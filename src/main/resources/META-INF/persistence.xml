@@ -5,13 +5,15 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>it.areson.aresonsomnium.entities.SomniumPlayer</class>
         <properties>
-            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/somnium"/>
-            <property name="javax.persistence.jdbc.user" value="root"/>
-            <property name="javax.persistence.jdbc.password" value="CKK6z9P3hKyCgvk4"/>
-            <property name="eclipselink.logging.level" value="SEVERE"/>
-            <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
+            <property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/aresonSomnium" />
+            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
+            <property name="hibernate.connection.username" value="root" />
+            <property name="hibernate.connection.password" value="CKK6z9P3hKyCgvk4" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
+            <property name="hibernate.hbm2ddl.auto" value="create" />
+            <property name="hibernate.show_sql" value="true" />
+            <property name="use_sql_comments" value="true" />
+            <property name="hibernate.format_sql" value="true" />
         </properties>
-
     </persistence-unit>
 </persistence>
