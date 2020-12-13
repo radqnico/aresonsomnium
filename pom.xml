@@ -8,9 +8,6 @@
     <artifactId>AresonSomnium</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>TestModule</module>
-    </modules>
 
     <properties>
         <!-- Target option 5 is no longer supported. Use 7 or later. -->
