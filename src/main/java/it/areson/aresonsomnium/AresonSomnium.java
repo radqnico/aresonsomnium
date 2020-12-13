@@ -26,7 +26,7 @@ public class AresonSomnium extends JavaPlugin {
         Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
 
         entityManagerFactory = Persistence.createEntityManagerFactory("persistence-unit");
-
+        entityManager = entityManagerFactory.createEntityManager();
         SomniumPlayer somniumPlayer = new SomniumPlayer();
 
         entityManager.getTransaction().begin();
