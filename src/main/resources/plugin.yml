@@ -1,5 +1,5 @@
 name: ${project.artifactId}
 version: ${project.version}
-main: ${project.groupId}.aresondungeons.${project.artifactId}
+main: ${project.groupId}.aresonsomnium.${project.artifactId}
 api-version: "1.16"
 author: Areson
