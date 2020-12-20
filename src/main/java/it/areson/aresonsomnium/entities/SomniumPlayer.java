@@ -64,7 +64,7 @@ public class SomniumPlayer extends MySQLObject {
     public void saveToDB() {
         createTableIfNotExists();
         String query = String.format("INSERT INTO %s (playerName, timePlayed) values ('%s', %d) ON DUPLICATE KEY " +
-                        "UPDATE timePlayedSeconds=%d",
+                        "UPDATE timePlayed=%d",
                 tableName,
                 getPlayerName(),
                 timePlayed,
