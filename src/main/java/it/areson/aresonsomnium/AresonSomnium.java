@@ -1,37 +1,46 @@
 package it.areson.aresonsomnium;
 
-import it.areson.aresonsomnium.entities.SomniumPlayer;
+import it.areson.aresonsomnium.database.MySqlDBConnection;
+import it.areson.aresonsomnium.entities.SomniumPlayerManager;
+import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.hibernate.jpa.HibernatePersistenceProvider;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import java.util.Properties;
+import java.util.logging.Logger;
+
+import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 
 public class AresonSomnium extends JavaPlugin {
 
-    EntityManagerFactory entityManagerFactory;
-    EntityManager entityManager;
+    private SomniumPlayerManager somniumPlayerManager;
+    private MySqlDBConnection mySqlDBConnection;
+
+    private SomniumPlayerDBEvents playerDBEvents;
 
     @Override
     public void onDisable() {
-        entityManager.close();
-        entityManagerFactory.close();
+
     }
 
     @Override
     public void onEnable() {
+        Logger logger = getLogger();
+        mySqlDBConnection = new MySqlDBConnection(logger);
+        somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection, PLAYER_TABLE_NAME);
 
-        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-
-        entityManagerFactory = Persistence.createEntityManagerFactory("persistence-unit");
-        entityManager = entityManagerFactory.createEntityManager();
-        SomniumPlayer somniumPlayer = new SomniumPlayer();
-
-        entityManager.getTransaction().begin();
-        entityManager.persist(somniumPlayer);
-        entityManager.getTransaction().commit();
+        // Events
+        initAllEvents();
+        registerAllEvents();
     }
 
+    private void initAllEvents() {
+        playerDBEvents = new SomniumPlayerDBEvents(this);
+    }
+
+    private void registerAllEvents() {
+        playerDBEvents.registerEvents();
+    }
+
+    public SomniumPlayerManager getSomniumPlayerManager() {
+        return somniumPlayerManager;
+    }
 }

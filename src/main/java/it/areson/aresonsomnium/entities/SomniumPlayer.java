@@ -1,52 +1,109 @@
 package it.areson.aresonsomnium.entities;
 
+import it.areson.aresonsomnium.database.MySQLObject;
+import it.areson.aresonsomnium.database.MySqlDBConnection;
 import org.bukkit.entity.Player;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-@Entity
-@Table(name = "somniumPlayer")
-public class SomniumPlayer {
+public class SomniumPlayer extends MySQLObject {
 
-    @Id private String playerName;
+    public static long DEFAULT_TIME_PLAYED = 0L;
+    private final Player player;
     private long timePlayed;
 
-    @Transient private Player player;
-
-    public SomniumPlayer(){
-        this.playerName = "___DEFAULT___";
-        this.timePlayed = 0;
-    }
-
-    public SomniumPlayer(Player player){
+    public SomniumPlayer(MySqlDBConnection mySqlDBConnection, String tableName, Player player) {
+        super(mySqlDBConnection, tableName);
         this.player = player;
-        this.playerName = player.getName();
+        this.timePlayed = DEFAULT_TIME_PLAYED;
+        updateFromDB();
     }
 
     public String getPlayerName() {
-        return playerName;
-    }
-
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
+        return player.getName();
     }
 
     public Player getPlayer() {
         return player;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
+    public void addTimePlayed(long seconds) {
+        timePlayed += seconds;
     }
 
     public long getTimePlayed() {
         return timePlayed;
     }
 
-    public void setTimePlayed(long timePlayed) {
-        this.timePlayed = timePlayed;
+    @Override
+    public void createTableIfNotExists() {
+        String query = "create table if not exists " + tableName + "\n" +
+                "(\n" +
+                "    playerName varchar(255) not null\n" +
+                "        primary key,\n" +
+                "    timePlayed bigint default " + DEFAULT_TIME_PLAYED + " null\n" +
+                ");";
+        try {
+            Connection connection = mySqlDBConnection.connect();
+            int update = mySqlDBConnection.update(connection, query);
+            if (update >= 0) {
+                mySqlDBConnection.getLogger().info("Tabella '" + tableName + "' creata correttamente.");
+            } else {
+                mySqlDBConnection.getLogger().warning("Creazione tabella '" + tableName + "' non riuscita.");
+            }
+            connection.close();
+        } catch (SQLException exception) {
+            mySqlDBConnection.getLogger().severe("Impossibile connettersi per creare '" + tableName + "'");
+            mySqlDBConnection.printSqlExceptionDetails(exception);
+        }
+    }
+
+    @Override
+    public void saveToDB() {
+        createTableIfNotExists();
+        String query = String.format("INSERT INTO %s (playerName, timePlayed) values ('%s', %d) ON DUPLICATE KEY" +
+                        "UPDATE timePlayedSeconds=%d",
+                tableName,
+                getPlayerName(),
+                timePlayed,
+                timePlayed);
+        try {
+            Connection connection = mySqlDBConnection.connect();
+            int update = mySqlDBConnection.update(connection, query);
+            if (update >= 0) {
+                mySqlDBConnection.getLogger().info("Aggiornato giocatore '" + getPlayerName() + "' sul DB.");
+            } else {
+                mySqlDBConnection.getLogger().warning("Giocatore '" + getPlayerName() + "' non aggiornato.");
+            }
+            connection.close();
+        } catch (SQLException exception) {
+            mySqlDBConnection.getLogger().severe("Impossibile connettersi per aggiornare il giocatore '" + getPlayerName() + "'");
+            mySqlDBConnection.printSqlExceptionDetails(exception);
+        }
+    }
+
+    @Override
+    public void updateFromDB() {
+        createTableIfNotExists();
+        String query = String.format("select * from somniumPlayer where playerName='%s'",
+                getPlayerName());
+        try {
+            Connection connection = mySqlDBConnection.connect();
+            ResultSet select = mySqlDBConnection.select(connection, query);
+            if (select.next()) {
+                // Presente
+                this.timePlayed = select.getLong("timePlayed");
+                mySqlDBConnection.getLogger().info("Dai del giocatore '" + getPlayerName() + "' recuperati dal DB");
+            } else {
+                // Non presente
+                mySqlDBConnection.getLogger().warning("Giocatore '" + getPlayerName() + "' non presente sul DB");
+            }
+            connection.close();
+        } catch (SQLException exception) {
+            mySqlDBConnection.getLogger().severe("Impossibile connettersi per recuperare il giocatore '" + getPlayerName() + "'");
+            mySqlDBConnection.printSqlExceptionDetails(exception);
+        }
     }
 }
