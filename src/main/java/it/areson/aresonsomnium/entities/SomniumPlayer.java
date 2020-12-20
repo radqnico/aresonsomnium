@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class SomniumPlayer extends MySQLObject {
 
@@ -14,11 +16,18 @@ public class SomniumPlayer extends MySQLObject {
     private final Player player;
     private long timePlayed;
 
+    private final LocalDateTime timeJoined;
+
     public SomniumPlayer(MySqlDBConnection mySqlDBConnection, String tableName, Player player) {
         super(mySqlDBConnection, tableName);
         this.player = player;
         this.timePlayed = DEFAULT_TIME_PLAYED;
+        timeJoined = LocalDateTime.now();
         updateFromDB();
+    }
+
+    public long getSecondsPlayedTotal() {
+        return timePlayed + Duration.between(timeJoined, LocalDateTime.now()).toMillis() / 1000;
     }
 
     public String getPlayerName() {
@@ -27,14 +36,6 @@ public class SomniumPlayer extends MySQLObject {
 
     public Player getPlayer() {
         return player;
-    }
-
-    public void addTimePlayed(long seconds) {
-        timePlayed += seconds;
-    }
-
-    public long getTimePlayed() {
-        return timePlayed;
     }
 
     @Override
@@ -67,8 +68,8 @@ public class SomniumPlayer extends MySQLObject {
                         "UPDATE timePlayed=%d",
                 tableName,
                 getPlayerName(),
-                timePlayed,
-                timePlayed);
+                getSecondsPlayedTotal(),
+                getSecondsPlayedTotal());
         try {
             Connection connection = mySqlDBConnection.connect();
             int update = mySqlDBConnection.update(connection, query);
