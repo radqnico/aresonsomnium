@@ -24,6 +24,7 @@ public class SomniumPlayer extends MySQLObject {
     public SomniumPlayer(MySqlDBConnection mySqlDBConnection, String tableName, Player player) {
         super(mySqlDBConnection, tableName);
         this.player = player;
+        setAllDefault();
         updateFromDB();
     }
 
