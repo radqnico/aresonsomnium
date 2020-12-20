@@ -24,10 +24,7 @@ public class SomniumPlayerManager {
 
     public SomniumPlayer addSomniumPlayer(Player player) {
         SomniumPlayer somniumPlayer = new SomniumPlayer(connection, tableName, player);
-        onlinePlayers.put(
-                player,
-                somniumPlayer
-        );
+        onlinePlayers.put(player, somniumPlayer);
         return somniumPlayer;
     }
 

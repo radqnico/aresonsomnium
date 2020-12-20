@@ -1,12 +1,8 @@
 package it.areson.aresonsomnium.economy;
 
-import it.areson.aresonsomnium.database.MySQLObject;
-import it.areson.aresonsomnium.database.MySqlDBConnection;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-
 public class Wallet {
+
+    public static Wallet DEFAULT_WALLET = new Wallet(0, 0, 0);
 
     private int basicCoins;
     private int charonCoins;
@@ -18,8 +14,6 @@ public class Wallet {
         this.forcedCoins = forcedCoins;
     }
 
-
-
     public int getBasicCoins() {
         return basicCoins;
     }
@@ -30,5 +24,17 @@ public class Wallet {
 
     public int getForcedCoins() {
         return forcedCoins;
+    }
+
+    public void changeBasicCoins(int amount) {
+        basicCoins += amount;
+    }
+
+    public void changeCharonCoins(int amount) {
+        charonCoins += amount;
+    }
+
+    public void changeForcedCoins(int amount) {
+        forcedCoins += amount;
     }
 }

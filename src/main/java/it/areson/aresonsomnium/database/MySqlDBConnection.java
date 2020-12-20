@@ -47,9 +47,7 @@ public class MySqlDBConnection {
 
     public int update(Connection connection, String sqlQuery) throws SQLException {
         Statement statement = connection.createStatement();
-        int result = statement.executeUpdate(sqlQuery);
-        logger.info("Update result: " + result);
-        return result;
+        return statement.executeUpdate(sqlQuery);
     }
 
     public void printSqlExceptionDetails(SQLException exception) {

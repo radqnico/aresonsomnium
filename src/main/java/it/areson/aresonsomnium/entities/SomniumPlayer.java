@@ -2,6 +2,7 @@ package it.areson.aresonsomnium.entities;
 
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
+import it.areson.aresonsomnium.economy.Wallet;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -13,17 +14,27 @@ import java.time.LocalDateTime;
 public class SomniumPlayer extends MySQLObject {
 
     public static long DEFAULT_TIME_PLAYED = 0L;
+
     private final Player player;
+    private LocalDateTime timeJoined;
     private long timePlayed;
 
-    private final LocalDateTime timeJoined;
+    private Wallet wallet;
 
     public SomniumPlayer(MySqlDBConnection mySqlDBConnection, String tableName, Player player) {
         super(mySqlDBConnection, tableName);
         this.player = player;
-        this.timePlayed = DEFAULT_TIME_PLAYED;
-        timeJoined = LocalDateTime.now();
         updateFromDB();
+    }
+
+    private void setAllDefault() {
+        this.timeJoined = LocalDateTime.now();
+        this.timePlayed = DEFAULT_TIME_PLAYED;
+        this.wallet = Wallet.DEFAULT_WALLET;
+    }
+
+    public Wallet getWallet() {
+        return wallet;
     }
 
     public long getSecondsPlayedTotal() {
@@ -49,9 +60,7 @@ public class SomniumPlayer extends MySQLObject {
         try {
             Connection connection = mySqlDBConnection.connect();
             int update = mySqlDBConnection.update(connection, query);
-            if (update >= 0) {
-                mySqlDBConnection.getLogger().info("Tabella '" + tableName + "' creata correttamente.");
-            } else {
+            if (update < 0) {
                 mySqlDBConnection.getLogger().warning("Creazione tabella '" + tableName + "' non riuscita.");
             }
             connection.close();
@@ -64,12 +73,13 @@ public class SomniumPlayer extends MySQLObject {
     @Override
     public void saveToDB() {
         createTableIfNotExists();
-        String query = String.format("INSERT INTO %s (playerName, timePlayed) values ('%s', %d) ON DUPLICATE KEY " +
-                        "UPDATE timePlayed=%d",
+        Wallet wallet = getWallet();
+        String query = String.format("INSERT INTO %s (playerName, timePlayed, basicCoins, charonCoins, forcedCoins) " +
+                        "values ('%s', %d, %d, %d, %d) ON DUPLICATE KEY " +
+                        "UPDATE timePlayed=%d, basicCoins=%d, charonCoins=%d, forcedCoins=%d",
                 tableName,
-                getPlayerName(),
-                getSecondsPlayedTotal(),
-                getSecondsPlayedTotal());
+                getPlayerName(), getSecondsPlayedTotal(), wallet.getBasicCoins(), wallet.getCharonCoins(), wallet.getForcedCoins(),
+                getSecondsPlayedTotal(), wallet.getBasicCoins(), wallet.getCharonCoins(), wallet.getForcedCoins());
         try {
             Connection connection = mySqlDBConnection.connect();
             int update = mySqlDBConnection.update(connection, query);
@@ -96,7 +106,10 @@ public class SomniumPlayer extends MySQLObject {
             if (select.next()) {
                 // Presente
                 this.timePlayed = select.getLong("timePlayed");
-                mySqlDBConnection.getLogger().info("Dai del giocatore '" + getPlayerName() + "' recuperati dal DB");
+                this.wallet.changeBasicCoins(select.getInt("basicCoins"));
+                this.wallet.changeCharonCoins(select.getInt("charonCoins"));
+                this.wallet.changeForcedCoins(select.getInt("forcedCoins"));
+                mySqlDBConnection.getLogger().info("Dati del giocatore '" + getPlayerName() + "' recuperati dal DB");
             } else {
                 // Non presente
                 mySqlDBConnection.getLogger().warning("Giocatore '" + getPlayerName() + "' non presente sul DB");
