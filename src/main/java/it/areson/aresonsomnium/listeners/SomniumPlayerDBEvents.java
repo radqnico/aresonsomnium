@@ -24,7 +24,7 @@ public class SomniumPlayerDBEvents extends GeneralEventListener {
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         SomniumPlayerManager somniumPlayerManager = aresonSomnium.getSomniumPlayerManager();
-        somniumPlayerManager.removeSomniumPlayer(player);
+        somniumPlayerManager.saveAndRemoveSomniumPlayer(player);
     }
 
 }
