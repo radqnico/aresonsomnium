@@ -54,7 +54,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "stats":
                         handleStatsCommand(commandSender, args[1]);
                         break;
-                    case "chengecoins":
+                    case "setCoins":
                         notEnoughArguments(commandSender);
                         break;
                 }
@@ -63,7 +63,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "stats":
                         tooManyArguments(commandSender);
                         break;
-                    case "chengecoins":
+                    case "setcoins":
                         notEnoughArguments(commandSender);
                         break;
                 }
@@ -72,7 +72,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "stats":
                         tooManyArguments(commandSender);
                         break;
-                    case "chengecoins":
+                    case "setcoins":
                         handleChengeCoins(commandSender, args[1], args[2], args[3]);
                         break;
                 }
@@ -138,7 +138,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (Objects.nonNull(somniumPlayer)) {
                 String toSend = ChatColor.GOLD + somniumPlayer.getPlayerName() + ChatColor.RESET + "'s stats:\n" +
-                        "   Seconds played: " + somniumPlayer.getSecondsPlayedTotal() + "\n" +
+                        "   Secondi giocati: " + somniumPlayer.getSecondsPlayedTotal() + "\n" +
                         "   Wallet:\n" +
                         "      Basic coins: " + somniumPlayer.getWallet().getBasicCoins() + "\n" +
                         "      Charon coins: " + somniumPlayer.getWallet().getCharonCoins() + "\n" +
@@ -166,7 +166,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                             break;
                         case "charon":
                             somniumPlayer.getWallet().setCharonCoins(amount);
-                            commandSender.sendMessage(ChatColor.GREEN + "Valoredei Charon Coins impostato");
+                            commandSender.sendMessage(ChatColor.GREEN + "Valore dei Charon Coins impostato");
                             break;
                         case "force":
                             somniumPlayer.getWallet().setForcedCoins(amount);
