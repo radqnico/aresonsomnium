@@ -1,5 +1,6 @@
 package it.areson.aresonsomnium;
 
+import it.areson.aresonsomnium.commands.admin.SomniumAdminCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.entities.SomniumPlayerManager;
 import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
@@ -30,6 +31,12 @@ public class AresonSomnium extends JavaPlugin {
         // Events
         initAllEvents();
         registerAllEvents();
+
+        registerCommands();
+    }
+
+    private void registerCommands(){
+        new SomniumAdminCommand(this);
     }
 
     private void initAllEvents() {
