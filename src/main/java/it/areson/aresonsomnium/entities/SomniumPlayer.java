@@ -74,13 +74,7 @@ public class SomniumPlayer extends MySQLObject {
     @Override
     public void saveToDB() {
         createTableIfNotExists();
-        Wallet wallet = getWallet();
-        String query = String.format("INSERT INTO %s (playerName, timePlayed, basicCoins, charonCoins, forcedCoins) " +
-                        "values ('%s', %d, %d, %d, %d) ON DUPLICATE KEY " +
-                        "UPDATE timePlayed=%d, basicCoins=%d, charonCoins=%d, forcedCoins=%d",
-                tableName,
-                getPlayerName(), getSecondsPlayedTotal(), wallet.getBasicCoins(), wallet.getCharonCoins(), wallet.getForcedCoins(),
-                getSecondsPlayedTotal(), wallet.getBasicCoins(), wallet.getCharonCoins(), wallet.getForcedCoins());
+        String query = getSaveQuery();
         try {
             Connection connection = mySqlDBConnection.connect();
             int update = mySqlDBConnection.update(connection, query);
@@ -103,13 +97,10 @@ public class SomniumPlayer extends MySQLObject {
                 getPlayerName());
         try {
             Connection connection = mySqlDBConnection.connect();
-            ResultSet select = mySqlDBConnection.select(connection, query);
-            if (select.next()) {
+            ResultSet resultSet = mySqlDBConnection.select(connection, query);
+            if (resultSet.next()) {
                 // Presente
-                this.timePlayed = select.getLong("timePlayed");
-                this.wallet.changeBasicCoins(select.getInt("basicCoins"));
-                this.wallet.changeCharonCoins(select.getInt("charonCoins"));
-                this.wallet.changeForcedCoins(select.getInt("forcedCoins"));
+                setFromResultSet(resultSet);
                 mySqlDBConnection.getLogger().info("Dati del giocatore '" + getPlayerName() + "' recuperati dal DB");
             } else {
                 // Non presente
@@ -120,5 +111,21 @@ public class SomniumPlayer extends MySQLObject {
             mySqlDBConnection.getLogger().severe("Impossibile connettersi per recuperare il giocatore '" + getPlayerName() + "'");
             mySqlDBConnection.printSqlExceptionDetails(exception);
         }
+    }
+
+    public String getSaveQuery(){
+        return String.format("INSERT INTO %s (playerName, timePlayed, basicCoins, charonCoins, forcedCoins) " +
+                        "values ('%s', %d, %d, %d, %d) ON DUPLICATE KEY " +
+                        "UPDATE timePlayed=%d, basicCoins=%d, charonCoins=%d, forcedCoins=%d",
+                tableName,
+                getPlayerName(), getSecondsPlayedTotal(), wallet.getBasicCoins(), wallet.getCharonCoins(), wallet.getForcedCoins(),
+                getSecondsPlayedTotal(), wallet.getBasicCoins(), wallet.getCharonCoins(), wallet.getForcedCoins());
+    }
+
+    public void setFromResultSet(ResultSet resultSet) throws SQLException{
+        this.timePlayed = resultSet.getLong("timePlayed");
+        this.wallet.changeBasicCoins(resultSet.getInt("basicCoins"));
+        this.wallet.changeCharonCoins(resultSet.getInt("charonCoins"));
+        this.wallet.changeForcedCoins(resultSet.getInt("forcedCoins"));
     }
 }
