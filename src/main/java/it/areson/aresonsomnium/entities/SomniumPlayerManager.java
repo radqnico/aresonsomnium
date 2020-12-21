@@ -40,4 +40,9 @@ public class SomniumPlayerManager {
         onlinePlayers.remove(player).saveToDB();
     }
 
+    public void saveAll() {
+        for (SomniumPlayer somniumPlayer : onlinePlayers.values()) {
+            somniumPlayer.saveToDB();
+        }
+    }
 }

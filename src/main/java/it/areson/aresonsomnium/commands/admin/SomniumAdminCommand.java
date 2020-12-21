@@ -1,6 +1,7 @@
 package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
+import it.areson.aresonsomnium.entities.CoinType;
 import it.areson.aresonsomnium.entities.SomniumPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
@@ -14,12 +15,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("ALL")
+
+@SuppressWarnings("NullableProblems")
 public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final PluginCommand command;
     private final String[] subCommands = new String[]{"stats", "setCoins"};
-    private final String[] coinTypes = new String[]{"basic", "charon", "forced"};
     private AresonSomnium aresonSomnium;
 
     public SomniumAdminCommand(AresonSomnium aresonSomnium) {
@@ -29,7 +30,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             command.setExecutor(this);
             command.setTabCompleter(this);
         } else {
-            this.aresonSomnium.getLogger().warning("Comando 'somnium' non dichiarato");
+            this.aresonSomnium.getLogger().warning("Comando 'somniumadmin' non dichiarato");
         }
     }
 
@@ -73,7 +74,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         tooManyArguments(commandSender);
                         break;
                     case "setcoins":
-                        handleChengeCoins(commandSender, args[1], args[2], args[3]);
+                        handleSetCoins(commandSender, args[1], args[2], args[3]);
                         break;
                 }
         }
@@ -89,14 +90,6 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         if (strings.length == 2) {
             switch (strings[0].toLowerCase()) {
                 case "stats":
-                    StringUtil.copyPartialMatches(
-                            strings[1],
-                            aresonSomnium.getServer().getOnlinePlayers().stream()
-                                    .map(HumanEntity::getName)
-                                    .collect(Collectors.toList()),
-                            suggestions
-                    );
-                    break;
                 case "setcoins":
                     StringUtil.copyPartialMatches(
                             strings[1],
@@ -108,12 +101,12 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     break;
             }
         }
-        if (strings.length==3){
+        if (strings.length == 3) {
             switch (strings[0].toLowerCase()) {
                 case "setcoins":
                     StringUtil.copyPartialMatches(
                             strings[2],
-                            Arrays.asList(coinTypes),
+                            Arrays.stream(CoinType.values()).map(value -> value.name().toLowerCase()).collect(Collectors.toList()),
                             suggestions
                     );
                     break;
@@ -123,12 +116,12 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
     }
 
     private void notEnoughArguments(CommandSender commandSender) {
-        commandSender.sendMessage("Parametri non sufficienti");
+        commandSender.sendMessage(errorMessage("Parametri non sufficienti"));
         commandSender.sendMessage(command.getUsage());
     }
 
     private void tooManyArguments(CommandSender commandSender) {
-        commandSender.sendMessage("Troppi parametri forniti");
+        commandSender.sendMessage(errorMessage("Troppi parametri forniti"));
         commandSender.sendMessage(command.getUsage());
     }
 
@@ -142,47 +135,60 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         "   Wallet:\n" +
                         "      Basic coins: " + somniumPlayer.getWallet().getBasicCoins() + "\n" +
                         "      Charon coins: " + somniumPlayer.getWallet().getCharonCoins() + "\n" +
-                        "      Forced coins: " + somniumPlayer.getWallet().getForcedCoins() + "\n";
+                        "      Forced coins: " + somniumPlayer.getWallet().getForcedCoins();
                 commandSender.sendMessage(toSend);
             } else {
-                commandSender.sendMessage(ChatColor.RED + "Impossibile reperire il SomniumPlayer per " + playerName);
+                commandSender.sendMessage(errorMessage("Impossibile reperire il SomniumPlayer per " + playerName));
             }
         } else {
-            commandSender.sendMessage(ChatColor.RED + "Il giocatore " + playerName + " non esiste");
+            commandSender.sendMessage(errorMessage("Il giocatore " + playerName + " non esiste"));
         }
     }
 
-    private void handleChengeCoins(CommandSender commandSender, String playerName, String coinType, String amountString) {
+    private void handleSetCoins(CommandSender commandSender, String playerName, String coinType, String amountString) {
         Player player = aresonSomnium.getServer().getPlayer(playerName);
         if (Objects.nonNull(player)) {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (Objects.nonNull(somniumPlayer)) {
                 try {
                     int amount = Integer.parseInt(amountString);
-                    switch (coinType) {
-                        case "basic":
+                    CoinType type = CoinType.valueOf(coinType.toUpperCase());
+                    switch (type) {
+                        case BASIC:
                             somniumPlayer.getWallet().setBasicCoins(amount);
-                            commandSender.sendMessage(ChatColor.GREEN + "Valore dei Basic Coins impostato");
+                            commandSender.sendMessage(successMessage("Valore dei Basic Coins impostato"));
                             break;
-                        case "charon":
+                        case CHARON:
                             somniumPlayer.getWallet().setCharonCoins(amount);
-                            commandSender.sendMessage(ChatColor.GREEN + "Valore dei Charon Coins impostato");
+                            commandSender.sendMessage(successMessage("Valore dei Charon Coins impostato"));
                             break;
-                        case "force":
+                        case FORCED:
                             somniumPlayer.getWallet().setForcedCoins(amount);
-                            commandSender.sendMessage(ChatColor.GREEN + "Valore dei Forced Coins impostato");
+                            commandSender.sendMessage(successMessage("Valore dei Forced Coins impostato"));
                             break;
                         default:
-                            commandSender.sendMessage(ChatColor.RED + "Tipo di moneta non esistente");
+                            commandSender.sendMessage(errorMessage("Tipo di moneta non esistente"));
                     }
                 } catch (NumberFormatException exception) {
-                    commandSender.sendMessage(ChatColor.RED + "Numero non valido");
+                    commandSender.sendMessage(errorMessage("Numero non valido"));
                 }
             } else {
-                commandSender.sendMessage(ChatColor.RED + "Impossibile reperire il SomniumPlayer per " + playerName);
+                commandSender.sendMessage(errorMessage("Impossibile reperire il SomniumPlayer per " + playerName));
             }
         } else {
-            commandSender.sendMessage(ChatColor.RED + "Il giocatore " + playerName + " non esiste");
+            commandSender.sendMessage(errorMessage("Il giocatore " + playerName + " non esiste"));
         }
+    }
+
+    private String successMessage(String message) {
+        return ChatColor.GREEN + message;
+    }
+
+    private String warningMessage(String message) {
+        return ChatColor.YELLOW + message;
+    }
+
+    private String errorMessage(String message) {
+        return ChatColor.RED + message;
     }
 }

@@ -3,6 +3,7 @@ package it.areson.aresonsomnium.entities;
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.Wallet;
+import it.areson.aresonsomnium.exceptions.CantAffordException;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -113,7 +114,7 @@ public class SomniumPlayer extends MySQLObject {
         }
     }
 
-    public String getSaveQuery(){
+    public String getSaveQuery() {
         return String.format("INSERT INTO %s (playerName, timePlayed, basicCoins, charonCoins, forcedCoins) " +
                         "values ('%s', %d, %d, %d, %d) ON DUPLICATE KEY " +
                         "UPDATE timePlayed=%d, basicCoins=%d, charonCoins=%d, forcedCoins=%d",
@@ -122,10 +123,41 @@ public class SomniumPlayer extends MySQLObject {
                 getSecondsPlayedTotal(), wallet.getBasicCoins(), wallet.getCharonCoins(), wallet.getForcedCoins());
     }
 
-    public void setFromResultSet(ResultSet resultSet) throws SQLException{
+    public void setFromResultSet(ResultSet resultSet) throws SQLException {
         this.timePlayed = resultSet.getLong("timePlayed");
         this.wallet.changeBasicCoins(resultSet.getInt("basicCoins"));
         this.wallet.changeCharonCoins(resultSet.getInt("charonCoins"));
         this.wallet.changeForcedCoins(resultSet.getInt("forcedCoins"));
+    }
+
+    public boolean canAfford(CoinType coinType, int amount) {
+        switch (coinType) {
+            case BASIC:
+                return getWallet().getBasicCoins() >= amount;
+            case CHARON:
+                return getWallet().getCharonCoins() >= amount;
+            case FORCED:
+                return getWallet().getForcedCoins() >= amount;
+            default:
+                return false;
+        }
+    }
+
+    public void changeCoins(CoinType coinType, int amount) {
+        if (canAfford(coinType, amount)) {
+            switch (coinType) {
+                case BASIC:
+                    getWallet().changeBasicCoins(amount);
+                    break;
+                case CHARON:
+                    getWallet().changeCharonCoins(amount);
+                    break;
+                case FORCED:
+                    getWallet().changeForcedCoins(amount);
+                    break;
+            }
+        } else {
+            throw new CantAffordException("Can't remove " + amount + " " + coinType.getCoinName() + " Coins from player '" + getPlayerName() + "'");
+        }
     }
 }
