@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final PluginCommand command;
-    private final String[] subCommands = new String[]{"stats", "setCoins"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers"};
     private AresonSomnium aresonSomnium;
 
     public SomniumAdminCommand(AresonSomnium aresonSomnium) {
@@ -47,6 +47,9 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         break;
                     case "chengecoins":
                         notEnoughArguments(commandSender);
+                        break;
+                    case "listplayers":
+                        handleListPlayers(commandSender);
                         break;
                 }
                 break;
@@ -190,5 +193,14 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private String errorMessage(String message) {
         return ChatColor.RED + message;
+    }
+
+    private void handleListPlayers(CommandSender commandSender) {
+        StringBuilder message = new StringBuilder("Giocatori online: ");
+        List<String> onlinePlayersNames = aresonSomnium.getSomniumPlayerManager().getOnlinePlayersNames();
+        for (String playerName : onlinePlayersNames) {
+            message.append(playerName).append(" ");
+        }
+        commandSender.sendMessage(message.toString());
     }
 }

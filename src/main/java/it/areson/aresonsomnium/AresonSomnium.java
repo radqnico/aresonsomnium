@@ -20,6 +20,7 @@ public class AresonSomnium extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        somniumPlayerManager.saveAll();
         playerDBEvents.unregisterEvents();
     }
 

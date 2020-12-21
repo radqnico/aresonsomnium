@@ -4,7 +4,9 @@ import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.utils.PlayerComparator;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class SomniumPlayerManager {
 
@@ -44,5 +46,9 @@ public class SomniumPlayerManager {
         for (SomniumPlayer somniumPlayer : onlinePlayers.values()) {
             somniumPlayer.saveToDB();
         }
+    }
+
+    public List<String> getOnlinePlayersNames() {
+        return onlinePlayers.values().stream().map(SomniumPlayer::getPlayerName).collect(Collectors.toList());
     }
 }
