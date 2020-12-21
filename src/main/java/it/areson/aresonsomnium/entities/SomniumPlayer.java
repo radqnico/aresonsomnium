@@ -96,6 +96,7 @@ public class SomniumPlayer extends MySQLObject {
         createTableIfNotExists();
         String query = String.format("select * from somniumPlayer where playerName='%s'",
                 getPlayerName());
+        System.out.println("QUERY: " + query);
         try {
             Connection connection = mySqlDBConnection.connect();
             ResultSet resultSet = mySqlDBConnection.select(connection, query);
