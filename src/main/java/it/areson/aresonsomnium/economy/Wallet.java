@@ -18,12 +18,24 @@ public class Wallet {
         return basicCoins;
     }
 
+    public void setBasicCoins(int basicCoins) {
+        this.basicCoins = basicCoins;
+    }
+
     public int getCharonCoins() {
         return charonCoins;
     }
 
+    public void setCharonCoins(int charonCoins) {
+        this.charonCoins = charonCoins;
+    }
+
     public int getForcedCoins() {
         return forcedCoins;
+    }
+
+    public void setForcedCoins(int forcedCoins) {
+        this.forcedCoins = forcedCoins;
     }
 
     public void changeBasicCoins(int amount) {
