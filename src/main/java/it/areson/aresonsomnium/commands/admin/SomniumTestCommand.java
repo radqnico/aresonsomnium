@@ -1,10 +1,7 @@
 package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.entities.CoinType;
-import static it.areson.aresonsomnium.utils.MessageUtils.*;
 import org.bukkit.command.*;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
@@ -12,7 +9,8 @@ import org.bukkit.util.StringUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static it.areson.aresonsomnium.utils.MessageUtils.*;
 
 
 @SuppressWarnings("NullableProblems")
@@ -41,13 +39,13 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                 break;
             case 1:
                 switch (args[0].toLowerCase()) {
-                    case "isSerialization":
+                    case "isserialization":
                         itemStackSerializationHandler(commandSender);
                         break;
+                    default:
+                        commandSender.sendMessage(errorMessage("Funzione non trovata"));
                 }
                 break;
-            default:
-                commandSender.sendMessage(errorMessage("Funzione non trovata"));
         }
         return true;
     }
