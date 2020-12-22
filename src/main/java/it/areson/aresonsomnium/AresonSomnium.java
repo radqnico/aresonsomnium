@@ -2,6 +2,7 @@ package it.areson.aresonsomnium;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.admin.SomniumAdminCommand;
+import it.areson.aresonsomnium.commands.admin.SomniumTestCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.entities.SomniumPlayerManager;
 import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
@@ -37,14 +38,17 @@ public class AresonSomnium extends JavaPlugin {
         // Commands
         registerCommands();
 
-        // Auto Save Task every 10m = 12000 ticks
-        AutoSaveManager.startAutoSaveTask(this, 12000);
+        // Auto Save Task interval
+        // 1m  = 1200
+        // 10m = 12000
+        AutoSaveManager.startAutoSaveTask(this, 6000); // 5m
 
         AresonSomniumAPI.instance = this;
     }
 
     private void registerCommands() {
         new SomniumAdminCommand(this);
+        new SomniumTestCommand(this);
     }
 
     private void initAllEvents() {

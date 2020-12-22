@@ -1,4 +1,5 @@
 /AresonSomnium.iml
 /.idea/
-/target/
-/dependency-reduced-pom.xml
+/target
+/src/main/java/it/areson/aresonsomnium/diagram.uml
+/src/main/java/it/areson/aresonsomnium/diagram.png

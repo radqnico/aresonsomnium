@@ -2,8 +2,6 @@ package it.areson.aresonsomnium.economy;
 
 public class Wallet {
 
-    public static Wallet DEFAULT_WALLET = new Wallet(0, 0, 0);
-
     private int basicCoins;
     private int charonCoins;
     private int forcedCoins;
@@ -12,6 +10,10 @@ public class Wallet {
         this.basicCoins = basicCoins;
         this.charonCoins = charonCoins;
         this.forcedCoins = forcedCoins;
+    }
+
+    public static Wallet getNewDefaultWallet() {
+        return new Wallet(0, 0, 0);
     }
 
     public int getBasicCoins() {

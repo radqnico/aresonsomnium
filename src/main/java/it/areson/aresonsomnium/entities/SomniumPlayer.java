@@ -32,7 +32,7 @@ public class SomniumPlayer extends MySQLObject {
     private void setAllDefault() {
         this.timeJoined = LocalDateTime.now();
         this.timePlayed = DEFAULT_TIME_PLAYED;
-        this.wallet = Wallet.DEFAULT_WALLET;
+        this.wallet = Wallet.getNewDefaultWallet();
     }
 
     public Wallet getWallet() {
@@ -96,7 +96,6 @@ public class SomniumPlayer extends MySQLObject {
         createTableIfNotExists();
         String query = String.format("select * from somniumPlayer where playerName='%s'",
                 getPlayerName());
-        System.out.println("QUERY: " + query);
         try {
             Connection connection = mySqlDBConnection.connect();
             ResultSet resultSet = mySqlDBConnection.select(connection, query);

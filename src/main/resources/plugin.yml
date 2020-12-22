@@ -7,6 +7,11 @@ commands:
   somniumadmin:
     description: "AresonSomnium admin command"
     permission: aresonsomnium.admin
+    usage: /<command> <function> [args...]
+  somniumtest:
+    description: "AresonSomnium testing command"
+    permission: aresonsomnium.admin
+    usage: /<command> <function> [args...]
 
 permissions:
   aresonsomnium.admin:
