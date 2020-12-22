@@ -41,10 +41,20 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
             case 1:
                 switch (args[0].toLowerCase()) {
                     case "serialize":
-                        itemStackSerializationHandler(commandSender);
+                    case "deserialize":
+                        notEnoughArguments(commandSender, command);
+                        break;
+                    default:
+                        commandSender.sendMessage(errorMessage("Funzione non trovata"));
+                }
+                break;
+            case 2:
+                switch (args[0].toLowerCase()) {
+                    case "serialize":
+                        itemStackSerializationHandler(commandSender, args[1]);
                         break;
                     case "deserialize":
-                        itemStackDeserializationHandler(commandSender);
+                        itemStackDeserializationHandler(commandSender, args[1]);
                         break;
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
@@ -54,14 +64,14 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    private void itemStackDeserializationHandler(CommandSender commandSender) {
+    private void itemStackDeserializationHandler(CommandSender commandSender, String path) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            byte[] bytes = aresonSomnium.getDataFile().readBytes("testSerialization");
+            byte[] bytes = aresonSomnium.getDataFile().readBytes(path);
             System.out.println("BYTES: " + Arrays.toString(bytes));
             ItemStack itemStack = ItemStack.deserializeBytes(bytes);
             HashMap<Integer, ItemStack> ignore = player.getInventory().addItem(itemStack);
-            if(!ignore.isEmpty()){
+            if (!ignore.isEmpty()) {
                 player.sendMessage(warningMessage("Non hai spazio nell'inventario"));
             }
         } else {
@@ -69,7 +79,7 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void itemStackSerializationHandler(CommandSender commandSender) {
+    private void itemStackSerializationHandler(CommandSender commandSender, String path) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
@@ -77,7 +87,7 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                 byte[] bytes = itemInMainHand.serializeAsBytes();
                 player.sendMessage(successMessage("Serializzazione completata"));
                 player.sendMessage(Arrays.toString(bytes));
-                aresonSomnium.getDataFile().writeBytes("testSerialization", bytes);
+                aresonSomnium.getDataFile().writeBytes(path, bytes);
             } catch (IllegalArgumentException exception) {
                 player.sendMessage(errorMessage("Errore: " + exception.getMessage()));
             }
