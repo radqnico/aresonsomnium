@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +49,7 @@ public class FileManager {
 
     public byte[] readBytes(String path) {
         List<Byte> byteList = fileConfiguration.getByteList(path);
+        System.out.println(byteList.toString());
         byte[] bytes = new byte[byteList.size()];
         for (int i = 0; i < byteList.size(); i++) {
             bytes[i] = byteList.get(i);
