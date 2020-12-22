@@ -8,6 +8,7 @@ import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static it.areson.aresonsomnium.utils.MessageUtils.*;
@@ -17,7 +18,7 @@ import static it.areson.aresonsomnium.utils.MessageUtils.*;
 public class SomniumTestCommand implements CommandExecutor, TabCompleter {
 
     private final PluginCommand command;
-    private final String[] subCommands = new String[]{"isSerialization"};
+    private final String[] subCommands = new String[]{"serialize", "deserialize"};
     private AresonSomnium aresonSomnium;
 
     public SomniumTestCommand(AresonSomnium aresonSomnium) {
@@ -39,8 +40,11 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                 break;
             case 1:
                 switch (args[0].toLowerCase()) {
-                    case "isserialization":
+                    case "serialize":
                         itemStackSerializationHandler(commandSender);
+                        break;
+                    case "deserialize":
+                        itemStackDeserializationHandler(commandSender);
                         break;
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
@@ -48,6 +52,20 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                 break;
         }
         return true;
+    }
+
+    private void itemStackDeserializationHandler(CommandSender commandSender) {
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
+            byte[] bytes = aresonSomnium.getDataFile().readBytes("testSerialization");
+            ItemStack itemStack = ItemStack.deserializeBytes(bytes);
+            HashMap<Integer, ItemStack> ignore = player.getInventory().addItem(itemStack);
+            if(!ignore.isEmpty()){
+                player.sendMessage(warningMessage("Non hai spazio nell'inventario"));
+            }
+        } else {
+            commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
+        }
     }
 
     private void itemStackSerializationHandler(CommandSender commandSender) {

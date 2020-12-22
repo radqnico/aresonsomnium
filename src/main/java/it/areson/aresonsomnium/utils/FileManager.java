@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 public class FileManager {
@@ -43,6 +44,15 @@ public class FileManager {
     public void writeBytes(String path, byte[] byteArray) {
         fileConfiguration.set(path, byteArray);
         save();
+    }
+
+    public byte[] readBytes(String path) {
+        List<Byte> byteList = fileConfiguration.getByteList(path);
+        byte[] bytes = new byte[byteList.size()];
+        for (int i = 0; i < byteList.size(); i++) {
+            bytes[i] = byteList.get(i);
+        }
+        return bytes;
     }
 
     public Optional<Location> getLocation(String path) {
