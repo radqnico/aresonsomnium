@@ -58,6 +58,7 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             byte[] bytes = aresonSomnium.getDataFile().readBytes("testSerialization");
+            System.out.println("BYTES: " + Arrays.toString(bytes));
             ItemStack itemStack = ItemStack.deserializeBytes(bytes);
             HashMap<Integer, ItemStack> ignore = player.getInventory().addItem(itemStack);
             if(!ignore.isEmpty()){
