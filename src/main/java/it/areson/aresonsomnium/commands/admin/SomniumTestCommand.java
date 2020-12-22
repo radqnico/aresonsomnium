@@ -2,7 +2,7 @@ package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.entities.CoinType;
-import it.areson.aresonsomnium.utils.MessageUtils;
+import static it.areson.aresonsomnium.utils.MessageUtils.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -24,7 +24,7 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
 
     public SomniumTestCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
-        command = this.aresonSomnium.getCommand("SomniumTest");
+        command = this.aresonSomnium.getCommand("somniumtest");
         if (command != null) {
             command.setExecutor(this);
             command.setTabCompleter(this);
@@ -37,7 +37,7 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         switch (args.length) {
             case 0:
-                MessageUtils.notEnoughArguments(commandSender, command);
+                notEnoughArguments(commandSender, command);
                 break;
             case 1:
                 switch (args[0].toLowerCase()) {
@@ -46,6 +46,8 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                         break;
                 }
                 break;
+            default:
+                commandSender.sendMessage(errorMessage("Funzione non trovata"));
         }
         return true;
     }
@@ -55,10 +57,10 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
             Player player = (Player) commandSender;
             ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
             byte[] bytes = itemInMainHand.serializeAsBytes();
-            player.sendMessage(MessageUtils.successMessage("Serializzazione completata"));
+            player.sendMessage(successMessage("Serializzazione completata"));
             player.sendMessage(Arrays.toString(bytes));
         } else {
-            commandSender.sendMessage(MessageUtils.errorMessage("Comando disponibile solo da Player"));
+            commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
         }
         commandSender.sendMessage();
     }
@@ -70,14 +72,5 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
             StringUtil.copyPartialMatches(strings[0], Arrays.asList(subCommands), suggestions);
         }
         return suggestions;
-    }
-
-    private void handleListPlayers(CommandSender commandSender) {
-        StringBuilder message = new StringBuilder("Giocatori online: ");
-        List<String> onlinePlayersNames = aresonSomnium.getSomniumPlayerManager().getOnlinePlayersNames();
-        for (String playerName : onlinePlayersNames) {
-            message.append(playerName).append(" ");
-        }
-        commandSender.sendMessage(message.toString());
     }
 }
