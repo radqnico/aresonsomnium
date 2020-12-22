@@ -7,6 +7,7 @@ import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.entities.SomniumPlayerManager;
 import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
+import it.areson.aresonsomnium.utils.FileManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
@@ -16,8 +17,8 @@ import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 public class AresonSomnium extends JavaPlugin {
 
     private SomniumPlayerManager somniumPlayerManager;
-
     private SomniumPlayerDBEvents playerDBEvents;
+    private FileManager dataFile;
 
     @Override
     public void onDisable() {
@@ -44,6 +45,14 @@ public class AresonSomnium extends JavaPlugin {
         AutoSaveManager.startAutoSaveTask(this, 6000); // 5m
 
         AresonSomniumAPI.instance = this;
+    }
+
+    private void registerFiles(){
+        dataFile = new FileManager(this, "data.yml");
+    }
+
+    public FileManager getDataFile(){
+        return dataFile;
     }
 
     private void registerCommands() {

@@ -54,9 +54,14 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
-            byte[] bytes = itemInMainHand.serializeAsBytes();
-            player.sendMessage(successMessage("Serializzazione completata"));
-            player.sendMessage(Arrays.toString(bytes));
+            try {
+                byte[] bytes = itemInMainHand.serializeAsBytes();
+                player.sendMessage(successMessage("Serializzazione completata"));
+                player.sendMessage(Arrays.toString(bytes));
+                aresonSomnium.getDataFile().writeBytes("testSerialization", bytes);
+            } catch (IllegalArgumentException exception) {
+                player.sendMessage(errorMessage("Errore: " + exception.getMessage()));
+            }
         } else {
             commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
         }
