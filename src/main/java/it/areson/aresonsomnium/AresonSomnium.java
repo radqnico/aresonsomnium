@@ -39,6 +39,9 @@ public class AresonSomnium extends JavaPlugin {
         // Commands
         registerCommands();
 
+        // Files
+        registerFiles();
+
         // Auto Save Task interval
         // 1m  = 1200
         // 10m = 12000
