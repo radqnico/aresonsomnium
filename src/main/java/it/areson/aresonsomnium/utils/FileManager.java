@@ -8,8 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Base64;
 import java.util.Optional;
 
 public class FileManager {
@@ -43,18 +42,17 @@ public class FileManager {
     }
 
     public void writeBytes(String path, byte[] byteArray) {
-        fileConfiguration.set(path, byteArray);
+        String encoded = Base64.getEncoder().encodeToString(byteArray);
+        fileConfiguration.set(path, encoded);
         save();
     }
 
     public byte[] readBytes(String path) {
-        List<Byte> byteList = fileConfiguration.getByteList(path);
-        System.out.println(byteList.toString());
-        byte[] bytes = new byte[byteList.size()];
-        for (int i = 0; i < byteList.size(); i++) {
-            bytes[i] = byteList.get(i);
+        String string = fileConfiguration.getString(path);
+        if (string != null) {
+            return Base64.getDecoder().decode(string.getBytes());
         }
-        return bytes;
+        return null;
     }
 
     public Optional<Location> getLocation(String path) {
