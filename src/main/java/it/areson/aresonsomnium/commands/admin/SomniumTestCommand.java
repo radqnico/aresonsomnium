@@ -23,7 +23,7 @@ import static it.areson.aresonsomnium.utils.MessageUtils.*;
 public class SomniumTestCommand implements CommandExecutor, TabCompleter {
 
     private final PluginCommand command;
-    private final String[] subCommands = new String[]{"serialize", "deserialize", "openPermanentGui"};
+    private final String[] subCommands = new String[]{"serialize", "deserialize", "openPermanentGui", "summonPanico"};
     private AresonSomnium aresonSomnium;
 
     public SomniumTestCommand(AresonSomnium aresonSomnium) {
@@ -48,7 +48,7 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                     case "serialize":
                     case "deserialize":
                     case "openpermanentgui":
-                    case "summonPanico":
+                    case "summonpanico":
                         notEnoughArguments(commandSender, command);
                         break;
 
@@ -67,7 +67,7 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                     case "openpermanentgui":
                         openPermanentGuiHandler(commandSender, args[1]);
                         break;
-                    case "summonPanico":
+                    case "summonpanico":
                         int n = Integer.parseInt(args[1]);
                         LoadBalancer loadBalancer = new LoadBalancer("spawn");
                         for (int i = 0; i < n; i++) {
