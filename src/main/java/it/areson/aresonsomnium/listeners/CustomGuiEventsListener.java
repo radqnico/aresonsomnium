@@ -41,7 +41,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         if (guiManager.isViewingCustomGui(player)) {
             Inventory clickedInventory = event.getClickedInventory();
             if(Objects.nonNull(clickedInventory)) {
-                System.out.println(clickedInventory.toString());
+                System.out.println(clickedInventory.getType());
             }
             event.setCancelled(true);
         }
