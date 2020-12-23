@@ -30,7 +30,7 @@ public class GuiManager {
         return guis;
     }
 
-    private void fetchAllFromDB() {
+    public void fetchAllFromDB() {
         String query = "select guiName from " + tableName;
         String guiName = "ERRORE NON DOVUTO ALLA GUI";
         try {
@@ -84,7 +84,7 @@ public class GuiManager {
         return false;
     }
 
-    public boolean someoneEditing() {
-        return !editingGuis.isEmpty();
+    public boolean isEditing(Player player) {
+        return editingGuis.containsKey(player);
     }
 }

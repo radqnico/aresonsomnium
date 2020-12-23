@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final PluginCommand command;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createGui", "editGui"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createGui", "editGui", "reloadGuis"};
     private AresonSomnium aresonSomnium;
 
     public SomniumAdminCommand(AresonSomnium aresonSomnium) {
@@ -53,6 +53,9 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "listplayers":
                         handleListPlayers(commandSender);
                         break;
+                    case "reloadguis":
+                        handleReloadGuis(commandSender);
+                        break;
                 }
                 break;
             case 2:
@@ -64,7 +67,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         handleEditGui(commandSender, args[1]);
                         break;
                     case "listplayers":
-                        tooManyArguments(commandSender);
+                        tooManyArguments(commandSender, "listPlayers: 2");
                         break;
                     case "setcoins":
                     case "creategui":
@@ -82,7 +85,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "stats":
                     case "listplayers":
                     case "editgui":
-                        tooManyArguments(commandSender);
+                        tooManyArguments(commandSender, "editGui: 3");
                         break;
                 }
             case 4:
@@ -94,7 +97,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "listplayers":
                     case "creategui":
                     case "editgui":
-                        tooManyArguments(commandSender);
+                        tooManyArguments(commandSender, "editGui: 4");
                         break;
                 }
         }
@@ -148,9 +151,14 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         commandSender.sendMessage(command.getUsage());
     }
 
-    private void tooManyArguments(CommandSender commandSender) {
-        commandSender.sendMessage(errorMessage("Troppi parametri forniti"));
+    private void tooManyArguments(CommandSender commandSender, String function) {
+        commandSender.sendMessage(errorMessage("Troppi parametri forniti a " + function));
         commandSender.sendMessage(command.getUsage());
+    }
+
+    private void handleReloadGuis(CommandSender commandSender) {
+        aresonSomnium.getGuiManager().fetchAllFromDB();
+        commandSender.sendMessage(successMessage("Tutte le GUI ricaricate dal DB"));
     }
 
     private void handleEditGui(CommandSender commandSender, String guiName) {

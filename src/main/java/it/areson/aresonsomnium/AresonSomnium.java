@@ -5,7 +5,7 @@ import it.areson.aresonsomnium.commands.admin.SomniumAdminCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumTestCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.entities.SomniumPlayerManager;
-import it.areson.aresonsomnium.listeners.CustomGuiEventsLitener;
+import it.areson.aresonsomnium.listeners.CustomGuiEventsListener;
 import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
 import it.areson.aresonsomnium.shops.GuiManager;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
@@ -22,7 +22,7 @@ public class AresonSomnium extends JavaPlugin {
     private SomniumPlayerManager somniumPlayerManager;
     private GuiManager guiManager;
     private SomniumPlayerDBEvents playerDBEvents;
-    private CustomGuiEventsLitener customGuiEventsLitener;
+    private CustomGuiEventsListener customGuiEventsListener;
     private FileManager dataFile;
 
     @Override
@@ -70,10 +70,10 @@ public class AresonSomnium extends JavaPlugin {
 
     private void initAllEvents() {
         playerDBEvents = new SomniumPlayerDBEvents(this);
-        customGuiEventsLitener = new CustomGuiEventsLitener(this, guiManager);
+        customGuiEventsListener = new CustomGuiEventsListener(this, guiManager);
 
         playerDBEvents.registerEvents();
-        customGuiEventsLitener.registerEvents();
+        customGuiEventsListener.registerEvents();
     }
 
     public SomniumPlayerManager getSomniumPlayerManager() {
