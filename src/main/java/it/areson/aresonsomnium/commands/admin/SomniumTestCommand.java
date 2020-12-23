@@ -1,9 +1,12 @@
 package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
+import it.areson.aresonsomnium.loadbalancer.LoadBalancer;
+import it.areson.aresonsomnium.loadbalancer.SpawnEntityJob;
 import it.areson.aresonsomnium.shops.CustomGUI;
 import it.areson.aresonsomnium.shops.GuiManager;
 import org.bukkit.command.*;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
@@ -45,8 +48,10 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                     case "serialize":
                     case "deserialize":
                     case "openpermanentgui":
+                    case "summonPanico":
                         notEnoughArguments(commandSender, command);
                         break;
+
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
                 }
@@ -62,6 +67,12 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                     case "openpermanentgui":
                         openPermanentGuiHandler(commandSender, args[1]);
                         break;
+                    case "summonPanico":
+                        int n = Integer.parseInt(args[1]);
+                        LoadBalancer loadBalancer = new LoadBalancer("spawn");
+                        for (int i = 0; i < n; i++) {
+                            loadBalancer.addJob(new SpawnEntityJob(((Player) commandSender).getLocation(), EntityType.SKELETON));
+                        }
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
                 }
