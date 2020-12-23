@@ -22,7 +22,7 @@ import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
 
 public class CustomGUI extends MySQLObject {
 
-    public static String tableQuery = "create table %s (" +
+    public static String tableQuery = "create table if not exists %s (" +
             "guiName varchar(255) not null primary key,\n" +
             "guiTitle varchar(255) not null,\n" +
             "guiObjects text not null\n" +
