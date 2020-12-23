@@ -57,11 +57,11 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                             Bukkit.getScheduler().scheduleSyncDelayedTask(
                                     aresonSomnium,
                                     () -> {
-                                        for (int j = 0; j < 1000; j++) {
+                                        for (int j = 0; j < 500; j++) {
                                             player.getWorld().spawnEntity(clone, EntityType.SKELETON);
                                         }
                                     },
-                                    i*10
+                                    i*20
                             );
                         }
                         break;
