@@ -9,6 +9,7 @@ import org.bukkit.inventory.Inventory;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.TreeMap;
 
@@ -103,6 +104,7 @@ public class GuiManager {
     }
 
     public boolean isViewingCustomGui(Player player) {
+        System.out.println(Arrays.toString(openedGuis.descendingKeySet().toArray(new Player[0])));
         return openedGuis.containsKey(player);
     }
 

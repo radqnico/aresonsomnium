@@ -13,7 +13,7 @@ public abstract class MySQLObject {
         this.tableName = tableName;
     }
 
-    protected void createTableIfNotExists(String query){
+    protected void createTableIfNotExists(String query) {
         try {
             Connection connection = mySqlDBConnection.connect();
             int update = mySqlDBConnection.update(connection, query);
