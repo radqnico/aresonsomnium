@@ -74,6 +74,7 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                             loadBalancer.addJob(new SpawnEntityJob(((Player) commandSender).getLocation(), EntityType.SKELETON));
                         }
                         loadBalancer.start(aresonSomnium);
+                        break;
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
                 }
