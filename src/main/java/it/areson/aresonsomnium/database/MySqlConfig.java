@@ -8,5 +8,6 @@ public class MySqlConfig {
     public static String DB = "aresonSomnium";
 
     public static String PLAYER_TABLE_NAME = "somniumPlayer";
+    public static String GUIS_TABLE_NAME = "somniumGuis";
 
 }

@@ -15,6 +15,12 @@ import java.time.LocalDateTime;
 public class SomniumPlayer extends MySQLObject {
 
     public static long DEFAULT_TIME_PLAYED = 0L;
+    public static String tableQuery = "create table if not exists %s\n" +
+            "(\n" +
+            "    playerName varchar(255) not null\n" +
+            "        primary key,\n" +
+            "    timePlayed bigint default " + DEFAULT_TIME_PLAYED + " null\n" +
+            ");";
 
     private final Player player;
     private LocalDateTime timeJoined;
@@ -52,29 +58,8 @@ public class SomniumPlayer extends MySQLObject {
     }
 
     @Override
-    public void createTableIfNotExists() {
-        String query = "create table if not exists " + tableName + "\n" +
-                "(\n" +
-                "    playerName varchar(255) not null\n" +
-                "        primary key,\n" +
-                "    timePlayed bigint default " + DEFAULT_TIME_PLAYED + " null\n" +
-                ");";
-        try {
-            Connection connection = mySqlDBConnection.connect();
-            int update = mySqlDBConnection.update(connection, query);
-            if (update < 0) {
-                mySqlDBConnection.getLogger().warning("Creazione tabella '" + tableName + "' non riuscita.");
-            }
-            connection.close();
-        } catch (SQLException exception) {
-            mySqlDBConnection.getLogger().severe("Impossibile connettersi per creare '" + tableName + "'");
-            mySqlDBConnection.printSqlExceptionDetails(exception);
-        }
-    }
-
-    @Override
     public void saveToDB() {
-        createTableIfNotExists();
+        createTableIfNotExists(String.format(tableQuery, tableName));
         String query = getSaveQuery();
         try {
             Connection connection = mySqlDBConnection.connect();
@@ -92,8 +77,8 @@ public class SomniumPlayer extends MySQLObject {
     }
 
     @Override
-    public void updateFromDB() {
-        createTableIfNotExists();
+    public boolean updateFromDB() {
+        createTableIfNotExists(String.format(tableQuery, tableName));
         String query = String.format("select * from somniumPlayer where playerName='%s'",
                 getPlayerName());
         try {
@@ -103,6 +88,7 @@ public class SomniumPlayer extends MySQLObject {
                 // Presente
                 setFromResultSet(resultSet);
                 mySqlDBConnection.getLogger().info("Dati del giocatore '" + getPlayerName() + "' recuperati dal DB");
+                return true;
             } else {
                 // Non presente
                 mySqlDBConnection.getLogger().warning("Giocatore '" + getPlayerName() + "' non presente sul DB");
@@ -112,6 +98,7 @@ public class SomniumPlayer extends MySQLObject {
             mySqlDBConnection.getLogger().severe("Impossibile connettersi per recuperare il giocatore '" + getPlayerName() + "'");
             mySqlDBConnection.printSqlExceptionDetails(exception);
         }
+        return false;
     }
 
     public String getSaveQuery() {

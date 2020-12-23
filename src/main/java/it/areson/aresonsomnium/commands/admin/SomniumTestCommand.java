@@ -1,6 +1,8 @@
 package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
+import it.areson.aresonsomnium.shops.CustomGUI;
+import it.areson.aresonsomnium.shops.GuiManager;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -18,7 +20,7 @@ import static it.areson.aresonsomnium.utils.MessageUtils.*;
 public class SomniumTestCommand implements CommandExecutor, TabCompleter {
 
     private final PluginCommand command;
-    private final String[] subCommands = new String[]{"serialize", "deserialize"};
+    private final String[] subCommands = new String[]{"serialize", "deserialize", "openPermanentGui"};
     private AresonSomnium aresonSomnium;
 
     public SomniumTestCommand(AresonSomnium aresonSomnium) {
@@ -42,6 +44,7 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                 switch (args[0].toLowerCase()) {
                     case "serialize":
                     case "deserialize":
+                    case "openpermanentgui":
                         notEnoughArguments(commandSender, command);
                         break;
                     default:
@@ -56,6 +59,9 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                     case "deserialize":
                         itemStackDeserializationHandler(commandSender, args[1]);
                         break;
+                    case "openpermanentgui":
+                        openPermanentGuiHandler(commandSender, args[1]);
+                        break;
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
                 }
@@ -64,11 +70,21 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
+    private void openPermanentGuiHandler(CommandSender commandSender, String guiName) {
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
+            GuiManager guiManager = aresonSomnium.getGuiManager();
+            CustomGUI permanentGui = guiManager.getPermanentGui(guiName);
+            player.openInventory(permanentGui.createInventory());
+        } else {
+            commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
+        }
+    }
+
     private void itemStackDeserializationHandler(CommandSender commandSender, String path) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             byte[] bytes = aresonSomnium.getDataFile().readBytes(path);
-            System.out.println("BYTES: " + Arrays.toString(bytes));
             ItemStack itemStack = ItemStack.deserializeBytes(bytes);
             HashMap<Integer, ItemStack> ignore = player.getInventory().addItem(itemStack);
             if (!ignore.isEmpty()) {
@@ -85,8 +101,7 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
             ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
             try {
                 byte[] bytes = itemInMainHand.serializeAsBytes();
-                player.sendMessage(successMessage("Serializzazione completata"));
-                player.sendMessage(Arrays.toString(bytes));
+                player.sendMessage(successMessage("Serializzazione di '" + path + "' completata"));
                 aresonSomnium.getDataFile().writeBytes(path, bytes);
             } catch (IllegalArgumentException exception) {
                 player.sendMessage(errorMessage("Errore: " + exception.getMessage()));
