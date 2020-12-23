@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -47,7 +48,7 @@ public class CustomGUI extends MySQLObject {
     }
 
     public Inventory createInventory() {
-        Inventory inventory = Bukkit.createInventory(null, 54, title);
+        Inventory inventory = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', title));
         for (Map.Entry<Integer, ItemStack> entry : items.entrySet()) {
             Integer key = entry.getKey();
             ItemStack value = entry.getValue();
@@ -135,10 +136,14 @@ public class CustomGUI extends MySQLObject {
         Gson gson = new Gson();
         HashMap<String, String> serializedItems = gson.fromJson(guiItems, type);
         for (Map.Entry<String, String> entry : serializedItems.entrySet()) {
-            items.put(
-                    Integer.parseInt(entry.getKey()),
-                    ItemStack.deserializeBytes(Base64.getDecoder().decode(entry.getValue()))
-            );
+            try {
+                items.put(
+                        Integer.parseInt(entry.getKey()),
+                        ItemStack.deserializeBytes(Base64.getDecoder().decode(entry.getValue()))
+                );
+            } catch (Exception exception) {
+                Bukkit.getLogger().severe("Oggetto invalido trovato nella GUI '" + title + "' : " + entry.toString());
+            }
         }
     }
 }

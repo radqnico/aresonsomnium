@@ -1,7 +1,8 @@
-package it.areson.aresonsomnium.entities;
+package it.areson.aresonsomnium.players;
 
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
+import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.exceptions.CantAffordException;
 import org.bukkit.entity.Player;

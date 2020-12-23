@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.entities;
+package it.areson.aresonsomnium.players;
 
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.utils.PlayerComparator;

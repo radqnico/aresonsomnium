@@ -7,12 +7,18 @@ commands:
   somniumadmin:
     description: "AresonSomnium admin command"
     permission: aresonsomnium.admin
-    usage: /<command> <function> [args...]
+    usage: /somniumadmin <function> [args...]
   somniumtest:
     description: "AresonSomnium testing command"
     permission: aresonsomnium.admin
-    usage: /<command> <function> [args...]
+    usage: /somniumtest <function> [args...]
+  opengui:
+    description: "Open a GUI"
+    permission: aresonsomnium.player
+    usage: /opengui <guiName>
 
 permissions:
   aresonsomnium.admin:
     default: op
+  aresonsomnium.player:
+    default: true

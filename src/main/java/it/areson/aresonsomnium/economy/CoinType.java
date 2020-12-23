@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.entities;
+package it.areson.aresonsomnium.economy;
 
 public enum CoinType {
     BASIC("Basic"),

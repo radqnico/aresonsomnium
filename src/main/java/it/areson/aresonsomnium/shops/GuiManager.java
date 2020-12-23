@@ -1,6 +1,7 @@
 package it.areson.aresonsomnium.shops;
 
 import it.areson.aresonsomnium.database.MySqlDBConnection;
+import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.utils.PlayerComparator;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -15,12 +16,15 @@ public class GuiManager {
 
     private final TreeMap<String, CustomGUI> guis;
     private final TreeMap<Player, String> editingGuis;
+    private final TreeMap<Player, String> openedGuis;
     private final MySqlDBConnection mySqlDBConnection;
     private final String tableName;
 
     public GuiManager(MySqlDBConnection connection, String tableName) {
         this.guis = new TreeMap<>();
-        this.editingGuis = new TreeMap<>(new PlayerComparator());
+        PlayerComparator playerComparator = new PlayerComparator();
+        this.editingGuis = new TreeMap<>(playerComparator);
+        this.openedGuis = new TreeMap<>(playerComparator);
         this.mySqlDBConnection = connection;
         this.tableName = tableName;
         fetchAllFromDB();
@@ -84,7 +88,25 @@ public class GuiManager {
         return false;
     }
 
-    public boolean isEditing(Player player) {
+    public void openGuiToPlayer(Player player, String guiName) {
+        CustomGUI customGUI = guis.get(guiName);
+        if (Objects.nonNull(customGUI)) {
+            player.openInventory(customGUI.createInventory());
+            openedGuis.put(player, guiName);
+        } else {
+            player.sendMessage(MessageUtils.errorMessage("L'interfaccia '" + guiName + "' non esiste"));
+        }
+    }
+
+    public void playerCloseGui(Player player) {
+        openedGuis.remove(player);
+    }
+
+    public boolean isViewingCustomGui(Player player) {
+        return openedGuis.containsKey(player);
+    }
+
+    public boolean isEditingCustomGui(Player player) {
         return editingGuis.containsKey(player);
     }
 }

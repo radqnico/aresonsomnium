@@ -1,7 +1,7 @@
 package it.areson.aresonsomnium.listeners;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.entities.SomniumPlayerManager;
+import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;

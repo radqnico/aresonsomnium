@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.commands.admin;
+package it.areson.aresonsomnium.commands.player;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
@@ -17,22 +17,23 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static it.areson.aresonsomnium.utils.MessageUtils.errorMessage;
+
 
 @SuppressWarnings("NullableProblems")
-public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
+public class OpenGuiCommand implements CommandExecutor, TabCompleter {
 
     private final PluginCommand command;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createGui", "editGui", "reloadGuis"};
-    private AresonSomnium aresonSomnium;
+    private final AresonSomnium aresonSomnium;
 
-    public SomniumAdminCommand(AresonSomnium aresonSomnium) {
+    public OpenGuiCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
-        command = this.aresonSomnium.getCommand("SomniumAdmin");
+        command = this.aresonSomnium.getCommand("OpenGui");
         if (command != null) {
             command.setExecutor(this);
             command.setTabCompleter(this);
         } else {
-            this.aresonSomnium.getLogger().warning("Comando 'somniumadmin' non dichiarato");
+            this.aresonSomnium.getLogger().warning("Comando 'OpenGui' non dichiarato");
         }
     }
 
@@ -43,68 +44,26 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 notEnoughArguments(commandSender);
                 break;
             case 1:
-                switch (args[0].toLowerCase()) {
-                    case "stats":
-                    case "setcoins":
-                    case "creategui":
-                    case "editgui":
-                        notEnoughArguments(commandSender);
-                        break;
-                    case "listplayers":
-                        handleListPlayers(commandSender);
-                        break;
-                    case "reloadguis":
-                        handleReloadGuis(commandSender);
-                        break;
-                }
+                handleOpenGui(commandSender, args[0]);
                 break;
-            case 2:
-                switch (args[0].toLowerCase()) {
-                    case "stats":
-                        handleStatsCommand(commandSender, args[1]);
-                        break;
-                    case "editgui":
-                        handleEditGui(commandSender, args[1]);
-                        break;
-                    case "listplayers":
-                        tooManyArguments(commandSender, "listPlayers: 2");
-                        break;
-                    case "setcoins":
-                    case "creategui":
-                        notEnoughArguments(commandSender);
-                        break;
-                }
-                break;
-            case 3:
-                switch (args[0].toLowerCase()) {
-                    case "setcoins":
-                        notEnoughArguments(commandSender);
-                        break;
-                    case "creategui":
-                        handleCreateGui(commandSender, args[1], args[2].replaceAll("_", " "));
-                        break;
-                    case "stats":
-                    case "listplayers":
-                    case "editgui":
-                        tooManyArguments(commandSender, "editGui: 3");
-                        break;
-                }
-                break;
-            case 4:
-                switch (args[0].toLowerCase()) {
-                    case "setcoins":
-                        handleSetCoins(commandSender, args[1], args[2], args[3]);
-                        break;
-                    case "stats":
-                    case "listplayers":
-                    case "creategui":
-                    case "editgui":
-                        tooManyArguments(commandSender, "editGui: 4");
-                        break;
-                }
-                break;
+            default:
+                tooManyArguments(commandSender, "");
         }
         return true;
+    }
+
+    private void handleOpenGui(CommandSender commandSender, String guiName) {
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
+            GuiManager guiManager = aresonSomnium.getGuiManager();
+            if (guiManager.isPermanent(guiName)) {
+                guiManager.openGuiToPlayer(player, guiName);
+            } else {
+                player.sendMessage("La GUI richiesta non esiste");
+            }
+        } else {
+            commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
+        }
     }
 
 
@@ -112,39 +71,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         List<String> suggestions = new ArrayList<>();
         if (strings.length == 1) {
-            StringUtil.copyPartialMatches(strings[0], Arrays.asList(subCommands), suggestions);
-        }
-        if (strings.length == 2) {
-            switch (strings[0].toLowerCase()) {
-                case "stats":
-                case "setcoins":
-                    StringUtil.copyPartialMatches(
-                            strings[1],
-                            aresonSomnium.getServer().getOnlinePlayers().stream()
-                                    .map(HumanEntity::getName)
-                                    .collect(Collectors.toList()),
-                            suggestions
-                    );
-                    break;
-                case "editgui":
-                    StringUtil.copyPartialMatches(
-                            strings[1],
-                            aresonSomnium.getGuiManager().getGuis().keySet(),
-                            suggestions
-                    );
-                    break;
-            }
-        }
-        if (strings.length == 3) {
-            switch (strings[0].toLowerCase()) {
-                case "setcoins":
-                    StringUtil.copyPartialMatches(
-                            strings[2],
-                            Arrays.stream(CoinType.values()).map(value -> value.name().toLowerCase()).collect(Collectors.toList()),
-                            suggestions
-                    );
-                    break;
-            }
+            StringUtil.copyPartialMatches(strings[0], aresonSomnium.getGuiManager().getGuis().keySet(), suggestions);
         }
         return suggestions;
     }
