@@ -23,7 +23,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final PluginCommand command;
     private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createGui", "editGui", "reloadGuis"};
-    private AresonSomnium aresonSomnium;
+    private final AresonSomnium aresonSomnium;
 
     public SomniumAdminCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
