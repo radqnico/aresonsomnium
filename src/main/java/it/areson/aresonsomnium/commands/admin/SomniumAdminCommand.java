@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static it.areson.aresonsomnium.utils.MessageUtils.errorMessage;
-
 
 @SuppressWarnings("NullableProblems")
 public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
@@ -62,41 +60,41 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "stats":
                         handleStatsCommand(commandSender, args[1]);
                         break;
-                    case "setcoins":
-                    case "creategui":
-                        notEnoughArguments(commandSender);
-                        break;
                     case "editgui":
                         handleEditGui(commandSender, args[1]);
                         break;
                     case "listplayers":
                         tooManyArguments(commandSender);
                         break;
+                    case "setcoins":
+                    case "creategui":
+                        notEnoughArguments(commandSender);
+                        break;
                 }
             case 3:
                 switch (args[0].toLowerCase()) {
-                    case "stats":
-                    case "listplayers":
-                    case "editgui":
-                        tooManyArguments(commandSender);
-                        break;
                     case "setcoins":
                         notEnoughArguments(commandSender);
                         break;
                     case "creategui":
-                        handleCreateGui(commandSender, args[1], args[2]);
+                        handleCreateGui(commandSender, args[1], args[2].replaceAll("_", " "));
+                        break;
+                    case "stats":
+                    case "listplayers":
+                    case "editgui":
+                        tooManyArguments(commandSender);
                         break;
                 }
             case 4:
                 switch (args[0].toLowerCase()) {
+                    case "setcoins":
+                        handleSetCoins(commandSender, args[1], args[2], args[3]);
+                        break;
                     case "stats":
                     case "listplayers":
                     case "creategui":
                     case "editgui":
                         tooManyArguments(commandSender);
-                        break;
-                    case "setcoins":
-                        handleSetCoins(commandSender, args[1], args[2], args[3].replaceAll("_", " "));
                         break;
                 }
         }

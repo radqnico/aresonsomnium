@@ -76,7 +76,7 @@ public class GuiManager {
     public boolean endEditGui(Player player, Inventory inventory) {
         String guiName = editingGuis.remove(player);
         if (Objects.nonNull(guiName)) {
-            CustomGUI customGUI = guis.remove(guiName);
+            CustomGUI customGUI = guis.get(guiName);
             customGUI.updateFromInventory(inventory);
             customGUI.saveToDB();
             return true;
