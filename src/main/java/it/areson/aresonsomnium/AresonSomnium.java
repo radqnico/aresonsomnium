@@ -40,7 +40,6 @@ public class AresonSomnium extends JavaPlugin {
 
         // Events
         initAllEvents();
-        registerAllEvents();
 
         // Commands
         registerCommands();
@@ -72,10 +71,9 @@ public class AresonSomnium extends JavaPlugin {
     private void initAllEvents() {
         playerDBEvents = new SomniumPlayerDBEvents(this);
         customGuiEventsLitener = new CustomGuiEventsLitener(this, guiManager);
-    }
 
-    private void registerAllEvents() {
         playerDBEvents.registerEvents();
+        customGuiEventsLitener.registerEvents();
     }
 
     public SomniumPlayerManager getSomniumPlayerManager() {
