@@ -96,7 +96,7 @@ public class CustomGUI extends MySQLObject {
     @Override
     public boolean updateFromDB() {
         createTableIfNotExists(String.format(tableQuery, tableName));
-        String query = "select * from somniumPlayer where guiName='" + name + "'";
+        String query = "select * from somniumGuis where guiName='" + name + "'";
         try {
             Connection connection = mySqlDBConnection.connect();
             ResultSet resultSet = mySqlDBConnection.select(connection, query);
