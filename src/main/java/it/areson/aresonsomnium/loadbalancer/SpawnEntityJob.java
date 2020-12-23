@@ -3,6 +3,7 @@ package it.areson.aresonsomnium.loadbalancer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Skeleton;
 
 public class SpawnEntityJob implements Job {
 
@@ -16,6 +17,6 @@ public class SpawnEntityJob implements Job {
 
     @Override
     public void compute() {
-        location.getWorld().spawnEntity(location, entityType);
+        Skeleton skeleton = (Skeleton) location.getWorld().spawnEntity(location, entityType);
     }
 }

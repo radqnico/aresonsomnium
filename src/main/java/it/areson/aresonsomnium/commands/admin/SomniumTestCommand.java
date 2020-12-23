@@ -5,6 +5,7 @@ import it.areson.aresonsomnium.loadbalancer.LoadBalancer;
 import it.areson.aresonsomnium.loadbalancer.SpawnEntityJob;
 import it.areson.aresonsomnium.shops.CustomGUI;
 import it.areson.aresonsomnium.shops.GuiManager;
+import org.bukkit.Location;
 import org.bukkit.command.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -68,12 +69,14 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                         openPermanentGuiHandler(commandSender, args[1]);
                         break;
                     case "summonpanico":
-                        int n = Integer.parseInt(args[1]);
                         LoadBalancer loadBalancer = new LoadBalancer("spawn");
-                        for (int i = 0; i < n; i++) {
-                            loadBalancer.addJob(new SpawnEntityJob(((Player) commandSender).getLocation(), EntityType.SKELETON));
+                        Location clone = ((Player) commandSender).getLocation().clone();
+                        for (int i = 0; i < 10000; i++) {
+                            loadBalancer.addJob(new SpawnEntityJob(clone, EntityType.SKELETON));
                         }
-                        loadBalancer.start(aresonSomnium);
+                        loadBalancer.start(aresonSomnium).whenComplete((ticks, ex) -> {
+                            commandSender.sendMessage("Ci ho messo " + ticks + " ticks");
+                        });
                         break;
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
