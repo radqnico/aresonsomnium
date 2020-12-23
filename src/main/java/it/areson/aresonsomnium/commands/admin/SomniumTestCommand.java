@@ -1,13 +1,9 @@
 package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.loadbalancer.LoadBalancer;
 import it.areson.aresonsomnium.shops.CustomGUI;
 import it.areson.aresonsomnium.shops.GuiManager;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.*;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
@@ -24,7 +20,7 @@ import static it.areson.aresonsomnium.utils.MessageUtils.*;
 public class SomniumTestCommand implements CommandExecutor, TabCompleter {
 
     private final PluginCommand command;
-    private final String[] subCommands = new String[]{"serialize", "deserialize", "openPermanentGui", "summonPanico"};
+    private final String[] subCommands = new String[]{"serialize", "deserialize", "openPermanentGui"};
     private AresonSomnium aresonSomnium;
 
     public SomniumTestCommand(AresonSomnium aresonSomnium) {
@@ -49,24 +45,9 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                     case "serialize":
                     case "deserialize":
                     case "openpermanentgui":
-                    case "summonpanico":
-                        LoadBalancer loadBalancer = new LoadBalancer("spawn");
-                        Player player = (Player) commandSender;
-                        Location clone = (player).getLocation().clone();
-                        for (int i = 0; i < 250; i++) {
-                            int finalI = i;
-                            Bukkit.getScheduler().scheduleSyncDelayedTask(
-                                    aresonSomnium,
-                                    () -> {
-                                        for (int j = 0; j < 100; j++) {
-                                            player.getWorld().spawnEntity(clone, EntityType.ZOMBIE);
-                                        }
-                                        Bukkit.broadcastMessage(finalI+"/"+50);
-                                    },
-                                    i*20
-                            );
-                        }
+                        notEnoughArguments(commandSender, command);
                         break;
+
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
                 }
