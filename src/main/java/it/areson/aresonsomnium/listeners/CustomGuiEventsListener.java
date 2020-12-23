@@ -26,8 +26,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             } else {
                 aresonSomnium.getLogger().info(MessageUtils.warningMessage("GUI modificata da '" + player.getName() + "' NON salvata DB"));
             }
-        }
-        if(guiManager.isViewingCustomGui(player)){
+        } else if (guiManager.isViewingCustomGui(player)) {
             guiManager.playerCloseGui(player);
         }
     }
@@ -37,6 +36,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         Player player = (Player) event.getWhoClicked();
         GuiManager guiManager = aresonSomnium.getGuiManager();
         if (guiManager.isViewingCustomGui(player)) {
+            System.out.println("Dentro");
             event.setCancelled(true);
         }
     }
