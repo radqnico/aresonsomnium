@@ -74,6 +74,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         notEnoughArguments(commandSender);
                         break;
                 }
+                break;
             case 3:
                 switch (args[0].toLowerCase()) {
                     case "setcoins":
@@ -88,6 +89,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         tooManyArguments(commandSender, "editGui: 3");
                         break;
                 }
+                break;
             case 4:
                 switch (args[0].toLowerCase()) {
                     case "setcoins":
@@ -100,6 +102,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         tooManyArguments(commandSender, "editGui: 4");
                         break;
                 }
+                break;
         }
         return true;
     }
