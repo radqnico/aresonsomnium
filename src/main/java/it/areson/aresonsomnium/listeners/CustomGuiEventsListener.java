@@ -7,6 +7,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
+
+import java.util.Objects;
 
 public class CustomGuiEventsListener extends GeneralEventListener {
 
@@ -36,7 +39,10 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         Player player = (Player) event.getWhoClicked();
         GuiManager guiManager = aresonSomnium.getGuiManager();
         if (guiManager.isViewingCustomGui(player)) {
-            System.out.println("Dentro");
+            Inventory clickedInventory = event.getClickedInventory();
+            if(Objects.nonNull(clickedInventory)) {
+                System.out.println(clickedInventory.toString());
+            }
             event.setCancelled(true);
         }
     }

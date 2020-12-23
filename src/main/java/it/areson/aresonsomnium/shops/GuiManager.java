@@ -104,7 +104,6 @@ public class GuiManager {
     }
 
     public boolean isViewingCustomGui(Player player) {
-        System.out.println(Arrays.toString(openedGuis.descendingKeySet().toArray(new Player[0])));
         return openedGuis.containsKey(player);
     }
 
