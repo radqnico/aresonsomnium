@@ -88,7 +88,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         tooManyArguments(commandSender);
                         break;
                     case "setcoins":
-                        handleSetCoins(commandSender, args[1], args[2], args[3]);
+                        handleSetCoins(commandSender, args[1], args[2], args[3].replaceAll("_", " "));
                         break;
                 }
         }

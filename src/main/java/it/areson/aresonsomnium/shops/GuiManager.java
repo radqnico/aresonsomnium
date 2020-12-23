@@ -60,9 +60,13 @@ public class GuiManager {
 
     public CustomGUI createNewGui(String name, String guiTitle) {
         if (permanentGuis.containsKey(name)) {
-            return volatileGuis.put(name, permanentGuis.get(name));
+            CustomGUI customGUI = permanentGuis.get(name);
+            volatileGuis.put(name, customGUI);
+            return customGUI;
         }
-        return volatileGuis.put(name, new CustomGUI(name, guiTitle, mySqlDBConnection));
+        CustomGUI customGUI = new CustomGUI(name, guiTitle, mySqlDBConnection);
+        volatileGuis.put(name, customGUI);
+        return customGUI;
     }
 
     public void beginEditGui(Player player, String guiName) {
@@ -74,11 +78,8 @@ public class GuiManager {
         if (Objects.nonNull(guiName)) {
             CustomGUI customGUI = volatileGuis.remove(guiName);
             customGUI.updateFromInventory(inventory);
-            CustomGUI put = permanentGuis.put(guiName, customGUI);
-            if (Objects.nonNull(put)) {
-                put.saveToDB();
-                return true;
-            }
+            customGUI.saveToDB();
+            return true;
         }
         return false;
     }
