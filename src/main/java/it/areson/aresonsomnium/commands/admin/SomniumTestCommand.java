@@ -53,15 +53,15 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                         LoadBalancer loadBalancer = new LoadBalancer("spawn");
                         Player player = (Player) commandSender;
                         Location clone = (player).getLocation().clone();
-                        for (int i = 0; i < 100; i++) {
+                        for (int i = 0; i < 50; i++) {
                             Bukkit.getScheduler().scheduleSyncDelayedTask(
                                     aresonSomnium,
                                     () -> {
-                                        for (int j = 0; j < 100; j++) {
+                                        for (int j = 0; j < 1000; j++) {
                                             player.getWorld().spawnEntity(clone, EntityType.SKELETON);
                                         }
                                     },
-                                    i*20
+                                    i*10
                             );
                         }
                         break;
