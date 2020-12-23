@@ -2,9 +2,9 @@ package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.loadbalancer.LoadBalancer;
-import it.areson.aresonsomnium.loadbalancer.SpawnEntityJob;
 import it.areson.aresonsomnium.shops.CustomGUI;
 import it.areson.aresonsomnium.shops.GuiManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.*;
 import org.bukkit.entity.EntityType;
@@ -50,9 +50,21 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                     case "deserialize":
                     case "openpermanentgui":
                     case "summonpanico":
-                        notEnoughArguments(commandSender, command);
+                        LoadBalancer loadBalancer = new LoadBalancer("spawn");
+                        Player player = (Player) commandSender;
+                        Location clone = (player).getLocation().clone();
+                        for (int i = 0; i < 100; i++) {
+                            Bukkit.getScheduler().scheduleSyncDelayedTask(
+                                    aresonSomnium,
+                                    () -> {
+                                        for (int j = 0; j < 100; j++) {
+                                            player.getWorld().spawnEntity(clone, EntityType.SKELETON);
+                                        }
+                                    },
+                                    i*20
+                            );
+                        }
                         break;
-
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
                 }
@@ -67,16 +79,6 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                         break;
                     case "openpermanentgui":
                         openPermanentGuiHandler(commandSender, args[1]);
-                        break;
-                    case "summonpanico":
-                        LoadBalancer loadBalancer = new LoadBalancer("spawn");
-                        Location clone = ((Player) commandSender).getLocation().clone();
-                        for (int i = 0; i < 10000; i++) {
-                            loadBalancer.addJob(new SpawnEntityJob(clone, EntityType.SKELETON));
-                        }
-                        loadBalancer.start(aresonSomnium).whenComplete((ticks, ex) -> {
-                            commandSender.sendMessage("Ci ho messo " + ticks + " ticks");
-                        });
                         break;
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
