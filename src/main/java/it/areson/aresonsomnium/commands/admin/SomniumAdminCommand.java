@@ -17,12 +17,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static it.areson.aresonsomnium.utils.MessageUtils.errorMessage;
+
 
 @SuppressWarnings("NullableProblems")
 public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final PluginCommand command;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createGui"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createGui", "editGui"};
     private AresonSomnium aresonSomnium;
 
     public SomniumAdminCommand(AresonSomnium aresonSomnium) {
@@ -47,6 +49,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "stats":
                     case "setcoins":
                     case "creategui":
+                    case "editgui":
                         notEnoughArguments(commandSender);
                         break;
                     case "listplayers":
@@ -63,6 +66,9 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "creategui":
                         notEnoughArguments(commandSender);
                         break;
+                    case "editgui":
+                        handleEditGui(commandSender, args[1]);
+                        break;
                     case "listplayers":
                         tooManyArguments(commandSender);
                         break;
@@ -71,6 +77,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 switch (args[0].toLowerCase()) {
                     case "stats":
                     case "listplayers":
+                    case "editgui":
                         tooManyArguments(commandSender);
                         break;
                     case "setcoins":
@@ -85,6 +92,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "stats":
                     case "listplayers":
                     case "creategui":
+                    case "editgui":
                         tooManyArguments(commandSender);
                         break;
                     case "setcoins":
@@ -114,6 +122,13 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                             suggestions
                     );
                     break;
+                case "editgui":
+                    StringUtil.copyPartialMatches(
+                            strings[1],
+                            aresonSomnium.getGuiManager().getGuis().keySet(),
+                            suggestions
+                    );
+                    break;
             }
         }
         if (strings.length == 3) {
@@ -138,6 +153,22 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
     private void tooManyArguments(CommandSender commandSender) {
         commandSender.sendMessage(errorMessage("Troppi parametri forniti"));
         commandSender.sendMessage(command.getUsage());
+    }
+
+    private void handleEditGui(CommandSender commandSender, String guiName) {
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
+            GuiManager guiManager = aresonSomnium.getGuiManager();
+            if (guiManager.isPermanent(guiName)) {
+                CustomGUI permanentGui = guiManager.getPermanentGui(guiName);
+                player.openInventory(permanentGui.createInventory());
+                guiManager.beginEditGui(player, guiName);
+            } else {
+                player.sendMessage("La GUI richiesta non è una GUI salvata");
+            }
+        } else {
+            commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
+        }
     }
 
     private void handleCreateGui(CommandSender commandSender, String guiName, String guiTitle) {

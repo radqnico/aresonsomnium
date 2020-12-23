@@ -13,19 +13,21 @@ import java.util.TreeMap;
 
 public class GuiManager {
 
-    private final TreeMap<String, CustomGUI> permanentGuis;
-    private final TreeMap<String, CustomGUI> volatileGuis;
+    private final TreeMap<String, CustomGUI> guis;
     private final TreeMap<Player, String> editingGuis;
     private final MySqlDBConnection mySqlDBConnection;
     private final String tableName;
 
     public GuiManager(MySqlDBConnection connection, String tableName) {
-        this.volatileGuis = new TreeMap<>();
-        this.permanentGuis = new TreeMap<>();
+        this.guis = new TreeMap<>();
         this.editingGuis = new TreeMap<>(new PlayerComparator());
         this.mySqlDBConnection = connection;
         this.tableName = tableName;
         fetchAllFromDB();
+    }
+
+    public TreeMap<String, CustomGUI> getGuis() {
+        return guis;
     }
 
     private void fetchAllFromDB() {
@@ -47,25 +49,23 @@ public class GuiManager {
     }
 
     private void addFromResultSet(String guiName, ResultSet resultSet) throws SQLException {
-        permanentGuis.put(guiName, CustomGUI.getFromDB(mySqlDBConnection, guiName));
+        guis.put(guiName, CustomGUI.getFromDB(mySqlDBConnection, guiName));
     }
 
     public boolean isPermanent(String guiName) {
-        return permanentGuis.containsKey(guiName);
+        return guis.containsKey(guiName);
     }
 
     public CustomGUI getPermanentGui(String guiName) {
-        return permanentGuis.get(guiName);
+        return guis.get(guiName);
     }
 
     public CustomGUI createNewGui(String name, String guiTitle) {
-        if (permanentGuis.containsKey(name)) {
-            CustomGUI customGUI = permanentGuis.get(name);
-            volatileGuis.put(name, customGUI);
-            return customGUI;
+        if (guis.containsKey(name)) {
+            return guis.get(name);
         }
         CustomGUI customGUI = new CustomGUI(name, guiTitle, mySqlDBConnection);
-        volatileGuis.put(name, customGUI);
+        guis.put(name, customGUI);
         return customGUI;
     }
 
@@ -76,7 +76,7 @@ public class GuiManager {
     public boolean endEditGui(Player player, Inventory inventory) {
         String guiName = editingGuis.remove(player);
         if (Objects.nonNull(guiName)) {
-            CustomGUI customGUI = volatileGuis.remove(guiName);
+            CustomGUI customGUI = guis.remove(guiName);
             customGUI.updateFromInventory(inventory);
             customGUI.saveToDB();
             return true;
