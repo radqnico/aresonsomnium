@@ -148,9 +148,9 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             Player player = (Player) commandSender;
             player.openInventory(newGui.createInventory());
             guiManager.beginEditGui(player, guiName);
-            message = "GUI '' creata e aperta al giocatore ''";
+            message = "GUI '" + guiName + "' creata e aperta al giocatore '" + player.getName() + "'";
         } else {
-            message = "GUI '' creata";
+            message = "GUI '" + guiName + "' creata";
         }
         commandSender.sendMessage(successMessage(message));
     }

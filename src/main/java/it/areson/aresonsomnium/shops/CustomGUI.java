@@ -95,7 +95,7 @@ public class CustomGUI extends MySQLObject {
         String itemsJson = gson.toJson(serialized);
         return String.format("INSERT INTO %s (guiName, guiTitle, guiItems) " +
                         "values ('%s', '%s', '%s') ON DUPLICATE KEY " +
-                        "UPDATE guiTitle=%s, guiItems=%s",
+                        "UPDATE guiTitle='%s', guiItems='%s'",
                 tableName,
                 name, title, itemsJson,
                 title, itemsJson
