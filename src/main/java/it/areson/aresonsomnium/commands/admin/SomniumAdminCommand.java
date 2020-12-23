@@ -3,6 +3,8 @@ package it.areson.aresonsomnium.commands.admin;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.entities.CoinType;
 import it.areson.aresonsomnium.entities.SomniumPlayer;
+import it.areson.aresonsomnium.shops.CustomGUI;
+import it.areson.aresonsomnium.shops.GuiManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.HumanEntity;
@@ -20,7 +22,7 @@ import java.util.stream.Collectors;
 public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final PluginCommand command;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createGui"};
     private AresonSomnium aresonSomnium;
 
     public SomniumAdminCommand(AresonSomnium aresonSomnium) {
@@ -43,9 +45,8 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             case 1:
                 switch (args[0].toLowerCase()) {
                     case "stats":
-                        notEnoughArguments(commandSender);
-                        break;
-                    case "chengecoins":
+                    case "setcoins":
+                    case "creategui":
                         notEnoughArguments(commandSender);
                         break;
                     case "listplayers":
@@ -58,22 +59,32 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "stats":
                         handleStatsCommand(commandSender, args[1]);
                         break;
-                    case "setCoins":
+                    case "setcoins":
+                    case "creategui":
                         notEnoughArguments(commandSender);
+                        break;
+                    case "listplayers":
+                        tooManyArguments(commandSender);
                         break;
                 }
             case 3:
                 switch (args[0].toLowerCase()) {
                     case "stats":
+                    case "listplayers":
                         tooManyArguments(commandSender);
                         break;
                     case "setcoins":
                         notEnoughArguments(commandSender);
                         break;
+                    case "creategui":
+                        handleCreateGui(commandSender, args[1], args[2]);
+                        break;
                 }
             case 4:
                 switch (args[0].toLowerCase()) {
                     case "stats":
+                    case "listplayers":
+                    case "creategui":
                         tooManyArguments(commandSender);
                         break;
                     case "setcoins":
@@ -83,6 +94,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         }
         return true;
     }
+
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
@@ -126,6 +138,21 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
     private void tooManyArguments(CommandSender commandSender) {
         commandSender.sendMessage(errorMessage("Troppi parametri forniti"));
         commandSender.sendMessage(command.getUsage());
+    }
+
+    private void handleCreateGui(CommandSender commandSender, String guiName, String guiTitle) {
+        GuiManager guiManager = aresonSomnium.getGuiManager();
+        CustomGUI newGui = guiManager.createNewGui(guiName, guiTitle);
+        String message;
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
+            player.openInventory(newGui.createInventory());
+            guiManager.beginEditGui(player, guiName);
+            message = "GUI '' creata e aperta al giocatore ''";
+        } else {
+            message = "GUI '' creata";
+        }
+        commandSender.sendMessage(successMessage(message));
     }
 
     private void handleStatsCommand(CommandSender commandSender, String playerName) {

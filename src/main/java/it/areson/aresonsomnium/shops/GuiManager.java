@@ -1,6 +1,9 @@
 package it.areson.aresonsomnium.shops;
 
 import it.areson.aresonsomnium.database.MySqlDBConnection;
+import it.areson.aresonsomnium.utils.PlayerComparator;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -11,13 +14,15 @@ import java.util.TreeMap;
 public class GuiManager {
 
     private final TreeMap<String, CustomGUI> permanentGuis;
-    private final TreeMap<String, CustomGUI> editingGuis;
+    private final TreeMap<String, CustomGUI> volatileGuis;
+    private final TreeMap<Player, String> editingGuis;
     private final MySqlDBConnection mySqlDBConnection;
     private final String tableName;
 
     public GuiManager(MySqlDBConnection connection, String tableName) {
-        this.editingGuis = new TreeMap<>();
+        this.volatileGuis = new TreeMap<>();
         this.permanentGuis = new TreeMap<>();
+        this.editingGuis = new TreeMap<>(new PlayerComparator());
         this.mySqlDBConnection = connection;
         this.tableName = tableName;
         fetchAllFromDB();
@@ -33,7 +38,6 @@ public class GuiManager {
                 // Presente
                 guiName = resultSet.getString("guiName");
                 addFromResultSet(guiName, resultSet);
-                mySqlDBConnection.getLogger().info("Dati GUI '" + guiName + "' recuperati dal DB");
             }
             connection.close();
         } catch (SQLException exception) {
@@ -50,19 +54,36 @@ public class GuiManager {
         return permanentGuis.containsKey(guiName);
     }
 
-    public boolean isEditing(String guiName) {
-        return editingGuis.containsKey(guiName);
-    }
-
     public CustomGUI getPermanentGui(String guiName) {
         return permanentGuis.get(guiName);
     }
 
-    public CustomGUI createGui(String name, String guiTitle) {
-        CustomGUI fromDB = CustomGUI.getFromDB(mySqlDBConnection, name);
-        if (Objects.nonNull(fromDB)) {
-            return fromDB;
+    public CustomGUI createNewGui(String name, String guiTitle) {
+        if (permanentGuis.containsKey(name)) {
+            return volatileGuis.put(name, permanentGuis.get(name));
         }
-        return editingGuis.put(name, new CustomGUI(name, guiTitle, mySqlDBConnection));
+        return volatileGuis.put(name, new CustomGUI(name, guiTitle, mySqlDBConnection));
+    }
+
+    public void beginEditGui(Player player, String guiName) {
+        editingGuis.put(player, guiName);
+    }
+
+    public boolean endEditGui(Player player, Inventory inventory) {
+        String guiName = editingGuis.get(player);
+        if (Objects.nonNull(guiName)) {
+            CustomGUI customGUI = volatileGuis.remove(guiName);
+            customGUI.updateFromInventory(inventory);
+            CustomGUI put = permanentGuis.put(guiName, customGUI);
+            if (Objects.nonNull(put)) {
+                put.saveToDB();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean someoneEditing() {
+        return !editingGuis.isEmpty();
     }
 }

@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,10 +13,7 @@ import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
@@ -29,8 +27,8 @@ public class CustomGUI extends MySQLObject {
             ");";
 
     private final String name;
-    private String title;
     private final TreeMap<Integer, ItemStack> items;
+    private String title;
 
     public CustomGUI(String name, String title, MySqlDBConnection mySqlDBConnection) {
         super(mySqlDBConnection, GUIS_TABLE_NAME);
@@ -56,6 +54,17 @@ public class CustomGUI extends MySQLObject {
             inventory.setItem(key, value);
         }
         return inventory;
+    }
+
+    public void updateFromInventory(Inventory inventory) {
+        items.clear();
+        int size = inventory.getSize();
+        for (int i = 0; i < size; i++) {
+            ItemStack item = inventory.getItem(i);
+            if (Objects.nonNull(item) && !item.getType().equals(Material.AIR)) {
+                items.put(i, item);
+            }
+        }
     }
 
     @Override
@@ -121,10 +130,11 @@ public class CustomGUI extends MySQLObject {
         this.title = resultSet.getString("guiTitle");
         this.items.clear();
         String guiItems = resultSet.getString("guiItems");
-        Type type = new TypeToken<HashMap<String, String>>(){}.getType();
+        Type type = new TypeToken<HashMap<String, String>>() {
+        }.getType();
         Gson gson = new Gson();
         HashMap<String, String> serializedItems = gson.fromJson(guiItems, type);
-        for (Map.Entry<String,String> entry : serializedItems.entrySet()) {
+        for (Map.Entry<String, String> entry : serializedItems.entrySet()) {
             items.put(
                     Integer.parseInt(entry.getKey()),
                     ItemStack.deserializeBytes(Base64.getDecoder().decode(entry.getValue()))

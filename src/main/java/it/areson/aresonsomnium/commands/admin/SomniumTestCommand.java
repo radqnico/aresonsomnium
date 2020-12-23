@@ -74,8 +74,12 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             GuiManager guiManager = aresonSomnium.getGuiManager();
-            CustomGUI permanentGui = guiManager.getPermanentGui(guiName);
-            player.openInventory(permanentGui.createInventory());
+            if (guiManager.isPermanent(guiName)) {
+                CustomGUI permanentGui = guiManager.getPermanentGui(guiName);
+                player.openInventory(permanentGui.createInventory());
+            } else {
+                player.sendMessage("La GUI richiesta non è una GUI salvata");
+            }
         } else {
             commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
         }
