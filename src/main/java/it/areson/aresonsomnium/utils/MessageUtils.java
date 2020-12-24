@@ -18,15 +18,15 @@ public class MessageUtils {
     }
 
     public static String successMessage(String message) {
-        return ChatColor.GREEN + message;
+        return ChatColor.GREEN + message + ChatColor.RESET;
     }
 
     public static String warningMessage(String message) {
-        return ChatColor.YELLOW + message;
+        return ChatColor.YELLOW + message + ChatColor.RESET;
     }
 
     public static String errorMessage(String message) {
-        return ChatColor.RED + message;
+        return ChatColor.RED + message + ChatColor.RESET;
     }
 
 }

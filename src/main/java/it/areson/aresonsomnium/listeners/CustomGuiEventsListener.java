@@ -32,8 +32,11 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             if (shopManager.endEditGui(player, event.getInventory())) {
                 aresonSomnium.getLogger().info(MessageUtils.successMessage("GUI modificata da '" + player.getName() + "' salvata su DB"));
                 String pricesJSON = editingCustomShop.getPricesJSON();
-                TextComponent textComponent = new TextComponent("Clicca per copiare");
+                TextComponent textComponent = new TextComponent("Clicca questo messaggio per copiare\nOggetti: ");
+                textComponent.addExtra(MessageUtils.successMessage(editingCustomShop.getIndexAndNameJSON()));
+                textComponent.addExtra("\n\nPrezzi:\n");
                 textComponent.addExtra(MessageUtils.successMessage(pricesJSON));
+                textComponent.addExtra("\n\nCopia e incolla solo la parte dei prezzi in /somniumadmin setPrices <nomeShop> <jsonPrezzi>");
                 textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, pricesJSON));
                 player.spigot().sendMessage(textComponent);
             } else {
