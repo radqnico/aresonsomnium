@@ -180,15 +180,20 @@ public class CustomShop extends MySQLObject {
         for (Map.Entry<String, String> entry : serializedPrices.entrySet()) {
             try {
                 int key = Integer.parseInt(entry.getKey());
-                float price = Float.parseFloat(entry.getValue());
                 ShopItem shopItem = items.get(key);
-                if (Objects.nonNull(shopItem)) {
-                    shopItem.setPrice(price);
-                } else {
-                    Bukkit.getLogger().warning("Prezzo non corrispondente a nessun oggetto nello slot '" + key + "' : " + entry.toString());
+                try {
+                    float price = Float.parseFloat(entry.getValue());
+                    if (Objects.nonNull(shopItem)) {
+                        shopItem.setPrice(price);
+                    } else {
+                        Bukkit.getLogger().warning("Prezzo non corrispondente a nessun oggetto nello slot '" + key + "' : " + entry.toString());
+                    }
+                }catch (NumberFormatException exception){
+                    shopItem.setPrice(-1);
+                    Bukkit.getLogger().severe("Prezzo invalido trovato nella GUI '" + title + "' : " + entry.toString());
                 }
-            } catch (Exception exception) {
-                Bukkit.getLogger().severe("Prezzo invalido trovato nella GUI '" + title + "' : " + entry.toString());
+            } catch (NumberFormatException exception) {
+                Bukkit.getLogger().severe("Chiave prezzo invalida nello shop '" + title + "' : " + entry.toString());
                 exception.printStackTrace();
             }
         }
