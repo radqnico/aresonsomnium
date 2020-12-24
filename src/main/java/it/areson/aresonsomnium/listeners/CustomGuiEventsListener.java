@@ -73,7 +73,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                                 int slot = event.getSlot();
                                 Float price = customShop.getPriceOfSlot(slot);
                                 if (Objects.nonNull(price)) {
-                                    handleButItem(player, price, currentItem);
+                                    handleBuyItem(player, CoinType.BASIC, price, currentItem);
                                 } else {
                                     player.sendMessage(MessageUtils.errorMessage("Il prezzo di questo oggetto non e' valido. Segnala il problema allo Staff."));
                                 }
@@ -86,16 +86,19 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         }
     }
 
-    private void handleButItem(Player player, Float price, ItemStack itemStack) {
+    private void handleBuyItem(Player player, CoinType coinType, Float price, ItemStack itemStack) {
         SomniumPlayerManager somniumPlayerManager = aresonSomnium.getSomniumPlayerManager();
         SomniumPlayer somniumPlayer = somniumPlayerManager.getSomniumPlayer(player);
-        if (somniumPlayer.canAfford(CoinType.BASIC, price)) {
+        if (somniumPlayer.canAfford(coinType, price)) {
             if (player.getInventory().addItem(itemStack.clone()).isEmpty()) {
-                somniumPlayer.changeCoins(CoinType.BASIC, -price);
+                somniumPlayer.changeCoins(coinType, -price);
+                player.sendMessage(MessageUtils.successMessage("Oggetto acquistato. Ora hai " + somniumPlayer.getWallet().getBasicCoins() + "" + coinType.getCoinName() + " Coins."));
             } else {
-                player.sendMessage(MessageUtils.errorMessage("Non hai abbastanza " + CoinType.BASIC.getCoinName() + " Coins."));
+                player.sendMessage(MessageUtils.errorMessage("Non hai abbastanza spazio nell'inventario."));
             }
             player.closeInventory();
+        } else {
+            player.sendMessage(MessageUtils.errorMessage("Non hai abbastanza " + coinType.getCoinName() + " Coins."));
         }
     }
 
