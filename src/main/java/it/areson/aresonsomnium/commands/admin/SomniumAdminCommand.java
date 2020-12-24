@@ -171,6 +171,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         if (shopManager.isShop(shopName)) {
             CustomShop permanentShop = shopManager.getShop(shopName);
             permanentShop.setPrices(pricesJson);
+            permanentShop.saveToDB();
             commandSender.sendMessage("Prezzi per lo shop '" + shopName + "' impostati.");
             String isValid = permanentShop.isShopReady() ? successMessage("Lo shop sembra valido.") : warningMessage("Non tutti i prezzi sono corretti.");
             commandSender.sendMessage(isValid);

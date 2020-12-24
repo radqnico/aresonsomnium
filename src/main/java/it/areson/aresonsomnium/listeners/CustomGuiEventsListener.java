@@ -32,12 +32,13 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             if (shopManager.endEditGui(player, event.getInventory())) {
                 aresonSomnium.getLogger().info(MessageUtils.successMessage("GUI modificata da '" + player.getName() + "' salvata su DB"));
                 String pricesJSON = editingCustomShop.getPricesJSON();
-                TextComponent textComponent = new TextComponent("Clicca questo messaggio per copiare\nOggetti:\n");
-                textComponent.addExtra(MessageUtils.successMessage(editingCustomShop.getIndexAndNameJSON()));
+                String indexAndNameJSON = editingCustomShop.getIndexAndNameJSON();
+                TextComponent textComponent = new TextComponent("\nClicca questo messaggio per copiare\nOggetti:\n");
+                textComponent.addExtra(MessageUtils.successMessage(indexAndNameJSON));
                 textComponent.addExtra("\n\nPrezzi:\n");
                 textComponent.addExtra(MessageUtils.successMessage(pricesJSON));
-                textComponent.addExtra("\n\nCopia e incolla solo la parte dei prezzi con\n/somniumadmin setShopPrices <nomeShop> <jsonPrezzi>");
-                textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, pricesJSON));
+                textComponent.addExtra("\n\nCopia e incolla solo la parte dei prezzi con\n/somniumadmin setShopPrices <nomeShop> <jsonPrezzi>\n");
+                textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, indexAndNameJSON + "\n\n-------------\n\n" + pricesJSON));
                 player.spigot().sendMessage(textComponent);
             } else {
                 aresonSomnium.getLogger().info(MessageUtils.warningMessage("GUI modificata da '" + player.getName() + "' NON salvata DB"));
