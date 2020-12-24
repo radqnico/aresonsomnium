@@ -159,7 +159,7 @@ public class CustomShop extends MySQLObject {
         for (Map.Entry<String, String> entry : serializedPrices.entrySet()) {
             try {
                 int key = Integer.parseInt(entry.getKey());
-                int price = Integer.parseInt(entry.getValue());
+                float price = Float.parseFloat(entry.getValue());
                 ShopItem shopItem = items.get(key);
                 if (Objects.nonNull(shopItem)) {
                     shopItem.setPrice(price);
@@ -168,6 +168,7 @@ public class CustomShop extends MySQLObject {
                 }
             } catch (Exception exception) {
                 Bukkit.getLogger().severe("Oggetto invalido trovato nella GUI '" + title + "' : " + entry.toString());
+                exception.printStackTrace();
             }
         }
     }
@@ -176,8 +177,8 @@ public class CustomShop extends MySQLObject {
         return items.get(slot).getPrice();
     }
 
-    public boolean isShopReady(){
-        return items.values().stream().noneMatch(value -> value.getPrice()==-1);
+    public boolean isShopReady() {
+        return items.values().stream().noneMatch(value -> value.getPrice() == -1);
     }
 
 }
