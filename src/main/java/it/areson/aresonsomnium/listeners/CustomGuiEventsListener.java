@@ -35,7 +35,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 TextComponent textComponent = new TextComponent("Clicca per copiare");
                 textComponent.addExtra(MessageUtils.successMessage(pricesJSON));
                 textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, pricesJSON));
-                player.spigot().sendMessage();
+                player.spigot().sendMessage(textComponent);
             } else {
                 aresonSomnium.getLogger().info(MessageUtils.warningMessage("GUI modificata da '" + player.getName() + "' NON salvata DB"));
             }
