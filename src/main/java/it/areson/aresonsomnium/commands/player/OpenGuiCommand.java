@@ -50,8 +50,8 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
     private void handleOpenGui(CommandSender commandSender, String guiName) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            ShopManager shopManager = aresonSomnium.getGuiManager();
-            if (shopManager.isPermanent(guiName)) {
+            ShopManager shopManager = aresonSomnium.getShopManager();
+            if (shopManager.isShop(guiName)) {
                 shopManager.openGuiToPlayer(player, guiName);
             } else {
                 player.sendMessage("La GUI richiesta non esiste");
@@ -66,7 +66,7 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         List<String> suggestions = new ArrayList<>();
         if (strings.length == 1) {
-            StringUtil.copyPartialMatches(strings[0], aresonSomnium.getGuiManager().getGuis().keySet(), suggestions);
+            StringUtil.copyPartialMatches(strings[0], aresonSomnium.getShopManager().getGuis().keySet(), suggestions);
         }
         return suggestions;
     }
@@ -82,16 +82,16 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleReloadGuis(CommandSender commandSender) {
-        aresonSomnium.getGuiManager().fetchAllFromDB();
+        aresonSomnium.getShopManager().fetchAllFromDB();
         commandSender.sendMessage(successMessage("Tutte le GUI ricaricate dal DB"));
     }
 
     private void handleEditGui(CommandSender commandSender, String guiName) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            ShopManager shopManager = aresonSomnium.getGuiManager();
-            if (shopManager.isPermanent(guiName)) {
-                CustomShop permanentGui = shopManager.getPermanentGui(guiName);
+            ShopManager shopManager = aresonSomnium.getShopManager();
+            if (shopManager.isShop(guiName)) {
+                CustomShop permanentGui = shopManager.getShop(guiName);
                 player.openInventory(permanentGui.createInventory());
                 shopManager.beginEditGui(player, guiName);
             } else {
@@ -103,7 +103,7 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleCreateGui(CommandSender commandSender, String guiName, String guiTitle) {
-        ShopManager shopManager = aresonSomnium.getGuiManager();
+        ShopManager shopManager = aresonSomnium.getShopManager();
         CustomShop newGui = shopManager.createNewGui(guiName, guiTitle);
         String message;
         if (commandSender instanceof Player) {

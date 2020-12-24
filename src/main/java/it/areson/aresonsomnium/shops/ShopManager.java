@@ -57,11 +57,11 @@ public class ShopManager {
         guis.put(guiName, CustomShop.getFromDB(mySqlDBConnection, guiName));
     }
 
-    public boolean isPermanent(String guiName) {
+    public boolean isShop(String guiName) {
         return guis.containsKey(guiName);
     }
 
-    public CustomShop getPermanentGui(String guiName) {
+    public CustomShop getShop(String guiName) {
         return guis.get(guiName);
     }
 
