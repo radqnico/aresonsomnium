@@ -19,29 +19,32 @@ import java.util.stream.Collectors;
 
 import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
 
-public class CustomGUI extends MySQLObject {
+public class CustomShop extends MySQLObject {
 
     public static String tableQuery = "create table if not exists %s (" +
             "guiName varchar(255) not null primary key,\n" +
             "guiTitle varchar(255) not null,\n" +
             "guiObjects text not null\n" +
+            "prices text not null\n" +
             ");";
 
     private final String name;
-    private final TreeMap<Integer, ItemStack> items;
+    private final TreeMap<Integer, ShopItem> items;
+    private final TreeMap<Integer, Float> prices;
     private String title;
 
-    public CustomGUI(String name, String title, MySqlDBConnection mySqlDBConnection) {
+    public CustomShop(String name, String title, MySqlDBConnection mySqlDBConnection) {
         super(mySqlDBConnection, GUIS_TABLE_NAME);
         this.title = title;
         this.name = name;
         this.items = new TreeMap<>();
+        this.prices = new TreeMap<>();
     }
 
-    public static CustomGUI getFromDB(MySqlDBConnection connection, String name) {
-        CustomGUI customGUI = new CustomGUI(name, null, connection);
-        if (customGUI.updateFromDB()) {
-            return customGUI;
+    public static CustomShop getFromDB(MySqlDBConnection connection, String name) {
+        CustomShop customShop = new CustomShop(name, null, connection);
+        if (customShop.updateFromDB()) {
+            return customShop;
         } else {
             return null;
         }
@@ -49,9 +52,9 @@ public class CustomGUI extends MySQLObject {
 
     public Inventory createInventory() {
         Inventory inventory = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', title));
-        for (Map.Entry<Integer, ItemStack> entry : items.entrySet()) {
+        for (Map.Entry<Integer, ShopItem> entry : items.entrySet()) {
             Integer key = entry.getKey();
-            ItemStack value = entry.getValue();
+            ItemStack value = entry.getValue().getItemStack();
             inventory.setItem(key, value);
         }
         return inventory;
@@ -63,7 +66,7 @@ public class CustomGUI extends MySQLObject {
         for (int i = 0; i < size; i++) {
             ItemStack item = inventory.getItem(i);
             if (Objects.nonNull(item) && !item.getType().equals(Material.AIR)) {
-                items.put(i, item);
+                items.put(i, new ShopItem(item, -1));
             }
         }
     }
@@ -89,17 +92,22 @@ public class CustomGUI extends MySQLObject {
 
     public String getSaveQuery() {
         Gson gson = new Gson();
-        Map<String, String> serialized = items.entrySet().parallelStream().collect(Collectors.toMap(
+        Map<String, String> serializedItems = items.entrySet().parallelStream().collect(Collectors.toMap(
                 e -> e.getKey().toString(),
-                e -> Base64.getEncoder().encodeToString(e.getValue().serializeAsBytes())
+                e -> Base64.getEncoder().encodeToString(e.getValue().getItemStack().serializeAsBytes())
         ));
-        String itemsJson = gson.toJson(serialized);
-        return String.format("INSERT INTO %s (guiName, guiTitle, guiItems) " +
-                        "values ('%s', '%s', '%s') ON DUPLICATE KEY " +
-                        "UPDATE guiTitle='%s', guiItems='%s'",
+        Map<String, String> serializedPrices = items.entrySet().parallelStream().collect(Collectors.toMap(
+                e -> e.getKey().toString(),
+                e -> e.getValue().getPrice() + "")
+        );
+        String itemsJson = gson.toJson(serializedItems);
+        String pricesJson = gson.toJson(serializedPrices);
+        return String.format("INSERT INTO %s (guiName, guiTitle, guiItems, prices) " +
+                        "values ('%s', '%s', '%s', '%s') ON DUPLICATE KEY " +
+                        "UPDATE guiTitle='%s', guiItems='%s', prices='%s'",
                 tableName,
-                name, title, itemsJson,
-                title, itemsJson
+                name, title, itemsJson, pricesJson,
+                title, itemsJson, pricesJson
         );
     }
 
@@ -131,19 +139,43 @@ public class CustomGUI extends MySQLObject {
         this.title = resultSet.getString("guiTitle");
         this.items.clear();
         String guiItems = resultSet.getString("guiItems");
+        String prices = resultSet.getString("prices");
+
         Type type = new TypeToken<HashMap<String, String>>() {
         }.getType();
         Gson gson = new Gson();
         HashMap<String, String> serializedItems = gson.fromJson(guiItems, type);
+        HashMap<String, String> serializedPrices = gson.fromJson(prices, type);
+
         for (Map.Entry<String, String> entry : serializedItems.entrySet()) {
             try {
                 items.put(
                         Integer.parseInt(entry.getKey()),
-                        ItemStack.deserializeBytes(Base64.getDecoder().decode(entry.getValue()))
+                        new ShopItem(ItemStack.deserializeBytes(Base64.getDecoder().decode(entry.getValue())), -1)
                 );
             } catch (Exception exception) {
                 Bukkit.getLogger().severe("Oggetto invalido trovato nella GUI '" + title + "' : " + entry.toString());
             }
         }
+
+        for (Map.Entry<String, String> entry : serializedPrices.entrySet()) {
+            try {
+                int key = Integer.parseInt(entry.getKey());
+                int price = Integer.parseInt(entry.getValue());
+                ShopItem shopItem = items.get(key);
+                if (Objects.nonNull(shopItem)) {
+                    shopItem.setPrice(price);
+                } else {
+                    Bukkit.getLogger().warning("Prezzo non corrispondente a nessun oggetto nello slot '" + key + "' : " + entry.toString());
+                }
+            } catch (Exception exception) {
+                Bukkit.getLogger().severe("Oggetto invalido trovato nella GUI '" + title + "' : " + entry.toString());
+            }
+        }
     }
+
+    public TreeMap<Integer, Float> getPrices() {
+        return prices;
+    }
+
 }

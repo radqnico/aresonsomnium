@@ -3,8 +3,8 @@ package it.areson.aresonsomnium.commands.admin;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.players.SomniumPlayer;
-import it.areson.aresonsomnium.shops.CustomGUI;
-import it.areson.aresonsomnium.shops.GuiManager;
+import it.areson.aresonsomnium.shops.CustomShop;
+import it.areson.aresonsomnium.shops.ShopManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.HumanEntity;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final PluginCommand command;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createGui", "editGui", "reloadGuis"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops"};
     private final AresonSomnium aresonSomnium;
 
     public SomniumAdminCommand(AresonSomnium aresonSomnium) {
@@ -46,15 +46,15 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 switch (args[0].toLowerCase()) {
                     case "stats":
                     case "setcoins":
-                    case "creategui":
-                    case "editgui":
+                    case "createshop":
+                    case "editshop":
                         notEnoughArguments(commandSender);
                         break;
                     case "listplayers":
                         handleListPlayers(commandSender);
                         break;
-                    case "reloadguis":
-                        handleReloadGuis(commandSender);
+                    case "reloadshops":
+                        handleReloadShops(commandSender);
                         break;
                 }
                 break;
@@ -63,14 +63,14 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "stats":
                         handleStatsCommand(commandSender, args[1]);
                         break;
-                    case "editgui":
-                        handleEditGui(commandSender, args[1]);
+                    case "editshop":
+                        handleEditShop(commandSender, args[1]);
                         break;
                     case "listplayers":
                         tooManyArguments(commandSender, "listPlayers: 2");
                         break;
                     case "setcoins":
-                    case "creategui":
+                    case "createshop":
                         notEnoughArguments(commandSender);
                         break;
                 }
@@ -80,13 +80,13 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "setcoins":
                         notEnoughArguments(commandSender);
                         break;
-                    case "creategui":
-                        handleCreateGui(commandSender, args[1], args[2].replaceAll("_", " "));
+                    case "createshop":
+                        handleCreateShop(commandSender, args[1], args[2].replaceAll("_", " "));
                         break;
                     case "stats":
                     case "listplayers":
-                    case "editgui":
-                        tooManyArguments(commandSender, "editGui: 3");
+                    case "editshop":
+                        tooManyArguments(commandSender, "editShop: 3");
                         break;
                 }
                 break;
@@ -97,9 +97,9 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         break;
                     case "stats":
                     case "listplayers":
-                    case "creategui":
-                    case "editgui":
-                        tooManyArguments(commandSender, "editGui: 4");
+                    case "createshop":
+                    case "editshop":
+                        tooManyArguments(commandSender, "editShop: 4");
                         break;
                 }
                 break;
@@ -126,7 +126,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                             suggestions
                     );
                     break;
-                case "editgui":
+                case "editshop":
                     StringUtil.copyPartialMatches(
                             strings[1],
                             aresonSomnium.getGuiManager().getGuis().keySet(),
@@ -159,19 +159,19 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         commandSender.sendMessage(command.getUsage());
     }
 
-    private void handleReloadGuis(CommandSender commandSender) {
+    private void handleReloadShops(CommandSender commandSender) {
         aresonSomnium.getGuiManager().fetchAllFromDB();
         commandSender.sendMessage(successMessage("Tutte le GUI ricaricate dal DB"));
     }
 
-    private void handleEditGui(CommandSender commandSender, String guiName) {
+    private void handleEditShop(CommandSender commandSender, String guiName) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            GuiManager guiManager = aresonSomnium.getGuiManager();
-            if (guiManager.isPermanent(guiName)) {
-                CustomGUI permanentGui = guiManager.getPermanentGui(guiName);
+            ShopManager shopManager = aresonSomnium.getGuiManager();
+            if (shopManager.isPermanent(guiName)) {
+                CustomShop permanentGui = shopManager.getPermanentGui(guiName);
                 player.openInventory(permanentGui.createInventory());
-                guiManager.beginEditGui(player, guiName);
+                shopManager.beginEditGui(player, guiName);
             } else {
                 player.sendMessage("La GUI richiesta non è una GUI salvata");
             }
@@ -180,14 +180,14 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void handleCreateGui(CommandSender commandSender, String guiName, String guiTitle) {
-        GuiManager guiManager = aresonSomnium.getGuiManager();
-        CustomGUI newGui = guiManager.createNewGui(guiName, guiTitle);
+    private void handleCreateShop(CommandSender commandSender, String guiName, String guiTitle) {
+        ShopManager shopManager = aresonSomnium.getGuiManager();
+        CustomShop newGui = shopManager.createNewGui(guiName, guiTitle);
         String message;
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             player.openInventory(newGui.createInventory());
-            guiManager.beginEditGui(player, guiName);
+            shopManager.beginEditGui(player, guiName);
             message = "GUI '" + guiName + "' creata e aperta al giocatore '" + player.getName() + "'";
         } else {
             message = "GUI '" + guiName + "' creata";

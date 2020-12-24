@@ -3,21 +3,16 @@ package it.areson.aresonsomnium.commands.player;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.players.SomniumPlayer;
-import it.areson.aresonsomnium.shops.CustomGUI;
-import it.areson.aresonsomnium.shops.GuiManager;
+import it.areson.aresonsomnium.shops.CustomShop;
+import it.areson.aresonsomnium.shops.ShopManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
-
-import static it.areson.aresonsomnium.utils.MessageUtils.errorMessage;
 
 
 @SuppressWarnings("NullableProblems")
@@ -55,9 +50,9 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
     private void handleOpenGui(CommandSender commandSender, String guiName) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            GuiManager guiManager = aresonSomnium.getGuiManager();
-            if (guiManager.isPermanent(guiName)) {
-                guiManager.openGuiToPlayer(player, guiName);
+            ShopManager shopManager = aresonSomnium.getGuiManager();
+            if (shopManager.isPermanent(guiName)) {
+                shopManager.openGuiToPlayer(player, guiName);
             } else {
                 player.sendMessage("La GUI richiesta non esiste");
             }
@@ -94,11 +89,11 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
     private void handleEditGui(CommandSender commandSender, String guiName) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            GuiManager guiManager = aresonSomnium.getGuiManager();
-            if (guiManager.isPermanent(guiName)) {
-                CustomGUI permanentGui = guiManager.getPermanentGui(guiName);
+            ShopManager shopManager = aresonSomnium.getGuiManager();
+            if (shopManager.isPermanent(guiName)) {
+                CustomShop permanentGui = shopManager.getPermanentGui(guiName);
                 player.openInventory(permanentGui.createInventory());
-                guiManager.beginEditGui(player, guiName);
+                shopManager.beginEditGui(player, guiName);
             } else {
                 player.sendMessage("La GUI richiesta non è una GUI salvata");
             }
@@ -108,13 +103,13 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleCreateGui(CommandSender commandSender, String guiName, String guiTitle) {
-        GuiManager guiManager = aresonSomnium.getGuiManager();
-        CustomGUI newGui = guiManager.createNewGui(guiName, guiTitle);
+        ShopManager shopManager = aresonSomnium.getGuiManager();
+        CustomShop newGui = shopManager.createNewGui(guiName, guiTitle);
         String message;
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             player.openInventory(newGui.createInventory());
-            guiManager.beginEditGui(player, guiName);
+            shopManager.beginEditGui(player, guiName);
             message = "GUI '" + guiName + "' creata e aperta al giocatore '" + player.getName() + "'";
         } else {
             message = "GUI '" + guiName + "' creata";

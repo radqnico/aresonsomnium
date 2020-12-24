@@ -8,7 +8,7 @@ import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.listeners.CustomGuiEventsListener;
 import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
-import it.areson.aresonsomnium.shops.GuiManager;
+import it.areson.aresonsomnium.shops.ShopManager;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.FileManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,7 +21,7 @@ import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 public class AresonSomnium extends JavaPlugin {
 
     private SomniumPlayerManager somniumPlayerManager;
-    private GuiManager guiManager;
+    private ShopManager shopManager;
     private SomniumPlayerDBEvents playerDBEvents;
     private CustomGuiEventsListener customGuiEventsListener;
     private FileManager dataFile;
@@ -37,7 +37,7 @@ public class AresonSomnium extends JavaPlugin {
         Logger logger = getLogger();
         MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(logger);
         somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection, PLAYER_TABLE_NAME);
-        guiManager = new GuiManager(mySqlDBConnection, GUIS_TABLE_NAME);
+        shopManager = new ShopManager(mySqlDBConnection, GUIS_TABLE_NAME);
 
         // Events
         initAllEvents();
@@ -72,7 +72,7 @@ public class AresonSomnium extends JavaPlugin {
 
     private void initAllEvents() {
         playerDBEvents = new SomniumPlayerDBEvents(this);
-        customGuiEventsListener = new CustomGuiEventsListener(this, guiManager);
+        customGuiEventsListener = new CustomGuiEventsListener(this, shopManager);
 
         playerDBEvents.registerEvents();
         customGuiEventsListener.registerEvents();
@@ -82,7 +82,7 @@ public class AresonSomnium extends JavaPlugin {
         return somniumPlayerManager;
     }
 
-    public GuiManager getGuiManager() {
-        return guiManager;
+    public ShopManager getGuiManager() {
+        return shopManager;
     }
 }
