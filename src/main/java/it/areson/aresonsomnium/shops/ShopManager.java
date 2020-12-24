@@ -92,8 +92,12 @@ public class ShopManager {
     public void openGuiToPlayer(Player player, String guiName) {
         CustomShop customShop = guis.get(guiName);
         if (Objects.nonNull(customShop)) {
-            player.openInventory(customShop.createInventory());
-            openedGuis.put(player, guiName);
+            if (customShop.isShopReady()) {
+                player.openInventory(customShop.createInventory());
+                openedGuis.put(player, guiName);
+            } else {
+                player.sendMessage(MessageUtils.errorMessage("Il negozio richiesto non e' pronto. Segnala il problema allo staff."));
+            }
         } else {
             player.sendMessage(MessageUtils.errorMessage("L'interfaccia '" + guiName + "' non esiste"));
         }
@@ -105,6 +109,13 @@ public class ShopManager {
 
     public boolean isViewingCustomGui(Player player) {
         return openedGuis.containsKey(player);
+    }
+
+    public CustomShop getViewingCustomShop(Player player) {
+        if (isViewingCustomGui(player)) {
+            return guis.get(openedGuis.get(player));
+        }
+        return null;
     }
 
     public boolean isEditingCustomGui(Player player) {

@@ -30,7 +30,6 @@ public class CustomShop extends MySQLObject {
 
     private final String name;
     private final TreeMap<Integer, ShopItem> items;
-    private final TreeMap<Integer, Float> prices;
     private String title;
 
     public CustomShop(String name, String title, MySqlDBConnection mySqlDBConnection) {
@@ -38,7 +37,6 @@ public class CustomShop extends MySQLObject {
         this.title = title;
         this.name = name;
         this.items = new TreeMap<>();
-        this.prices = new TreeMap<>();
     }
 
     public static CustomShop getFromDB(MySqlDBConnection connection, String name) {
@@ -174,8 +172,12 @@ public class CustomShop extends MySQLObject {
         }
     }
 
-    public TreeMap<Integer, Float> getPrices() {
-        return prices;
+    public Float getPriceOfSlot(int slot) {
+        return items.get(slot).getPrice();
+    }
+
+    public boolean isShopReady(){
+        return items.values().stream().noneMatch(value -> value.getPrice()==-1);
     }
 
 }

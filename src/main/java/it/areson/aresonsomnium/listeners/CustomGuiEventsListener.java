@@ -1,18 +1,17 @@
 package it.areson.aresonsomnium.listeners;
 
 import it.areson.aresonsomnium.AresonSomnium;
+import it.areson.aresonsomnium.shops.CustomShop;
 import it.areson.aresonsomnium.shops.ShopManager;
 import it.areson.aresonsomnium.utils.MessageUtils;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
 import java.util.Objects;
 
 public class CustomGuiEventsListener extends GeneralEventListener {
@@ -44,16 +43,13 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         ShopManager shopManager = aresonSomnium.getGuiManager();
         if (shopManager.isViewingCustomGui(player)) {
             Inventory clickedInventory = event.getClickedInventory();
-            if(Objects.nonNull(clickedInventory)) {
-                if(clickedInventory.getType().equals(InventoryType.CHEST)){
-                    ItemStack currentItem = event.getCurrentItem();
-                    if(Objects.nonNull(currentItem) && !currentItem.getType().equals(Material.AIR)){
-                        HashMap<Integer, ItemStack> integerItemStackHashMap = player.getInventory().addItem(currentItem.clone());
-                        if(integerItemStackHashMap.isEmpty()){
-                            // Scala monete
-                        } else {
-                            player.sendMessage(MessageUtils.errorMessage("Hai l'inventario pieno!"));
-                        }
+            CustomShop customShop = shopManager.getViewingCustomShop(player);
+            if (Objects.nonNull(clickedInventory)) {
+                if (clickedInventory.getType().equals(InventoryType.CHEST)) {
+                    if (event.getClick().equals(ClickType.LEFT)) {
+                        int slot = event.getSlot();
+                        Float price = customShop.getPriceOfSlot(slot);
+                        player.sendMessage("Price: " + price);
                     }
                 }
             }
