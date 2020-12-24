@@ -136,7 +136,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 case "setshopprices":
                     StringUtil.copyPartialMatches(
                             strings[1],
-                            aresonSomnium.getShopManager().getGuis().keySet(),
+                            aresonSomnium.getShopManager().getShops().keySet(),
                             suggestions
                     );
                     break;
@@ -185,14 +185,14 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         commandSender.sendMessage(successMessage("Tutte le GUI ricaricate dal DB"));
     }
 
-    private void handleEditShop(CommandSender commandSender, String guiName) {
+    private void handleEditShop(CommandSender commandSender, String shopName) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             ShopManager shopManager = aresonSomnium.getShopManager();
-            if (shopManager.isShop(guiName)) {
-                CustomShop permanentGui = shopManager.getShop(guiName);
+            if (shopManager.isShop(shopName)) {
+                CustomShop permanentGui = shopManager.getShop(shopName);
                 player.openInventory(permanentGui.createInventory());
-                shopManager.beginEditGui(player, guiName);
+                shopManager.beginEditGui(player, shopName);
             } else {
                 player.sendMessage("La GUI richiesta non è una GUI salvata");
             }
@@ -201,17 +201,17 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void handleCreateShop(CommandSender commandSender, String guiName, String guiTitle) {
+    private void handleCreateShop(CommandSender commandSender, String shopName, String shopTitle) {
         ShopManager shopManager = aresonSomnium.getShopManager();
-        CustomShop newGui = shopManager.createNewGui(guiName, guiTitle);
+        CustomShop newGui = shopManager.createNewGui(shopName, shopTitle);
         String message;
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             player.openInventory(newGui.createInventory());
-            shopManager.beginEditGui(player, guiName);
-            message = "GUI '" + guiName + "' creata e aperta al giocatore '" + player.getName() + "'";
+            shopManager.beginEditGui(player, shopName);
+            message = "GUI '" + shopName + "' creata e aperta al giocatore '" + player.getName() + "'";
         } else {
-            message = "GUI '" + guiName + "' creata";
+            message = "GUI '" + shopName + "' creata";
         }
         commandSender.sendMessage(successMessage(message));
     }

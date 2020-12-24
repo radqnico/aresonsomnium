@@ -92,7 +92,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         if (somniumPlayer.canAfford(coinType, price)) {
             if (player.getInventory().addItem(itemStack.clone()).isEmpty()) {
                 somniumPlayer.changeCoins(coinType, -price);
-                player.sendMessage(MessageUtils.successMessage("Oggetto acquistato. Ora hai " + somniumPlayer.getWallet().getBasicCoins() + "" + coinType.getCoinName() + " Coins."));
+                player.sendMessage(MessageUtils.successMessage("Oggetto acquistato. Ora hai " + somniumPlayer.getWallet().getBasicCoins() + " " + coinType.getCoinName() + " Coins."));
             } else {
                 player.sendMessage(MessageUtils.errorMessage("Non hai abbastanza spazio nell'inventario."));
             }

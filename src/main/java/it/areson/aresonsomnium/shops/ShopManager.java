@@ -14,31 +14,31 @@ import java.util.TreeMap;
 
 public class ShopManager {
 
-    private final TreeMap<String, CustomShop> guis;
-    private final TreeMap<Player, String> editingGuis;
-    private final TreeMap<Player, String> openedGuis;
+    private final TreeMap<String, CustomShop> shops;
+    private final TreeMap<Player, String> editingShops;
+    private final TreeMap<Player, String> openedShops;
     private final MySqlDBConnection mySqlDBConnection;
     private final String tableName;
 
     public ShopManager(MySqlDBConnection connection, String tableName) {
-        this.guis = new TreeMap<>();
+        this.shops = new TreeMap<>();
         PlayerComparator playerComparator = new PlayerComparator();
-        this.editingGuis = new TreeMap<>(playerComparator);
-        this.openedGuis = new TreeMap<>(playerComparator);
+        this.editingShops = new TreeMap<>(playerComparator);
+        this.openedShops = new TreeMap<>(playerComparator);
         this.mySqlDBConnection = connection;
         this.tableName = tableName;
         fetchAllFromDB();
     }
 
-    public TreeMap<String, CustomShop> getGuis() {
-        return guis;
+    public TreeMap<String, CustomShop> getShops() {
+        return shops;
     }
 
     public void fetchAllFromDB() {
         String query = "select guiName from " + tableName;
         String guiName = "ERRORE NON DOVUTO ALLA GUI";
         try {
-            guis.clear();
+            shops.clear();
             Connection connection = mySqlDBConnection.connect();
             ResultSet resultSet = mySqlDBConnection.select(connection, query);
             while (resultSet.next()) {
@@ -54,34 +54,34 @@ public class ShopManager {
     }
 
     private void addFromName(String guiName) throws SQLException {
-        guis.put(guiName, CustomShop.getFromDB(mySqlDBConnection, guiName));
+        shops.put(guiName, CustomShop.getFromDB(mySqlDBConnection, guiName));
     }
 
     public boolean isShop(String guiName) {
-        return guis.containsKey(guiName);
+        return shops.containsKey(guiName);
     }
 
     public CustomShop getShop(String guiName) {
-        return guis.get(guiName);
+        return shops.get(guiName);
     }
 
     public CustomShop createNewGui(String name, String guiTitle) {
-        if (guis.containsKey(name)) {
-            return guis.get(name);
+        if (shops.containsKey(name)) {
+            return shops.get(name);
         }
         CustomShop customShop = new CustomShop(name, guiTitle, mySqlDBConnection);
-        guis.put(name, customShop);
+        shops.put(name, customShop);
         return customShop;
     }
 
     public void beginEditGui(Player player, String guiName) {
-        editingGuis.put(player, guiName);
+        editingShops.put(player, guiName);
     }
 
     public boolean endEditGui(Player player, Inventory inventory) {
-        String guiName = editingGuis.remove(player);
+        String guiName = editingShops.remove(player);
         if (Objects.nonNull(guiName)) {
-            CustomShop customShop = guis.get(guiName);
+            CustomShop customShop = shops.get(guiName);
             customShop.updateFromInventory(inventory);
             customShop.saveToDB();
             return true;
@@ -90,11 +90,11 @@ public class ShopManager {
     }
 
     public void openGuiToPlayer(Player player, String guiName) {
-        CustomShop customShop = guis.get(guiName);
+        CustomShop customShop = shops.get(guiName);
         if (Objects.nonNull(customShop)) {
             if (customShop.isShopReady()) {
                 player.openInventory(customShop.createInventory());
-                openedGuis.put(player, guiName);
+                openedShops.put(player, guiName);
             } else {
                 player.sendMessage(MessageUtils.errorMessage("Il negozio richiesto non e' pronto. Segnala il problema allo staff."));
             }
@@ -104,28 +104,28 @@ public class ShopManager {
     }
 
     public void playerCloseGui(Player player) {
-        openedGuis.remove(player);
+        openedShops.remove(player);
     }
 
     public boolean isViewingCustomGui(Player player) {
-        return openedGuis.containsKey(player);
+        return openedShops.containsKey(player);
     }
 
     public CustomShop getViewingCustomShop(Player player) {
         if (isViewingCustomGui(player)) {
-            return guis.get(openedGuis.get(player));
+            return shops.get(openedShops.get(player));
         }
         return null;
     }
 
     public CustomShop getEditingCustomShop(Player player){
         if(isEditingCustomGui(player)){
-            return guis.get(editingGuis.get(player));
+            return shops.get(editingShops.get(player));
         }
         return null;
     }
 
     public boolean isEditingCustomGui(Player player) {
-        return editingGuis.containsKey(player);
+        return editingShops.containsKey(player);
     }
 }

@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.Type;
 import java.sql.Connection;
@@ -53,6 +54,18 @@ public class CustomShop extends MySQLObject {
         for (Map.Entry<Integer, ShopItem> entry : items.entrySet()) {
             Integer key = entry.getKey();
             ItemStack value = entry.getValue().getItemStack();
+            ItemMeta itemMeta = value.getItemMeta();
+            if (Objects.nonNull(itemMeta)) {
+                List<String> lore = itemMeta.getLore();
+                if (Objects.nonNull(lore)) {
+                    lore.add("\n" + ChatColor.GOLD + ChatColor.BOLD + "" + entry.getValue().getPrice() + " Basic Coins");
+                } else {
+                    lore = new ArrayList<>();
+                    lore.add("\n" + ChatColor.GOLD + ChatColor.BOLD + "" + entry.getValue().getPrice() + " Basic Coins");
+                }
+                itemMeta.setLore(lore);
+                value.setItemMeta(itemMeta);
+            }
             inventory.setItem(key, value);
         }
         return inventory;
@@ -188,7 +201,7 @@ public class CustomShop extends MySQLObject {
                     } else {
                         Bukkit.getLogger().warning("Prezzo non corrispondente a nessun oggetto nello slot '" + key + "' : " + entry.toString());
                     }
-                }catch (NumberFormatException exception){
+                } catch (NumberFormatException exception) {
                     shopItem.setPrice(-1);
                     Bukkit.getLogger().severe("Prezzo invalido trovato nella GUI '" + title + "' : " + entry.toString());
                 }
