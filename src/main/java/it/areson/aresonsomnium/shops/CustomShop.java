@@ -190,7 +190,9 @@ public class CustomShop extends MySQLObject {
         Gson gson = new Gson();
         Map<String, String> serializedPrices = items.entrySet().parallelStream().collect(Collectors.toMap(
                 e -> e.getKey().toString(),
-                e -> e.getValue().getItemStack().getItemMeta().getDisplayName())
+                e -> e.getValue().getItemStack().getItemMeta().getDisplayName().equals("") ?
+                        e.getValue().getItemStack().getType().name() :
+                        e.getValue().getItemStack().getItemMeta().getDisplayName())
         );
         return gson.toJson(serializedPrices);
     }
