@@ -2,11 +2,11 @@ package it.areson.aresonsomnium.economy;
 
 public class Wallet {
 
-    private int basicCoins;
-    private int charonCoins;
-    private int forcedCoins;
+    private float basicCoins;
+    private float charonCoins;
+    private float forcedCoins;
 
-    public Wallet(int basicCoins, int charonCoins, int forcedCoins) {
+    public Wallet(float basicCoins, float charonCoins, float forcedCoins) {
         this.basicCoins = basicCoins;
         this.charonCoins = charonCoins;
         this.forcedCoins = forcedCoins;
@@ -16,39 +16,39 @@ public class Wallet {
         return new Wallet(0, 0, 0);
     }
 
-    public int getBasicCoins() {
+    public float getBasicCoins() {
         return basicCoins;
     }
 
-    public void setBasicCoins(int basicCoins) {
+    public void setBasicCoins(float basicCoins) {
         this.basicCoins = basicCoins;
     }
 
-    public int getCharonCoins() {
+    public float getCharonCoins() {
         return charonCoins;
     }
 
-    public void setCharonCoins(int charonCoins) {
+    public void setCharonCoins(float charonCoins) {
         this.charonCoins = charonCoins;
     }
 
-    public int getForcedCoins() {
+    public float getForcedCoins() {
         return forcedCoins;
     }
 
-    public void setForcedCoins(int forcedCoins) {
+    public void setForcedCoins(float forcedCoins) {
         this.forcedCoins = forcedCoins;
     }
 
-    public void changeBasicCoins(int amount) {
+    public void changeBasicCoins(float amount) {
         basicCoins += amount;
     }
 
-    public void changeCharonCoins(int amount) {
+    public void changeCharonCoins(float amount) {
         charonCoins += amount;
     }
 
-    public void changeForcedCoins(int amount) {
+    public void changeForcedCoins(float amount) {
         forcedCoins += amount;
     }
 }
