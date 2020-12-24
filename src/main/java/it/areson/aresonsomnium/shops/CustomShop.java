@@ -177,6 +177,15 @@ public class CustomShop extends MySQLObject {
         return items.get(slot).getPrice();
     }
 
+    public String getPricesJSON(){
+        Gson gson = new Gson();
+        Map<String, String> serializedPrices = items.entrySet().parallelStream().collect(Collectors.toMap(
+                e -> e.getKey().toString(),
+                e -> e.getValue().getPrice() + "")
+        );
+        return gson.toJson(serializedPrices);
+    }
+
     public boolean isShopReady() {
         return items.values().stream().noneMatch(value -> value.getPrice() == -1);
     }

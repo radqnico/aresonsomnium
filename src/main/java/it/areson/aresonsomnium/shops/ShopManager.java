@@ -118,6 +118,13 @@ public class ShopManager {
         return null;
     }
 
+    public CustomShop getEditingCustomShop(Player player){
+        if(isEditingCustomGui(player)){
+            return guis.get(editingGuis.get(player));
+        }
+        return null;
+    }
+
     public boolean isEditingCustomGui(Player player) {
         return editingGuis.containsKey(player);
     }

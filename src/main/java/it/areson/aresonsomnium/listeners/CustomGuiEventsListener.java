@@ -4,9 +4,10 @@ import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.shops.CustomShop;
 import it.areson.aresonsomnium.shops.ShopManager;
 import it.areson.aresonsomnium.utils.MessageUtils;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -27,8 +28,14 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     public void onInventoryCloseEvent(InventoryCloseEvent event) {
         Player player = (Player) event.getView().getPlayer();
         if (shopManager.isEditingCustomGui(player)) {
+            CustomShop editingCustomShop = shopManager.getEditingCustomShop(player);
             if (shopManager.endEditGui(player, event.getInventory())) {
                 aresonSomnium.getLogger().info(MessageUtils.successMessage("GUI modificata da '" + player.getName() + "' salvata su DB"));
+                String pricesJSON = editingCustomShop.getPricesJSON();
+                TextComponent textComponent = new TextComponent("Clicca per copiare");
+                textComponent.addExtra(MessageUtils.successMessage(pricesJSON));
+                textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, pricesJSON));
+                player.spigot().sendMessage();
             } else {
                 aresonSomnium.getLogger().info(MessageUtils.warningMessage("GUI modificata da '" + player.getName() + "' NON salvata DB"));
             }
@@ -46,10 +53,14 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             CustomShop customShop = shopManager.getViewingCustomShop(player);
             if (Objects.nonNull(clickedInventory)) {
                 if (clickedInventory.getType().equals(InventoryType.CHEST)) {
-                    if (event.getClick().equals(ClickType.LEFT)) {
-                        int slot = event.getSlot();
-                        Float price = customShop.getPriceOfSlot(slot);
-                        player.sendMessage("Price: " + price);
+                    switch (event.getClick()) {
+                        case LEFT:
+                            int slot = event.getSlot();
+                            Float price = customShop.getPriceOfSlot(slot);
+                            if (Objects.nonNull(price)) {
+                                player.sendMessage("Price: " + price);
+                            }
+                            break;
                     }
                 }
             }
