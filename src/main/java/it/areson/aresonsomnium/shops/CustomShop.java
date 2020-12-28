@@ -1,9 +1,9 @@
 package it.areson.aresonsomnium.shops;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonObject;
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
+import it.areson.aresonsomnium.economy.CoinType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -11,12 +11,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
 
@@ -53,20 +51,24 @@ public class CustomShop extends MySQLObject {
         Inventory inventory = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', title));
         for (Map.Entry<Integer, ShopItem> entry : items.entrySet()) {
             Integer key = entry.getKey();
-            ItemStack value = entry.getValue().getItemStack();
-            ItemMeta itemMeta = value.getItemMeta();
+            ShopItem shopItem = entry.getValue();
+            ItemMeta itemMeta = shopItem.getItemMeta();
             if (Objects.nonNull(itemMeta)) {
-                List<String> lore = itemMeta.getLore();
+                final List<String> lore = itemMeta.getLore();
+                final List<String> loreIfNull = new ArrayList<>();
                 if (Objects.nonNull(lore)) {
-                    lore.add("\n" + ChatColor.GOLD + ChatColor.BOLD + "" + entry.getValue().getPrice() + " Basic Coins");
+                    lore.add("");
+                    shopItem.getPriceMap().forEach(((coinType, price) -> lore.add(ChatColor.GOLD + "" + ChatColor.BOLD + "" + price + " " + coinType.getCoinName() + " Coins")));
+                    itemMeta.setLore(lore);
                 } else {
-                    lore = new ArrayList<>();
-                    lore.add("\n" + ChatColor.GOLD + ChatColor.BOLD + "" + entry.getValue().getPrice() + " Basic Coins");
+                    shopItem.getPriceMap().forEach(((coinType, price) -> loreIfNull.add(ChatColor.GOLD + "" + ChatColor.BOLD + "" + price + " " + coinType.getCoinName() + " Coins")));
+                    itemMeta.setLore(loreIfNull);
                 }
-                itemMeta.setLore(lore);
-                value.setItemMeta(itemMeta);
+                shopItem.setItemMeta(itemMeta);
+            } else {
+                Bukkit.getLogger().warning("ItemMeta nulli per l'oggetto " + shopItem.toString());
             }
-            inventory.setItem(key, value);
+            inventory.setItem(key, shopItem);
         }
         return inventory;
     }
@@ -74,10 +76,17 @@ public class CustomShop extends MySQLObject {
     public void updateFromInventory(Inventory inventory) {
         items.clear();
         int size = inventory.getSize();
+        TreeMap<CoinType, Float> nullPriceMap = new TreeMap<>();
+        nullPriceMap.put(CoinType.BASIC, (float) -1);
         for (int i = 0; i < size; i++) {
-            ItemStack item = inventory.getItem(i);
-            if (Objects.nonNull(item) && !item.getType().equals(Material.AIR)) {
-                items.put(i, new ShopItem(item, -1));
+            if (inventory.getItem(i) instanceof ShopItem) {
+                ShopItem shopItem = (ShopItem) inventory.getItem(i);
+                items.put(i, shopItem);
+            } else {
+                ItemStack item = inventory.getItem(i);
+                if (Objects.nonNull(item) && !item.getType().equals(Material.AIR)) {
+                    items.put(i, new ShopItem(item, new TreeMap<>(nullPriceMap)));
+                }
             }
         }
     }
@@ -102,23 +111,19 @@ public class CustomShop extends MySQLObject {
     }
 
     public String getSaveQuery() {
-        Gson gson = new Gson();
-        Map<String, String> serializedItems = items.entrySet().parallelStream().collect(Collectors.toMap(
-                e -> e.getKey().toString(),
-                e -> Base64.getEncoder().encodeToString(e.getValue().getItemStack().serializeAsBytes())
-        ));
-        Map<String, String> serializedPrices = items.entrySet().parallelStream().collect(Collectors.toMap(
-                e -> e.getKey().toString(),
-                e -> e.getValue().getPrice() + "")
-        );
-        String itemsJson = gson.toJson(serializedItems);
-        String pricesJson = gson.toJson(serializedPrices);
+        JsonObject itemsJson = new JsonObject();
+        for (Map.Entry<Integer, ShopItem> entry : items.entrySet()) {
+            String key = entry.getKey().toString();
+            String itemJson = entry.getValue().toJson();
+            itemsJson.addProperty(key, itemJson);
+        }
+
         return String.format("INSERT INTO %s (guiName, guiTitle, guiItems, prices) " +
-                        "values ('%s', '%s', '%s', '%s') ON DUPLICATE KEY " +
-                        "UPDATE guiTitle='%s', guiItems='%s', prices='%s'",
+                        "values ('%s', '%s', '%s') ON DUPLICATE KEY " +
+                        "UPDATE guiTitle='%s', guiItems='%s'",
                 tableName,
-                name, title, itemsJson, pricesJson,
-                title, itemsJson, pricesJson
+                name, title, itemsJson,
+                title, itemsJson
         );
     }
 
@@ -150,12 +155,10 @@ public class CustomShop extends MySQLObject {
         this.title = resultSet.getString("guiTitle");
         this.items.clear();
         String guiItems = resultSet.getString("guiItems");
-        String prices = resultSet.getString("prices");
 
-        setItems(guiItems);
-        setPrices(prices);
+
     }
-
+/*
     public Float getPriceOfSlot(int slot) {
         return items.get(slot).getPrice();
     }
@@ -230,4 +233,6 @@ public class CustomShop extends MySQLObject {
             }
         }
     }
+
+    */
 }
