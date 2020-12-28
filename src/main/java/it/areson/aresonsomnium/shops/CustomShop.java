@@ -123,8 +123,8 @@ public class CustomShop extends MySQLObject {
                         "values ('%s', '%s', '%s') ON DUPLICATE KEY " +
                         "UPDATE guiTitle='%s', guiItems='%s'",
                 tableName,
-                name, title, itemsJson.getAsString(),
-                title, itemsJson.getAsString()
+                name, title, itemsJson,
+                title, itemsJson
         );
     }
 
