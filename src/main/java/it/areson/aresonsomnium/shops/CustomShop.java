@@ -58,11 +58,12 @@ public class CustomShop extends MySQLObject {
                 final List<String> lore = itemMeta.getLore();
                 final List<String> loreIfNull = new ArrayList<>();
                 if (Objects.nonNull(lore)) {
-                    lore.add("");
-                    shopItem.getPriceMap().forEach(((coinType, price) -> lore.add(ChatColor.GOLD + "" + ChatColor.BOLD + "" + price + " " + coinType.getCoinName() + " Coins")));
+                    lore.add("non");
+                    shopItem.getPriceMap().forEach(((coinType, price) -> lore.add(ChatColor.GOLD + "" + price + " " + ChatColor.BOLD + coinType.getCoinName() + " Coins")));
                     itemMeta.setLore(lore);
                 } else {
-                    shopItem.getPriceMap().forEach(((coinType, price) -> loreIfNull.add(ChatColor.GOLD + "" + ChatColor.BOLD + "" + price + " " + coinType.getCoinName() + " Coins")));
+                    loreIfNull.add("null");
+                    shopItem.getPriceMap().forEach(((coinType, price) -> loreIfNull.add(ChatColor.GOLD + "" + price + " " + ChatColor.BOLD + coinType.getCoinName() + " Coins")));
                     itemMeta.setLore(loreIfNull);
                 }
                 shopItem.setItemMeta(itemMeta);
@@ -172,6 +173,6 @@ public class CustomShop extends MySQLObject {
     }
 
     public boolean isShopReady() {
-        return items.values().stream().noneMatch(value -> value.getPriceMap().values().stream().noneMatch(price -> price <= 0));
+        return items.values().stream().noneMatch(value -> value.getPriceMap().values().stream().anyMatch(price -> price <= 0));
     }
 }
