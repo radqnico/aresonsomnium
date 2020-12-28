@@ -158,8 +158,16 @@ public class CustomShop extends MySQLObject {
         String guiItems = resultSet.getString("guiItems");
         JsonObject jsonObject = new JsonParser().parse(guiItems).getAsJsonObject();
         jsonObject.entrySet().forEach(entry -> {
-            String slot = entry.getKey();
-            String serializedItemJson = entry.getValue().toString();
+            String slotString = entry.getKey();
+            ShopItem.SerializedShopItem serializedShopItem = new Gson().fromJson(entry.getValue(), ShopItem.SerializedShopItem.class);
+            ShopItem shopItem = serializedShopItem.toShopItem();
+            try {
+                int slot = Integer.parseInt(slotString);
+                items.put(slot, shopItem);
+            } catch (NumberFormatException e) {
+                Bukkit.getLogger().severe("Slot non valido oggetto " + shopItem.toString());
+                e.printStackTrace();
+            }
         });
     }
 

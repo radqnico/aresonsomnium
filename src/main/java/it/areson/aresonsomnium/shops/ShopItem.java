@@ -1,6 +1,5 @@
 package it.areson.aresonsomnium.shops;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import it.areson.aresonsomnium.economy.CoinType;
 import org.bukkit.Material;
@@ -46,6 +45,10 @@ public class ShopItem extends ItemStack {
         public SerializedShopItem(String serializedItemStack, TreeMap<CoinType, Float> priceMap) {
             this.itemStack = serializedItemStack;
             this.prices = priceMap;
+        }
+
+        public ShopItem toShopItem() {
+            return new ShopItem(ItemStack.deserializeBytes(Base64.getDecoder().decode(itemStack)), prices);
         }
     }
 }
