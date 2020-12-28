@@ -117,7 +117,7 @@ public class CustomShop extends MySQLObject {
             itemsJson.addProperty(key, itemJson);
         }
 
-        return String.format("INSERT INTO %s (guiName, guiTitle, guiItems, prices) " +
+        return String.format("INSERT INTO %s (guiName, guiTitle, guiItems) " +
                         "values ('%s', '%s', '%s') ON DUPLICATE KEY " +
                         "UPDATE guiTitle='%s', guiItems='%s'",
                 tableName,
