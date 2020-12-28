@@ -23,8 +23,7 @@ public class CustomShop extends MySQLObject {
     public static String tableQuery = "create table if not exists %s (" +
             "guiName varchar(255) not null primary key,\n" +
             "guiTitle varchar(255) not null,\n" +
-            "guiObjects text not null,\n" +
-            "prices text not null\n" +
+            "guiObjects text not null\n" +
             ");";
 
     private final String name;
