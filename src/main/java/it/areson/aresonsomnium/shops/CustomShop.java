@@ -1,6 +1,8 @@
 package it.areson.aresonsomnium.shops;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.CoinType;
@@ -76,7 +78,7 @@ public class CustomShop extends MySQLObject {
         items.clear();
         int size = inventory.getSize();
         TreeMap<CoinType, Float> nullPriceMap = new TreeMap<>();
-        nullPriceMap.put(CoinType.BASIC, (float) -1);
+        nullPriceMap.put(CoinType.BASIC, 0f);
         for (int i = 0; i < size; i++) {
             if (inventory.getItem(i) instanceof ShopItem) {
                 ShopItem shopItem = (ShopItem) inventory.getItem(i);
@@ -113,16 +115,16 @@ public class CustomShop extends MySQLObject {
         JsonObject itemsJson = new JsonObject();
         for (Map.Entry<Integer, ShopItem> entry : items.entrySet()) {
             String key = entry.getKey().toString();
-            String itemJson = entry.getValue().toJson();
-            itemsJson.addProperty(key, itemJson);
+            ShopItem.SerializedShopItem value = entry.getValue().toSerialized();
+            itemsJson.add(key, new Gson().toJsonTree(value));
         }
 
         return String.format("INSERT INTO %s (guiName, guiTitle, guiItems) " +
                         "values ('%s', '%s', '%s') ON DUPLICATE KEY " +
                         "UPDATE guiTitle='%s', guiItems='%s'",
                 tableName,
-                name, title, itemsJson,
-                title, itemsJson
+                name, title, itemsJson.getAsString(),
+                title, itemsJson.getAsString()
         );
     }
 
@@ -154,11 +156,14 @@ public class CustomShop extends MySQLObject {
         this.title = resultSet.getString("guiTitle");
         this.items.clear();
         String guiItems = resultSet.getString("guiItems");
-
-
+        JsonObject jsonObject = new JsonParser().parse(guiItems).getAsJsonObject();
+        jsonObject.entrySet().forEach(entry -> {
+            String slot = entry.getKey();
+            String serializedItemJson = entry.getValue().toString();
+        });
     }
 
     public boolean isShopReady() {
-        return items.values().stream().noneMatch(value -> value.getPriceMap().values().stream().noneMatch(price -> price < 0));
+        return items.values().stream().noneMatch(value -> value.getPriceMap().values().stream().noneMatch(price -> price <= 0));
     }
 }
