@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final PluginCommand command;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops", "setShopPrices"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops"};
     private final AresonSomnium aresonSomnium;
 
     public SomniumAdminCommand(AresonSomnium aresonSomnium) {
@@ -48,7 +48,6 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "setcoins":
                     case "createshop":
                     case "editshop":
-                    case "setshopprices":
                         notEnoughArguments(commandSender);
                         break;
                     case "listplayers":
@@ -72,7 +71,6 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         break;
                     case "setcoins":
                     case "createshop":
-                    case "setshopprices":
                         notEnoughArguments(commandSender);
                         break;
                 }
@@ -84,9 +82,6 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         break;
                     case "createshop":
                         handleCreateShop(commandSender, args[1], args[2].replaceAll("_", " "));
-                        break;
-                    case "setshopprices":
-                        handleSetShopPrices(commandSender, args[1], args[2].replaceAll(" ", ""));
                         break;
                     case "stats":
                     case "listplayers":
@@ -164,20 +159,6 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
     private void tooManyArguments(CommandSender commandSender, String function) {
         commandSender.sendMessage(errorMessage("Troppi parametri forniti a " + function));
         commandSender.sendMessage(command.getUsage());
-    }
-
-    private void handleSetShopPrices(CommandSender commandSender, String shopName, String pricesJson) {
-        ShopManager shopManager = aresonSomnium.getShopManager();
-        if (shopManager.isShop(shopName)) {
-            CustomShop permanentShop = shopManager.getShop(shopName);
-            permanentShop.setPrices(pricesJson);
-            permanentShop.saveToDB();
-            commandSender.sendMessage("Prezzi per lo shop '" + shopName + "' impostati.");
-            String isValid = permanentShop.isShopReady() ? successMessage("Lo shop sembra valido.") : warningMessage("Non tutti i prezzi sono corretti.");
-            commandSender.sendMessage(isValid);
-        } else {
-            commandSender.sendMessage(errorMessage("La GUI richiesta non è una GUI salvata"));
-        }
     }
 
     private void handleReloadShops(CommandSender commandSender) {

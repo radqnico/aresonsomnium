@@ -5,10 +5,12 @@ import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.shops.CustomShop;
+import it.areson.aresonsomnium.shops.ShopItem;
 import it.areson.aresonsomnium.shops.ShopManager;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -43,12 +45,8 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     public void onInventoryCloseEvent(InventoryCloseEvent event) {
         Player player = (Player) event.getView().getPlayer();
         if (shopManager.isEditingCustomGui(player)) {
-            CustomShop editingCustomShop = shopManager.getEditingCustomShop(player);
             if (shopManager.endEditGui(player, event.getInventory())) {
                 aresonSomnium.getLogger().info(MessageUtils.successMessage("GUI modificata da '" + player.getName() + "' salvata su DB"));
-                String pricesJSON = editingCustomShop.getPricesJSON();
-                String indexAndNameJSON = editingCustomShop.getIndexAndNameJSON();
-                sendCopyMessage(player, pricesJSON, indexAndNameJSON);
             } else {
                 aresonSomnium.getLogger().info(MessageUtils.warningMessage("GUI modificata da '" + player.getName() + "' NON salvata DB"));
             }
@@ -68,16 +66,10 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 if (clickedInventory.getType().equals(InventoryType.CHEST)) {
                     ItemStack currentItem = event.getCurrentItem();
                     if (Objects.nonNull(currentItem) && !currentItem.getType().equals(Material.AIR)) {
-                        switch (event.getClick()) {
-                            case LEFT:
-                                int slot = event.getSlot();
-                                Float price = customShop.getPriceOfSlot(slot);
-                                if (Objects.nonNull(price)) {
-                                    handleBuyItem(player, CoinType.BASIC, price, currentItem);
-                                } else {
-                                    player.sendMessage(MessageUtils.errorMessage("Il prezzo di questo oggetto non e' valido. Segnala il problema allo Staff."));
-                                }
-                                break;
+                        if(currentItem instanceof ShopItem){
+                            Bukkit.getLogger().info("ShopItem");
+                        } else {
+                            Bukkit.getLogger().info("ItemStack");
                         }
                     }
                 }

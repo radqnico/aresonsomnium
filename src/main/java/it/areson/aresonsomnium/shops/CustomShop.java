@@ -157,81 +157,8 @@ public class CustomShop extends MySQLObject {
 
 
     }
-/*
-    public Float getPriceOfSlot(int slot) {
-        return items.get(slot).getPrice();
-    }
-
-    public String getPricesJSON() {
-        Gson gson = new Gson();
-        Map<String, String> serializedPrices = items.entrySet().parallelStream().collect(Collectors.toMap(
-                e -> e.getKey().toString(),
-                e -> e.getValue().getPrice() + "")
-        );
-        return gson.toJson(serializedPrices);
-    }
-
-    public String getIndexAndNameJSON() {
-        Gson gson = new Gson();
-        Map<String, String> serializedPrices = items.entrySet().parallelStream().collect(Collectors.toMap(
-                e -> e.getKey().toString(),
-                e -> e.getValue().getItemStack().getItemMeta().getDisplayName().equals("") ?
-                        e.getValue().getItemStack().getType().name() :
-                        e.getValue().getItemStack().getItemMeta().getDisplayName())
-        );
-        return gson.toJson(serializedPrices);
-    }
 
     public boolean isShopReady() {
-        return items.values().stream().noneMatch(value -> value.getPrice() < 0);
+        return items.values().stream().noneMatch(value -> value.getPriceMap().values().stream().noneMatch(price -> price < 0));
     }
-
-    public void setPrices(String pricesJson) {
-        Type type = new TypeToken<HashMap<String, String>>() {
-        }.getType();
-        Gson gson = new Gson();
-        HashMap<String, String> serializedPrices = gson.fromJson(pricesJson, type);
-
-        for (Map.Entry<String, String> entry : serializedPrices.entrySet()) {
-            try {
-                int key = Integer.parseInt(entry.getKey());
-                ShopItem shopItem = items.get(key);
-                try {
-                    float price = Float.parseFloat(entry.getValue());
-                    if (Objects.nonNull(shopItem)) {
-                        shopItem.setPrice(price);
-                    } else {
-                        Bukkit.getLogger().warning("Prezzo non corrispondente a nessun oggetto nello slot '" + key + "' : " + entry.toString());
-                    }
-                } catch (NumberFormatException exception) {
-                    shopItem.setPrice(-1);
-                    Bukkit.getLogger().severe("Prezzo invalido trovato nella GUI '" + title + "' : " + entry.toString());
-                }
-            } catch (NumberFormatException exception) {
-                Bukkit.getLogger().severe("Chiave prezzo invalida nello shop '" + title + "' : " + entry.toString());
-                exception.printStackTrace();
-            }
-        }
-    }
-
-    public void setItems(String itemsJson) {
-        Type type = new TypeToken<HashMap<String, String>>() {
-        }.getType();
-        Gson gson = new Gson();
-        HashMap<String, String> serializedItems = gson.fromJson(itemsJson, type);
-
-        for (Map.Entry<String, String> entry : serializedItems.entrySet()) {
-            try {
-                items.put(
-                        Integer.parseInt(entry.getKey()),
-                        new ShopItem(ItemStack.deserializeBytes(Base64.getDecoder().decode(entry.getValue())), -1)
-                );
-            } catch (Exception exception) {
-                Bukkit.getLogger().severe("Oggetto invalido trovato nella GUI '" + title + "' : " + entry.toString());
-                exception.printStackTrace();
-            }
-        }
-    }
-
-    */
 }
