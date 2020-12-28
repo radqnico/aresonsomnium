@@ -36,9 +36,9 @@ public class ShopItem extends ItemStack {
     public String toJson() {
         byte[] bytes = serializeAsBytes();
         String itemStackString = Base64.getEncoder().encodeToString(bytes);
-        Map<String, String> map = priceMap.entrySet().parallelStream().collect(Collectors.toMap(
+        Map<String, Float> map = priceMap.entrySet().parallelStream().collect(Collectors.toMap(
                 e -> e.getKey().name(),
-                e -> e.getValue().toString()
+                Map.Entry::getValue
         ));
         String priceMapJson = new Gson().toJson(map);
         SerializedShopItem serializedShopItem = new SerializedShopItem(itemStackString, priceMapJson);
