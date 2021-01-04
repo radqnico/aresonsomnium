@@ -18,7 +18,7 @@ public class AutoSaveManager {
                         aresonSomnium,
                         () -> {
                             aresonSomnium.getSomniumPlayerManager().saveAll();
-                            aresonSomnium.getLogger().info("Tutti i player salvati.");
+                            aresonSomnium.getLogger().info("All players saved.");
                         }
                 ),
                 0L,
