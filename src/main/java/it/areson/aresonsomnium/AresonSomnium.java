@@ -82,7 +82,7 @@ public class AresonSomnium extends JavaPlugin {
         return somniumPlayerManager;
     }
 
-    public ShopManager getShopManager() {
+    public ShopManager getGuiManager() {
         return shopManager;
     }
 }

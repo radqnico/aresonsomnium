@@ -18,12 +18,9 @@ public class SomniumPlayer extends MySQLObject {
     public static long DEFAULT_TIME_PLAYED = 0L;
     public static String tableQuery = "create table if not exists %s\n" +
             "(\n" +
-            "    playerName  varchar(255)     not null\n" +
+            "    playerName varchar(255) not null\n" +
             "        primary key,\n" +
-            "    timePlayed  bigint default 0 null,\n" +
-            "    basicCoins  float  default 0 not null,\n" +
-            "    charonCoins float  default 0 not null,\n" +
-            "    forcedCoins float  default 0 not null\n" +
+            "    timePlayed bigint default " + DEFAULT_TIME_PLAYED + " null\n" +
             ");";
 
     private final Player player;
@@ -107,8 +104,8 @@ public class SomniumPlayer extends MySQLObject {
 
     public String getSaveQuery() {
         return String.format("INSERT INTO %s (playerName, timePlayed, basicCoins, charonCoins, forcedCoins) " +
-                        "values ('%s', %d, %f, %f, %f) ON DUPLICATE KEY " +
-                        "UPDATE timePlayed=%d, basicCoins=%f, charonCoins=%f, forcedCoins=%f",
+                        "values ('%s', %d, %d, %d, %d) ON DUPLICATE KEY " +
+                        "UPDATE timePlayed=%d, basicCoins=%d, charonCoins=%d, forcedCoins=%d",
                 tableName,
                 getPlayerName(), getSecondsPlayedTotal(), wallet.getBasicCoins(), wallet.getCharonCoins(), wallet.getForcedCoins(),
                 getSecondsPlayedTotal(), wallet.getBasicCoins(), wallet.getCharonCoins(), wallet.getForcedCoins());
@@ -121,7 +118,7 @@ public class SomniumPlayer extends MySQLObject {
         this.wallet.changeForcedCoins(resultSet.getInt("forcedCoins"));
     }
 
-    public boolean canAfford(CoinType coinType, float amount) {
+    public boolean canAfford(CoinType coinType, int amount) {
         switch (coinType) {
             case BASIC:
                 return getWallet().getBasicCoins() >= amount;
@@ -134,7 +131,7 @@ public class SomniumPlayer extends MySQLObject {
         }
     }
 
-    public void changeCoins(CoinType coinType, float amount) {
+    public void changeCoins(CoinType coinType, int amount) {
         if (canAfford(coinType, amount)) {
             switch (coinType) {
                 case BASIC:

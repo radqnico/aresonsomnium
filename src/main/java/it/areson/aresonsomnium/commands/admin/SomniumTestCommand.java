@@ -74,9 +74,9 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
     private void openPermanentGuiHandler(CommandSender commandSender, String guiName) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            ShopManager shopManager = aresonSomnium.getShopManager();
-            if (shopManager.isShop(guiName)) {
-                CustomShop permanentGui = shopManager.getShop(guiName);
+            ShopManager shopManager = aresonSomnium.getGuiManager();
+            if (shopManager.isPermanent(guiName)) {
+                CustomShop permanentGui = shopManager.getPermanentGui(guiName);
                 player.openInventory(permanentGui.createInventory());
             } else {
                 player.sendMessage("La GUI richiesta non è una GUI salvata");
