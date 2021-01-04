@@ -1,14 +1,15 @@
 package it.areson.aresonsomnium.shops;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
 import it.areson.aresonsomnium.economy.CoinType;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Base64;
+import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class ShopItem extends ItemStack {
 
@@ -32,33 +33,27 @@ public class ShopItem extends ItemStack {
         this.priceMap = priceMap;
     }
 
-    public SerializedShopItem toSerializedShopItem() {
+    public String toJson() {
         byte[] bytes = serializeAsBytes();
         String itemStackString = Base64.getEncoder().encodeToString(bytes);
-        return new SerializedShopItem(itemStackString, new TreeMap<>(priceMap));
-    }
-
-    public ShopItem cloneShopItem() {
-        return new ShopItem(super.clone(), new TreeMap<>(priceMap));
+        Map<String, String> map = priceMap.entrySet().parallelStream().collect(Collectors.toMap(
+                e -> e.getKey().name(),
+                e -> e.getValue().toString()
+        ));
+        String priceMapJson = new Gson().toJson(map);
+        SerializedShopItem serializedShopItem = new SerializedShopItem(itemStackString, priceMapJson);
+        return new Gson().toJson(serializedShopItem);
     }
 
     public static class SerializedShopItem {
         @Expose
-        private final String itemStack;
+        private final String serializedItemStack;
         @Expose
-        private final TreeMap<CoinType, Float> prices;
+        private final String priceMapJson;
 
-        public SerializedShopItem(String serializedItemStack, TreeMap<CoinType, Float> priceMap) {
-            this.itemStack = serializedItemStack;
-            this.prices = priceMap;
-        }
-
-        public ShopItem toShopItem() {
-            return new ShopItem(ItemStack.deserializeBytes(Base64.getDecoder().decode(itemStack)), prices);
-        }
-
-        public JsonElement toJsonElement(){
-            return new Gson().toJsonTree(this);
+        public SerializedShopItem(String serializedItemStack, String priceMapJson) {
+            this.serializedItemStack = serializedItemStack;
+            this.priceMapJson = priceMapJson;
         }
     }
 }
