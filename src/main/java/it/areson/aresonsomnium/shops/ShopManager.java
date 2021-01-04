@@ -4,7 +4,6 @@ import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.utils.PlayerComparator;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -15,7 +14,6 @@ import java.util.TreeMap;
 public class ShopManager {
 
     private final TreeMap<String, CustomShop> shops;
-    private final TreeMap<Player, String> editingShops;
     private final TreeMap<Player, String> openedShops;
     private final MySqlDBConnection mySqlDBConnection;
     private final String tableName;
@@ -23,7 +21,6 @@ public class ShopManager {
     public ShopManager(MySqlDBConnection connection, String tableName) {
         this.shops = new TreeMap<>();
         PlayerComparator playerComparator = new PlayerComparator();
-        this.editingShops = new TreeMap<>(playerComparator);
         this.openedShops = new TreeMap<>(playerComparator);
         this.mySqlDBConnection = connection;
         this.tableName = tableName;
@@ -74,22 +71,7 @@ public class ShopManager {
         return customShop;
     }
 
-    public void beginEditGui(Player player, String guiName) {
-        editingShops.put(player, guiName);
-    }
-
-    public boolean endEditGui(Player player, Inventory inventory) {
-        String guiName = editingShops.remove(player);
-        if (Objects.nonNull(guiName)) {
-            CustomShop customShop = shops.get(guiName);
-            customShop.updateFromInventory(inventory);
-            customShop.saveToDB();
-            return true;
-        }
-        return false;
-    }
-
-    public void openGuiToPlayer(Player player, String guiName) {
+    public void openShop(Player player, String guiName) {
         CustomShop customShop = shops.get(guiName);
         if (Objects.nonNull(customShop)) {
             if (customShop.isShopReady()) {
@@ -103,29 +85,12 @@ public class ShopManager {
         }
     }
 
-    public void playerCloseGui(Player player) {
+    public void playerCloseShop(Player player) {
         openedShops.remove(player);
     }
 
-    public boolean isViewingCustomGui(Player player) {
+    public boolean isViewingShop(Player player) {
         return openedShops.containsKey(player);
     }
 
-    public CustomShop getViewingCustomShop(Player player) {
-        if (isViewingCustomGui(player)) {
-            return shops.get(openedShops.get(player));
-        }
-        return null;
-    }
-
-    public CustomShop getEditingCustomShop(Player player){
-        if(isEditingCustomGui(player)){
-            return shops.get(editingShops.get(player));
-        }
-        return null;
-    }
-
-    public boolean isEditingCustomGui(Player player) {
-        return editingShops.containsKey(player);
-    }
 }

@@ -1,5 +1,7 @@
 package it.areson.aresonsomnium.shops;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
 import it.areson.aresonsomnium.economy.CoinType;
 import org.bukkit.Material;
@@ -30,10 +32,14 @@ public class ShopItem extends ItemStack {
         this.priceMap = priceMap;
     }
 
-    public SerializedShopItem toSerialized() {
+    public SerializedShopItem toSerializedShopItem() {
         byte[] bytes = serializeAsBytes();
         String itemStackString = Base64.getEncoder().encodeToString(bytes);
         return new SerializedShopItem(itemStackString, new TreeMap<>(priceMap));
+    }
+
+    public ShopItem cloneShopItem() {
+        return new ShopItem(super.clone(), new TreeMap<>(priceMap));
     }
 
     public static class SerializedShopItem {
@@ -49,6 +55,10 @@ public class ShopItem extends ItemStack {
 
         public ShopItem toShopItem() {
             return new ShopItem(ItemStack.deserializeBytes(Base64.getDecoder().decode(itemStack)), prices);
+        }
+
+        public JsonElement toJsonElement(){
+            return new Gson().toJsonTree(this);
         }
     }
 }

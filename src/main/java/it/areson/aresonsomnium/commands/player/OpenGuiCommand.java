@@ -1,19 +1,14 @@
 package it.areson.aresonsomnium.commands.player;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.economy.CoinType;
-import it.areson.aresonsomnium.players.SomniumPlayer;
-import it.areson.aresonsomnium.shops.CustomShop;
 import it.areson.aresonsomnium.shops.ShopManager;
 import it.areson.aresonsomnium.utils.MessageUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 @SuppressWarnings("NullableProblems")
@@ -53,7 +48,7 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
             Player player = (Player) commandSender;
             ShopManager shopManager = aresonSomnium.getShopManager();
             if (shopManager.isShop(shopName)) {
-                shopManager.openGuiToPlayer(player, shopName);
+                shopManager.openShop(player, shopName);
             } else {
                 player.sendMessage("La GUI richiesta non esiste");
             }

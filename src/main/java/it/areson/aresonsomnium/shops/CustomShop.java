@@ -5,12 +5,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
-import it.areson.aresonsomnium.economy.CoinType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.sql.Connection;
@@ -48,11 +45,15 @@ public class CustomShop extends MySQLObject {
         }
     }
 
+    public TreeMap<Integer, ShopItem> getItems() {
+        return items;
+    }
+
     public Inventory createInventory() {
         Inventory inventory = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', title));
         for (Map.Entry<Integer, ShopItem> entry : items.entrySet()) {
             Integer key = entry.getKey();
-            ShopItem shopItem = entry.getValue();
+            ShopItem shopItem = entry.getValue().cloneShopItem();
             ItemMeta itemMeta = shopItem.getItemMeta();
             if (Objects.nonNull(itemMeta)) {
                 final List<String> lore = itemMeta.getLore();
@@ -75,28 +76,10 @@ public class CustomShop extends MySQLObject {
         return inventory;
     }
 
-    public void updateFromInventory(Inventory inventory) {
-        items.clear();
-        int size = inventory.getSize();
-        TreeMap<CoinType, Float> nullPriceMap = new TreeMap<>();
-        nullPriceMap.put(CoinType.BASIC, 0f);
-        for (int i = 0; i < size; i++) {
-            if (inventory.getItem(i) instanceof ShopItem) {
-                ShopItem shopItem = (ShopItem) inventory.getItem(i);
-                items.put(i, shopItem);
-            } else {
-                ItemStack item = inventory.getItem(i);
-                if (Objects.nonNull(item) && !item.getType().equals(Material.AIR)) {
-                    items.put(i, new ShopItem(item, new TreeMap<>(nullPriceMap)));
-                }
-            }
-        }
-    }
-
     @Override
     public void saveToDB() {
         createTableIfNotExists(String.format(tableQuery, tableName));
-        String saveQuery = getSaveQuery();
+        String saveQuery = getInsertQuery();
         try {
             Connection connection = mySqlDBConnection.connect();
             int update = mySqlDBConnection.update(connection, saveQuery);
@@ -112,12 +95,12 @@ public class CustomShop extends MySQLObject {
         }
     }
 
-    public String getSaveQuery() {
+    public String getInsertQuery() {
         JsonObject itemsJson = new JsonObject();
         for (Map.Entry<Integer, ShopItem> entry : items.entrySet()) {
             String key = entry.getKey().toString();
-            ShopItem.SerializedShopItem value = entry.getValue().toSerialized();
-            itemsJson.add(key, new Gson().toJsonTree(value));
+            ShopItem.SerializedShopItem serializedShopItem = entry.getValue().toSerializedShopItem();
+            itemsJson.add(key, serializedShopItem.toJsonElement());
         }
 
         return String.format("INSERT INTO %s (guiName, guiTitle, guiItems) " +
@@ -138,7 +121,7 @@ public class CustomShop extends MySQLObject {
             ResultSet resultSet = mySqlDBConnection.select(connection, query);
             if (resultSet.next()) {
                 // Presente
-                setFromResultSet(resultSet);
+                applyResultSet(resultSet);
                 mySqlDBConnection.getLogger().info("Dati GUI '" + name + "' recuperati dal DB");
                 return true;
             } else {
@@ -153,7 +136,7 @@ public class CustomShop extends MySQLObject {
         return false;
     }
 
-    private void setFromResultSet(ResultSet resultSet) throws SQLException {
+    private void applyResultSet(ResultSet resultSet) throws SQLException {
         this.title = resultSet.getString("guiTitle");
         this.items.clear();
         String guiItems = resultSet.getString("guiItems");
