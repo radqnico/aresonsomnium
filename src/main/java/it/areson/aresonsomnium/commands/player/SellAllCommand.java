@@ -6,10 +6,12 @@ import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import it.areson.aresonsomnium.shops.BlockPrice;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @SuppressWarnings("NullableProblems")
 public class SellAllCommand implements CommandExecutor, TabCompleter {
@@ -31,7 +33,27 @@ public class SellAllCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] arguments) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
+            double multiplier = 1.0;
 
+            //Getting multiplier
+            Optional<PermissionAttachmentInfo> optionalMultiplierPermission = player.getEffectivePermissions().stream().parallel()
+                    .filter(permission -> permission.getPermission().startsWith(aresonSomnium.MULTIPLIER_PERMISSION))
+                    .findFirst();
+
+            if (optionalMultiplierPermission.isPresent()) {
+                String permission = optionalMultiplierPermission.get().getPermission();
+                int lastDotPosition = permission.lastIndexOf(".");
+                String stringMultiplier = permission.substring(lastDotPosition);
+
+                try {
+                    double value = Double.parseDouble(stringMultiplier);
+                    multiplier = value / 100;
+                } catch (NumberFormatException event) {
+                    aresonSomnium.getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
+                }
+            }
+
+            //Getting amount
             BigDecimal coinsToGive = Arrays.stream(player.getInventory().getContents()).parallel().reduce(BigDecimal.ZERO, (total, itemStack) -> {
                 try {
                     if (itemStack != null) {
@@ -47,6 +69,7 @@ public class SellAllCommand implements CommandExecutor, TabCompleter {
                 return total;
             }, BigDecimal::add);
 
+            coinsToGive = coinsToGive.multiply(BigDecimal.valueOf(multiplier));
             Wallet.addBasicCoins(player, coinsToGive);
 
         }

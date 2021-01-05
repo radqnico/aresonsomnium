@@ -28,6 +28,8 @@ public class AresonSomnium extends JavaPlugin {
     private CustomGuiEventsListener customGuiEventsListener;
     private FileManager dataFile;
 
+    public final String MULTIPLIER_PERMISSION = "aresonsomnium.multiplier";
+
     @Override
     public void onDisable() {
         somniumPlayerManager.saveAll();
