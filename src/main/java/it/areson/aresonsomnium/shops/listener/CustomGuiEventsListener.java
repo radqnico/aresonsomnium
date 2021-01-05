@@ -67,7 +67,15 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     break;
             }
         }
+    }
 
+    @EventHandler
+    public void onInventoryDragEvent(InventoryDragEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        ShopManager shopManager = aresonSomnium.getGuiManager();
+        if (shopManager.isEditingCustomGui(player) || shopManager.isViewingCustomGui(player)) {
+            event.setCancelled(true);
+        }
     }
 
     private void shopClickOnItem(CustomShop customShop, Inventory clickedInventory, ClickType clickType, int slot, Player player) {
