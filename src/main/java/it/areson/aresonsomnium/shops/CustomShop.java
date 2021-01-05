@@ -144,6 +144,7 @@ public class CustomShop extends MySQLObject {
                 Map.Entry::getKey,
                 entry -> entry.getValue().toShopItem()
         )));
+        this.title = resultSet.getString("guiTitle");
     }
 
     public boolean isShopReady() {
