@@ -1,10 +1,9 @@
-package it.areson.aresonsomnium.shops;
+package it.areson.aresonsomnium.shops.guis;
 
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.utils.PlayerComparator;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -78,15 +77,8 @@ public class ShopManager {
         editingGuis.put(player, guiName);
     }
 
-    public boolean endEditGui(Player player, Inventory inventory) {
-        String guiName = editingGuis.remove(player);
-        if (Objects.nonNull(guiName)) {
-            CustomShop customShop = guis.get(guiName);
-            customShop.updateFromInventory(inventory);
-            customShop.saveToDB();
-            return true;
-        }
-        return false;
+    public boolean endEditGui(Player player) {
+        return Objects.nonNull(editingGuis.remove(player));
     }
 
     public void openGuiToPlayer(Player player, String guiName) {
@@ -118,8 +110,8 @@ public class ShopManager {
         return null;
     }
 
-    public CustomShop getEditingCustomShop(Player player){
-        if(isEditingCustomGui(player)){
+    public CustomShop getEditingCustomShop(Player player) {
+        if (isEditingCustomGui(player)) {
             return guis.get(editingGuis.get(player));
         }
         return null;

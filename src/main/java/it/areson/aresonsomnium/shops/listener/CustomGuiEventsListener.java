@@ -1,11 +1,11 @@
-package it.areson.aresonsomnium.listeners;
+package it.areson.aresonsomnium.shops.listener;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.shops.CustomShop;
-import it.areson.aresonsomnium.shops.ShopManager;
+import it.areson.aresonsomnium.listeners.GeneralEventListener;
+import it.areson.aresonsomnium.shops.guis.CustomShop;
+import it.areson.aresonsomnium.shops.guis.ShopManager;
+import it.areson.aresonsomnium.shops.items.ShopItem;
 import it.areson.aresonsomnium.utils.MessageUtils;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -28,7 +28,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     public void onInventoryCloseEvent(InventoryCloseEvent event) {
         Player player = (Player) event.getView().getPlayer();
         if (shopManager.isEditingCustomGui(player)) {
-            if (shopManager.endEditGui(player, event.getInventory())) {
+            if (shopManager.endEditGui(player)) {
                 aresonSomnium.getLogger().info(MessageUtils.successMessage("GUI modificata da '" + player.getName() + "' salvata su DB"));
             } else {
                 aresonSomnium.getLogger().info(MessageUtils.warningMessage("GUI modificata da '" + player.getName() + "' NON salvata DB"));
@@ -49,12 +49,18 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 if (clickedInventory.getType().equals(InventoryType.CHEST)) {
                     switch (event.getClick()) {
                         case LEFT:
-
+                            int slot = event.getSlot();
+                            ShopItem shopItem = customShop.getItems().get(slot);
+                            if(Objects.nonNull(shopItem)){
+                                player.sendMessage(shopItem.getPrice().toString());
+                            }
                             break;
                     }
                 }
             }
             event.setCancelled(true);
+        } else if (shopManager.isEditingCustomGui(player)){
+            player.sendMessage("Editing");
         }
     }
 

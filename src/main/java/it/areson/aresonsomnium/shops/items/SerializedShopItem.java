@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.shops;
+package it.areson.aresonsomnium.shops.items;
 
 import com.google.gson.Gson;
 import org.bukkit.inventory.ItemStack;

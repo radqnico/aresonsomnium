@@ -1,8 +1,8 @@
 package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.shops.CustomShop;
-import it.areson.aresonsomnium.shops.ShopManager;
+import it.areson.aresonsomnium.shops.guis.CustomShop;
+import it.areson.aresonsomnium.shops.guis.ShopManager;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

@@ -1,9 +1,12 @@
-package it.areson.aresonsomnium.shops;
+package it.areson.aresonsomnium.shops.guis;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
+import it.areson.aresonsomnium.shops.items.Price;
+import it.areson.aresonsomnium.shops.items.SerializedShopItem;
+import it.areson.aresonsomnium.shops.items.ShopItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -51,6 +54,10 @@ public class CustomShop extends MySQLObject {
         }
     }
 
+    public TreeMap<Integer, ShopItem> getItems() {
+        return items;
+    }
+
     public Inventory createInventory() {
         Inventory inventory = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', title));
         for (Map.Entry<Integer, ShopItem> entry : items.entrySet()) {
@@ -59,17 +66,6 @@ public class CustomShop extends MySQLObject {
             inventory.setItem(key, value);
         }
         return inventory;
-    }
-
-    public void updateFromInventory(Inventory inventory) {
-        items.clear();
-        int size = inventory.getSize();
-        for (int i = 0; i < size; i++) {
-            ItemStack item = inventory.getItem(i);
-            if (Objects.nonNull(item) && !item.getType().equals(Material.AIR)) {
-                items.put(i, new ShopItem(item, new Price()));
-            }
-        }
     }
 
     @Override

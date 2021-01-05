@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.shops;
+package it.areson.aresonsomnium.shops.items;
 
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
@@ -59,5 +59,10 @@ public class Price {
 
     public boolean isPriceReady() {
         return basicCoins.compareTo(BigDecimal.valueOf(0)) >= 0 && charonCoins >= 0 && forcedCoins >= 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Price{basicCoins=" + basicCoins + ",charonCoins=" + charonCoins + ",forcedCoins=" + forcedCoins + "}";
     }
 }

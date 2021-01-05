@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.shops;
+package it.areson.aresonsomnium.shops.items;
 
 import org.bukkit.inventory.ItemStack;
 
