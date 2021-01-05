@@ -34,9 +34,12 @@ public class SellAllCommand implements CommandExecutor, TabCompleter {
 
             BigDecimal coinsToGive = Arrays.stream(player.getInventory().getContents()).parallel().reduce(BigDecimal.ZERO, (total, itemStack) -> {
                 try {
-                    BigDecimal price = BlockPrice.getPrice(itemStack.getType());
-                    total = total.add(price);
-                    player.getInventory().remove(itemStack);
+                    if (itemStack != null) {
+                        BigDecimal price = BlockPrice.getPrice(itemStack.getType());
+                        total = total.add(price);
+                        player.getInventory().remove(itemStack);
+                    }
+
                 } catch (MaterialNotSellableException ignored) {
                 }
                 return total;
