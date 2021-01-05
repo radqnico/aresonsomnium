@@ -17,7 +17,10 @@ commands:
     permission: aresonsomnium.player
     usage: /opengui <guiName>
     aliases: [shop]
-
+  sellall:
+    description: "Sell all the sellable items in your inventory"
+    permission: aresonsomnium.player
+    usage: /sellall
 permissions:
   aresonsomnium.admin:
     default: op
