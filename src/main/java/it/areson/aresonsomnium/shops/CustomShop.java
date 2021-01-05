@@ -14,7 +14,10 @@ import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
@@ -88,7 +91,7 @@ public class CustomShop extends MySQLObject {
         }
     }
 
-    public Map<Integer, SerializedShopItem> getSerializedShopItems(){
+    public Map<Integer, SerializedShopItem> getSerializedShopItems() {
         return items.entrySet().parallelStream().collect(Collectors.toMap(
                 Map.Entry::getKey,
                 entry -> entry.getValue().toSerializedShopItem()
@@ -132,7 +135,15 @@ public class CustomShop extends MySQLObject {
     }
 
     private void setFromResultSet(ResultSet resultSet) throws SQLException {
-
+        Gson gson = new Gson();
+        this.items.clear();
+        Type type = new TypeToken<HashMap<Integer, SerializedShopItem>>() {
+        }.getType();
+        Map<Integer, SerializedShopItem> serializedShopItemMap = gson.fromJson(resultSet.getString("shopItems"), type);
+        this.items.putAll(serializedShopItemMap.entrySet().parallelStream().collect(Collectors.toMap(
+                Map.Entry::getKey,
+                entry -> entry.getValue().toShopItem()
+        )));
     }
 
     public boolean isShopReady() {

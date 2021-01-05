@@ -18,6 +18,9 @@ commands:
     usage: /opengui <guiName>
     aliases: [shop]
 
+depend:
+  - EssentialsX
+
 permissions:
   aresonsomnium.admin:
     default: op
