@@ -5,16 +5,15 @@ import it.areson.aresonsomnium.commands.admin.SomniumAdminCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumTestCommand;
 import it.areson.aresonsomnium.commands.player.OpenGuiCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
-import it.areson.aresonsomnium.players.SomniumPlayerManager;
-import it.areson.aresonsomnium.shops.listener.CustomGuiEventsListener;
 import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
-import it.areson.aresonsomnium.shops.items.BlockPrice;
+import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
+import it.areson.aresonsomnium.shops.items.BlockPrice;
+import it.areson.aresonsomnium.shops.listener.CustomGuiEventsListener;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
+import it.areson.aresonsomnium.utils.Debugger;
 import it.areson.aresonsomnium.utils.FileManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.logging.Logger;
 
 import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
 import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
@@ -27,6 +26,8 @@ public class AresonSomnium extends JavaPlugin {
     private CustomGuiEventsListener customGuiEventsListener;
     private FileManager dataFile;
 
+    private Debugger debugger;
+
     @Override
     public void onDisable() {
         somniumPlayerManager.saveAll();
@@ -35,8 +36,8 @@ public class AresonSomnium extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Logger logger = getLogger();
-        MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(logger);
+        debugger = new Debugger(this, Debugger.DebugLevel.LOW);
+        MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(debugger);
         somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection, PLAYER_TABLE_NAME);
         shopManager = new ShopManager(mySqlDBConnection, GUIS_TABLE_NAME);
 
@@ -88,5 +89,9 @@ public class AresonSomnium extends JavaPlugin {
 
     public ShopManager getGuiManager() {
         return shopManager;
+    }
+
+    public Debugger getDebugger() {
+        return debugger;
     }
 }

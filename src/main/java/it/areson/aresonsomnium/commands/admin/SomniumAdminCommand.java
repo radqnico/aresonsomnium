@@ -6,6 +6,7 @@ import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.shops.guis.CustomShop;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
+import it.areson.aresonsomnium.utils.Debugger;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
@@ -24,7 +25,8 @@ import java.util.stream.Collectors;
 public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final PluginCommand command;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers",
+            "createShop", "editShop", "reloadShops", "setDebugLevel"};
     private final AresonSomnium aresonSomnium;
 
     public SomniumAdminCommand(AresonSomnium aresonSomnium) {
@@ -50,6 +52,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "setcoins":
                     case "createshop":
                     case "editshop":
+                    case "setdebuglevel":
                         notEnoughArguments(commandSender);
                         break;
                     case "listplayers":
@@ -71,6 +74,8 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "listplayers":
                         tooManyArguments(commandSender, "listPlayers: 2");
                         break;
+                    case "setdebuglevel":
+                        handleSetDebugLevel(commandSender, args[1]);
                     case "setcoins":
                     case "createshop":
                         notEnoughArguments(commandSender);
@@ -109,7 +114,6 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         List<String> suggestions = new ArrayList<>();
@@ -132,6 +136,13 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     StringUtil.copyPartialMatches(
                             strings[1],
                             aresonSomnium.getGuiManager().getGuis().keySet(),
+                            suggestions
+                    );
+                    break;
+                case "setdebuglevel":
+                    StringUtil.copyPartialMatches(
+                            strings[1],
+                            Arrays.stream(Debugger.DebugLevel.values()).map(Enum::name).collect(Collectors.toList()),
                             suggestions
                     );
                     break;
@@ -159,6 +170,19 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
     private void tooManyArguments(CommandSender commandSender, String function) {
         commandSender.sendMessage(MessageUtils.errorMessage("Troppi parametri forniti a " + function));
         commandSender.sendMessage(command.getUsage());
+    }
+
+    private void handleSetDebugLevel(CommandSender commandSender, String level) {
+        Debugger.DebugLevel debugLevel = Debugger.DebugLevel.valueOf(level);
+        switch (debugLevel){
+            case LOW:
+            case HIGH:
+                aresonSomnium.getDebugger().setDebugLevel(debugLevel);
+                break;
+            default:
+                commandSender.sendMessage("Livello di debug non valido");
+                break;
+        }
     }
 
     private void handleReloadShops(CommandSender commandSender) {

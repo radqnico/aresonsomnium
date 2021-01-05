@@ -2,9 +2,8 @@ package it.areson.aresonsomnium.players;
 
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
-import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
-import it.areson.aresonsomnium.exceptions.CantAffordException;
+import it.areson.aresonsomnium.shops.items.Price;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -68,13 +67,13 @@ public class SomniumPlayer extends MySQLObject {
             Connection connection = mySqlDBConnection.connect();
             int update = mySqlDBConnection.update(connection, query);
             if (update >= 0) {
-                mySqlDBConnection.getLogger().info("Aggiornato giocatore '" + getPlayerName() + "' sul DB.");
+                mySqlDBConnection.getDebugger().debugSuccess("Aggiornato giocatore '" + getPlayerName() + "' sul DB.");
             } else {
-                mySqlDBConnection.getLogger().warning("Giocatore '" + getPlayerName() + "' non aggiornato.");
+                mySqlDBConnection.getDebugger().debugWarning("Giocatore '" + getPlayerName() + "' non aggiornato.");
             }
             connection.close();
         } catch (SQLException exception) {
-            mySqlDBConnection.getLogger().severe("Impossibile connettersi per aggiornare il giocatore '" + getPlayerName() + "'");
+            mySqlDBConnection.getDebugger().debugError("Impossibile connettersi per aggiornare il giocatore '" + getPlayerName() + "'");
             mySqlDBConnection.printSqlExceptionDetails(exception);
         }
     }
@@ -90,15 +89,15 @@ public class SomniumPlayer extends MySQLObject {
             if (resultSet.next()) {
                 // Presente
                 setFromResultSet(resultSet);
-                mySqlDBConnection.getLogger().info("Dati del giocatore '" + getPlayerName() + "' recuperati dal DB");
+                mySqlDBConnection.getDebugger().debugSuccess("Dati del giocatore '" + getPlayerName() + "' recuperati dal DB");
                 return true;
             } else {
                 // Non presente
-                mySqlDBConnection.getLogger().warning("Giocatore '" + getPlayerName() + "' non presente sul DB");
+                mySqlDBConnection.getDebugger().debugWarning("Giocatore '" + getPlayerName() + "' non presente sul DB");
             }
             connection.close();
         } catch (SQLException exception) {
-            mySqlDBConnection.getLogger().severe("Impossibile connettersi per recuperare il giocatore '" + getPlayerName() + "'");
+            mySqlDBConnection.getDebugger().debugError("Impossibile connettersi per recuperare il giocatore '" + getPlayerName() + "'");
             mySqlDBConnection.printSqlExceptionDetails(exception);
         }
         return false;
@@ -119,29 +118,7 @@ public class SomniumPlayer extends MySQLObject {
         this.wallet.changeForcedCoins(resultSet.getInt("forcedCoins"));
     }
 
-    public boolean canAfford(CoinType coinType, int amount) {
-        switch (coinType) {
-            case CHARON:
-                return getWallet().getCharonCoins() >= amount;
-            case FORCED:
-                return getWallet().getForcedCoins() >= amount;
-            default:
-                return false;
-        }
-    }
-
-    public void changeCoins(CoinType coinType, int amount) {
-        if (canAfford(coinType, amount)) {
-            switch (coinType) {
-                case CHARON:
-                    getWallet().changeCharonCoins(amount);
-                    break;
-                case FORCED:
-                    getWallet().changeForcedCoins(amount);
-                    break;
-            }
-        } else {
-            throw new CantAffordException("Can't remove " + amount + " " + coinType.getCoinName() + " Coins from player '" + getPlayerName() + "'");
-        }
+    public boolean canAfford(Price price) {
+        return price.canAffordThis(this);
     }
 }

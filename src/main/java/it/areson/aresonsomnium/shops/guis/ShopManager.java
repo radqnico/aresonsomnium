@@ -47,7 +47,7 @@ public class ShopManager {
             }
             connection.close();
         } catch (SQLException exception) {
-            mySqlDBConnection.getLogger().severe("Impossibile connettersi per recuperare la GUI '" + guiName + "'");
+            mySqlDBConnection.getDebugger().debugError("Impossibile connettersi per recuperare la GUI '" + guiName + "'");
             mySqlDBConnection.printSqlExceptionDetails(exception);
         }
     }

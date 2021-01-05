@@ -4,12 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
-import it.areson.aresonsomnium.shops.items.Price;
 import it.areson.aresonsomnium.shops.items.SerializedShopItem;
 import it.areson.aresonsomnium.shops.items.ShopItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,7 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -30,8 +27,7 @@ public class CustomShop extends MySQLObject {
     public static String tableQuery = "create table if not exists %s (" +
             "guiName varchar(255) not null primary key,\n" +
             "guiTitle varchar(255) not null,\n" +
-            "guiObjects text not null,\n" +
-            "prices text not null\n" +
+            "shopItems text not null,\n" +
             ");";
 
     private final String name;
@@ -76,13 +72,13 @@ public class CustomShop extends MySQLObject {
             Connection connection = mySqlDBConnection.connect();
             int update = mySqlDBConnection.update(connection, saveQuery);
             if (update >= 0) {
-                mySqlDBConnection.getLogger().info("Aggiornata GUI '" + name + "' sul DB.");
+                mySqlDBConnection.getDebugger().debugSuccess("Aggiornata GUI '" + name + "' sul DB.");
             } else {
-                mySqlDBConnection.getLogger().warning("GUI '\" + name + \"' NON aggiornata sul DB.");
+                mySqlDBConnection.getDebugger().debugWarning("GUI '\" + name + \"' NON aggiornata sul DB.");
             }
             connection.close();
         } catch (SQLException exception) {
-            mySqlDBConnection.getLogger().severe("Impossibile connettersi per aggiornare la GUI '" + name + "'");
+            mySqlDBConnection.getDebugger().debugError("Impossibile connettersi per aggiornare la GUI '" + name + "'");
             mySqlDBConnection.printSqlExceptionDetails(exception);
         }
     }
@@ -116,15 +112,15 @@ public class CustomShop extends MySQLObject {
             if (resultSet.next()) {
                 // Presente
                 setFromResultSet(resultSet);
-                mySqlDBConnection.getLogger().info("Dati GUI '" + name + "' recuperati dal DB");
+                mySqlDBConnection.getDebugger().debugSuccess("Dati GUI '" + name + "' recuperati dal DB");
                 return true;
             } else {
                 // Non presente
-                mySqlDBConnection.getLogger().warning("GUI '" + name + "' non presente sul DB");
+                mySqlDBConnection.getDebugger().debugWarning("GUI '" + name + "' non presente sul DB");
             }
             connection.close();
         } catch (SQLException exception) {
-            mySqlDBConnection.getLogger().severe("Impossibile connettersi per recuperare la GUI '" + name + "'");
+            mySqlDBConnection.getDebugger().debugError("Impossibile connettersi per recuperare la GUI '" + name + "'");
             mySqlDBConnection.printSqlExceptionDetails(exception);
         }
         return false;
