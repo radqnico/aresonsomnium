@@ -44,6 +44,7 @@ public class SellAllCommand implements CommandExecutor, TabCompleter {
                 String permission = optionalMultiplierPermission.get().getPermission();
                 int lastDotPosition = permission.lastIndexOf(".");
                 String stringMultiplier = permission.substring(lastDotPosition);
+                aresonSomnium.getLogger().severe("" + stringMultiplier);
 
                 try {
                     double value = Double.parseDouble(stringMultiplier);
