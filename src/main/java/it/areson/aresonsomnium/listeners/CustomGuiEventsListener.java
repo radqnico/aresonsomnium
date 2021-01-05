@@ -28,17 +28,8 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     public void onInventoryCloseEvent(InventoryCloseEvent event) {
         Player player = (Player) event.getView().getPlayer();
         if (shopManager.isEditingCustomGui(player)) {
-            CustomShop editingCustomShop = shopManager.getEditingCustomShop(player);
             if (shopManager.endEditGui(player, event.getInventory())) {
                 aresonSomnium.getLogger().info(MessageUtils.successMessage("GUI modificata da '" + player.getName() + "' salvata su DB"));
-                String pricesJSON = editingCustomShop.getPricesJSON();
-                TextComponent textComponent = new TextComponent("Clicca questo messaggio per copiare\nOggetti: ");
-                textComponent.addExtra(MessageUtils.successMessage(editingCustomShop.getIndexAndNameJSON()));
-                textComponent.addExtra("\n\nPrezzi:\n");
-                textComponent.addExtra(MessageUtils.successMessage(pricesJSON));
-                textComponent.addExtra("\n\nCopia e incolla solo la parte dei prezzi in /somniumadmin setPrices <nomeShop> <jsonPrezzi>");
-                textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, pricesJSON));
-                player.spigot().sendMessage(textComponent);
             } else {
                 aresonSomnium.getLogger().info(MessageUtils.warningMessage("GUI modificata da '" + player.getName() + "' NON salvata DB"));
             }
@@ -58,11 +49,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 if (clickedInventory.getType().equals(InventoryType.CHEST)) {
                     switch (event.getClick()) {
                         case LEFT:
-                            int slot = event.getSlot();
-                            Float price = customShop.getPriceOfSlot(slot);
-                            if (Objects.nonNull(price)) {
-                                player.sendMessage("Price: " + price);
-                            }
+
                             break;
                     }
                 }
