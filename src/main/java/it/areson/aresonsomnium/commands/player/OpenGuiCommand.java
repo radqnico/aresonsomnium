@@ -1,10 +1,11 @@
 package it.areson.aresonsomnium.commands.player;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.economy.CoinType;
+import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.shops.CustomShop;
 import it.areson.aresonsomnium.shops.ShopManager;
+import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -57,7 +58,7 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
                 player.sendMessage("La GUI richiesta non esiste");
             }
         } else {
-            commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
+            commandSender.sendMessage(MessageUtils.errorMessage("Comando disponibile solo da Player"));
         }
     }
 
@@ -72,18 +73,18 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
     }
 
     private void notEnoughArguments(CommandSender commandSender) {
-        commandSender.sendMessage(errorMessage("Parametri non sufficienti"));
+        commandSender.sendMessage(MessageUtils.errorMessage("Parametri non sufficienti"));
         commandSender.sendMessage(command.getUsage());
     }
 
     private void tooManyArguments(CommandSender commandSender, String function) {
-        commandSender.sendMessage(errorMessage("Troppi parametri forniti a " + function));
+        commandSender.sendMessage(MessageUtils.errorMessage("Troppi parametri forniti a " + function));
         commandSender.sendMessage(command.getUsage());
     }
 
     private void handleReloadGuis(CommandSender commandSender) {
         aresonSomnium.getGuiManager().fetchAllFromDB();
-        commandSender.sendMessage(successMessage("Tutte le GUI ricaricate dal DB"));
+        commandSender.sendMessage(MessageUtils.successMessage("Tutte le GUI ricaricate dal DB"));
     }
 
     private void handleEditGui(CommandSender commandSender, String guiName) {
@@ -98,7 +99,7 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
                 player.sendMessage("La GUI richiesta non è una GUI salvata");
             }
         } else {
-            commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
+            commandSender.sendMessage(MessageUtils.errorMessage("Comando disponibile solo da Player"));
         }
     }
 
@@ -114,7 +115,7 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
         } else {
             message = "GUI '" + guiName + "' creata";
         }
-        commandSender.sendMessage(successMessage(message));
+        commandSender.sendMessage(MessageUtils.successMessage(message));
     }
 
     private void handleStatsCommand(CommandSender commandSender, String playerName) {
@@ -125,63 +126,16 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
                 String toSend = ChatColor.GOLD + somniumPlayer.getPlayerName() + ChatColor.RESET + "'s stats:\n" +
                         "   Secondi giocati: " + somniumPlayer.getSecondsPlayedTotal() + "\n" +
                         "   Wallet:\n" +
-                        "      Basic coins: " + somniumPlayer.getWallet().getBasicCoins() + "\n" +
+                        "      Basic (essentials) coins: " + Wallet.getBasicCoins(player) + "\n" +
                         "      Charon coins: " + somniumPlayer.getWallet().getCharonCoins() + "\n" +
                         "      Forced coins: " + somniumPlayer.getWallet().getForcedCoins();
                 commandSender.sendMessage(toSend);
             } else {
-                commandSender.sendMessage(errorMessage("Impossibile reperire il SomniumPlayer per " + playerName));
+                commandSender.sendMessage(MessageUtils.errorMessage("Impossibile reperire il SomniumPlayer per " + playerName));
             }
         } else {
-            commandSender.sendMessage(errorMessage("Il giocatore " + playerName + " non esiste"));
+            commandSender.sendMessage(MessageUtils.errorMessage("Il giocatore " + playerName + " non esiste"));
         }
-    }
-
-    private void handleSetCoins(CommandSender commandSender, String playerName, String coinType, String amountString) {
-        Player player = aresonSomnium.getServer().getPlayer(playerName);
-        if (Objects.nonNull(player)) {
-            SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
-            if (Objects.nonNull(somniumPlayer)) {
-                try {
-                    int amount = Integer.parseInt(amountString);
-                    CoinType type = CoinType.valueOf(coinType.toUpperCase());
-                    switch (type) {
-                        case BASIC:
-                            somniumPlayer.getWallet().setBasicCoins(amount);
-                            commandSender.sendMessage(successMessage("Valore dei Basic Coins impostato"));
-                            break;
-                        case CHARON:
-                            somniumPlayer.getWallet().setCharonCoins(amount);
-                            commandSender.sendMessage(successMessage("Valore dei Charon Coins impostato"));
-                            break;
-                        case FORCED:
-                            somniumPlayer.getWallet().setForcedCoins(amount);
-                            commandSender.sendMessage(successMessage("Valore dei Forced Coins impostato"));
-                            break;
-                        default:
-                            commandSender.sendMessage(errorMessage("Tipo di moneta non esistente"));
-                    }
-                } catch (NumberFormatException exception) {
-                    commandSender.sendMessage(errorMessage("Numero non valido"));
-                }
-            } else {
-                commandSender.sendMessage(errorMessage("Impossibile reperire il SomniumPlayer per " + playerName));
-            }
-        } else {
-            commandSender.sendMessage(errorMessage("Il giocatore " + playerName + " non esiste"));
-        }
-    }
-
-    private String successMessage(String message) {
-        return ChatColor.GREEN + message;
-    }
-
-    private String warningMessage(String message) {
-        return ChatColor.YELLOW + message;
-    }
-
-    private String errorMessage(String message) {
-        return ChatColor.RED + message;
     }
 
     private void handleListPlayers(CommandSender commandSender) {

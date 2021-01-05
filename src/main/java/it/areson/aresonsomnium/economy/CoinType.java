@@ -1,7 +1,6 @@
 package it.areson.aresonsomnium.economy;
 
 public enum CoinType {
-    BASIC("Basic"),
     CHARON("Charon"),
     FORCED("Forced");
 

@@ -8,6 +8,7 @@ import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.listeners.CustomGuiEventsListener;
 import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
+import it.areson.aresonsomnium.shops.BlockPrice;
 import it.areson.aresonsomnium.shops.ShopManager;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.FileManager;
@@ -52,6 +53,9 @@ public class AresonSomnium extends JavaPlugin {
         // 1m  = 1200
         // 10m = 12000
         AutoSaveManager.startAutoSaveTask(this, 6000); // 5m
+
+        // Init prices map
+        BlockPrice.initPrices();
 
         AresonSomniumAPI.instance = this;
     }

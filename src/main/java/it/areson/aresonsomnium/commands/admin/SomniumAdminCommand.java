@@ -2,6 +2,7 @@ package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
+import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.shops.CustomShop;
 import it.areson.aresonsomnium.shops.ShopManager;
@@ -203,7 +204,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 String toSend = ChatColor.GOLD + somniumPlayer.getPlayerName() + ChatColor.RESET + "'s stats:\n" +
                         "   Secondi giocati: " + somniumPlayer.getSecondsPlayedTotal() + "\n" +
                         "   Wallet:\n" +
-                        "      Basic coins: " + somniumPlayer.getWallet().getBasicCoins() + "\n" +
+                        "      Basic coins: " + Wallet.getBasicCoins(player) + "\n" +
                         "      Charon coins: " + somniumPlayer.getWallet().getCharonCoins() + "\n" +
                         "      Forced coins: " + somniumPlayer.getWallet().getForcedCoins();
                 commandSender.sendMessage(toSend);
@@ -224,10 +225,6 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     int amount = Integer.parseInt(amountString);
                     CoinType type = CoinType.valueOf(coinType.toUpperCase());
                     switch (type) {
-                        case BASIC:
-                            somniumPlayer.getWallet().setBasicCoins(amount);
-                            commandSender.sendMessage(successMessage("Valore dei Basic Coins impostato"));
-                            break;
                         case CHARON:
                             somniumPlayer.getWallet().setCharonCoins(amount);
                             commandSender.sendMessage(successMessage("Valore dei Charon Coins impostato"));
