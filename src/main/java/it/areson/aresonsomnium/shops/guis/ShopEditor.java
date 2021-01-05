@@ -1,13 +1,14 @@
 package it.areson.aresonsomnium.shops.guis;
 
 import it.areson.aresonsomnium.shops.items.ShopItem;
+import it.areson.aresonsomnium.utils.PlayerComparator;
 import org.bukkit.entity.Player;
 
 import java.util.TreeMap;
 
 public class ShopEditor {
 
-    private static final TreeMap<Player, ShopItem> pickupItems = new TreeMap<>();
+    private static final TreeMap<Player, ShopItem> pickupItems = new TreeMap<>(new PlayerComparator());
 
     public static void addNewItemToShop(CustomShop shop, int slot, ShopItem shopItem) {
         shop.getItems().put(slot, shopItem);
