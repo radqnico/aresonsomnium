@@ -19,7 +19,7 @@ commands:
     aliases: [shop]
 
 depend:
-  - EssentialsX
+  - Essentials
 
 permissions:
   aresonsomnium.admin:
