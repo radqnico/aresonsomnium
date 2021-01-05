@@ -23,7 +23,11 @@ public class Debugger {
                 break;
             case HIGH:
                 aresonSomnium.getLogger().info(MessageUtils.successMessage(message));
-                aresonSomnium.getServer().getOnlinePlayers().forEach(player -> player.sendMessage(MessageUtils.successMessage("DEBUG: " + message)));
+                aresonSomnium.getServer().getOnlinePlayers().forEach(player -> {
+                    if (player.isOp()) {
+                        player.sendMessage(MessageUtils.successMessage("DEBUG: " + message));
+                    }
+                });
                 break;
         }
     }
@@ -35,7 +39,11 @@ public class Debugger {
                 break;
             case HIGH:
                 aresonSomnium.getLogger().info(message);
-                aresonSomnium.getServer().getOnlinePlayers().forEach(player -> player.sendMessage("DEBUG: " + message));
+                aresonSomnium.getServer().getOnlinePlayers().forEach(player -> {
+                    if (player.isOp()) {
+                        player.sendMessage("DEBUG: " + message);
+                    }
+                });
                 break;
         }
     }
@@ -47,7 +55,11 @@ public class Debugger {
                 break;
             case HIGH:
                 aresonSomnium.getLogger().warning(message);
-                aresonSomnium.getServer().getOnlinePlayers().forEach(player -> player.sendMessage(MessageUtils.warningMessage("DEBUG: " + message)));
+                aresonSomnium.getServer().getOnlinePlayers().forEach(player -> {
+                    if (player.isOp()) {
+                        player.sendMessage(MessageUtils.warningMessage("DEBUG: " + message));
+                    }
+                });
                 break;
         }
     }
@@ -59,13 +71,17 @@ public class Debugger {
                 break;
             case HIGH:
                 aresonSomnium.getLogger().severe(message);
-                aresonSomnium.getServer().getOnlinePlayers().forEach(player -> player.sendMessage(MessageUtils.errorMessage("DEBUG: " + message)));
+                aresonSomnium.getServer().getOnlinePlayers().forEach(player -> {
+                    if (player.isOp()) {
+                        player.sendMessage(MessageUtils.errorMessage("DEBUG: " + message));
+                    }
+                });
                 break;
         }
     }
 
     public enum DebugLevel {
         LOW, // Only Errors
-        HIGH, // All that happens in console
+        HIGH // All that happens in console
     }
 }

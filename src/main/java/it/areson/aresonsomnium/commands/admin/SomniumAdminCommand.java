@@ -90,6 +90,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "createshop":
                         handleCreateShop(commandSender, args[1], args[2].replaceAll("_", " "));
                         break;
+                    case "setdebuglevel":
                     case "stats":
                     case "listplayers":
                     case "editshop":
