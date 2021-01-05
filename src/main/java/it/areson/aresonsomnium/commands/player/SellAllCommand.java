@@ -16,8 +16,6 @@ public class SellAllCommand implements CommandExecutor, TabCompleter {
 
     private final AresonSomnium aresonSomnium;
 
-    private BigDecimal price;
-
     public SellAllCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
         PluginCommand command = this.aresonSomnium.getCommand("sellall");
@@ -44,7 +42,7 @@ public class SellAllCommand implements CommandExecutor, TabCompleter {
                 return total;
             }, BigDecimal::add);
 
-            Wallet.addBasicCoins(player, price.multiply(coinsToGive));
+            Wallet.addBasicCoins(player, coinsToGive);
 
         }
         return true;
