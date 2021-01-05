@@ -70,9 +70,9 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     player.sendMessage("Place item");
                     break;
                 default:
+                    event.setCancelled(true);
                     break;
             }
-            event.setCancelled(true);
         }
     }
 
