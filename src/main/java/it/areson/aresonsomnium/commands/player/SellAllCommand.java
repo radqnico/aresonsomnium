@@ -4,6 +4,7 @@ import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import it.areson.aresonsomnium.players.SomniumPlayer;
+import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.shops.BlockPrice;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -33,8 +34,7 @@ public class SellAllCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(commandSender instanceof Player) {
-            SomniumPlayer somniumPlayer = (SomniumPlayer) commandSender;
-            Player player = somniumPlayer.getPlayer();
+            Player player = (Player) commandSender;
 
             for (ItemStack item : player.getInventory().getContents()) {
                 try {
