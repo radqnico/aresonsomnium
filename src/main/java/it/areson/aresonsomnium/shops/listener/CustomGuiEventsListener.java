@@ -3,6 +3,7 @@ package it.areson.aresonsomnium.shops.listener;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.listeners.GeneralEventListener;
 import it.areson.aresonsomnium.shops.guis.CustomShop;
+import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
 import it.areson.aresonsomnium.shops.items.ShopItem;
 import it.areson.aresonsomnium.utils.MessageUtils;
@@ -43,14 +44,14 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     public void onInventoryClickEvent(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         ShopManager shopManager = aresonSomnium.getGuiManager();
+        int slot = event.getSlot();
+        Inventory clickedInventory = event.getClickedInventory();
         if (shopManager.isViewingCustomGui(player)) {
-            Inventory clickedInventory = event.getClickedInventory();
             CustomShop customShop = shopManager.getViewingCustomShop(player);
             if (Objects.nonNull(clickedInventory)) {
                 if (clickedInventory.getType().equals(InventoryType.CHEST)) {
                     switch (event.getClick()) {
                         case LEFT:
-                            int slot = event.getSlot();
                             ShopItem shopItem = customShop.getItems().get(slot);
                             if (Objects.nonNull(shopItem)) {
                                 player.sendMessage(shopItem.getPrice().toString());
@@ -61,17 +62,32 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             }
             event.setCancelled(true);
         } else if (shopManager.isEditingCustomGui(player)) {
-            InventoryAction action = event.getAction();
-            switch (action){
-                case PICKUP_ALL:
-                    player.sendMessage("Pickup item");
-                    break;
-                case PLACE_ALL:
-                    player.sendMessage("Place item");
-                    break;
-                default:
-                    event.setCancelled(true);
-                    break;
+            if(Objects.nonNull(clickedInventory) && clickedInventory.getType().equals(InventoryType.CHEST)){
+                CustomShop customShop = shopManager.getEditingCustomShop(player);
+                InventoryAction action = event.getAction();
+                switch (action) {
+                    case PICKUP_ALL:
+                        ShopItem shopItem = customShop.getItems().get(slot);
+                        if (Objects.nonNull(shopItem)) {
+                            ShopEditor.setPickupItems(player, shopItem);
+                            ShopEditor.removeItemFromShop(customShop, slot);
+                        }
+                        player.sendMessage("Oggetto rimosso");
+                        break;
+                    case PLACE_ALL:
+                        ShopItem pickupItem = ShopEditor.getPickupItem(player);
+                        if(Objects.nonNull(pickupItem)){
+                            ShopEditor.addNewItemToShop(customShop, slot, pickupItem);
+                            player.sendMessage("Oggetto SALVATO rimesso");
+                        } else {
+                            ShopEditor.addNewItemToShop(customShop, slot, new ShopItem(event.getCurrentItem()));
+                            player.sendMessage("Oggetto nuovo");
+                        }
+                        break;
+                    default:
+                        event.setCancelled(true);
+                        break;
+                }
             }
         }
     }
