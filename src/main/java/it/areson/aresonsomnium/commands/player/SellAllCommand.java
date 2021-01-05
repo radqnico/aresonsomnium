@@ -21,12 +21,12 @@ public class SellAllCommand implements CommandExecutor, TabCompleter {
 
     public SellAllCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
-        command = this.aresonSomnium.getCommand("OpenGui");
+        command = this.aresonSomnium.getCommand("sellall");
         if (command != null) {
             command.setExecutor(this);
             command.setTabCompleter(this);
         } else {
-            this.aresonSomnium.getLogger().warning("Comando 'OpenGui' non dichiarato");
+            this.aresonSomnium.getLogger().warning("Comando 'sellAll' non dichiarato");
         }
     }
 
