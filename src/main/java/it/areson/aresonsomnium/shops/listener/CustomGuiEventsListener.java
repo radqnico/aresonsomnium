@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 
@@ -62,33 +63,48 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             }
             event.setCancelled(true);
         } else if (shopManager.isEditingCustomGui(player)) {
-            if(Objects.nonNull(clickedInventory) && clickedInventory.getType().equals(InventoryType.CHEST)){
-                CustomShop customShop = shopManager.getEditingCustomShop(player);
-                InventoryAction action = event.getAction();
-                switch (action) {
-                    case PICKUP_ALL:
-                        ShopItem shopItem = customShop.getItems().get(slot);
-                        if (Objects.nonNull(shopItem)) {
-                            ShopEditor.setPickupItems(player, shopItem);
-                            ShopEditor.removeItemFromShop(customShop, slot);
-                        }
-                        player.sendMessage("Oggetto rimosso");
-                        break;
-                    case PLACE_ALL:
-                        ShopItem pickupItem = ShopEditor.getPickupItem(player);
-                        if(Objects.nonNull(pickupItem)){
-                            ShopEditor.addNewItemToShop(customShop, slot, pickupItem);
-                            player.sendMessage("Oggetto SALVATO rimesso");
-                        } else {
-                            ShopEditor.addNewItemToShop(customShop, slot, new ShopItem(event.getCurrentItem()));
-                            player.sendMessage("Oggetto nuovo");
-                        }
-                        break;
-                    default:
-                        event.setCancelled(true);
-                        break;
-                }
+            CustomShop customShop = shopManager.getEditingCustomShop(player);
+            InventoryAction action = event.getAction();
+            switch (action) {
+                case PICKUP_ALL:
+                    if (Objects.nonNull(clickedInventory) && clickedInventory.getType().equals(InventoryType.CHEST)) {
+                        handlePickupItem(customShop, player, slot);
+                    } else {
+                        ShopEditor.getPickupItem(player);
+                    }
+                    break;
+                case PLACE_ALL:
+                    if (Objects.nonNull(clickedInventory) && clickedInventory.getType().equals(InventoryType.CHEST)) {
+                        handlePlaceAll(customShop, player, slot, event.getCurrentItem());
+                    } else {
+                        ShopEditor.getPickupItem(player);
+                    }
+                    break;
+                default:
+                    event.setCancelled(true);
+                    break;
             }
+        }
+
+    }
+
+    private void handlePickupItem(CustomShop customShop, Player player, int slot) {
+        ShopItem shopItem = customShop.getItems().get(slot);
+        if (Objects.nonNull(shopItem)) {
+            ShopEditor.setPickupItems(player, shopItem);
+            ShopEditor.removeItemFromShop(customShop, slot);
+        }
+        player.sendMessage("Oggetto rimosso");
+    }
+
+    private void handlePlaceAll(CustomShop customShop, Player player, int slot, ItemStack currentItem) {
+        ShopItem pickupItem = ShopEditor.getPickupItem(player);
+        if (Objects.nonNull(pickupItem)) {
+            ShopEditor.addNewItemToShop(customShop, slot, pickupItem);
+            player.sendMessage("Oggetto SALVATO rimesso");
+        } else {
+            ShopEditor.addNewItemToShop(customShop, slot, new ShopItem(currentItem));
+            player.sendMessage("Oggetto nuovo");
         }
     }
 
