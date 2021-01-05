@@ -3,49 +3,49 @@ package it.areson.aresonsomnium.commands.player;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
-import it.areson.aresonsomnium.players.SomniumPlayer;
-import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.shops.BlockPrice;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("NullableProblems")
 public class SellAllCommand implements CommandExecutor, TabCompleter {
 
-    private final PluginCommand command;
     private final AresonSomnium aresonSomnium;
 
     private BigDecimal price;
 
     public SellAllCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
-        command = this.aresonSomnium.getCommand("sellall");
+        PluginCommand command = this.aresonSomnium.getCommand("sellall");
         if (command != null) {
             command.setExecutor(this);
             command.setTabCompleter(this);
         } else {
-            this.aresonSomnium.getLogger().warning("Comando 'sellAll' non dichiarato");
+            this.aresonSomnium.getLogger().severe("Errore durante l'inizializzazione del comando 'sellAll'");
         }
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if(commandSender instanceof Player) {
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] arguments) {
+        if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
 
-            for (ItemStack item : player.getInventory().getContents()) {
+            BigDecimal coinsToGive = Arrays.stream(player.getInventory().getContents()).parallel().reduce(BigDecimal.ZERO, (total, itemStack) -> {
                 try {
-                    price = BlockPrice.getPrice(item.getType());
-                } catch (MaterialNotSellableException e) {
-                    e.printStackTrace();
+                    BigDecimal price = BlockPrice.getPrice(itemStack.getType());
+                    total = total.add(price);
+                    player.getInventory().remove(itemStack);
+                } catch (MaterialNotSellableException ignored) {
                 }
-                BigDecimal amount = BigDecimal.valueOf(item.getAmount());
-                player.getInventory().remove(item);
-                Wallet.addBasicCoins(player, price.multiply(amount));
-            }
+                return total;
+            }, BigDecimal::add);
+
+            Wallet.addBasicCoins(player, price.multiply(coinsToGive));
+
         }
         return true;
     }
@@ -54,4 +54,5 @@ public class SellAllCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         return null;
     }
+
 }
