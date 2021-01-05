@@ -36,7 +36,7 @@ public class SellAllCommand implements CommandExecutor, TabCompleter {
         if(commandSender instanceof Player) {
             Player player = (Player) commandSender;
 
-            for (ItemStack item : player.getInventory().getContents()) {
+            for (ItemStack item : player.getInventory().getStorageContents()) {
                 try {
                     price = BlockPrice.getPrice(item.getType());
                 } catch (MaterialNotSellableException e) {
