@@ -51,7 +51,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                         case LEFT:
                             int slot = event.getSlot();
                             ShopItem shopItem = customShop.getItems().get(slot);
-                            if(Objects.nonNull(shopItem)){
+                            if (Objects.nonNull(shopItem)) {
                                 player.sendMessage(shopItem.getPrice().toString());
                             }
                             break;
@@ -59,8 +59,10 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 }
             }
             event.setCancelled(true);
-        } else if (shopManager.isEditingCustomGui(player)){
+        } else if (shopManager.isEditingCustomGui(player)) {
             player.sendMessage("Editing");
+            player.sendMessage("Action: " + event.getAction().name() + "\n");
+            player.sendMessage(event.toString());
         }
     }
 
