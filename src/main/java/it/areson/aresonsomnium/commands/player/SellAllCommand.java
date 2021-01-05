@@ -43,8 +43,7 @@ public class SellAllCommand implements CommandExecutor, TabCompleter {
             if (optionalMultiplierPermission.isPresent()) {
                 String permission = optionalMultiplierPermission.get().getPermission();
                 int lastDotPosition = permission.lastIndexOf(".");
-                String stringMultiplier = permission.substring(lastDotPosition);
-                aresonSomnium.getLogger().severe("" + stringMultiplier);
+                String stringMultiplier = permission.substring(lastDotPosition + 1);
 
                 try {
                     double value = Double.parseDouble(stringMultiplier);
@@ -70,8 +69,6 @@ public class SellAllCommand implements CommandExecutor, TabCompleter {
                 return total;
             }, BigDecimal::add);
 
-            aresonSomnium.getLogger().severe("" + coinsToGive);
-            aresonSomnium.getLogger().severe("" + multiplier);
             coinsToGive = coinsToGive.multiply(BigDecimal.valueOf(multiplier));
             Wallet.addBasicCoins(player, coinsToGive);
 
