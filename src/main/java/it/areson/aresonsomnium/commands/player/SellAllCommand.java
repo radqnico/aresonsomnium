@@ -69,6 +69,8 @@ public class SellAllCommand implements CommandExecutor, TabCompleter {
                 return total;
             }, BigDecimal::add);
 
+            aresonSomnium.getLogger().severe("" + coinsToGive);
+            aresonSomnium.getLogger().severe("" + multiplier);
             coinsToGive = coinsToGive.multiply(BigDecimal.valueOf(multiplier));
             Wallet.addBasicCoins(player, coinsToGive);
 
