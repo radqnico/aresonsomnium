@@ -2,6 +2,7 @@ package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.shops.guis.CustomShop;
+import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -44,10 +45,12 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                 switch (args[0].toLowerCase()) {
                     case "serialize":
                     case "deserialize":
+                    case "openpricesgui":
+                        handleOpenPricesGui(commandSender);
+                        break;
                     case "openpermanentgui":
                         notEnoughArguments(commandSender, command);
                         break;
-
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
                 }
@@ -69,6 +72,15 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                 break;
         }
         return true;
+    }
+
+    private void handleOpenPricesGui(CommandSender commandSender) {
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
+            player.openInventory(ShopEditor.getPricesInventory());
+        } else {
+            commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
+        }
     }
 
     private void openPermanentGuiHandler(CommandSender commandSender, String guiName) {

@@ -76,6 +76,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         break;
                     case "setdebuglevel":
                         handleSetDebugLevel(commandSender, args[1]);
+                        break;
                     case "setcoins":
                     case "createshop":
                         notEnoughArguments(commandSender);
