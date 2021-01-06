@@ -20,13 +20,12 @@ import static it.areson.aresonsomnium.utils.MessageUtils.*;
 @SuppressWarnings("NullableProblems")
 public class SomniumTestCommand implements CommandExecutor, TabCompleter {
 
-    private final PluginCommand command;
-    private final String[] subCommands = new String[]{"serialize", "deserialize", "openPermanentGui"};
-    private AresonSomnium aresonSomnium;
+    private final String[] subCommands = new String[]{"serialize", "deserialize", "openPermanentGui", "openPricesGui"};
+    private final AresonSomnium aresonSomnium;
 
     public SomniumTestCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
-        command = this.aresonSomnium.getCommand("somniumtest");
+        PluginCommand command = this.aresonSomnium.getCommand("somniumtest");
         if (command != null) {
             command.setExecutor(this);
             command.setTabCompleter(this);
@@ -77,7 +76,7 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
     private void handleOpenPricesGui(CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            player.openInventory(ShopEditor.getPricesInventory());
+            player.openInventory(aresonSomnium.getShopEditor().getPricesInventory());
         } else {
             commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
         }
@@ -86,7 +85,7 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
     private void openPermanentGuiHandler(CommandSender commandSender, String guiName) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            ShopManager shopManager = aresonSomnium.getGuiManager();
+            ShopManager shopManager = aresonSomnium.getShopManager();
             if (shopManager.isPermanent(guiName)) {
                 CustomShop permanentGui = shopManager.getPermanentGui(guiName);
                 player.openInventory(permanentGui.createInventory());

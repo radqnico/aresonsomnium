@@ -7,6 +7,7 @@ import it.areson.aresonsomnium.commands.player.OpenGuiCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
+import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
 import it.areson.aresonsomnium.shops.items.BlockPrice;
 import it.areson.aresonsomnium.shops.listener.CustomGuiEventsListener;
@@ -22,6 +23,7 @@ public class AresonSomnium extends JavaPlugin {
 
     private SomniumPlayerManager somniumPlayerManager;
     private ShopManager shopManager;
+    private ShopEditor shopEditor;
     private SomniumPlayerDBEvents playerDBEvents;
     private CustomGuiEventsListener customGuiEventsListener;
     private FileManager dataFile;
@@ -40,6 +42,7 @@ public class AresonSomnium extends JavaPlugin {
         MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(debugger);
         somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection, PLAYER_TABLE_NAME);
         shopManager = new ShopManager(mySqlDBConnection, GUIS_TABLE_NAME);
+        shopEditor = new ShopEditor();
 
         // Events
         initAllEvents();
@@ -87,11 +90,15 @@ public class AresonSomnium extends JavaPlugin {
         return somniumPlayerManager;
     }
 
-    public ShopManager getGuiManager() {
+    public ShopManager getShopManager() {
         return shopManager;
     }
 
     public Debugger getDebugger() {
         return debugger;
+    }
+
+    public ShopEditor getShopEditor() {
+        return shopEditor;
     }
 }

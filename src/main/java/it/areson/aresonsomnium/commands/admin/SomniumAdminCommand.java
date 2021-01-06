@@ -137,7 +137,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 case "editshop":
                     StringUtil.copyPartialMatches(
                             strings[1],
-                            aresonSomnium.getGuiManager().getGuis().keySet(),
+                            aresonSomnium.getShopManager().getGuis().keySet(),
                             suggestions
                     );
                     break;
@@ -188,14 +188,14 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleReloadShops(CommandSender commandSender) {
-        aresonSomnium.getGuiManager().fetchAllFromDB();
+        aresonSomnium.getShopManager().fetchAllFromDB();
         commandSender.sendMessage(MessageUtils.successMessage("Tutte le GUI ricaricate dal DB"));
     }
 
     private void handleEditShop(CommandSender commandSender, String guiName) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            ShopManager shopManager = aresonSomnium.getGuiManager();
+            ShopManager shopManager = aresonSomnium.getShopManager();
             if (shopManager.isPermanent(guiName)) {
                 CustomShop permanentGui = shopManager.getPermanentGui(guiName);
                 player.openInventory(permanentGui.createInventory());
@@ -209,7 +209,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleCreateShop(CommandSender commandSender, String guiName, String guiTitle) {
-        ShopManager shopManager = aresonSomnium.getGuiManager();
+        ShopManager shopManager = aresonSomnium.getShopManager();
         CustomShop newGui = shopManager.createNewGui(guiName, guiTitle);
         String message;
         if (commandSender instanceof Player) {

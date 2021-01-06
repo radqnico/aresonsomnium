@@ -46,7 +46,7 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
     private void handleOpenGui(CommandSender commandSender, String guiName) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            ShopManager shopManager = aresonSomnium.getGuiManager();
+            ShopManager shopManager = aresonSomnium.getShopManager();
             if (shopManager.isPermanent(guiName)) {
                 shopManager.openGuiToPlayer(player, guiName);
             } else {
@@ -62,7 +62,7 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         List<String> suggestions = new ArrayList<>();
         if (strings.length == 1) {
-            StringUtil.copyPartialMatches(strings[0], aresonSomnium.getGuiManager().getGuis().keySet(), suggestions);
+            StringUtil.copyPartialMatches(strings[0], aresonSomnium.getShopManager().getGuis().keySet(), suggestions);
         }
         return suggestions;
     }

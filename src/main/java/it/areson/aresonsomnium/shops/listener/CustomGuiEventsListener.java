@@ -18,10 +18,12 @@ import java.util.Objects;
 public class CustomGuiEventsListener extends GeneralEventListener {
 
     private final ShopManager shopManager;
+    private final ShopEditor shopEditor;
 
     public CustomGuiEventsListener(AresonSomnium aresonSomnium, ShopManager shopManager) {
         super(aresonSomnium);
         this.shopManager = shopManager;
+        shopEditor = aresonSomnium.getShopEditor();
     }
 
     @EventHandler
@@ -41,7 +43,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     @EventHandler
     public void onInventoryClickEvent(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        ShopManager shopManager = aresonSomnium.getGuiManager();
+        ShopManager shopManager = aresonSomnium.getShopManager();
         int slot = event.getSlot();
         Inventory clickedInventory = event.getClickedInventory();
 
@@ -72,7 +74,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     @EventHandler
     public void onInventoryDragEvent(InventoryDragEvent event) {
         Player player = (Player) event.getWhoClicked();
-        ShopManager shopManager = aresonSomnium.getGuiManager();
+        ShopManager shopManager = aresonSomnium.getShopManager();
         if (shopManager.isEditingCustomGui(player) || shopManager.isViewingCustomGui(player)) {
             event.setCancelled(true);
         }
@@ -95,29 +97,29 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         if (Objects.nonNull(clickedInventory) && clickedInventory.getType().equals(InventoryType.CHEST)) {
             ShopItem shopItem = customShop.getItems().get(slot);
             if (Objects.nonNull(shopItem)) {
-                ShopEditor.setPickupItems(player, shopItem);
-                ShopEditor.removeItemFromShop(customShop, slot);
+                shopEditor.setPickupItems(player, shopItem);
+                shopEditor.removeItemFromShop(customShop, slot);
             }
             aresonSomnium.getDebugger().debugInfo("Oggetto rimosso");
         } else {
             // Remove saved item
-            ShopEditor.getPickupItem(player);
+            shopEditor.getPickupItem(player);
         }
     }
 
     private void handlePlaceAll(Inventory clickedInventory, CustomShop customShop, Player player, int slot, ItemStack currentItem) {
         if (Objects.nonNull(clickedInventory) && clickedInventory.getType().equals(InventoryType.CHEST)) {
-            ShopItem pickupItem = ShopEditor.getPickupItem(player);
+            ShopItem pickupItem = aresonSomnium.getShopEditor().getPickupItem(player);
             if (Objects.nonNull(pickupItem)) {
-                ShopEditor.addNewItemToShop(customShop, slot, pickupItem);
+                shopEditor.addNewItemToShop(customShop, slot, pickupItem);
                 aresonSomnium.getDebugger().debugInfo("Oggetto salvato recuperato");
             } else {
-                ShopEditor.addNewItemToShop(customShop, slot, new ShopItem(currentItem));
+                shopEditor.addNewItemToShop(customShop, slot, new ShopItem(currentItem));
                 aresonSomnium.getDebugger().debugInfo("Oggetto nuovo inserito");
             }
         } else {
             // Remove saved item
-            ShopEditor.getPickupItem(player);
+            shopEditor.getPickupItem(player);
         }
     }
 
