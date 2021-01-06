@@ -6,6 +6,8 @@ import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.shops.items.Price;
 import org.bukkit.entity.Player;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -114,8 +116,8 @@ public class SomniumPlayer extends MySQLObject {
 
     public void setFromResultSet(ResultSet resultSet) throws SQLException {
         this.timePlayed = resultSet.getLong("timePlayed");
-        this.wallet.changeCharonCoins(resultSet.getInt("charonCoins"));
-        this.wallet.changeForcedCoins(resultSet.getInt("forcedCoins"));
+        this.wallet.changeCharonCoins(BigInteger.valueOf(resultSet.getLong("charonCoins")));
+        this.wallet.changeForcedCoins(BigInteger.valueOf(resultSet.getLong("forcedCoins")));
     }
 
     public boolean canAfford(Price price) {

@@ -4,16 +4,17 @@ import com.google.gson.Gson;
 import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Base64;
 
 public class SerializedShopItem {
 
     private final String serializedItemStack;
     private final BigDecimal basicCoins;
-    private final int charonCoins;
-    private final int forcedCoins;
+    private final BigInteger charonCoins;
+    private final BigInteger forcedCoins;
 
-    public SerializedShopItem(String serializedItemStack, BigDecimal basicCoins, int charonCoins, int forcedCoins) {
+    public SerializedShopItem(String serializedItemStack, BigDecimal basicCoins, BigInteger charonCoins, BigInteger forcedCoins) {
         this.serializedItemStack = serializedItemStack;
         this.basicCoins = basicCoins;
         this.charonCoins = charonCoins;

@@ -20,17 +20,17 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     private final ShopManager shopManager;
     private final ShopEditor shopEditor;
 
-    public CustomGuiEventsListener(AresonSomnium aresonSomnium, ShopManager shopManager) {
+    public CustomGuiEventsListener(AresonSomnium aresonSomnium) {
         super(aresonSomnium);
-        this.shopManager = shopManager;
+        this.shopManager = aresonSomnium.getShopManager();
         shopEditor = aresonSomnium.getShopEditor();
     }
 
     @EventHandler
     public void onInventoryCloseEvent(InventoryCloseEvent event) {
         Player player = (Player) event.getView().getPlayer();
-        if (shopManager.isEditingCustomGui(player)) {
-            if (shopManager.endEditGui(player)) {
+        if (shopEditor.isEditingCustomGui(player)) {
+            if (shopEditor.endEditGui(player)) {
                 aresonSomnium.getLogger().info(MessageUtils.successMessage("GUI modificata da '" + player.getName() + "' salvata su DB"));
             } else {
                 aresonSomnium.getLogger().info(MessageUtils.warningMessage("GUI modificata da '" + player.getName() + "' NON salvata DB"));
@@ -43,7 +43,6 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     @EventHandler
     public void onInventoryClickEvent(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        ShopManager shopManager = aresonSomnium.getShopManager();
         int slot = event.getSlot();
         Inventory clickedInventory = event.getClickedInventory();
 
@@ -53,9 +52,9 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             ClickType click = event.getClick();
             shopClickOnItem(customShop, clickedInventory, click, slot, player);
             event.setCancelled(true);
-        } else if (shopManager.isEditingCustomGui(player)) {
+        } else if (shopEditor.isEditingCustomGui(player)) {
             // Click to edit
-            CustomShop customShop = shopManager.getEditingCustomShop(player);
+            CustomShop customShop = shopEditor.getEditingCustomShop(player);
             InventoryAction action = event.getAction();
             switch (action) {
                 case PICKUP_ALL:
@@ -64,6 +63,9 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 case PLACE_ALL:
                     handlePlaceAll(clickedInventory, customShop, player, slot, event.getCurrentItem());
                     break;
+                case PICKUP_HALF:
+                    handlePickupHalf(player);
+                    break;
                 default:
                     event.setCancelled(true);
                     break;
@@ -71,11 +73,14 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         }
     }
 
+    private void handlePickupHalf(Player player){
+        // TODO continuare edit prezzo
+    }
+
     @EventHandler
     public void onInventoryDragEvent(InventoryDragEvent event) {
         Player player = (Player) event.getWhoClicked();
-        ShopManager shopManager = aresonSomnium.getShopManager();
-        if (shopManager.isEditingCustomGui(player) || shopManager.isViewingCustomGui(player)) {
+        if (shopEditor.isEditingCustomGui(player) || shopManager.isViewingCustomGui(player)) {
             event.setCancelled(true);
         }
     }

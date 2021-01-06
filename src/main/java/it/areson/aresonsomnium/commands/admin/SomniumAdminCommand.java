@@ -5,6 +5,7 @@ import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.shops.guis.CustomShop;
+import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
 import it.areson.aresonsomnium.utils.Debugger;
 import it.areson.aresonsomnium.utils.MessageUtils;
@@ -14,6 +15,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -196,10 +198,11 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             ShopManager shopManager = aresonSomnium.getShopManager();
+            ShopEditor shopEditor = aresonSomnium.getShopEditor();
             if (shopManager.isPermanent(guiName)) {
                 CustomShop permanentGui = shopManager.getPermanentGui(guiName);
                 player.openInventory(permanentGui.createInventory());
-                shopManager.beginEditGui(player, guiName);
+                shopEditor.beginEditGui(player, guiName);
             } else {
                 player.sendMessage("La GUI richiesta non è una GUI salvata");
             }
@@ -210,12 +213,13 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private void handleCreateShop(CommandSender commandSender, String guiName, String guiTitle) {
         ShopManager shopManager = aresonSomnium.getShopManager();
+        ShopEditor shopEditor = aresonSomnium.getShopEditor();
         CustomShop newGui = shopManager.createNewGui(guiName, guiTitle);
         String message;
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             player.openInventory(newGui.createInventory());
-            shopManager.beginEditGui(player, guiName);
+            shopEditor.beginEditGui(player, guiName);
             message = "GUI '" + guiName + "' creata e aperta al giocatore '" + player.getName() + "'";
         } else {
             message = "GUI '" + guiName + "' creata";
@@ -249,15 +253,15 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (Objects.nonNull(somniumPlayer)) {
                 try {
-                    int amount = Integer.parseInt(amountString);
+                    BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(amountString));
                     CoinType type = CoinType.valueOf(coinType.toUpperCase());
                     switch (type) {
                         case CHARON:
-                            somniumPlayer.getWallet().setCharonCoins(amount);
+                            somniumPlayer.getWallet().setCharonCoins(amount.toBigInteger());
                             commandSender.sendMessage(MessageUtils.successMessage("Valore dei Charon Coins impostato"));
                             break;
                         case FORCED:
-                            somniumPlayer.getWallet().setForcedCoins(amount);
+                            somniumPlayer.getWallet().setForcedCoins(amount.toBigInteger());
                             commandSender.sendMessage(MessageUtils.successMessage("Valore dei Forced Coins impostato"));
                             break;
                         default:

@@ -7,19 +7,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public class Wallet {
 
-    private int charonCoins;
-    private int forcedCoins;
+    private BigInteger charonCoins;
+    private BigInteger forcedCoins;
 
-    public Wallet(int charonCoins, int forcedCoins) {
+    public Wallet(BigInteger charonCoins, BigInteger forcedCoins) {
         this.charonCoins = charonCoins;
         this.forcedCoins = forcedCoins;
     }
 
     public static Wallet getNewDefaultWallet() {
-        return new Wallet(0, 0);
+        return new Wallet(BigInteger.ZERO, BigInteger.ZERO);
     }
 
     public static BigDecimal getBasicCoins(Player player) {
@@ -47,27 +48,27 @@ public class Wallet {
         }
     }
 
-    public int getCharonCoins() {
+    public BigInteger getCharonCoins() {
         return charonCoins;
     }
 
-    public void setCharonCoins(int charonCoins) {
+    public void setCharonCoins(BigInteger charonCoins) {
         this.charonCoins = charonCoins;
     }
 
-    public int getForcedCoins() {
+    public BigInteger getForcedCoins() {
         return forcedCoins;
     }
 
-    public void setForcedCoins(int forcedCoins) {
+    public void setForcedCoins(BigInteger forcedCoins) {
         this.forcedCoins = forcedCoins;
     }
 
-    public void changeCharonCoins(int amount) {
-        charonCoins += amount;
+    public void changeCharonCoins(BigInteger amount) {
+        charonCoins = charonCoins.add(amount);
     }
 
-    public void changeForcedCoins(int amount) {
-        forcedCoins += amount;
+    public void changeForcedCoins(BigInteger amount) {
+        forcedCoins = forcedCoins.add(amount);
     }
 }

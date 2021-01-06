@@ -42,7 +42,7 @@ public class AresonSomnium extends JavaPlugin {
         MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(debugger);
         somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection, PLAYER_TABLE_NAME);
         shopManager = new ShopManager(mySqlDBConnection, GUIS_TABLE_NAME);
-        shopEditor = new ShopEditor();
+        shopEditor = new ShopEditor(this);
 
         // Events
         initAllEvents();
@@ -80,7 +80,7 @@ public class AresonSomnium extends JavaPlugin {
 
     private void initAllEvents() {
         playerDBEvents = new SomniumPlayerDBEvents(this);
-        customGuiEventsListener = new CustomGuiEventsListener(this, shopManager);
+        customGuiEventsListener = new CustomGuiEventsListener(this);
 
         playerDBEvents.registerEvents();
         customGuiEventsListener.registerEvents();

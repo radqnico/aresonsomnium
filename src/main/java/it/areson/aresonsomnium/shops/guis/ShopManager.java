@@ -14,7 +14,6 @@ import java.util.TreeMap;
 public class ShopManager {
 
     private final TreeMap<String, CustomShop> guis;
-    private final TreeMap<Player, String> editingGuis;
     private final TreeMap<Player, String> openedGuis;
     private final MySqlDBConnection mySqlDBConnection;
     private final String tableName;
@@ -22,7 +21,6 @@ public class ShopManager {
     public ShopManager(MySqlDBConnection connection, String tableName) {
         this.guis = new TreeMap<>();
         PlayerComparator playerComparator = new PlayerComparator();
-        this.editingGuis = new TreeMap<>(playerComparator);
         this.openedGuis = new TreeMap<>(playerComparator);
         this.mySqlDBConnection = connection;
         this.tableName = tableName;
@@ -73,13 +71,7 @@ public class ShopManager {
         return customShop;
     }
 
-    public void beginEditGui(Player player, String guiName) {
-        editingGuis.put(player, guiName);
-    }
 
-    public boolean endEditGui(Player player) {
-        return Objects.nonNull(editingGuis.remove(player));
-    }
 
     public void openGuiToPlayer(Player player, String guiName) {
         CustomShop customShop = guis.get(guiName);
@@ -110,14 +102,5 @@ public class ShopManager {
         return null;
     }
 
-    public CustomShop getEditingCustomShop(Player player) {
-        if (isEditingCustomGui(player)) {
-            return guis.get(editingGuis.get(player));
-        }
-        return null;
-    }
 
-    public boolean isEditingCustomGui(Player player) {
-        return editingGuis.containsKey(player);
-    }
 }
