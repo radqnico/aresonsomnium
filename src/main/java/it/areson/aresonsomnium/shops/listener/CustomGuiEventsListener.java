@@ -67,7 +67,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             // Click to shop
             CustomShop customShop = shopManager.getViewingCustomShop(player);
             ClickType click = event.getClick();
-            buyItem(customShop, clickedInventory, click, slot, player);
+            prepareBuyItem(customShop, clickedInventory, click, slot, player);
             event.setCancelled(true);
         } else if (shopEditor.isEditingCustomGui(player)) {
             // Click to edit
@@ -137,31 +137,36 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         return false;
     }
 
-    private void buyItem(CustomShop customShop, Inventory clickedInventory, ClickType clickType, int slot, Player player) {
+    private void prepareBuyItem(CustomShop customShop, Inventory clickedInventory, ClickType clickType, int slot, Player player) {
         if (Objects.nonNull(clickedInventory)) {
             if (clickedInventory.getType().equals(InventoryType.CHEST)) {
                 if (clickType == ClickType.LEFT) {
                     ShopItem shopItem = customShop.getItems().get(slot);
                     if (Objects.nonNull(shopItem)) {
-                        SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
-                        if (Objects.nonNull(somniumPlayer)) {
-                            Price price = shopItem.getPrice();
-                            if (somniumPlayer.canAfford(price)) {
-                                if (player.getInventory().addItem(new ItemStack(shopItem.getItemStack())).isEmpty()) {
-                                    player.sendMessage(MessageUtils.successMessage("Oggetto acquistato"));
-                                } else {
-                                    player.sendMessage(MessageUtils.warningMessage("Non hai abbastanza spazio nell'inventario"));
-                                }
-                            } else {
-                                player.sendMessage(MessageUtils.errorMessage("Non puoi permetterti questo oggetto"));
-                            }
-                        } else {
-                            player.sendMessage(MessageUtils.errorMessage("Riscontrato un problema con i tuoi dati. Segnala il problema  allo staff."));
-                        }
+                        buyItem(player, shopItem);
                     }
                 }
             }
         }
+    }
+
+    private void buyItem(Player player, ShopItem shopItem) {
+        SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
+        if (Objects.nonNull(somniumPlayer)) {
+            Price price = shopItem.getPrice();
+            if (somniumPlayer.canAfford(price)) {
+                if (player.getInventory().addItem(new ItemStack(shopItem.getItemStack())).isEmpty()) {
+                    player.sendMessage(MessageUtils.successMessage("Oggetto acquistato"));
+                } else {
+                    player.sendMessage(MessageUtils.warningMessage("Non hai abbastanza spazio nell'inventario"));
+                }
+            } else {
+                player.sendMessage(MessageUtils.errorMessage("Non puoi permetterti questo oggetto"));
+            }
+        } else {
+            player.sendMessage(MessageUtils.errorMessage("Riscontrato un problema con i tuoi dati. Segnala il problema  allo staff."));
+        }
+
     }
 
     private void pickupItemFromShop(Inventory clickedInventory, CustomShop customShop, Player player, int slot) {

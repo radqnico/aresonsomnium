@@ -51,8 +51,8 @@ public class Price {
     }
 
     public boolean canAffordThis(SomniumPlayer somniumPlayer) {
-        return Wallet.getBasicCoins(somniumPlayer.getPlayer()).compareTo(basicCoins) >= 0 ||
-                somniumPlayer.getWallet().getCharonCoins().compareTo(charonCoins) >= 0 ||
+        return Wallet.getBasicCoins(somniumPlayer.getPlayer()).compareTo(basicCoins) >= 0 &&
+                somniumPlayer.getWallet().getCharonCoins().compareTo(charonCoins) >= 0 &&
                 somniumPlayer.getWallet().getForcedCoins().compareTo(forcedCoins) >= 0;
     }
 
