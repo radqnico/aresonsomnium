@@ -93,6 +93,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     case PICKUP_HALF:
                         shopEditor.newEditPrice(player, customShop);
                         player.openInventory(shopEditor.getPricesInventory());
+                        aresonSomnium.getSetPriceInChatListener().registerEvents();
                         break;
                     default:
                         event.setCancelled(true);

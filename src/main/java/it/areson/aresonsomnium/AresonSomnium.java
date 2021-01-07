@@ -11,6 +11,7 @@ import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
 import it.areson.aresonsomnium.shops.items.BlockPrice;
 import it.areson.aresonsomnium.shops.listener.CustomGuiEventsListener;
+import it.areson.aresonsomnium.shops.listener.SetPriceInChatListener;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.Debugger;
 import it.areson.aresonsomnium.utils.FileManager;
@@ -26,6 +27,7 @@ public class AresonSomnium extends JavaPlugin {
     private ShopEditor shopEditor;
     private SomniumPlayerDBEvents playerDBEvents;
     private CustomGuiEventsListener customGuiEventsListener;
+    private SetPriceInChatListener setPriceInChatListener;
     private FileManager dataFile;
 
     private Debugger debugger;
@@ -81,6 +83,7 @@ public class AresonSomnium extends JavaPlugin {
     private void initAllEvents() {
         playerDBEvents = new SomniumPlayerDBEvents(this);
         customGuiEventsListener = new CustomGuiEventsListener(this);
+        setPriceInChatListener = new SetPriceInChatListener(this);
 
         playerDBEvents.registerEvents();
         customGuiEventsListener.registerEvents();
@@ -100,5 +103,9 @@ public class AresonSomnium extends JavaPlugin {
 
     public ShopEditor getShopEditor() {
         return shopEditor;
+    }
+
+    public SetPriceInChatListener getSetPriceInChatListener() {
+        return setPriceInChatListener;
     }
 }

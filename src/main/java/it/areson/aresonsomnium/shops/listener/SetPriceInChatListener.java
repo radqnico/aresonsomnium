@@ -13,12 +13,12 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.math.BigDecimal;
 
-public class SetPriceInChatlistener extends GeneralEventListener {
+public class SetPriceInChatListener extends GeneralEventListener {
 
     private final ShopManager shopManager;
     private final ShopEditor shopEditor;
 
-    public SetPriceInChatlistener(AresonSomnium aresonSomnium) {
+    public SetPriceInChatListener(AresonSomnium aresonSomnium) {
         super(aresonSomnium);
         this.shopManager = aresonSomnium.getShopManager();
         shopEditor = aresonSomnium.getShopEditor();
@@ -39,6 +39,8 @@ public class SetPriceInChatlistener extends GeneralEventListener {
                 player.openInventory(shopEditor.getEditingCustomShop(player).createInventory());
 
                 shopEditor.endEditPrice(player);
+
+                this.unregisterEvents();
             } catch (NumberFormatException e) {
                 player.sendMessage("Inserisci un numero decimale.");
             } catch (PriceConfigNotReadyException exception){
