@@ -75,9 +75,15 @@ public class Price {
 
     public ArrayList<String> toLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add(ChatColor.translateAlternateColorCodes('&', "&f$ " + basicCoins.toPlainString()));
-        lore.add(MessageUtils.errorMessage("Oboli " + charonCoins.toString()));
-        lore.add(MessageUtils.successMessage("Gemme " + forcedCoins.toString()));
+        if (basicCoins.compareTo(BigDecimal.valueOf(0)) > 0) {
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&f$ " + basicCoins.toPlainString()));
+        }
+        if (charonCoins.compareTo(BigInteger.valueOf(0)) > 0) {
+            lore.add(MessageUtils.errorMessage("Oboli " + charonCoins.toString()));
+        }
+        if (forcedCoins.compareTo(BigInteger.valueOf(0)) > 0) {
+            lore.add(MessageUtils.successMessage("Gemme " + forcedCoins.toString()));
+        }
         return lore;
     }
 
