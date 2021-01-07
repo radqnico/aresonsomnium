@@ -48,6 +48,14 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     }
 
     @EventHandler
+    public void onInventoryDragEvent(InventoryDragEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        if (shopEditor.isEditingCustomGui(player) || shopManager.isViewingCustomGui(player)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     public void onInventoryClickEvent(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         int slot = event.getSlot();
@@ -57,7 +65,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             // Click to shop
             CustomShop customShop = shopManager.getViewingCustomShop(player);
             ClickType click = event.getClick();
-            shopClickOnItem(customShop, clickedInventory, click, slot, player);
+            buyItem(customShop, clickedInventory, click, slot, player);
             event.setCancelled(true);
         } else if (shopEditor.isEditingCustomGui(player)) {
             // Click to edit
@@ -66,8 +74,21 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             aresonSomnium.getDebugger().debugInfo("Dentro 1");
             aresonSomnium.getDebugger().debugInfo(clickedInventory.getType().name());
             if (shopEditor.isEditingPrice(player)) {
+                // Select coin type
                 aresonSomnium.getDebugger().debugInfo("Dentro 2");
                 EditPriceConfig editingPriceConfig = shopEditor.getEditingPriceConfig(player);
+                selectCoinType(player, clickedInventory, editingPriceConfig, slot);
+                event.setCancelled(true);
+            } else {
+                // Change shop items
+                changeShopItems(action, clickedInventory, customShop, player, slot);
+            }
+        }
+    }
+
+    private void selectCoinType(Player player, Inventory clickedInventory, EditPriceConfig editingPriceConfig, int slot) {
+        if (Objects.nonNull(clickedInventory)) {
+            if (clickedInventory.getType().equals(InventoryType.CHEST)) {
                 switch (slot) {
                     case 11:
                         editingPriceConfig.setCoinType(CoinType.BASIC);
@@ -85,43 +106,36 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                         player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Gemme <--"));
                         break;
                 }
-                event.setCancelled(true);
-            } else {
-                switch (action) {
-                    case PICKUP_ALL:
-                        handlePickupAll(clickedInventory, customShop, player, slot);
-                        break;
-                    case PLACE_ALL:
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                handlePlaceAll(clickedInventory, customShop, player, slot);
-                            }
-                        }.runTaskLaterAsynchronously(aresonSomnium, 2);
-                        break;
-                    case PICKUP_HALF:
-                        EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop);
-                        player.openInventory(shopEditor.getPricesInventory());
-                        editPriceConfig.setSlot(slot);
-                        aresonSomnium.getSetPriceInChatListener().registerEvents();
-                        break;
-                    default:
-                        event.setCancelled(true);
-                        break;
-                }
             }
         }
     }
 
-    @EventHandler
-    public void onInventoryDragEvent(InventoryDragEvent event) {
-        Player player = (Player) event.getWhoClicked();
-        if (shopEditor.isEditingCustomGui(player) || shopManager.isViewingCustomGui(player)) {
-            event.setCancelled(true);
+    private boolean changeShopItems(InventoryAction action, Inventory clickedInventory, CustomShop customShop, Player player, int slot) {
+        switch (action) {
+            case PICKUP_ALL:
+                pickupItemFromShop(clickedInventory, customShop, player, slot);
+                break;
+            case PLACE_ALL:
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        placeItemInShop(clickedInventory, customShop, player, slot);
+                    }
+                }.runTaskLaterAsynchronously(aresonSomnium, 2);
+                break;
+            case PICKUP_HALF:
+                EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop);
+                player.openInventory(shopEditor.getPricesInventory());
+                editPriceConfig.setSlot(slot);
+                aresonSomnium.getSetPriceInChatListener().registerEvents();
+                break;
+            default:
+                return false;
         }
+        return false;
     }
 
-    private void shopClickOnItem(CustomShop customShop, Inventory clickedInventory, ClickType clickType, int slot, Player player) {
+    private void buyItem(CustomShop customShop, Inventory clickedInventory, ClickType clickType, int slot, Player player) {
         if (Objects.nonNull(clickedInventory)) {
             if (clickedInventory.getType().equals(InventoryType.CHEST)) {
                 if (clickType == ClickType.LEFT) {
@@ -134,7 +148,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         }
     }
 
-    private void handlePickupAll(Inventory clickedInventory, CustomShop customShop, Player player, int slot) {
+    private void pickupItemFromShop(Inventory clickedInventory, CustomShop customShop, Player player, int slot) {
         if (Objects.nonNull(clickedInventory) && clickedInventory.getType().equals(InventoryType.CHEST)) {
             ShopItem shopItem = customShop.getItems().get(slot);
             if (Objects.nonNull(shopItem)) {
@@ -148,7 +162,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         }
     }
 
-    private void handlePlaceAll(Inventory clickedInventory, CustomShop customShop, Player player, int slot) {
+    private void placeItemInShop(Inventory clickedInventory, CustomShop customShop, Player player, int slot) {
         if (Objects.nonNull(clickedInventory) && clickedInventory.getType().equals(InventoryType.CHEST)) {
             ShopItem pickupItem = aresonSomnium.getShopEditor().getPickupItem(player);
             if (Objects.nonNull(pickupItem)) {

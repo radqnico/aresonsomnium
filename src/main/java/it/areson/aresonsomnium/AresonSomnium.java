@@ -40,7 +40,7 @@ public class AresonSomnium extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        debugger = new Debugger(this, Debugger.DebugLevel.LOW);
+        debugger = new Debugger(this, Debugger.DebugLevel.HIGH);
         MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(debugger);
         somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection, PLAYER_TABLE_NAME);
         shopManager = new ShopManager(mySqlDBConnection, GUIS_TABLE_NAME);
