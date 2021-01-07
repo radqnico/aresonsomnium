@@ -65,23 +65,18 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 switch (slot) {
                     case 11:
                         editingPriceConfig.setCoinType(CoinType.BASIC);
-                        aresonSomnium.getDebugger().debugInfo(editingPriceConfig.toString());
                         player.closeInventory();
-                        player.sendMessage("Inserisci i Basic Coins: ");
+                        player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Basic Coins <--"));
                         break;
                     case 13:
                         editingPriceConfig.setCoinType(CoinType.CHARON);
-                        editingPriceConfig.setSlot(slot);
-                        aresonSomnium.getDebugger().debugInfo(editingPriceConfig.toString());
                         player.closeInventory();
-                        player.sendMessage("Inserisci le Monete di Caronte: ");
+                        player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Monete di Caronte <--"));
                         break;
                     case 15:
                         editingPriceConfig.setCoinType(CoinType.FORCED);
-                        editingPriceConfig.setSlot(slot);
-                        aresonSomnium.getDebugger().debugInfo(editingPriceConfig.toString());
                         player.closeInventory();
-                        player.sendMessage("Inserisci le Gemme: ");
+                        player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Gemme <--"));
                         break;
                 }
                 event.setCancelled(true);
