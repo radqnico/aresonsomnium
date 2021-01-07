@@ -4,6 +4,7 @@ import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.admin.SomniumAdminCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumTestCommand;
 import it.areson.aresonsomnium.commands.player.OpenGuiCommand;
+import it.areson.aresonsomnium.commands.player.StatsCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
@@ -78,6 +79,7 @@ public class AresonSomnium extends JavaPlugin {
         new SomniumAdminCommand(this);
         new SomniumTestCommand(this);
         new OpenGuiCommand(this);
+        new StatsCommand(this);
     }
 
     private void initAllEvents() {

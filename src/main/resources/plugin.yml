@@ -17,6 +17,11 @@ commands:
     permission: aresonsomnium.player
     usage: /opengui <guiName>
     aliases: [shop]
+  stats:
+    description: "See your stats"
+      permission: aresonsomnium.player
+      usage: /stats
+      aliases: [ statistiche ]
 
 depend:
   - Essentials
