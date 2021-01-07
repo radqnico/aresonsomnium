@@ -68,7 +68,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             InventoryAction action = event.getAction();
             if (shopEditor.isEditingPrice(player)) {
                 if (Objects.nonNull(clickedInventory)) {
-                    if (clickedInventory.getType().equals(InventoryType.CHEST)) {
+                    if (!clickedInventory.getType().equals(InventoryType.PLAYER)) {
                         EditPriceConfig editingPriceConfig = shopEditor.getEditingPriceConfig(player);
                         switch (slot) {
                             case 11:
