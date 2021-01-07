@@ -4,6 +4,7 @@ import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.MessageUtils;
+import org.bukkit.ChatColor;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -74,8 +75,8 @@ public class Price {
 
     public ArrayList<String> toLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add(MessageUtils.successMessage("$ " + basicCoins.toPlainString()));
-        lore.add(MessageUtils.warningMessage("Oboli " + charonCoins.toString()));
+        lore.add(ChatColor.translateAlternateColorCodes('&', "&f$ " + basicCoins.toPlainString()));
+        lore.add(MessageUtils.errorMessage("Oboli " + charonCoins.toString()));
         lore.add(MessageUtils.successMessage("Gemme " + forcedCoins.toString()));
         return lore;
     }
