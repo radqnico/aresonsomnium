@@ -33,6 +33,8 @@ public class SetPriceInChatListener extends GeneralEventListener {
                 BigDecimal bigDecimal = BigDecimal.valueOf(Double.parseDouble(message));
                 EditPriceConfig editingPriceConfig = shopEditor.getEditingPriceConfig(player);
                 editingPriceConfig.setPrice(bigDecimal);
+
+                aresonSomnium.getDebugger().debugInfo(editingPriceConfig.toString());
                 editingPriceConfig.execute();
 
                 player.sendMessage("Prezzo impostato.");

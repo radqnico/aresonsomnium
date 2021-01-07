@@ -68,18 +68,23 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     case 11:
                         editingPriceConfig.setCoinType(CoinType.BASIC);
                         editingPriceConfig.setSlot(slot);
-                        aresonSomnium.getDebugger().debugInfo("Dentro 2");
+                        aresonSomnium.getDebugger().debugInfo(editingPriceConfig.toString());
                         player.closeInventory();
+                        player.sendMessage("Inserisci i Basic Coins: ");
                         break;
                     case 13:
                         editingPriceConfig.setCoinType(CoinType.CHARON);
                         editingPriceConfig.setSlot(slot);
+                        aresonSomnium.getDebugger().debugInfo(editingPriceConfig.toString());
                         player.closeInventory();
+                        player.sendMessage("Inserisci le Monete di Caronte: ");
                         break;
                     case 15:
                         editingPriceConfig.setCoinType(CoinType.FORCED);
                         editingPriceConfig.setSlot(slot);
+                        aresonSomnium.getDebugger().debugInfo(editingPriceConfig.toString());
                         player.closeInventory();
+                        player.sendMessage("Inserisci le Gemme: ");
                         break;
                 }
                 event.setCancelled(true);
