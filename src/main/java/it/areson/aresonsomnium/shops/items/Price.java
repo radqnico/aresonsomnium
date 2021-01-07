@@ -3,6 +3,7 @@ package it.areson.aresonsomnium.shops.items;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
+import it.areson.aresonsomnium.utils.MessageUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -71,11 +72,11 @@ public class Price {
         return "Price{basicCoins=" + basicCoins + ",charonCoins=" + charonCoins + ",forcedCoins=" + forcedCoins + "}";
     }
 
-    public ArrayList<String> toLore(){
+    public ArrayList<String> toLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("$ " + basicCoins.toPlainString());
-        lore.add("Oboli " + charonCoins.toString());
-        lore.add("Gemme " + forcedCoins.toString());
+        lore.add(MessageUtils.successMessage("$ " + basicCoins.toPlainString()));
+        lore.add(MessageUtils.warningMessage("Oboli " + charonCoins.toString()));
+        lore.add(MessageUtils.successMessage("Gemme " + forcedCoins.toString()));
         return lore;
     }
 
