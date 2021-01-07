@@ -56,22 +56,25 @@ public class CustomShop extends MySQLObject {
         Inventory inventory = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', title));
         for (Map.Entry<Integer, ShopItem> entry : items.entrySet()) {
             Integer key = entry.getKey();
-            ShopItem value = entry.getValue();
-            ItemMeta itemMeta = value.getItemStack().getItemMeta();
-            if (Objects.nonNull(itemMeta)) {
-                List<String> lore = itemMeta.getLore();
-                if (Objects.nonNull(lore)) {
-                    lore.add("");
-                    lore.addAll(value.getPrice().toLore());
-                } else {
-                    lore = new ArrayList<>();
-                    lore.add("");
-                    lore.addAll(value.getPrice().toLore());
+            ShopItem shopItem = entry.getValue();
+            ItemMeta itemMeta = shopItem.getItemStack().getItemMeta();
+            if(!shopItem.isLoreSet()) {
+                if (Objects.nonNull(itemMeta)) {
+                    List<String> lore = itemMeta.getLore();
+                    if (Objects.nonNull(lore)) {
+                        lore.add("");
+                        lore.addAll(shopItem.getPrice().toLore());
+                    } else {
+                        lore = new ArrayList<>();
+                        lore.add("");
+                        lore.addAll(shopItem.getPrice().toLore());
+                    }
+                    itemMeta.setLore(lore);
+                    shopItem.getItemStack().setItemMeta(itemMeta);
                 }
-                itemMeta.setLore(lore);
-                value.getItemStack().setItemMeta(itemMeta);
+                shopItem.setLoreSet(true);
             }
-            inventory.setItem(key, value.getItemStack());
+            inventory.setItem(key, shopItem.getItemStack());
         }
         return inventory;
     }
