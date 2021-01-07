@@ -3,10 +3,12 @@ package it.areson.aresonsomnium.shops.listener;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.listeners.GeneralEventListener;
+import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.shops.guis.CustomShop;
 import it.areson.aresonsomnium.shops.guis.EditPriceConfig;
 import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
+import it.areson.aresonsomnium.shops.items.Price;
 import it.areson.aresonsomnium.shops.items.ShopItem;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.entity.Player;
@@ -141,7 +143,21 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 if (clickType == ClickType.LEFT) {
                     ShopItem shopItem = customShop.getItems().get(slot);
                     if (Objects.nonNull(shopItem)) {
-                        player.sendMessage(shopItem.getPrice().toString());
+                        SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
+                        if (Objects.nonNull(somniumPlayer)) {
+                            Price price = shopItem.getPrice();
+                            if (somniumPlayer.canAfford(price)) {
+                                if (player.getInventory().addItem(new ItemStack(shopItem.getItemStack())).isEmpty()) {
+                                    player.sendMessage(MessageUtils.successMessage("Oggetto acquistato"));
+                                } else {
+                                    player.sendMessage(MessageUtils.warningMessage("Non hai abbastanza spazio nell'inventario"));
+                                }
+                            } else {
+                                player.sendMessage(MessageUtils.errorMessage("Non puoi permetterti questo oggetto"));
+                            }
+                        } else {
+                            player.sendMessage(MessageUtils.errorMessage("Riscontrato un problema con i tuoi dati. Segnala il problema  allo staff."));
+                        }
                     }
                 }
             }
