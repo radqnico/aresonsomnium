@@ -44,9 +44,6 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             } else if (shopManager.isViewingCustomGui(player)) {
                 shopManager.playerCloseGui(player);
             }
-        } else {
-            shopEditor.endEditPrice(player);
-            shopEditor.endEditGui(player);
         }
     }
 
