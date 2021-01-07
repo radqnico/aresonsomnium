@@ -14,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Objects;
 
@@ -66,32 +67,41 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             CustomShop customShop = shopEditor.getEditingCustomShop(player);
             InventoryAction action = event.getAction();
             if (shopEditor.isEditingPrice(player)) {
-                EditPriceConfig editingPriceConfig = shopEditor.getEditingPriceConfig(player);
-                switch (slot) {
-                    case 11:
-                        editingPriceConfig.setCoinType(CoinType.BASIC);
-                        player.closeInventory();
-                        player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Basic Coins <--"));
-                        break;
-                    case 13:
-                        editingPriceConfig.setCoinType(CoinType.CHARON);
-                        player.closeInventory();
-                        player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Monete di Caronte <--"));
-                        break;
-                    case 15:
-                        editingPriceConfig.setCoinType(CoinType.FORCED);
-                        player.closeInventory();
-                        player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Gemme <--"));
-                        break;
+                if (Objects.nonNull(clickedInventory)) {
+                    if (clickedInventory.getType().equals(InventoryType.CHEST)) {
+                        EditPriceConfig editingPriceConfig = shopEditor.getEditingPriceConfig(player);
+                        switch (slot) {
+                            case 11:
+                                editingPriceConfig.setCoinType(CoinType.BASIC);
+                                player.closeInventory();
+                                player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Basic Coins <--"));
+                                break;
+                            case 13:
+                                editingPriceConfig.setCoinType(CoinType.CHARON);
+                                player.closeInventory();
+                                player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Monete di Caronte <--"));
+                                break;
+                            case 15:
+                                editingPriceConfig.setCoinType(CoinType.FORCED);
+                                player.closeInventory();
+                                player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Gemme <--"));
+                                break;
+                        }
+                        event.setCancelled(true);
+                    }
                 }
-                event.setCancelled(true);
             } else {
                 switch (action) {
                     case PICKUP_ALL:
                         handlePickupAll(clickedInventory, customShop, player, slot);
                         break;
                     case PLACE_ALL:
-                        handlePlaceAll(clickedInventory, customShop, player, slot, event.getCursor());
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                handlePlaceAll(clickedInventory, customShop, player, slot);
+                            }
+                        }.runTaskLaterAsynchronously(aresonSomnium, 2);
                         break;
                     case PICKUP_HALF:
                         EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop);
@@ -142,13 +152,14 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         }
     }
 
-    private void handlePlaceAll(Inventory clickedInventory, CustomShop customShop, Player player, int slot, ItemStack currentItem) {
+    private void handlePlaceAll(Inventory clickedInventory, CustomShop customShop, Player player, int slot) {
         if (Objects.nonNull(clickedInventory) && clickedInventory.getType().equals(InventoryType.CHEST)) {
             ShopItem pickupItem = aresonSomnium.getShopEditor().getPickupItem(player);
             if (Objects.nonNull(pickupItem)) {
                 shopEditor.addNewItemToShop(customShop, slot, pickupItem);
                 aresonSomnium.getDebugger().debugInfo("Oggetto salvato recuperato");
             } else {
+                ItemStack currentItem = clickedInventory.getItem(slot);
                 shopEditor.addNewItemToShop(customShop, slot, new ShopItem(currentItem));
                 aresonSomnium.getDebugger().debugInfo("Oggetto nuovo inserito");
             }
