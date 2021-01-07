@@ -67,27 +67,26 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             CustomShop customShop = shopEditor.getEditingCustomShop(player);
             InventoryAction action = event.getAction();
             if (shopEditor.isEditingPrice(player)) {
-                if (Objects.nonNull(clickedInventory)) {
-                    EditPriceConfig editingPriceConfig = shopEditor.getEditingPriceConfig(player);
-                    switch (slot) {
-                        case 11:
-                            editingPriceConfig.setCoinType(CoinType.BASIC);
-                            player.closeInventory();
-                            player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Basic Coins <--"));
-                            break;
-                        case 13:
-                            editingPriceConfig.setCoinType(CoinType.CHARON);
-                            player.closeInventory();
-                            player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Monete di Caronte <--"));
-                            break;
-                        case 15:
-                            editingPriceConfig.setCoinType(CoinType.FORCED);
-                            player.closeInventory();
-                            player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Gemme <--"));
-                            break;
-                    }
-                    event.setCancelled(true);
+                EditPriceConfig editingPriceConfig = shopEditor.getEditingPriceConfig(player);
+                aresonSomnium.getDebugger().debugInfo(clickedInventory.getType().name());
+                switch (slot) {
+                    case 11:
+                        editingPriceConfig.setCoinType(CoinType.BASIC);
+                        player.closeInventory();
+                        player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Basic Coins <--"));
+                        break;
+                    case 13:
+                        editingPriceConfig.setCoinType(CoinType.CHARON);
+                        player.closeInventory();
+                        player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Monete di Caronte <--"));
+                        break;
+                    case 15:
+                        editingPriceConfig.setCoinType(CoinType.FORCED);
+                        player.closeInventory();
+                        player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Gemme <--"));
+                        break;
                 }
+                event.setCancelled(true);
             } else {
                 switch (action) {
                     case PICKUP_ALL:
