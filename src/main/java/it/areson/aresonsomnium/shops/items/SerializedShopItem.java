@@ -13,14 +13,12 @@ public class SerializedShopItem {
     private final BigDecimal basicCoins;
     private final BigInteger charonCoins;
     private final BigInteger forcedCoins;
-    private final Boolean loreSet;
 
-    public SerializedShopItem(String serializedItemStack, BigDecimal basicCoins, BigInteger charonCoins, BigInteger forcedCoins, Boolean loreSet) {
+    public SerializedShopItem(String serializedItemStack, BigDecimal basicCoins, BigInteger charonCoins, BigInteger forcedCoins) {
         this.serializedItemStack = serializedItemStack;
         this.basicCoins = basicCoins;
         this.charonCoins = charonCoins;
         this.forcedCoins = forcedCoins;
-        this.loreSet = loreSet;
     }
 
     public static SerializedShopItem fromJson(String json) {
@@ -34,8 +32,7 @@ public class SerializedShopItem {
     public ShopItem toShopItem() {
         return new ShopItem(
                 ItemStack.deserializeBytes(Base64.getDecoder().decode(serializedItemStack)),
-                new Price(basicCoins, charonCoins, forcedCoins),
-                loreSet
+                new Price(basicCoins, charonCoins, forcedCoins)
         );
     }
 }

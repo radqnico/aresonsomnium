@@ -57,22 +57,19 @@ public class CustomShop extends MySQLObject {
         for (Map.Entry<Integer, ShopItem> entry : items.entrySet()) {
             Integer key = entry.getKey();
             ShopItem shopItem = entry.getValue();
-            ItemMeta itemMeta = shopItem.getItemStack().getItemMeta();
-            if(!shopItem.isLoreSet()) {
-                if (Objects.nonNull(itemMeta)) {
-                    List<String> lore = itemMeta.getLore();
-                    if (Objects.nonNull(lore)) {
-                        lore.add("");
-                        lore.addAll(shopItem.getPrice().toLore());
-                    } else {
-                        lore = new ArrayList<>();
-                        lore.add("");
-                        lore.addAll(shopItem.getPrice().toLore());
-                    }
-                    itemMeta.setLore(lore);
-                    shopItem.getItemStack().setItemMeta(itemMeta);
+            ItemMeta itemMeta = shopItem.getItemStack().clone().getItemMeta();
+            if (Objects.nonNull(itemMeta)) {
+                List<String> lore = itemMeta.getLore();
+                if (Objects.nonNull(lore)) {
+                    lore.add("");
+                    lore.addAll(shopItem.getPrice().toLore());
+                } else {
+                    lore = new ArrayList<>();
+                    lore.add("");
+                    lore.addAll(shopItem.getPrice().toLore());
                 }
-                shopItem.setLoreSet(true);
+                itemMeta.setLore(lore);
+                shopItem.getItemStack().setItemMeta(itemMeta);
             }
             inventory.setItem(key, shopItem.getItemStack());
         }

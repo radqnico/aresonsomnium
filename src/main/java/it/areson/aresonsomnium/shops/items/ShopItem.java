@@ -8,24 +8,14 @@ public class ShopItem {
 
     private final ItemStack itemStack;
     private Price price;
-    private boolean loreSet;
 
-    public ShopItem(ItemStack itemStack, Price price, boolean loreSet) {
+    public ShopItem(ItemStack itemStack, Price price) {
         this.itemStack = itemStack;
         this.price = price;
-        this.loreSet = loreSet;
     }
 
     public ShopItem(ItemStack itemStack) {
-        this(itemStack, new Price(), false);
-    }
-
-    public boolean isLoreSet() {
-        return loreSet;
-    }
-
-    public void setLoreSet(boolean loreSet) {
-        this.loreSet = loreSet;
+        this(itemStack, new Price());
     }
 
     public ItemStack getItemStack() {
@@ -45,7 +35,7 @@ public class ShopItem {
                 Base64.getEncoder().encodeToString(itemStack.serializeAsBytes()),
                 price.getBasicCoins(),
                 price.getCharonCoins(),
-                price.getForcedCoins(),
-                loreSet);
+                price.getForcedCoins()
+        );
     }
 }
