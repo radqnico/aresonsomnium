@@ -91,7 +91,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                         handlePickupAll(clickedInventory, customShop, player, slot);
                         break;
                     case PLACE_ALL:
-                        handlePlaceAll(clickedInventory, customShop, player, slot, event.getCurrentItem());
+                        handlePlaceAll(clickedInventory, customShop, player, slot);
                         break;
                     case PICKUP_HALF:
                         EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop);
@@ -142,14 +142,14 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         }
     }
 
-    private void handlePlaceAll(Inventory clickedInventory, CustomShop customShop, Player player, int slot, ItemStack currentItem) {
+    private void handlePlaceAll(Inventory clickedInventory, CustomShop customShop, Player player, int slot) {
         if (Objects.nonNull(clickedInventory) && clickedInventory.getType().equals(InventoryType.CHEST)) {
             ShopItem pickupItem = aresonSomnium.getShopEditor().getPickupItem(player);
             if (Objects.nonNull(pickupItem)) {
                 shopEditor.addNewItemToShop(customShop, slot, pickupItem);
                 aresonSomnium.getDebugger().debugInfo("Oggetto salvato recuperato");
             } else {
-                aresonSomnium.getDebugger().debugWarning(currentItem.toString());
+                ItemStack currentItem = clickedInventory.getItem(slot);
                 shopEditor.addNewItemToShop(customShop, slot, new ShopItem(currentItem));
                 aresonSomnium.getDebugger().debugInfo("Oggetto nuovo inserito");
             }
