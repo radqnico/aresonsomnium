@@ -25,7 +25,7 @@ public class CustomShop extends MySQLObject {
     public static String tableQuery = "create table if not exists %s (" +
             "guiName varchar(255) not null primary key,\n" +
             "guiTitle varchar(255) not null,\n" +
-            "shopItems text not null,\n" +
+            "shopItems text not null\n" +
             ");";
 
     private final String name;
@@ -112,7 +112,7 @@ public class CustomShop extends MySQLObject {
     @Override
     public boolean updateFromDB() {
         createTableIfNotExists(String.format(tableQuery, tableName));
-        String query = "select * from somniumGuis where guiName='" + name + "'";
+        String query = "select * from " + GUIS_TABLE_NAME + " where guiName='" + name + "'";
         try {
             Connection connection = mySqlDBConnection.connect();
             ResultSet resultSet = mySqlDBConnection.select(connection, query);
