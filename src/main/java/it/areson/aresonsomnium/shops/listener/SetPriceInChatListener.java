@@ -6,6 +6,7 @@ import it.areson.aresonsomnium.listeners.GeneralEventListener;
 import it.areson.aresonsomnium.shops.guis.EditPriceConfig;
 import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -38,7 +39,10 @@ public class SetPriceInChatListener extends GeneralEventListener {
                 editingPriceConfig.execute();
 
                 player.sendMessage("Prezzo impostato.");
-                player.openInventory(shopEditor.getEditingCustomShop(player).createInventory());
+                Bukkit.getScheduler().runTask(
+                        aresonSomnium,
+                        () -> player.openInventory(shopEditor.getEditingCustomShop(player).createInventory())
+                );
 
                 shopEditor.endEditPrice(player);
 
