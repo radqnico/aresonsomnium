@@ -68,6 +68,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     case 11:
                         editingPriceConfig.setCoinType(CoinType.BASIC);
                         editingPriceConfig.setSlot(slot);
+                        aresonSomnium.getDebugger().debugInfo("Dentro 2");
                         player.closeInventory();
                         break;
                     case 13:

@@ -54,4 +54,14 @@ public class EditPriceConfig {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "EditPriceConfig{" +
+                "customShop=" + customShop +
+                ", slot=" + slot +
+                ", coinType=" + coinType.getCoinName() +
+                ", price=" + price +
+                '}';
+    }
 }
