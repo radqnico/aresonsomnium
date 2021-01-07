@@ -61,12 +61,16 @@ public class CustomShop extends MySQLObject {
             if (Objects.nonNull(itemMeta)) {
                 List<String> lore = itemMeta.getLore();
                 if (Objects.nonNull(lore)) {
+                    Bukkit.getLogger().severe(Arrays.toString(lore.toArray()));
                     lore.add("");
                     lore.addAll(value.getPrice().toLore());
-                }else {
+                    Bukkit.getLogger().severe(Arrays.toString(lore.toArray()));
+                } else {
+                    Bukkit.getLogger().severe(Arrays.toString(lore.toArray()));
                     lore = new ArrayList<>();
                     lore.add("");
                     lore.addAll(value.getPrice().toLore());
+                    Bukkit.getLogger().severe(Arrays.toString(lore.toArray()));
                 }
             }
             value.getItemStack().setItemMeta(itemMeta);
