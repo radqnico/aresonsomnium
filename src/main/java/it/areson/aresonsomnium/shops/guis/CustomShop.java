@@ -63,6 +63,10 @@ public class CustomShop extends MySQLObject {
                 if (Objects.nonNull(lore)) {
                     lore.add("");
                     lore.addAll(value.getPrice().toLore());
+                }else {
+                    lore = new ArrayList<>();
+                    lore.add("");
+                    lore.addAll(value.getPrice().toLore());
                 }
             }
             value.getItemStack().setItemMeta(itemMeta);
