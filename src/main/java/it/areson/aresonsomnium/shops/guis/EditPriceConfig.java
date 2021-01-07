@@ -3,6 +3,7 @@ package it.areson.aresonsomnium.shops.guis;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.exceptions.PriceConfigNotReadyException;
 import it.areson.aresonsomnium.shops.items.ShopItem;
+import org.bukkit.Bukkit;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -49,6 +50,11 @@ public class EditPriceConfig {
                     shopItem.getPrice().setForcedCoins(price.toBigInteger());
                     break;
                 case BASIC:
+                    if(shopItem.getPrice() != null) {
+                        Bukkit.getLogger().info(shopItem.getPrice().toString());
+                    }else{
+                        Bukkit.getLogger().info("NULLO");
+                    }
                     shopItem.getPrice().setBasicCoins(price);
                     break;
             }
