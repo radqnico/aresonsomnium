@@ -31,7 +31,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     @EventHandler
     public void onInventoryCloseEvent(InventoryCloseEvent event) {
         Player player = (Player) event.getView().getPlayer();
-        if (shopEditor.isEditingPrice(player)) {
+        if (!shopEditor.isEditingPrice(player)) {
             if (shopEditor.isEditingCustomGui(player)) {
                 if (shopEditor.endEditGui(player)) {
                     aresonSomnium.getLogger().info(MessageUtils.successMessage("GUI modificata da '" + player.getName() + "' salvata su DB"));
