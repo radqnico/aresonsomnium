@@ -149,6 +149,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 shopEditor.addNewItemToShop(customShop, slot, pickupItem);
                 aresonSomnium.getDebugger().debugInfo("Oggetto salvato recuperato");
             } else {
+                aresonSomnium.getDebugger().debugWarning(currentItem.toString());
                 shopEditor.addNewItemToShop(customShop, slot, new ShopItem(currentItem));
                 aresonSomnium.getDebugger().debugInfo("Oggetto nuovo inserito");
             }
