@@ -156,6 +156,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             Price price = shopItem.getPrice();
             if (somniumPlayer.canAfford(price)) {
                 if (player.getInventory().addItem(new ItemStack(shopItem.getItemStack())).isEmpty()) {
+                    price.removeFrom(somniumPlayer);
                     player.sendMessage(MessageUtils.successMessage("Oggetto acquistato"));
                 } else {
                     player.sendMessage(MessageUtils.warningMessage("Non hai abbastanza spazio nell'inventario"));

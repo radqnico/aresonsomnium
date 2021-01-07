@@ -23,7 +23,7 @@ public class Price {
     }
 
     public Price() {
-        this(BigDecimal.valueOf(-1), BigInteger.valueOf(-1), BigInteger.valueOf(-1));
+        this(BigDecimal.valueOf(0), BigInteger.valueOf(0), BigInteger.valueOf(0));
     }
 
     public BigDecimal getBasicCoins() {
@@ -63,9 +63,9 @@ public class Price {
     }
 
     public boolean isPriceReady() {
-        return basicCoins.compareTo(BigDecimal.valueOf(0)) >= 0 &&
-                charonCoins.compareTo(BigInteger.valueOf(0)) >= 0 &&
-                forcedCoins.compareTo(BigInteger.valueOf(0)) >= 0;
+        return basicCoins.compareTo(BigDecimal.valueOf(0)) > 0 ||
+                charonCoins.compareTo(BigInteger.valueOf(0)) > 0 ||
+                forcedCoins.compareTo(BigInteger.valueOf(0)) > 0;
     }
 
     @Override
