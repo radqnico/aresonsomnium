@@ -99,7 +99,7 @@ public class ShopEditor {
         return editPriceConfig;
     }
 
-    public EditPriceConfig getEditingPriceConfig(Player player){
+    public EditPriceConfig getEditingPriceConfig(Player player) {
         return activePriceConfigs.get(player);
     }
 
@@ -107,7 +107,7 @@ public class ShopEditor {
         return activePriceConfigs.containsKey(player);
     }
 
-    public void endEditPrice(Player player){
+    public void endEditPrice(Player player) {
         activePriceConfigs.remove(player);
     }
 

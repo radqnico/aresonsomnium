@@ -33,7 +33,9 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         Player player = (Player) event.getView().getPlayer();
         if (!shopEditor.isEditingPrice(player)) {
             if (shopEditor.isEditingCustomGui(player)) {
+                CustomShop customShop = shopEditor.getEditingCustomShop(player);
                 if (shopEditor.endEditGui(player)) {
+                    customShop.saveToDB();
                     aresonSomnium.getLogger().info(MessageUtils.successMessage("GUI modificata da '" + player.getName() + "' salvata su DB"));
                 } else {
                     aresonSomnium.getLogger().info(MessageUtils.warningMessage("GUI modificata da '" + player.getName() + "' NON salvata DB"));
