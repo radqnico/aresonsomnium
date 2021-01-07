@@ -93,8 +93,10 @@ public class ShopEditor {
         return editingGuis.containsKey(player);
     }
 
-    public void newEditPrice(Player player, CustomShop customShop) {
-        activePriceConfigs.put(player, new EditPriceConfig(customShop));
+    public EditPriceConfig newEditPrice(Player player, CustomShop customShop) {
+        EditPriceConfig editPriceConfig = new EditPriceConfig(customShop);
+        activePriceConfigs.put(player, editPriceConfig);
+        return editPriceConfig;
     }
 
     public EditPriceConfig getEditingPriceConfig(Player player){

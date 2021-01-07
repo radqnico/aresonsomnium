@@ -65,7 +65,6 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 switch (slot) {
                     case 11:
                         editingPriceConfig.setCoinType(CoinType.BASIC);
-                        editingPriceConfig.setSlot(slot);
                         aresonSomnium.getDebugger().debugInfo(editingPriceConfig.toString());
                         player.closeInventory();
                         player.sendMessage("Inserisci i Basic Coins: ");
@@ -95,8 +94,9 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                         handlePlaceAll(clickedInventory, customShop, player, slot, event.getCurrentItem());
                         break;
                     case PICKUP_HALF:
-                        shopEditor.newEditPrice(player, customShop);
+                        EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop);
                         player.openInventory(shopEditor.getPricesInventory());
+                        editPriceConfig.setSlot(slot);
                         aresonSomnium.getSetPriceInChatListener().registerEvents();
                         break;
                     default:

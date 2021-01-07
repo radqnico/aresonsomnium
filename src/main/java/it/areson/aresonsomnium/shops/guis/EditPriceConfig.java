@@ -50,11 +50,6 @@ public class EditPriceConfig {
                     shopItem.getPrice().setForcedCoins(price.toBigInteger());
                     break;
                 case BASIC:
-                    if(shopItem.getPrice() != null) {
-                        Bukkit.getLogger().info(shopItem.getPrice().toString());
-                    }else{
-                        Bukkit.getLogger().info("NULLO");
-                    }
                     shopItem.getPrice().setBasicCoins(price);
                     break;
             }
