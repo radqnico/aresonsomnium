@@ -80,6 +80,8 @@ public class CustomShop extends MySQLObject {
     public void saveToDB() {
         createTableIfNotExists(String.format(tableQuery, tableName));
         String saveQuery = getSaveQuery();
+
+        Bukkit.getLogger().severe("AAAAAAA    " + saveQuery);
         try {
             Connection connection = mySqlDBConnection.connect();
             int update = mySqlDBConnection.update(connection, saveQuery);
@@ -105,7 +107,6 @@ public class CustomShop extends MySQLObject {
     public String getSaveQuery() {
         Gson gson = new Gson();
         String itemsJson = gson.toJson(getSerializedShopItems());
-        Bukkit.getLogger().severe("AAAAAAA    " + itemsJson);
         return String.format("INSERT INTO %s (guiName, guiTitle, shopItems) " +
                         "values ('%s', '%s', '%s') ON DUPLICATE KEY " +
                         "UPDATE guiTitle='%s', shopItems='%s'",
