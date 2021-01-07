@@ -66,9 +66,11 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             // Click to edit
             CustomShop customShop = shopEditor.getEditingCustomShop(player);
             InventoryAction action = event.getAction();
+            aresonSomnium.getDebugger().debugInfo("Dentro 1");
+            aresonSomnium.getDebugger().debugInfo(clickedInventory.getType().name());
             if (shopEditor.isEditingPrice(player)) {
+                aresonSomnium.getDebugger().debugInfo("Dentro 2");
                 EditPriceConfig editingPriceConfig = shopEditor.getEditingPriceConfig(player);
-                aresonSomnium.getDebugger().debugInfo(clickedInventory.getType().name());
                 switch (slot) {
                     case 11:
                         editingPriceConfig.setCoinType(CoinType.BASIC);
