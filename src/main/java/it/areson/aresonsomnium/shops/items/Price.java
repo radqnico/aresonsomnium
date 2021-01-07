@@ -6,6 +6,7 @@ import it.areson.aresonsomnium.players.SomniumPlayer;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 public class Price {
 
@@ -68,6 +69,14 @@ public class Price {
     @Override
     public String toString() {
         return "Price{basicCoins=" + basicCoins + ",charonCoins=" + charonCoins + ",forcedCoins=" + forcedCoins + "}";
+    }
+
+    public ArrayList<String> toLore(){
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add("$ " + basicCoins.toPlainString());
+        lore.add("Oboli " + charonCoins.toString());
+        lore.add("Gemme " + forcedCoins.toString());
+        return lore;
     }
 
     public void setCoins(CoinType coinType, BigDecimal price) {

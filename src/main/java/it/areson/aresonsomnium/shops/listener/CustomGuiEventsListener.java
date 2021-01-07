@@ -1,8 +1,10 @@
 package it.areson.aresonsomnium.shops.listener;
 
 import it.areson.aresonsomnium.AresonSomnium;
+import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.listeners.GeneralEventListener;
 import it.areson.aresonsomnium.shops.guis.CustomShop;
+import it.areson.aresonsomnium.shops.guis.EditPriceConfig;
 import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
 import it.areson.aresonsomnium.shops.items.ShopItem;
@@ -29,14 +31,16 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     @EventHandler
     public void onInventoryCloseEvent(InventoryCloseEvent event) {
         Player player = (Player) event.getView().getPlayer();
-        if (shopEditor.isEditingCustomGui(player)) {
-            if (shopEditor.endEditGui(player)) {
-                aresonSomnium.getLogger().info(MessageUtils.successMessage("GUI modificata da '" + player.getName() + "' salvata su DB"));
-            } else {
-                aresonSomnium.getLogger().info(MessageUtils.warningMessage("GUI modificata da '" + player.getName() + "' NON salvata DB"));
+        if (shopEditor.isEditingPrice(player)) {
+            if (shopEditor.isEditingCustomGui(player)) {
+                if (shopEditor.endEditGui(player)) {
+                    aresonSomnium.getLogger().info(MessageUtils.successMessage("GUI modificata da '" + player.getName() + "' salvata su DB"));
+                } else {
+                    aresonSomnium.getLogger().info(MessageUtils.warningMessage("GUI modificata da '" + player.getName() + "' NON salvata DB"));
+                }
+            } else if (shopManager.isViewingCustomGui(player)) {
+                shopManager.playerCloseGui(player);
             }
-        } else if (shopManager.isViewingCustomGui(player)) {
-            shopManager.playerCloseGui(player);
         }
     }
 
@@ -56,25 +60,44 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             // Click to edit
             CustomShop customShop = shopEditor.getEditingCustomShop(player);
             InventoryAction action = event.getAction();
-            switch (action) {
-                case PICKUP_ALL:
-                    handlePickupAll(clickedInventory, customShop, player, slot);
-                    break;
-                case PLACE_ALL:
-                    handlePlaceAll(clickedInventory, customShop, player, slot, event.getCurrentItem());
-                    break;
-                case PICKUP_HALF:
-                    handlePickupHalf(player);
-                    break;
-                default:
-                    event.setCancelled(true);
-                    break;
+            if (shopEditor.isEditingPrice(player)) {
+                EditPriceConfig editingPriceConfig = shopEditor.getEditingPriceConfig(player);
+                switch (slot) {
+                    case 11:
+                        editingPriceConfig.setCoinType(CoinType.BASIC);
+                        editingPriceConfig.setSlot(slot);
+                        player.closeInventory();
+                        break;
+                    case 13:
+                        editingPriceConfig.setCoinType(CoinType.CHARON);
+                        editingPriceConfig.setSlot(slot);
+                        player.closeInventory();
+                        break;
+                    case 15:
+                        editingPriceConfig.setCoinType(CoinType.FORCED);
+                        editingPriceConfig.setSlot(slot);
+                        player.closeInventory();
+                        break;
+                }
+                event.setCancelled(true);
+            } else {
+                switch (action) {
+                    case PICKUP_ALL:
+                        handlePickupAll(clickedInventory, customShop, player, slot);
+                        break;
+                    case PLACE_ALL:
+                        handlePlaceAll(clickedInventory, customShop, player, slot, event.getCurrentItem());
+                        break;
+                    case PICKUP_HALF:
+                        shopEditor.newEditPrice(player, customShop);
+                        player.openInventory(shopEditor.getPricesInventory());
+                        break;
+                    default:
+                        event.setCancelled(true);
+                        break;
+                }
             }
         }
-    }
-
-    private void handlePickupHalf(Player player){
-        // TODO continuare edit prezzo
     }
 
     @EventHandler

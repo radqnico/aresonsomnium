@@ -1,9 +1,7 @@
 package it.areson.aresonsomnium.shops.guis;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.shops.items.ShopItem;
-import it.areson.aresonsomnium.utils.Pair;
 import it.areson.aresonsomnium.utils.PlayerComparator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -13,25 +11,24 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.TreeMap;
 
 public class ShopEditor {
 
-    private AresonSomnium aresonSomnium;
-
     private final TreeMap<Player, ShopItem> pickupItems;
-    private final TreeMap<Player, Pair<ShopItem, CoinType>> editingPrice;
     private final TreeMap<Player, String> editingGuis;
+    private final TreeMap<Player, EditPriceConfig> activePriceConfigs;
+    private final AresonSomnium aresonSomnium;
     private Inventory pricesInventory;
 
     public ShopEditor(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
 
-        this.pickupItems = new TreeMap<>(new PlayerComparator());
-        this.editingPrice = new TreeMap<>(new PlayerComparator());
-        this.editingGuis = new TreeMap<>(new PlayerComparator());
+        PlayerComparator playerComparator = new PlayerComparator();
+        this.pickupItems = new TreeMap<>(playerComparator);
+        this.editingGuis = new TreeMap<>(playerComparator);
+        this.activePriceConfigs = new TreeMap<>(playerComparator);
     }
 
     public void addNewItemToShop(CustomShop shop, int slot, ShopItem shopItem) {
@@ -69,23 +66,6 @@ public class ShopEditor {
         return pricesInventory;
     }
 
-    public void startEditingPrice(Player player, ShopItem shopItem, CoinType coinType) {
-        editingPrice.put(player, Pair.of(shopItem, coinType));
-    }
-
-    public boolean isEditingPrice(Player player) {
-        return editingPrice.containsKey(player);
-    }
-
-    public void stopEditingPrice(Player player, BigDecimal price) {
-        Pair<ShopItem, CoinType> itemCoinTypePair = editingPrice.remove(player);
-        if(Objects.nonNull(itemCoinTypePair)){
-            ShopItem shopItem = itemCoinTypePair.left();
-            CoinType coinType = itemCoinTypePair.right();
-            shopItem.getPrice().setCoins(coinType, price);
-        }
-    }
-
     public void setItemDisplayName(ItemStack itemStack, String name) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (Objects.nonNull(itemMeta)) {
@@ -111,6 +91,22 @@ public class ShopEditor {
 
     public boolean isEditingCustomGui(Player player) {
         return editingGuis.containsKey(player);
+    }
+
+    public void newEditPrice(Player player, CustomShop customShop) {
+        activePriceConfigs.put(player, new EditPriceConfig(customShop));
+    }
+
+    public EditPriceConfig getEditingPriceConfig(Player player){
+        return activePriceConfigs.get(player);
+    }
+
+    public boolean isEditingPrice(Player player) {
+        return activePriceConfigs.containsKey(player);
+    }
+
+    public void endEditPrice(Player player){
+        activePriceConfigs.remove(player);
     }
 
 }

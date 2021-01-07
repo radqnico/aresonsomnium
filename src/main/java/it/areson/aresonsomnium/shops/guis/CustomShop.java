@@ -9,15 +9,13 @@ import it.areson.aresonsomnium.shops.items.ShopItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
@@ -58,8 +56,17 @@ public class CustomShop extends MySQLObject {
         Inventory inventory = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', title));
         for (Map.Entry<Integer, ShopItem> entry : items.entrySet()) {
             Integer key = entry.getKey();
-            ItemStack value = entry.getValue().getItemStack();
-            inventory.setItem(key, value);
+            ShopItem value = entry.getValue();
+            ItemMeta itemMeta = value.getItemStack().getItemMeta();
+            if (Objects.nonNull(itemMeta)) {
+                List<String> lore = itemMeta.getLore();
+                if (Objects.nonNull(lore)) {
+                    lore.add("");
+                    lore.addAll(value.getPrice().toLore());
+                }
+            }
+            value.getItemStack().setItemMeta(itemMeta);
+            inventory.setItem(key, value.getItemStack());
         }
         return inventory;
     }
