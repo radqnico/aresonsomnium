@@ -31,9 +31,17 @@ public class EditPriceConfig {
     }
 
     public void execute() throws PriceConfigNotReadyException {
-        if (slot < 0 || Objects.isNull(customShop) || Objects.isNull(coinType) || Objects.isNull(price)) {
+        if (slot < 0) {
+            throw new PriceConfigNotReadyException("Manca lo slot");
+        } else if (Objects.isNull(customShop)) {
+            throw new PriceConfigNotReadyException("Manca lo shop");
+        } else if (Objects.isNull(coinType)) {
+            throw new PriceConfigNotReadyException("Manca il tipo di prezzo");
+        } else if (Objects.isNull(price)) {
+            throw new PriceConfigNotReadyException("Manca il prezzo");
+        } else {
             ShopItem shopItem = customShop.getItems().get(slot);
-            switch (coinType){
+            switch (coinType) {
                 case CHARON:
                     shopItem.getPrice().setCharonCoins(price.toBigInteger());
                     break;
@@ -44,8 +52,6 @@ public class EditPriceConfig {
                     shopItem.getPrice().setBasicCoins(price);
                     break;
             }
-        } else {
-            throw new PriceConfigNotReadyException();
         }
     }
 }
