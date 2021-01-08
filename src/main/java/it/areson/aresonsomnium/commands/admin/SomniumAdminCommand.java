@@ -264,6 +264,10 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                             somniumPlayer.getWallet().setForcedCoins(amount.toBigInteger());
                             commandSender.sendMessage(MessageUtils.successMessage("Valore dei Forced Coins impostato"));
                             break;
+                        case BASIC:
+                            Wallet.setBasicCoins(player, amount);
+                            commandSender.sendMessage(MessageUtils.successMessage("Valore dei Forced Coins impostato"));
+                            break;
                         default:
                             commandSender.sendMessage(MessageUtils.errorMessage("Tipo di moneta non esistente"));
                     }

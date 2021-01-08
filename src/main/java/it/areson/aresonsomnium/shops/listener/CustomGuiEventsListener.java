@@ -16,8 +16,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.List;
 import java.util.Objects;
 
 public class CustomGuiEventsListener extends GeneralEventListener {
@@ -73,17 +75,19 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             // Click to edit
             CustomShop customShop = shopEditor.getEditingCustomShop(player);
             InventoryAction action = event.getAction();
-            aresonSomnium.getDebugger().debugInfo("Dentro 1");
-            aresonSomnium.getDebugger().debugInfo(clickedInventory.getType().name());
-            if (shopEditor.isEditingPrice(player)) {
-                // Select coin type
-                aresonSomnium.getDebugger().debugInfo("Dentro 2");
-                EditPriceConfig editingPriceConfig = shopEditor.getEditingPriceConfig(player);
-                selectCoinType(player, clickedInventory, editingPriceConfig, slot);
-                event.setCancelled(true);
-            } else {
-                // Change shop items
-                changeShopItems(action, clickedInventory, customShop, player, slot);
+            if (Objects.nonNull(clickedInventory)) {
+                aresonSomnium.getDebugger().debugInfo(clickedInventory.getType().name());
+                if (shopEditor.isEditingPrice(player)) {
+                    // Select coin type
+                    EditPriceConfig editingPriceConfig = shopEditor.getEditingPriceConfig(player);
+                    selectCoinType(player, clickedInventory, editingPriceConfig, slot);
+                    event.setCancelled(true);
+                } else {
+                    // Change shop items
+                    if (!changeShopItems(action, clickedInventory, customShop, player, slot)) {
+                        event.setCancelled(true);
+                    }
+                }
             }
         }
     }
@@ -107,7 +111,10 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                         player.closeInventory();
                         player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Gemme <--"));
                         break;
+                    default:
+                        return;
                 }
+                aresonSomnium.getSetPriceInChatListener().registerEvents();
             }
         }
     }
@@ -129,7 +136,6 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop);
                 player.openInventory(shopEditor.getPricesInventory());
                 editPriceConfig.setSlot(slot);
-                aresonSomnium.getSetPriceInChatListener().registerEvents();
                 break;
             default:
                 return false;
@@ -196,8 +202,18 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 aresonSomnium.getDebugger().debugInfo("Oggetto nuovo inserito");
             }
         } else {
-            // Remove saved item
-            shopEditor.getPickupItem(player);
+            // Remove saved item and mark it as invalid
+            ShopItem pickupItem = shopEditor.getPickupItem(player);
+            ItemStack itemStack = pickupItem.getItemStack();
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            if (Objects.nonNull(itemMeta)) {
+                List<String> lore = itemMeta.getLore();
+                if (Objects.nonNull(lore)) {
+                    lore.add(MessageUtils.errorMessage("NON VALIDO PER NEGOZIO"));
+                }
+                itemMeta.setLore(lore);
+            }
+            itemStack.setItemMeta(itemMeta);
         }
     }
 
