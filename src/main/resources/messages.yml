@@ -1,0 +1,23 @@
+prefix: "&4[Areson] &r"
+
+sql-connect-error: "Impossibile connettersi all'SQL."
+
+# Commands response ADMIN
+invalid-debug-level: "&cLivello di debug non valido"
+guis-reloaded: "&aTutte le GUI ricaricate dal DB"
+gui-not-found: "&cLa GUI richiesta non è una GUI salvata"
+player-only-command: "&cComando disponibile solo da Player"
+somniumplayer-not-found: "&cImpossibile reperire il SomniumPlayer per %player%"
+player-not-found: "&cIl giocatore %player% non esiste"
+coins-set: "&aValore dei coins impostato"
+not-a-number: "&cNumero non valido"
+
+shop-not-ready: "&cIl negozio richiesto non e' pronto. Segnala il problema allo staff."
+
+# Stats format
+stats-format: "&6&l%player%&r's stats:
+  Secondi giocati: %secondsPlayed%
+  Portafoglio:
+  >  Basic coins:  %basicCoins%
+  >  Charon coins: %charonCoins%
+  >  Forced coins: %forcedCoins% "

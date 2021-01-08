@@ -2,19 +2,17 @@ package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.shops.guis.CustomShop;
-import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
+import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
-import static it.areson.aresonsomnium.utils.MessageUtils.*;
+import static it.areson.aresonsomnium.utils.MessageUtils.errorMessage;
 
 
 @SuppressWarnings("NullableProblems")
@@ -38,7 +36,7 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         switch (args.length) {
             case 0:
-                notEnoughArguments(commandSender, command);
+                MessageUtils.notEnoughArguments(commandSender, command);
                 break;
             case 1:
                 switch (args[0].toLowerCase()) {
@@ -48,25 +46,17 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                         handleOpenPricesGui(commandSender);
                         break;
                     case "openpermanentgui":
-                        notEnoughArguments(commandSender, command);
+                        MessageUtils.notEnoughArguments(commandSender, command);
                         break;
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
                 }
                 break;
             case 2:
-                switch (args[0].toLowerCase()) {
-                    case "serialize":
-                        itemStackSerializationHandler(commandSender, args[1]);
-                        break;
-                    case "deserialize":
-                        itemStackDeserializationHandler(commandSender, args[1]);
-                        break;
-                    case "openpermanentgui":
-                        openPermanentGuiHandler(commandSender, args[1]);
-                        break;
-                    default:
-                        commandSender.sendMessage(errorMessage("Funzione non trovata"));
+                if ("openpermanentgui".equals(args[0].toLowerCase())) {
+                    openPermanentGuiHandler(commandSender, args[1]);
+                } else {
+                    commandSender.sendMessage(errorMessage("Funzione non trovata"));
                 }
                 break;
         }
@@ -95,37 +85,6 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
         } else {
             commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
         }
-    }
-
-    private void itemStackDeserializationHandler(CommandSender commandSender, String path) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
-            byte[] bytes = aresonSomnium.getDataFile().readBytes(path);
-            ItemStack itemStack = ItemStack.deserializeBytes(bytes);
-            HashMap<Integer, ItemStack> ignore = player.getInventory().addItem(itemStack);
-            if (!ignore.isEmpty()) {
-                player.sendMessage(warningMessage("Non hai spazio nell'inventario"));
-            }
-        } else {
-            commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
-        }
-    }
-
-    private void itemStackSerializationHandler(CommandSender commandSender, String path) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
-            ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
-            try {
-                byte[] bytes = itemInMainHand.serializeAsBytes();
-                player.sendMessage(successMessage("Serializzazione di '" + path + "' completata"));
-                aresonSomnium.getDataFile().writeBytes(path, bytes);
-            } catch (IllegalArgumentException exception) {
-                player.sendMessage(errorMessage("Errore: " + exception.getMessage()));
-            }
-        } else {
-            commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
-        }
-        commandSender.sendMessage();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package it.areson.aresonsomnium.database;
 
+import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.utils.Debugger;
 
 import java.sql.*;
@@ -22,7 +23,7 @@ public class MySqlDBConnection {
             Connection connection = connect();
             connection.close();
         } catch (SQLException e) {
-            debugger.debugError("Impossibile connettersi all'SQL.");
+            debugger.debugError(AresonSomnium.getInstance().getMessages().getPlainMessage("sql-connect-error"));
             printSqlExceptionDetails(e);
         }
     }
@@ -35,7 +36,7 @@ public class MySqlDBConnection {
             String pass = MySqlConfig.PASS;
             return DriverManager.getConnection("jdbc:mysql://" + host + "/" + database + "?user=" + user + "&password=" + pass);
         } catch (SQLException e) {
-            debugger.debugError("Impossibile connettersi all'SQL.");
+            debugger.debugError(AresonSomnium.getInstance().getMessages().getPlainMessage("sql-connect-error"));
             printSqlExceptionDetails(e);
         }
         return null;

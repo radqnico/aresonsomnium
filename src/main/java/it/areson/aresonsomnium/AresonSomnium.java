@@ -15,7 +15,7 @@ import it.areson.aresonsomnium.shops.listener.CustomGuiEventsListener;
 import it.areson.aresonsomnium.shops.listener.SetPriceInChatListener;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.Debugger;
-import it.areson.aresonsomnium.utils.FileManager;
+import it.areson.aresonsomnium.utils.MessageManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
@@ -23,15 +23,19 @@ import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 
 public class AresonSomnium extends JavaPlugin {
 
+    private static AresonSomnium instance;
     private SomniumPlayerManager somniumPlayerManager;
     private ShopManager shopManager;
     private ShopEditor shopEditor;
     private SomniumPlayerDBEvents playerDBEvents;
     private CustomGuiEventsListener customGuiEventsListener;
     private SetPriceInChatListener setPriceInChatListener;
-    private FileManager dataFile;
-
+    private MessageManager messages;
     private Debugger debugger;
+
+    public static AresonSomnium getInstance() {
+        return instance;
+    }
 
     @Override
     public void onDisable() {
@@ -65,14 +69,15 @@ public class AresonSomnium extends JavaPlugin {
         BlockPrice.initPrices();
 
         AresonSomniumAPI.instance = this;
+        instance = this;
+    }
+
+    public MessageManager getMessages() {
+        return messages;
     }
 
     private void registerFiles() {
-        dataFile = new FileManager(this, "data.yml");
-    }
-
-    public FileManager getDataFile() {
-        return dataFile;
+        messages = new MessageManager(this, "messages.yml");
     }
 
     private void registerCommands() {

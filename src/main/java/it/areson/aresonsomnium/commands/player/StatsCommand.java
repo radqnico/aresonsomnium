@@ -4,6 +4,7 @@ import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.MessageUtils;
+import it.areson.aresonsomnium.utils.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -33,12 +34,10 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
-        switch (args.length) {
-            case 0:
-                handleStats(commandSender);
-                break;
-            default:
-                tooManyArguments(commandSender, "");
+        if (args.length == 0) {
+            handleStats(commandSender);
+        } else {
+            MessageUtils.tooManyArguments(commandSender, command);
         }
         return true;
     }
@@ -48,12 +47,14 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
             Player player = (Player) commandSender;
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (Objects.nonNull(somniumPlayer)) {
-                String toSend = ChatColor.GOLD + somniumPlayer.getPlayerName() + ChatColor.RESET + "'s stats:\n" +
-                        "   Secondi giocati: " + somniumPlayer.getSecondsPlayedTotal() + "\n" +
-                        "   Portafoglio:\n" +
-                        "      $: " + Wallet.getBasicCoins(player) + "\n" +
-                        "      Oboli: " + somniumPlayer.getWallet().getCharonCoins() + "\n" +
-                        "      Gemme: " + somniumPlayer.getWallet().getForcedCoins();
+                String toSend = aresonSomnium.getMessages().getPlainMessage(
+                        "stats-format",
+                        Pair.of("%player%", player.getName()),
+                        Pair.of("%secondsPlayed%", somniumPlayer.getSecondsPlayedTotal()+""),
+                        Pair.of("%basicCoins%", Wallet.getBasicCoins(player).toPlainString()),
+                        Pair.of("%charonCoins%", somniumPlayer.getWallet().getCharonCoins().toString()),
+                        Pair.of("%forcedCoins%", somniumPlayer.getWallet().getForcedCoins().toString())
+                );
                 commandSender.sendMessage(toSend);
             } else {
                 commandSender.sendMessage(MessageUtils.errorMessage("Riscontrato un problema con i tuoi dati. Segnala il problema  allo staff."));
@@ -71,10 +72,5 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
             StringUtil.copyPartialMatches(strings[0], aresonSomnium.getShopManager().getGuis().keySet(), suggestions);
         }
         return suggestions;
-    }
-
-    private void tooManyArguments(CommandSender commandSender, String function) {
-        commandSender.sendMessage(MessageUtils.errorMessage("Troppi parametri forniti a " + function));
-        commandSender.sendMessage(command.getUsage());
     }
 }

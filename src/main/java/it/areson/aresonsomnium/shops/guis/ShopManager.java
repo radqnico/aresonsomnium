@@ -1,5 +1,6 @@
 package it.areson.aresonsomnium.shops.guis;
 
+import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.utils.PlayerComparator;
@@ -71,8 +72,6 @@ public class ShopManager {
         return customShop;
     }
 
-
-
     public void openGuiToPlayer(Player player, String guiName) {
         CustomShop customShop = guis.get(guiName);
         if (Objects.nonNull(customShop)) {
@@ -80,10 +79,10 @@ public class ShopManager {
                 player.openInventory(customShop.createInventory());
                 openedGuis.put(player, guiName);
             } else {
-                player.sendMessage(MessageUtils.errorMessage("Il negozio richiesto non e' pronto. Segnala il problema allo staff."));
+                player.sendMessage(AresonSomnium.getInstance().getMessages().getPlainMessage("shop-not-ready"));
             }
         } else {
-            player.sendMessage(MessageUtils.errorMessage("L'interfaccia '" + guiName + "' non esiste"));
+            player.sendMessage(AresonSomnium.getInstance().getMessages().getPlainMessage("shop-not-ready"));
         }
     }
 

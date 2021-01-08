@@ -2,6 +2,7 @@ package it.areson.aresonsomnium.commands.player;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
+import it.areson.aresonsomnium.utils.MessageManager;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -32,13 +33,13 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         switch (args.length) {
             case 0:
-                notEnoughArguments(commandSender);
+                MessageUtils.notEnoughArguments(commandSender, command);
                 break;
             case 1:
                 handleOpenGui(commandSender, args[0]);
                 break;
             default:
-                tooManyArguments(commandSender, "");
+                MessageUtils.tooManyArguments(commandSender, command);
         }
         return true;
     }
@@ -50,10 +51,10 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
             if (shopManager.isPermanent(guiName)) {
                 shopManager.openGuiToPlayer(player, guiName);
             } else {
-                player.sendMessage("La GUI richiesta non esiste");
+                player.sendMessage(aresonSomnium.getMessages().getPlainMessage("gui-not-found"));
             }
         } else {
-            commandSender.sendMessage(MessageUtils.errorMessage("Comando disponibile solo da Player"));
+            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("player-only-command"));
         }
     }
 
@@ -65,15 +66,5 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
             StringUtil.copyPartialMatches(strings[0], aresonSomnium.getShopManager().getGuis().keySet(), suggestions);
         }
         return suggestions;
-    }
-
-    private void notEnoughArguments(CommandSender commandSender) {
-        commandSender.sendMessage(MessageUtils.errorMessage("Parametri non sufficienti"));
-        commandSender.sendMessage(command.getUsage());
-    }
-
-    private void tooManyArguments(CommandSender commandSender, String function) {
-        commandSender.sendMessage(MessageUtils.errorMessage("Troppi parametri forniti a " + function));
-        commandSender.sendMessage(command.getUsage());
     }
 }
