@@ -130,7 +130,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     public void run() {
                         placeItemInShop(clickedInventory, customShop, player, slot);
                     }
-                }.runTaskLaterAsynchronously(aresonSomnium, 2);
+                }.runTaskLater(aresonSomnium, 5);
                 return true;
             case PICKUP_HALF:
                 EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop);
