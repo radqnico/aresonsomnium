@@ -123,7 +123,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         switch (action) {
             case PICKUP_ALL:
                 pickupItemFromShop(clickedInventory, customShop, player, slot);
-                break;
+                return true;
             case PLACE_ALL:
                 new BukkitRunnable() {
                     @Override
@@ -131,16 +131,15 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                         placeItemInShop(clickedInventory, customShop, player, slot);
                     }
                 }.runTaskLaterAsynchronously(aresonSomnium, 2);
-                break;
+                return true;
             case PICKUP_HALF:
                 EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop);
                 player.openInventory(shopEditor.getPricesInventory());
                 editPriceConfig.setSlot(slot);
-                break;
+                return true;
             default:
                 return false;
         }
-        return false;
     }
 
     private void prepareBuyItem(CustomShop customShop, Inventory clickedInventory, ClickType clickType, int slot, Player player) {
