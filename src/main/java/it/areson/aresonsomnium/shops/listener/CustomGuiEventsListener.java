@@ -99,13 +99,13 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     }
 
     private org.bukkit.inventory.ItemStack getInvolvedItem(InventoryClickEvent event) {
-        org.bukkit.inventory.ItemStack currentItem = event.getCurrentItem();
-        if (checkItem(currentItem)) {
-            return currentItem;
+        ItemStack currentItem = event.getCurrentItem();
+        if (Objects.nonNull(currentItem) && checkItem(currentItem)) {
+            return new ItemStack(currentItem);
         }
-        org.bukkit.inventory.ItemStack cursor = event.getCursor();
-        if (checkItem(cursor)) {
-            return cursor;
+        ItemStack cursor = event.getCursor();
+        if (Objects.nonNull(cursor) && checkItem(cursor)) {
+            return new ItemStack(cursor);
         }
         return null;
     }
