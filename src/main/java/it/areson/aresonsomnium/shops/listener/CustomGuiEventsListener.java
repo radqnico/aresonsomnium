@@ -84,7 +84,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     event.setCancelled(true);
                 } else {
                     // Change shop items
-                    if (!changeShopItems(event, action, clickedInventory, customShop, player, slot)) {
+                    if (!changeShopItems(action, clickedInventory, customShop, player, slot)) {
                         event.setCancelled(true);
                     }
                 }
@@ -120,14 +120,13 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         }
     }
 
-    private boolean changeShopItems(InventoryClickEvent event, InventoryAction action, Inventory clickedInventory, CustomShop customShop, Player player, int slot) {
+    private boolean changeShopItems(InventoryAction action, Inventory clickedInventory, CustomShop customShop, Player player, int slot) {
         switch (action) {
             case PICKUP_ALL:
                 pickupItemFromShop(clickedInventory, customShop, player, slot);
                 return true;
             case PLACE_ALL:
-                //placeItemInShop(clickedInventory, customShop, player, slot);
-                placeItemInShop(event, player);
+                placeItemInShop(clickedInventory, customShop, player, slot);
                 return true;
             case PICKUP_HALF:
                 EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop);
@@ -186,39 +185,31 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         }
     }
 
-    private void placeItemInShop(InventoryClickEvent event, Player player) {
-        System.out.println("SLOT: " + event.getSlot());
-        System.out.println("CURRENT ITEM: " + event.getCurrentItem());
-        System.out.println("CURSOR ITEM: " + event.getCursor());
-        System.out.println("SLOT ITEM: " + event.getClickedInventory().getItem(event.getSlot()));
-
+    private void placeItemInShop(Inventory clickedInventory, CustomShop customShop, Player player, int slot) {
+        if (Objects.nonNull(clickedInventory) && clickedInventory.getType().equals(InventoryType.CHEST)) {
+            ShopItem pickupItem = aresonSomnium.getShopEditor().getPickupItem(player);
+            if (Objects.nonNull(pickupItem)) {
+                shopEditor.addNewItemToShop(customShop, slot, pickupItem);
+                aresonSomnium.getDebugger().debugInfo("Oggetto salvato recuperato");
+            } else {
+                ItemStack currentItem = clickedInventory.getItem(slot);
+                shopEditor.addNewItemToShop(customShop, slot, new ShopItem(currentItem));
+                aresonSomnium.getDebugger().debugInfo("Oggetto nuovo inserito");
+            }
+        } else {
+            // Remove saved item and mark it as invalid
+            ShopItem pickupItem = shopEditor.getPickupItem(player);
+            ItemStack itemStack = pickupItem.getItemStack();
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            if (Objects.nonNull(itemMeta)) {
+                List<String> lore = itemMeta.getLore();
+                if (Objects.nonNull(lore)) {
+                    lore.add(MessageUtils.errorMessage("NON VALIDO PER NEGOZIO"));
+                }
+                itemMeta.setLore(lore);
+            }
+            itemStack.setItemMeta(itemMeta);
+        }
     }
-
-//    private void placeItemInShop(Inventory clickedInventory, CustomShop customShop, Player player, int slot) {
-//        if (Objects.nonNull(clickedInventory) && clickedInventory.getType().equals(InventoryType.CHEST)) {
-//            ShopItem pickupItem = aresonSomnium.getShopEditor().getPickupItem(player);
-//            if (Objects.nonNull(pickupItem)) {
-//                shopEditor.addNewItemToShop(customShop, slot, pickupItem);
-//                aresonSomnium.getDebugger().debugInfo("Oggetto salvato recuperato");
-//            } else {
-//                ItemStack currentItem = clickedInventory.getItem(slot);
-//                shopEditor.addNewItemToShop(customShop, slot, new ShopItem(currentItem));
-//                aresonSomnium.getDebugger().debugInfo("Oggetto nuovo inserito");
-//            }
-//        } else {
-//            // Remove saved item and mark it as invalid
-//            ShopItem pickupItem = shopEditor.getPickupItem(player);
-//            ItemStack itemStack = pickupItem.getItemStack();
-//            ItemMeta itemMeta = itemStack.getItemMeta();
-//            if (Objects.nonNull(itemMeta)) {
-//                List<String> lore = itemMeta.getLore();
-//                if (Objects.nonNull(lore)) {
-//                    lore.add(MessageUtils.errorMessage("NON VALIDO PER NEGOZIO"));
-//                }
-//                itemMeta.setLore(lore);
-//            }
-//            itemStack.setItemMeta(itemMeta);
-//        }
-//    }
 
 }
