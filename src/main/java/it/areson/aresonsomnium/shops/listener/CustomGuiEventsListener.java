@@ -73,6 +73,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             } else if (shopManager.isViewingCustomGui(player)) {
                 // Shopping
                 prepareBuyItem(player, event);
+                event.setCancelled(true);
             }
         }
     }
@@ -136,7 +137,6 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 aresonSomnium.getDebugger().debugError("Errore: EditPriceConfig non trovato");
             }
         }
-        event.setCancelled(true);
     }
 
     private boolean checkItem(org.bukkit.inventory.ItemStack itemStack) {
