@@ -84,7 +84,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     event.setCancelled(true);
                 } else {
                     // Change shop items
-                    if (!changeShopItems(action, clickedInventory, customShop, player, slot)) {
+                    if (!changeShopItems(event, action, clickedInventory, customShop, player, slot)) {
                         event.setCancelled(true);
                     }
                 }
@@ -120,13 +120,14 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         }
     }
 
-    private boolean changeShopItems(InventoryAction action, Inventory clickedInventory, CustomShop customShop, Player player, int slot) {
+    private boolean changeShopItems(InventoryClickEvent event, InventoryAction action, Inventory clickedInventory, CustomShop customShop, Player player, int slot) {
         switch (action) {
             case PICKUP_ALL:
                 pickupItemFromShop(clickedInventory, customShop, player, slot);
                 return true;
             case PLACE_ALL:
-                placeItemInShop(clickedInventory, customShop, player, slot);
+                //placeItemInShop(clickedInventory, customShop, player, slot);
+                placeItemInShop(event, player);
                 return true;
             case PICKUP_HALF:
                 EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop);
