@@ -2,14 +2,10 @@ package it.areson.aresonsomnium.shops.guis;
 
 import it.areson.aresonsomnium.shops.items.ShopItem;
 import it.areson.aresonsomnium.utils.Pair;
-import org.bukkit.ChatColor;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -56,19 +52,7 @@ public class MoveShopItemAction {
     public void executeIfValid(CustomShop customShop) {
         switch (getActionType()) {
             case REMOVE_FROM_SHOP:
-                ShopItem remove = customShop.getItems().remove(source.right());
-                if (Objects.nonNull(remove)) {
-                    ItemMeta itemMeta = remove.getItemStack().getItemMeta();
-                    if (Objects.nonNull(itemMeta)) {
-                        List<String> lore = itemMeta.getLore();
-                        if (Objects.isNull(lore)) {
-                            lore = new ArrayList<>();
-                        }
-                        lore.add(ChatColor.translateAlternateColorCodes('&', "&cINVALIDO PER NEGOZIO"));
-                        itemMeta.setLore(lore);
-                    }
-                    remove.getItemStack().setItemMeta(itemMeta);
-                }
+                customShop.getItems().remove(source.right());
                 break;
             case ADD_NEW_TO_SHOP:
                 if (Objects.nonNull(itemStack)) {
