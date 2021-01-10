@@ -188,8 +188,8 @@ public class CustomGuiEventsListener extends GeneralEventListener {
 
     private void placeItemInShop(InventoryClickEvent event, Player player) {
         System.out.println("SLOT: " + event.getSlot());
-        System.out.println("CURRENT ITEM: " + event.getCurrentItem().getType().name());
-        System.out.println("CURSOR ITEM: " + event.getCursor().getType().name());
+        System.out.println("CURRENT ITEM: " + event.getCurrentItem());
+        System.out.println("CURSOR ITEM: " + event.getCursor());
         System.out.println("SLOT ITEM: " + event.getClickedInventory().getItem(event.getSlot()));
 
     }
