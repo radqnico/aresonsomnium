@@ -8,6 +8,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -56,13 +57,14 @@ public class MoveShopItemAction {
         switch (getActionType()) {
             case REMOVE_FROM_SHOP:
                 ShopItem remove = customShop.getItems().remove(source.right());
-                if(Objects.nonNull(remove)){
+                if (Objects.nonNull(remove)) {
                     ItemMeta itemMeta = remove.getItemStack().getItemMeta();
-                    if(Objects.nonNull(itemMeta)){
+                    if (Objects.nonNull(itemMeta)) {
                         List<String> lore = itemMeta.getLore();
-                        if(Objects.nonNull(lore)) {
-                            lore.add(ChatColor.translateAlternateColorCodes('&', "&cINVALIDO PER NEGOZIO"));
+                        if (Objects.isNull(lore)) {
+                            lore = new ArrayList<>();
                         }
+                        lore.add(ChatColor.translateAlternateColorCodes('&', "&cINVALIDO PER NEGOZIO"));
                         itemMeta.setLore(lore);
                     }
                     remove.getItemStack().setItemMeta(itemMeta);
