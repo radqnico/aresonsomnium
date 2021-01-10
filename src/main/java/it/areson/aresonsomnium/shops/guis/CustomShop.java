@@ -159,4 +159,9 @@ public class CustomShop extends MySQLObject {
         return items.values().stream().allMatch(value -> value.getPrice().isPriceReady());
     }
 
+    @Override
+    public String toString() {
+        List<String> collect = items.values().stream().map(shopItem -> shopItem.getItemStack().getType().name()).collect(Collectors.toList());
+        return "CustomShop{name=" + name + ",items:" + Arrays.toString(collect.toArray()) + "}";
+    }
 }

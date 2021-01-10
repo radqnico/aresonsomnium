@@ -89,6 +89,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     }
                 }
             }
+            aresonSomnium.getDebugger().debugInfo(customShop.toString());
         }
     }
 
