@@ -5,7 +5,9 @@ import it.areson.aresonsomnium.utils.Pair;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.List;
 import java.util.Objects;
 
 
@@ -52,7 +54,19 @@ public class MoveShopItemAction {
     public void executeIfValid(CustomShop customShop) {
         switch (getActionType()) {
             case REMOVE_FROM_SHOP:
-                customShop.getItems().remove(source.right());
+                ShopItem remove = customShop.getItems().remove(source.right());
+                if (Objects.nonNull(remove)) {
+                    ItemMeta itemMeta = remove.getItemStack().getItemMeta();
+                    if (Objects.nonNull(itemMeta)) {
+                        List<String> lore = itemMeta.getLore();
+                        if (Objects.nonNull(lore) && lore.size() >= 4) {
+                            lore.remove(lore.size() - 1);
+                            lore.remove(lore.size() - 1);
+                            lore.remove(lore.size() - 1);
+                            lore.remove(lore.size() - 1);
+                        }
+                    }
+                }
                 break;
             case ADD_NEW_TO_SHOP:
                 if (Objects.nonNull(itemStack)) {
