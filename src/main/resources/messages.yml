@@ -14,6 +14,11 @@ not-a-number: "&cNumero non valido"
 
 shop-not-ready: "&cIl negozio richiesto non e' pronto. Segnala il problema allo staff."
 
+item-buy-success: "&aOggetto acquistato per %basicCoins% coins, %charonCoins% oboli e %forcedCoins% gemme !"
+item-buy-not-enough-space: "&cNon hai abbastanza spazio nell'inventario"
+item-buy-not-enough-money: "&cNon te lo puoi permettere!"
+item-buy-error: "&cRiscontrato un problema con i tuoi dati. Segnala il problema  allo staff.!"
+
 # Stats format
 stats-format: "&6&l%player%&r's stats: \n
   Secondi giocati: %secondsPlayed% \n

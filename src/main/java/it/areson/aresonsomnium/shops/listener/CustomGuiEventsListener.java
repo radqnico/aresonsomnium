@@ -12,7 +12,10 @@ import it.areson.aresonsomnium.utils.Pair;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.inventory.*;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -69,6 +72,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 }
             } else if (shopManager.isViewingCustomGui(player)) {
                 // Shopping
+                prepareBuyItem(player, event);
             }
         }
     }
@@ -104,10 +108,10 @@ public class CustomGuiEventsListener extends GeneralEventListener {
 
     @SuppressWarnings("ConstantConditions")
     private void switchPriceAction(Player player, InventoryClickEvent event) {
-        if(InventoryType.CHEST.equals(event.getClickedInventory().getType())){
+        if (InventoryType.CHEST.equals(event.getClickedInventory().getType())) {
             int slot = event.getSlot();
             EditPriceConfig editingPriceConfig = shopEditor.getEditingPriceConfig(player);
-            if(Objects.nonNull(editingPriceConfig)) {
+            if (Objects.nonNull(editingPriceConfig)) {
                 switch (slot) {
                     case 11:
                         editingPriceConfig.setCoinType(CoinType.BASIC);
@@ -151,14 +155,14 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         return null;
     }
 
-    private void prepareBuyItem(CustomShop customShop, Inventory clickedInventory, ClickType clickType, int slot, Player player) {
-        if (Objects.nonNull(clickedInventory)) {
-            if (clickedInventory.getType().equals(InventoryType.CHEST)) {
-                if (clickType == ClickType.LEFT) {
-                    ShopItem shopItem = customShop.getItems().get(slot);
-                    if (Objects.nonNull(shopItem)) {
-                        buyItem(player, shopItem);
-                    }
+    @SuppressWarnings("ConstantConditions")
+    private void prepareBuyItem(Player player, InventoryClickEvent event) {
+        if (event.getClickedInventory().getType().equals(InventoryType.CHEST)) {
+            if (event.isLeftClick()) {
+                CustomShop shop = shopManager.getViewingCustomShop(player);
+                ShopItem shopItem = shop.getItems().get(event.getSlot());
+                if (Objects.nonNull(shopItem)) {
+                    buyItem(player, shopItem);
                 }
             }
         }
@@ -169,17 +173,22 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         if (Objects.nonNull(somniumPlayer)) {
             Price price = shopItem.getPrice();
             if (somniumPlayer.canAfford(price)) {
-                if (player.getInventory().addItem(new org.bukkit.inventory.ItemStack(shopItem.getItemStack())).isEmpty()) {
+                if (player.getInventory().addItem(new ItemStack(shopItem.getItemStack())).isEmpty()) {
                     price.removeFrom(somniumPlayer);
-                    player.sendMessage(MessageUtils.successMessage("Oggetto acquistato"));
+                    player.sendMessage(aresonSomnium.getMessages().getPlainMessage(
+                            "item-buy-success",
+                            Pair.of("%basicCoins%", price.getBasicCoins().toPlainString()),
+                            Pair.of("%charonCoins%", price.getCharonCoins().toString()),
+                            Pair.of("%forcedCoins%", price.getForcedCoins().toString())
+                    ));
                 } else {
-                    player.sendMessage(MessageUtils.warningMessage("Non hai abbastanza spazio nell'inventario"));
+                    player.sendMessage(aresonSomnium.getMessages().getPlainMessage("item-buy-not-enough-space"));
                 }
             } else {
-                player.sendMessage(MessageUtils.errorMessage("Non puoi permetterti questo oggetto"));
+                player.sendMessage(aresonSomnium.getMessages().getPlainMessage("item-buy-not-enough-money"));
             }
         } else {
-            player.sendMessage(MessageUtils.errorMessage("Riscontrato un problema con i tuoi dati. Segnala il problema  allo staff."));
+            player.sendMessage(aresonSomnium.getMessages().getPlainMessage("item-buy-error"));
         }
     }
 
