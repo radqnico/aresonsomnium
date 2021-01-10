@@ -1,12 +1,10 @@
 package it.areson.aresonsomnium.shops.listener;
 
 import it.areson.aresonsomnium.AresonSomnium;
+import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.listeners.GeneralEventListener;
 import it.areson.aresonsomnium.players.SomniumPlayer;
-import it.areson.aresonsomnium.shops.guis.CustomShop;
-import it.areson.aresonsomnium.shops.guis.MoveShopItemAction;
-import it.areson.aresonsomnium.shops.guis.ShopEditor;
-import it.areson.aresonsomnium.shops.guis.ShopManager;
+import it.areson.aresonsomnium.shops.guis.*;
 import it.areson.aresonsomnium.shops.items.Price;
 import it.areson.aresonsomnium.shops.items.ShopItem;
 import it.areson.aresonsomnium.utils.MessageUtils;
@@ -64,7 +62,11 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             if (shopEditor.isEditingCustomGui(player)) {
                 // Editing
                 CustomShop editingCustomShop = shopEditor.getEditingCustomShop(player);
-                switchEditingAction(player, editingCustomShop, event);
+                if (shopEditor.isEditingPrice(player)) {
+                    switchPriceAction(player, event);
+                } else {
+                    switchEditingAction(player, editingCustomShop, event);
+                }
             } else if (shopManager.isViewingCustomGui(player)) {
                 // Shopping
             }
@@ -79,7 +81,6 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     MoveShopItemAction moveShopItemAction = shopEditor.beginMoveItemAction(player);
                     moveShopItemAction.setSource(Pair.of(event.getClickedInventory(), event.getSlot()));
                     moveShopItemAction.setItem(involvedItem);
-                    aresonSomnium.getDebugger().debugInfo(moveShopItemAction.toString());
                 }
                 break;
             case PLACE_ALL:
@@ -89,9 +90,49 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     shopEditor.endMoveItemAction(player, customShop);
                 }
                 break;
+            case PICKUP_HALF:
+                if (Objects.nonNull(involvedItem)) {
+                    EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop);
+                    player.openInventory(shopEditor.getPricesInventory());
+                    editPriceConfig.setSlot(event.getSlot());
+                }
+                break;
             default:
                 event.setCancelled(true);
         }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private void switchPriceAction(Player player, InventoryClickEvent event) {
+        if(InventoryType.CHEST.equals(event.getClickedInventory().getType())){
+            int slot = event.getSlot();
+            EditPriceConfig editingPriceConfig = shopEditor.getEditingPriceConfig(player);
+            if(Objects.nonNull(editingPriceConfig)) {
+                switch (slot) {
+                    case 11:
+                        editingPriceConfig.setCoinType(CoinType.BASIC);
+                        player.closeInventory();
+                        player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Basic Coins <--"));
+                        break;
+                    case 13:
+                        editingPriceConfig.setCoinType(CoinType.CHARON);
+                        player.closeInventory();
+                        player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Monete di Caronte <--"));
+                        break;
+                    case 15:
+                        editingPriceConfig.setCoinType(CoinType.FORCED);
+                        player.closeInventory();
+                        player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Gemme <--"));
+                        break;
+                    default:
+                        return;
+                }
+                aresonSomnium.getSetPriceInChatListener().registerEvents();
+            } else {
+                aresonSomnium.getDebugger().debugError("Errore: EditPriceConfig non trovato");
+            }
+        }
+        event.setCancelled(true);
     }
 
     private boolean checkItem(org.bukkit.inventory.ItemStack itemStack) {

@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 
-@SuppressWarnings("ConstantConditions")
+
 public class MoveShopItemAction {
 
     private ItemStack itemStack;
@@ -70,7 +70,7 @@ public class MoveShopItemAction {
 
     @Override
     public String toString() {
-        return "MoveShopItemAction{source=" + source != null ? source.toString() : "null" + ",destination=" + destination != null ? destination.toString() : "null" + "}";
+        return "MoveShopItemAction{source=" + (source != null ? source.toString() : "null") + ",destination=" + (destination != null ? destination.toString() : "null") + "}";
     }
 
     public enum ActionType {
