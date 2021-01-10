@@ -73,6 +73,8 @@ public class CustomGuiEventsListener extends GeneralEventListener {
 
     private void switchEditingAction(Player player, CustomShop customShop, InventoryClickEvent event) {
         ItemStack involvedItem = getInvolvedItem(event);
+        aresonSomnium.getDebugger().debugInfo("INVITEM: " + involvedItem!=null?involvedItem.toString():"null");
+
         switch (event.getAction()) {
             case PICKUP_ALL:
                 if (Objects.nonNull(involvedItem)) {
@@ -86,7 +88,6 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     MoveShopItemAction moveShopItemAction = shopEditor.getMoveItemAction(player);
                     moveShopItemAction.setDestination(Pair.of(event.getClickedInventory(), event.getSlot()));
                     shopEditor.endMoveItemAction(player, customShop);
-                    aresonSomnium.getDebugger().debugInfo(moveShopItemAction.toString());
                 }
                 break;
             default:
