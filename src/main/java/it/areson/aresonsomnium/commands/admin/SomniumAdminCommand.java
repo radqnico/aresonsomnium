@@ -10,10 +10,11 @@ import it.areson.aresonsomnium.shops.guis.ShopManager;
 import it.areson.aresonsomnium.utils.Debugger;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.utils.Pair;
-import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.StringUtil;
 
 import java.math.BigDecimal;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers",
-            "createShop", "editShop", "reloadShops", "setDebugLevel"};
+            "createShop", "editShop", "reloadShops", "setDebugLevel", "deleteLastLoreLine"};
     private final AresonSomnium aresonSomnium;
 
     public SomniumAdminCommand(AresonSomnium aresonSomnium) {
@@ -62,6 +63,9 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         break;
                     case "reloadshops":
                         handleReloadShops(commandSender);
+                        break;
+                    case "deletelastloreline":
+                        handleDeleteLastLoreLine(commandSender);
                         break;
                 }
                 break;
@@ -164,6 +168,24 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         return suggestions;
     }
 
+    private void handleDeleteLastLoreLine(CommandSender commandSender) {
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
+            ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
+            ItemMeta itemMeta = itemInMainHand.getItemMeta();
+            if (Objects.nonNull(itemMeta)) {
+                List<String> lore = itemMeta.getLore();
+                if (Objects.nonNull(lore) && lore.size() > 0) {
+                    lore.remove(lore.size() - 1);
+                }
+                itemMeta.setLore(lore);
+            }
+            itemInMainHand.setItemMeta(itemMeta);
+        } else {
+            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("player-only-command"));
+        }
+    }
+
     private void handleSetDebugLevel(CommandSender commandSender, String level) {
         Debugger.DebugLevel debugLevel = Debugger.DebugLevel.valueOf(level);
         switch (debugLevel) {
@@ -218,7 +240,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 String toSend = aresonSomnium.getMessages().getPlainMessage(
                         "stats-format",
                         Pair.of("%player%", playerName),
-                        Pair.of("%secondsPlayed%", somniumPlayer.getSecondsPlayedTotal()+""),
+                        Pair.of("%secondsPlayed%", somniumPlayer.getSecondsPlayedTotal() + ""),
                         Pair.of("%basicCoins%", Wallet.getBasicCoins(player).toPlainString()),
                         Pair.of("%charonCoins%", somniumPlayer.getWallet().getCharonCoins().toString()),
                         Pair.of("%forcedCoins%", somniumPlayer.getWallet().getForcedCoins().toString())
