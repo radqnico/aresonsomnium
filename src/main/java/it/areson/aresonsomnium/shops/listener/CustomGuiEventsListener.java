@@ -4,11 +4,14 @@ import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.listeners.GeneralEventListener;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.shops.guis.CustomShop;
+import it.areson.aresonsomnium.shops.guis.MoveShopItemAction;
 import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
 import it.areson.aresonsomnium.shops.items.Price;
 import it.areson.aresonsomnium.shops.items.ShopItem;
 import it.areson.aresonsomnium.utils.MessageUtils;
+import it.areson.aresonsomnium.utils.Pair;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.*;
@@ -56,14 +59,54 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     @EventHandler
     public void onInventoryClickEvent(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        aresonSomnium.getDebugger().debugInfo("CLICK");
+        Inventory clickedInventory = event.getClickedInventory();
+        if (Objects.nonNull(clickedInventory)) {
+            if (shopEditor.isEditingCustomGui(player)) {
+                // Editing
+                CustomShop editingCustomShop = shopEditor.getEditingCustomShop(player);
+                switchEditingAction(player, editingCustomShop, event);
+                aresonSomnium.getDebugger().debugInfo(editingCustomShop.toString());
+            } else if (shopManager.isViewingCustomGui(player)) {
+                // Shopping
+            }
+        }
     }
 
-    @EventHandler
-    public void onInventoryMoveEvent(InventoryMoveItemEvent event) {
-        aresonSomnium.getDebugger().debugInfo("MOVE");
-        aresonSomnium.getDebugger().debugInfo(event.getSource().getType().name());
-        aresonSomnium.getDebugger().debugInfo(event.getDestination().getType().name());
+    private void switchEditingAction(Player player, CustomShop customShop, InventoryClickEvent event) {
+        ItemStack involvedItem = getInvolvedItem(event);
+        switch (event.getAction()) {
+            case PICKUP_ALL:
+                if (Objects.nonNull(involvedItem)) {
+                    MoveShopItemAction moveShopItemAction = shopEditor.beginMoveItemAction(player);
+                    moveShopItemAction.setSource(Pair.of(event.getClickedInventory(), event.getSlot()));
+                }
+                break;
+            case PLACE_ALL:
+                if (Objects.nonNull(involvedItem)) {
+                    MoveShopItemAction moveShopItemAction = shopEditor.getMoveItemAction(player);
+                    moveShopItemAction.setDestination(Pair.of(event.getClickedInventory(), event.getSlot()));
+                    shopEditor.endMoveItemAction(player, customShop);
+                }
+                break;
+            default:
+                event.setCancelled(true);
+        }
+    }
+
+    private boolean checkItem(ItemStack itemStack) {
+        return Objects.nonNull(itemStack) && !itemStack.getType().equals(Material.AIR);
+    }
+
+    private ItemStack getInvolvedItem(InventoryClickEvent event) {
+        ItemStack currentItem = event.getCurrentItem();
+        if (checkItem(currentItem)) {
+            return currentItem;
+        }
+        ItemStack cursor = event.getCursor();
+        if (checkItem(cursor)) {
+            return cursor;
+        }
+        return null;
     }
 
     private void prepareBuyItem(CustomShop customShop, Inventory clickedInventory, ClickType clickType, int slot, Player player) {

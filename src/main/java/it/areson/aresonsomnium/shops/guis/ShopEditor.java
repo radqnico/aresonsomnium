@@ -16,7 +16,7 @@ import java.util.TreeMap;
 
 public class ShopEditor {
 
-    private final TreeMap<Player, ShopItem> pickupItems;
+    private final TreeMap<Player, MoveShopItemAction> movingItems;
     private final TreeMap<Player, String> editingGuis;
     private final TreeMap<Player, EditPriceConfig> activePriceConfigs;
     private final AresonSomnium aresonSomnium;
@@ -26,25 +26,30 @@ public class ShopEditor {
         this.aresonSomnium = aresonSomnium;
 
         PlayerComparator playerComparator = new PlayerComparator();
-        this.pickupItems = new TreeMap<>(playerComparator);
+        this.movingItems = new TreeMap<>(playerComparator);
         this.editingGuis = new TreeMap<>(playerComparator);
         this.activePriceConfigs = new TreeMap<>(playerComparator);
     }
 
-    public void addNewItemToShop(CustomShop shop, int slot, ShopItem shopItem) {
-        shop.getItems().put(slot, shopItem);
+    public void executeActionOf(Player player){
+
     }
 
-    public void removeItemFromShop(CustomShop shop, int slot) {
-        shop.getItems().remove(slot);
+    public MoveShopItemAction beginMoveItemAction(Player player) {
+        MoveShopItemAction moveShopItemAction = new MoveShopItemAction();
+        movingItems.put(player, moveShopItemAction);
+        return moveShopItemAction;
     }
 
-    public void setPickupItems(Player player, ShopItem shopItem) {
-        pickupItems.put(player, shopItem);
+    public MoveShopItemAction getMoveItemAction(Player player) {
+        return movingItems.get(player);
     }
 
-    public ShopItem getPickupItem(Player player) {
-        return pickupItems.remove(player);
+    public void endMoveItemAction(Player player, CustomShop customShop){
+        MoveShopItemAction remove = movingItems.remove(player);
+        if(Objects.nonNull(remove)){
+            remove.executeIfValid(customShop);
+        }
     }
 
     public Inventory getPricesInventory() {
