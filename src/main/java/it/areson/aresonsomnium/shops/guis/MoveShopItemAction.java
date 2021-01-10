@@ -6,6 +6,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+@SuppressWarnings("ConstantConditions")
 public class MoveShopItemAction {
 
     private Pair<Inventory, Integer> source;
@@ -63,7 +64,7 @@ public class MoveShopItemAction {
 
     @Override
     public String toString() {
-        return "MoveShopItemAction{source=" + source.toString() + ",destination=" + destination.toString() + "}";
+        return "MoveShopItemAction{source=" + source!=null?source.toString():"null" + ",destination=" + destination!=null?destination.toString():"null" + "}";
     }
 
     public enum ActionType {
