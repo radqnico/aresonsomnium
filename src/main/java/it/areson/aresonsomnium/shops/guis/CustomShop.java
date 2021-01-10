@@ -83,7 +83,6 @@ public class CustomShop extends MySQLObject {
         createTableIfNotExists(String.format(tableQuery, tableName));
         String saveQuery = getSaveQuery();
 
-        Bukkit.getLogger().severe("AAAAAAA    " + saveQuery);
         try {
             Connection connection = mySqlDBConnection.connect();
             int update = mySqlDBConnection.update(connection, saveQuery);
@@ -161,7 +160,6 @@ public class CustomShop extends MySQLObject {
 
     @Override
     public String toString() {
-        List<String> collect = items.values().stream().map(shopItem -> shopItem.getItemStack().getType().name()).collect(Collectors.toList());
-        return "CustomShop{name=" + name + ",items:" + Arrays.toString(collect.toArray()) + "}";
+        return "CustomShop{name=" + name + ",items:" + Arrays.toString(items.values().stream().map(shopItem -> shopItem.getItemStack().getType().name()).toArray()) + "}";
     }
 }
