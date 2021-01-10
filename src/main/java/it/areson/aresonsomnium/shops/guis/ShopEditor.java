@@ -54,28 +54,28 @@ public class ShopEditor {
 
     public Inventory getPricesInventory() {
         if (Objects.isNull(pricesInventory)) {
-            ItemStack itemStackBasic = new ItemStack(Material.IRON_NUGGET);
-            setItemDisplayName(itemStackBasic, "Monete Base");
+            ItemStack shopItemBasic = new ItemStack(Material.IRON_NUGGET);
+            setItemDisplayName(shopItemBasic, "Monete Base");
 
-            ItemStack itemStackCharon = new ItemStack(Material.SUNFLOWER);
-            setItemDisplayName(itemStackCharon, "Monete di Caronte");
+            ItemStack shopItemCharon = new ItemStack(Material.SUNFLOWER);
+            setItemDisplayName(shopItemCharon, "Monete di Caronte");
 
-            ItemStack itemStackForced = new ItemStack(Material.EMERALD);
-            setItemDisplayName(itemStackForced, "Monete Forzate");
+            ItemStack shopItemForced = new ItemStack(Material.EMERALD);
+            setItemDisplayName(shopItemForced, "Monete Forzate");
 
             pricesInventory = Bukkit.createInventory(null, InventoryType.CHEST, "Seleziona la moneta");
-            pricesInventory.setItem(11, itemStackBasic);
-            pricesInventory.setItem(13, itemStackCharon);
-            pricesInventory.setItem(15, itemStackForced);
+            pricesInventory.setItem(11, shopItemBasic);
+            pricesInventory.setItem(13, shopItemCharon);
+            pricesInventory.setItem(15, shopItemForced);
         }
         return pricesInventory;
     }
 
-    public void setItemDisplayName(ItemStack itemStack, String name) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
+    public void setItemDisplayName(ItemStack shopItem, String name) {
+        ItemMeta itemMeta = shopItem.getItemMeta();
         if (Objects.nonNull(itemMeta)) {
             itemMeta.setDisplayName(name);
-            itemStack.setItemMeta(itemMeta);
+            shopItem.setItemMeta(itemMeta);
         }
     }
 

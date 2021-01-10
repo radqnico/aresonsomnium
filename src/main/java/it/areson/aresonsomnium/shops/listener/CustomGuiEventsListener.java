@@ -73,13 +73,12 @@ public class CustomGuiEventsListener extends GeneralEventListener {
 
     private void switchEditingAction(Player player, CustomShop customShop, InventoryClickEvent event) {
         ItemStack involvedItem = getInvolvedItem(event);
-        aresonSomnium.getDebugger().debugInfo("INVITEM: " + involvedItem!=null?involvedItem.toString():"null");
-
         switch (event.getAction()) {
             case PICKUP_ALL:
                 if (Objects.nonNull(involvedItem)) {
                     MoveShopItemAction moveShopItemAction = shopEditor.beginMoveItemAction(player);
                     moveShopItemAction.setSource(Pair.of(event.getClickedInventory(), event.getSlot()));
+                    moveShopItemAction.setItem(involvedItem);
                     aresonSomnium.getDebugger().debugInfo(moveShopItemAction.toString());
                 }
                 break;
@@ -95,16 +94,16 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         }
     }
 
-    private boolean checkItem(ItemStack itemStack) {
+    private boolean checkItem(org.bukkit.inventory.ItemStack itemStack) {
         return Objects.nonNull(itemStack) && !itemStack.getType().equals(Material.AIR);
     }
 
-    private ItemStack getInvolvedItem(InventoryClickEvent event) {
-        ItemStack currentItem = event.getCurrentItem();
+    private org.bukkit.inventory.ItemStack getInvolvedItem(InventoryClickEvent event) {
+        org.bukkit.inventory.ItemStack currentItem = event.getCurrentItem();
         if (checkItem(currentItem)) {
             return currentItem;
         }
-        ItemStack cursor = event.getCursor();
+        org.bukkit.inventory.ItemStack cursor = event.getCursor();
         if (checkItem(cursor)) {
             return cursor;
         }
@@ -129,7 +128,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         if (Objects.nonNull(somniumPlayer)) {
             Price price = shopItem.getPrice();
             if (somniumPlayer.canAfford(price)) {
-                if (player.getInventory().addItem(new ItemStack(shopItem.getItemStack())).isEmpty()) {
+                if (player.getInventory().addItem(new org.bukkit.inventory.ItemStack(shopItem.getItemStack())).isEmpty()) {
                     price.removeFrom(somniumPlayer);
                     player.sendMessage(MessageUtils.successMessage("Oggetto acquistato"));
                 } else {

@@ -3,7 +3,7 @@ package it.areson.aresonsomnium.shops.guis;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.exceptions.PriceConfigNotReadyException;
 import it.areson.aresonsomnium.shops.items.ShopItem;
-import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
 import java.util.Objects;

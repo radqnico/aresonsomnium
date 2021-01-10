@@ -1,25 +1,9 @@
 package it.areson.aresonsomnium.shops.listener;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.listeners.GeneralEventListener;
-import it.areson.aresonsomnium.players.SomniumPlayer;
-import it.areson.aresonsomnium.shops.guis.CustomShop;
-import it.areson.aresonsomnium.shops.guis.EditPriceConfig;
 import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
-import it.areson.aresonsomnium.shops.items.Price;
-import it.areson.aresonsomnium.shops.items.ShopItem;
-import it.areson.aresonsomnium.utils.MessageUtils;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.List;
-import java.util.Objects;
 
 public class CustomGuiEventsListener2 extends GeneralEventListener {
 

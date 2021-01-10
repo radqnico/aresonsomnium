@@ -6,25 +6,31 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Objects;
+
 @SuppressWarnings("ConstantConditions")
 public class MoveShopItemAction {
 
+    private ItemStack itemStack;
     private Pair<Inventory, Integer> source;
     private Pair<Inventory, Integer> destination;
 
     public MoveShopItemAction() {
         source = null;
         destination = null;
+        itemStack = null;
     }
 
-    public MoveShopItemAction setSource(Pair<Inventory, Integer> source) {
+    public void setSource(Pair<Inventory, Integer> source) {
         this.source = source;
-        return this;
     }
 
-    public MoveShopItemAction setDestination(Pair<Inventory, Integer> destination) {
+    public void setDestination(Pair<Inventory, Integer> destination) {
         this.destination = destination;
-        return this;
+    }
+
+    public void setItem(ItemStack itemStack) {
+        this.itemStack = itemStack;
     }
 
     public ActionType getActionType() {
@@ -49,9 +55,9 @@ public class MoveShopItemAction {
                 customShop.getItems().remove(source.right());
                 break;
             case ADD_NEW_TO_SHOP:
-                Inventory sourceInv = source.left();
-                ItemStack item = sourceInv.getItem(source.right());
-                customShop.getItems().put(destination.right(), new ShopItem(item));
+                if (Objects.nonNull(itemStack)) {
+                    customShop.getItems().put(destination.right(), new ShopItem(itemStack));
+                }
                 break;
             case MOVE_IN_SHOP:
                 ShopItem moved = customShop.getItems().remove(source.right());
@@ -64,7 +70,7 @@ public class MoveShopItemAction {
 
     @Override
     public String toString() {
-        return "MoveShopItemAction{source=" + source!=null?source.toString():"null" + ",destination=" + destination!=null?destination.toString():"null" + "}";
+        return "MoveShopItemAction{source=" + source != null ? source.toString() : "null" + ",destination=" + destination != null ? destination.toString() : "null" + "}";
     }
 
     public enum ActionType {

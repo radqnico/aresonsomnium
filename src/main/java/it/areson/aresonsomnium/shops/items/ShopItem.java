@@ -1,24 +1,22 @@
 package it.areson.aresonsomnium.shops.items;
 
-import org.bukkit.inventory.ItemStack;
-
 import java.util.Base64;
 
 public class ShopItem {
 
-    private final ItemStack itemStack;
+    private final org.bukkit.inventory.ItemStack itemStack;
     private Price price;
 
-    public ShopItem(ItemStack itemStack, Price price) {
+    public ShopItem(org.bukkit.inventory.ItemStack itemStack, Price price) {
         this.itemStack = itemStack;
         this.price = price;
     }
 
-    public ShopItem(ItemStack itemStack) {
+    public ShopItem(org.bukkit.inventory.ItemStack itemStack) {
         this(itemStack, new Price());
     }
 
-    public ItemStack getItemStack() {
+    public org.bukkit.inventory.ItemStack getItemStack() {
         return itemStack;
     }
 

@@ -1,7 +1,6 @@
 package it.areson.aresonsomnium.shops.items;
 
 import com.google.gson.Gson;
-import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -31,7 +30,7 @@ public class SerializedShopItem {
 
     public ShopItem toShopItem() {
         return new ShopItem(
-                ItemStack.deserializeBytes(Base64.getDecoder().decode(serializedItemStack)),
+                org.bukkit.inventory.ItemStack.deserializeBytes(Base64.getDecoder().decode(serializedItemStack)),
                 new Price(basicCoins, charonCoins, forcedCoins)
         );
     }

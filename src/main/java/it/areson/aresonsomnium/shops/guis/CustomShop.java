@@ -58,7 +58,7 @@ public class CustomShop extends MySQLObject {
         for (Map.Entry<Integer, ShopItem> entry : items.entrySet()) {
             Integer key = entry.getKey();
             ShopItem shopItem = entry.getValue();
-            ItemStack itemStack = new ItemStack(shopItem.getItemStack());
+            org.bukkit.inventory.ItemStack itemStack = new org.bukkit.inventory.ItemStack(shopItem.getItemStack());
             ItemMeta itemMeta = itemStack.getItemMeta();
             if (Objects.nonNull(itemMeta)) {
                 List<String> lore = itemMeta.getLore();
