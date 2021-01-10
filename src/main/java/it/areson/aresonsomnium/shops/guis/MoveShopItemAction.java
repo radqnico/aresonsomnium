@@ -61,6 +61,11 @@ public class MoveShopItemAction {
         }
     }
 
+    @Override
+    public String toString() {
+        return "MoveShopItemAction{source=" + source.toString() + ",destination=" + destination.toString() + "}";
+    }
+
     public enum ActionType {
         REMOVE_FROM_SHOP,
         ADD_NEW_TO_SHOP,

@@ -65,7 +65,6 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 // Editing
                 CustomShop editingCustomShop = shopEditor.getEditingCustomShop(player);
                 switchEditingAction(player, editingCustomShop, event);
-                aresonSomnium.getDebugger().debugInfo(editingCustomShop.toString());
             } else if (shopManager.isViewingCustomGui(player)) {
                 // Shopping
             }
@@ -79,6 +78,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 if (Objects.nonNull(involvedItem)) {
                     MoveShopItemAction moveShopItemAction = shopEditor.beginMoveItemAction(player);
                     moveShopItemAction.setSource(Pair.of(event.getClickedInventory(), event.getSlot()));
+                    aresonSomnium.getDebugger().debugInfo(moveShopItemAction.toString());
                 }
                 break;
             case PLACE_ALL:
@@ -86,6 +86,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     MoveShopItemAction moveShopItemAction = shopEditor.getMoveItemAction(player);
                     moveShopItemAction.setDestination(Pair.of(event.getClickedInventory(), event.getSlot()));
                     shopEditor.endMoveItemAction(player, customShop);
+                    aresonSomnium.getDebugger().debugInfo(moveShopItemAction.toString());
                 }
                 break;
             default:
