@@ -2,6 +2,7 @@ package it.areson.aresonsomnium;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.admin.SomniumAdminCommand;
+import it.areson.aresonsomnium.commands.admin.SomniumGommaCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumTestCommand;
 import it.areson.aresonsomnium.commands.player.OpenGuiCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
@@ -94,6 +95,7 @@ public class AresonSomnium extends JavaPlugin {
         new SomniumTestCommand(this);
         new OpenGuiCommand(this);
         new StatsCommand(this);
+        new SomniumGommaCommand(this);
     }
 
     private void initAllEvents() {
