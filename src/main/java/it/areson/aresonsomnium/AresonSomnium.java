@@ -6,6 +6,7 @@ import it.areson.aresonsomnium.commands.admin.SomniumTestCommand;
 import it.areson.aresonsomnium.commands.player.OpenGuiCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
+import it.areson.aresonsomnium.gomma.GommaObjectsFileReader;
 import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.shops.guis.ShopEditor;
@@ -30,6 +31,9 @@ public class AresonSomnium extends JavaPlugin {
     private SomniumPlayerDBEvents playerDBEvents;
     private CustomGuiEventsListener customGuiEventsListener;
     private SetPriceInChatListener setPriceInChatListener;
+
+    private GommaObjectsFileReader gommaObjectsFileReader;
+
     private MessageManager messages;
     private Debugger debugger;
 
@@ -78,6 +82,11 @@ public class AresonSomnium extends JavaPlugin {
 
     private void registerFiles() {
         messages = new MessageManager(this, "messages.yml");
+        gommaObjectsFileReader = new GommaObjectsFileReader(this, "gommaitems.yml");
+    }
+
+    public GommaObjectsFileReader getGommaObjectsFileReader() {
+        return gommaObjectsFileReader;
     }
 
     private void registerCommands() {

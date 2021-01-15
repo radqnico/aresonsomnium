@@ -8,6 +8,10 @@ commands:
     description: "AresonSomnium admin command"
     permission: aresonsomnium.admin
     usage: /somniumadmin <function> [args...]
+  gomma:
+    description: "AresonSomnium gomma command"
+    permission: aresonsomnium.admin
+    usage: /gomma <function>
   somniumtest:
     description: "AresonSomnium testing command"
     permission: aresonsomnium.admin
