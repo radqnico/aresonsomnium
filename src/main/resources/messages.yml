@@ -21,6 +21,7 @@ item-buy-error: "&cRiscontrato un problema con i tuoi dati. Segnala il problema 
 
 gomma-item-give: "&aHai ottenuto un oggetto dal Gomma Gomma"
 gomma-error-give: "&cFai spazio nell'inventario"
+gomma-item-name: "&lGomma"
 
 # Stats format
 stats-format: "&6&l%player%&r's stats: \n

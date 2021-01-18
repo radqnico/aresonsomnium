@@ -51,6 +51,15 @@ public class MessageManager extends FileManager {
         }
     }
 
+    public String getPlainMessageNoPrefix(String messageKey) {
+        String message = getFileConfiguration().getString(messageKey);
+        if (Objects.nonNull(message)) {
+            return ChatColor.translateAlternateColorCodes('&', message);
+        } else {
+            return ChatColor.translateAlternateColorCodes('&', "&cError: '" + messageKey + "' message does not exists!");
+        }
+    }
+
     public String getPlainMessage(String messageKey) {
         String message = getFileConfiguration().getString(messageKey);
         if (Objects.nonNull(message)) {

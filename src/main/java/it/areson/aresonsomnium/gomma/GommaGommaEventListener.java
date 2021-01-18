@@ -20,13 +20,14 @@ public class GommaGommaEventListener extends GeneralEventListener {
     }
 
     @EventHandler
-    public void rightClickBlock(PlayerInteractEvent event) {
+    public void onPlayerInteractEvent(PlayerInteractEvent event) {
         Block clickedBlock = event.getClickedBlock();
         if (Objects.nonNull(clickedBlock)) {
             Location location = clickedBlock.getLocation();
             Location gommaBlockLocation = aresonSomnium.getGommaObjectsFileReader().getGommaBlock();
             if (location.equals(gommaBlockLocation)) {
                 gommaPreconditionsOk(event.getPlayer());
+                event.setCancelled(true);
             }
         }
     }

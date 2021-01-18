@@ -4,7 +4,6 @@ import com.destroystokyo.paper.block.TargetBlockInfo;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.gomma.GommaConstants;
 import it.areson.aresonsomnium.utils.MessageUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -23,7 +22,7 @@ import static it.areson.aresonsomnium.utils.MessageUtils.successMessage;
 @SuppressWarnings("NullableProblems")
 public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
 
-    private final String[] subCommands = new String[]{"setBlock", "addItem", "testGive", "givegomma"};
+    private final String[] subCommands = new String[]{"setBlock", "addItem", "testGive", "giveGomma"};
     private final AresonSomnium aresonSomnium;
 
     public SomniumGommaCommand(AresonSomnium aresonSomnium) {
@@ -72,7 +71,7 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
 
             ItemMeta itemMeta = gommaItem.getItemMeta();
             if (Objects.nonNull(itemMeta)) {
-                itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&lGomma"));
+                itemMeta.setDisplayName(aresonSomnium.getMessages().getPlainMessageNoPrefix("gomma-item-name"));
                 itemMeta.setCustomModelData(GommaConstants.customModelData);
             }
             gommaItem.setItemMeta(itemMeta);
