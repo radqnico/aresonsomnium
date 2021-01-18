@@ -73,6 +73,7 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
             ItemMeta itemMeta = gommaItem.getItemMeta();
             if (Objects.nonNull(itemMeta)) {
                 itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&lGomma"));
+                itemMeta.setCustomModelData(GommaConstants.customModelData);
             }
             gommaItem.setItemMeta(itemMeta);
 

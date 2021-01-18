@@ -35,7 +35,7 @@ public class GommaGommaEventListener extends GeneralEventListener {
         PlayerInventory playerInventory = player.getInventory();
         ItemStack itemInMainHand = playerInventory.getItemInMainHand();
         ItemMeta itemInMainHandItemMeta = itemInMainHand.getItemMeta();
-        if (Objects.nonNull(itemInMainHandItemMeta)) {
+        if (Objects.nonNull(itemInMainHandItemMeta) && itemInMainHandItemMeta.hasCustomModelData()) {
             int customModelData = itemInMainHandItemMeta.getCustomModelData();
             if (customModelData == GommaConstants.customModelData) {
                 itemInMainHand.setAmount(itemInMainHand.getAmount() - 1);
