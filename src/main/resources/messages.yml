@@ -19,6 +19,9 @@ item-buy-not-enough-space: "&cNon hai abbastanza spazio nell'inventario"
 item-buy-not-enough-money: "&cNon te lo puoi permettere!"
 item-buy-error: "&cRiscontrato un problema con i tuoi dati. Segnala il problema  allo staff.!"
 
+gomma-item-give: "&aHai ottenuto un oggetto dal Gomma Gomma"
+gomma-error-give: "&cFai spazio nell'inventario"
+
 # Stats format
 stats-format: "&6&l%player%&r's stats: \n
   Secondi giocati: %secondsPlayed% \n

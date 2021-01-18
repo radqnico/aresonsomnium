@@ -3,13 +3,11 @@ package it.areson.aresonsomnium.gomma;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.utils.FileManager;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class GommaObjectsFileReader extends FileManager {
 
@@ -102,5 +100,14 @@ public class GommaObjectsFileReader extends FileManager {
             locationSector.set("pitch", location.getPitch());
             save();
         }
+    }
+
+    public ItemStack getRandomItem() {
+        List<ItemStack> itemList = getItemList();
+        if (itemList.size() > 0) {
+            Collections.shuffle(itemList);
+            return itemList.get(new Random().nextInt(itemList.size()));
+        }
+        return new ItemStack(Material.AIR);
     }
 }
