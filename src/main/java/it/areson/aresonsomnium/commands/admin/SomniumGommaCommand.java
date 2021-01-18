@@ -2,13 +2,16 @@ package it.areson.aresonsomnium.commands.admin;
 
 import com.destroystokyo.paper.block.TargetBlockInfo;
 import it.areson.aresonsomnium.AresonSomnium;
+import it.areson.aresonsomnium.gomma.GommaConstants;
 import it.areson.aresonsomnium.utils.MessageUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.StringUtil;
 
 import java.util.*;
@@ -20,7 +23,7 @@ import static it.areson.aresonsomnium.utils.MessageUtils.successMessage;
 @SuppressWarnings("NullableProblems")
 public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
 
-    private final String[] subCommands = new String[]{"setBlock", "addItem", "testGive"};
+    private final String[] subCommands = new String[]{"setBlock", "addItem", "testGive", "givegomma"};
     private final AresonSomnium aresonSomnium;
 
     public SomniumGommaCommand(AresonSomnium aresonSomnium) {
@@ -51,12 +54,37 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
                     case "testgive":
                         handleTestGive(commandSender);
                         break;
+                    case "givegomma":
+                        handleGiveGomma(commandSender);
+                        break;
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
                 }
                 break;
         }
         return true;
+    }
+
+    private void handleGiveGomma(CommandSender commandSender) {
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
+            ItemStack gommaItem = new ItemStack(GommaConstants.gommaMaterial);
+
+            ItemMeta itemMeta = gommaItem.getItemMeta();
+            if (Objects.nonNull(itemMeta)) {
+                itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&lGomma"));
+            }
+            gommaItem.setItemMeta(itemMeta);
+
+
+            if (player.getInventory().addItem(gommaItem).isEmpty()) {
+                player.sendMessage(MessageUtils.successMessage("Ti e' stata data una gomma"));
+            } else {
+                player.sendMessage(MessageUtils.errorMessage("Non hai abbastanza spazio"));
+            }
+        } else {
+            commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
+        }
     }
 
     private void handleTestGive(CommandSender commandSender) {
@@ -82,7 +110,7 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
             if (!Material.AIR.equals(itemInMainHand.getType())) {
                 ItemStack itemStack = itemInMainHand.asOne();
                 aresonSomnium.getGommaObjectsFileReader().storeItem(itemStack);
-                commandSender.sendMessage(successMessage("Oggetto aggiunto alla lista Gomma Gomma"));
+                commandSender.sendMessage(successMessage("Oggetto " + itemStack.getType().name() + " x" + itemStack.getAmount() + " aggiunto alla lista Gomma Gomma"));
             } else {
                 commandSender.sendMessage(errorMessage("Non hai nulla in mano"));
             }

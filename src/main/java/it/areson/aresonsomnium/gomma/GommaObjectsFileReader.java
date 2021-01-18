@@ -45,8 +45,9 @@ public class GommaObjectsFileReader extends FileManager {
                 }
             }
             maxKey++;
-            itemsSection.set("" + maxKey + ".item", Base64.getEncoder().encodeToString(itemStack.serializeAsBytes()));
-            itemsSection.set("" + maxKey + ".material-just-to-know", itemStack.getType().name());
+            itemsSection.set(maxKey + ".item", Base64.getEncoder().encodeToString(itemStack.serializeAsBytes()));
+            itemsSection.set(maxKey + ".material-just-to-know", itemStack.getType().name());
+            itemsSection.set(maxKey + ".amount-just-to-know", itemStack.getAmount() + "");
             save();
         }
     }
