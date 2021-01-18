@@ -11,10 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static it.areson.aresonsomnium.utils.MessageUtils.errorMessage;
 import static it.areson.aresonsomnium.utils.MessageUtils.successMessage;
@@ -23,7 +20,7 @@ import static it.areson.aresonsomnium.utils.MessageUtils.successMessage;
 @SuppressWarnings("NullableProblems")
 public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
 
-    private final String[] subCommands = new String[]{"setBlock", "addItem"};
+    private final String[] subCommands = new String[]{"setBlock", "addItem", "testGive"};
     private final AresonSomnium aresonSomnium;
 
     public SomniumGommaCommand(AresonSomnium aresonSomnium) {
@@ -51,6 +48,9 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
                     case "additem":
                         handleAddItem(commandSender);
                         break;
+                    case "testgive":
+                        handleTestGive(commandSender);
+                        break;
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
                 }
@@ -59,15 +59,31 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
+    private void handleTestGive(CommandSender commandSender) {
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
+            List<ItemStack> itemList = aresonSomnium.getGommaObjectsFileReader().getItemList();
+            Collections.shuffle(itemList);
+            ItemStack itemStack = itemList.get(new Random().nextInt(itemList.size()));
+            if (player.getInventory().addItem(itemStack).isEmpty()) {
+                player.sendMessage(MessageUtils.successMessage("Oggetto " + itemStack.getType().name() + " x" + itemStack.getAmount() + " ottenuto"));
+            } else {
+                player.sendMessage(MessageUtils.errorMessage("Non hai abbastanza spazio"));
+            }
+        } else {
+            commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
+        }
+    }
+
     private void handleAddItem(CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
-            if(!Material.AIR.equals(itemInMainHand.getType())){
+            if (!Material.AIR.equals(itemInMainHand.getType())) {
                 ItemStack itemStack = itemInMainHand.asOne();
                 aresonSomnium.getGommaObjectsFileReader().storeItem(itemStack);
                 commandSender.sendMessage(successMessage("Oggetto aggiunto alla lista Gomma Gomma"));
-            }else{
+            } else {
                 commandSender.sendMessage(errorMessage("Non hai nulla in mano"));
             }
 
@@ -80,7 +96,7 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             Block targetBlock = player.getTargetBlock(100, TargetBlockInfo.FluidMode.NEVER);
-            if(Objects.nonNull(targetBlock)){
+            if (Objects.nonNull(targetBlock)) {
                 Location location = targetBlock.getLocation();
                 aresonSomnium.getGommaObjectsFileReader().setGommaBlock(location);
                 commandSender.sendMessage(successMessage("Blocco Gomma Gomma impostato"));
