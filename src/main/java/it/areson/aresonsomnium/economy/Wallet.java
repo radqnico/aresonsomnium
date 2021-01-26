@@ -4,10 +4,15 @@ import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 import net.ess3.api.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Wallet {
 
@@ -21,6 +26,24 @@ public class Wallet {
 
     public static Wallet getNewDefaultWallet() {
         return new Wallet(BigInteger.ZERO, BigInteger.ZERO);
+    }
+
+    public static int getCheckModelData(){
+        return 999;
+    }
+
+    public static ItemStack generateCheck(double amount, CoinType coinType) {
+        ItemStack itemStack = new ItemStack(Material.PAPER);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if(itemMeta != null){
+            itemMeta.setDisplayName("&aAssegno di &l" + coinType.getCoinName());
+            List<String> lore = new ArrayList<>();
+            lore.add(""+amount);
+            itemMeta.setLore(lore);
+            itemMeta.setCustomModelData(getCheckModelData());
+        }
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
     }
 
     public static BigDecimal getBasicCoins(Player player) {

@@ -11,6 +11,7 @@ somniumplayer-not-found: "&cImpossibile reperire il SomniumPlayer per %player%"
 player-not-found: "&cIl giocatore %player% non esiste"
 coins-set: "&aValore dei coins impostato"
 not-a-number: "&cNumero non valido"
+coins-type-error: "&cIl tipo di moneta non esiste."
 
 shop-not-ready: "&cIl negozio richiesto non e' pronto. Segnala il problema allo staff."
 
@@ -24,6 +25,8 @@ gomma-error-give: "&cFai spazio nell'inventario"
 
 gomma-item-name: "&lGomma"
 gomma-material: "IRON_NUGGET"
+
+check-created: "&aBuono creato."
 
 # Stats format
 stats-format: "&6&l%player%&r's stats: \n

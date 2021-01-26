@@ -26,7 +26,11 @@ commands:
     permission: aresonsomnium.player
     usage: /stats
     aliases: [ statistiche ]
-
+  assegno:
+    description: "Crea un assegno"
+    permission: aresonsomnium.player
+    usage: /assegno <amount>
+    aliases: [ buono ]
 depend:
   - Essentials
 
