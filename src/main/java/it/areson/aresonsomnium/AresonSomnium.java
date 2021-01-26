@@ -52,6 +52,7 @@ public class AresonSomnium extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        instance = this;
         debugger = new Debugger(this, Debugger.DebugLevel.LOW);
         MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(debugger);
         somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection, PLAYER_TABLE_NAME);
@@ -76,7 +77,6 @@ public class AresonSomnium extends JavaPlugin {
         BlockPrice.initPrices();
 
         AresonSomniumAPI.instance = this;
-        instance = this;
     }
 
     public MessageManager getMessages() {
