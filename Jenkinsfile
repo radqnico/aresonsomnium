@@ -40,7 +40,7 @@ pipeline {
                                         transfers: [
                                                 sshTransfer(
                                                         sourceFiles: "**/*.jar",
-                                                        remoteDirectory: "/home/minecraft/somnium/plugins/",
+                                                        remoteDirectory: "/home/minecraft/test/plugins/",
                                                         flatten: true,
                                                         excludes: "**/*original*.jar"
                                                 )
@@ -54,7 +54,7 @@ pipeline {
                                 sshPublisherDesc(
                                         configName: "Areson",
                                         transfers: [
-                                                sshTransfer(execCommand: "screen -S somnium -X stuff ^['stop'^M")
+                                                sshTransfer(execCommand: "screen -S test -X stuff ^['stop'^M")
                                         ]
                                 )
                         ]
