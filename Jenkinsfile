@@ -38,12 +38,18 @@ pipeline {
                                 sshPublisherDesc(
                                         configName: "Areson",
                                         transfers: [
-                                                sshTransfer(
-                                                        sourceFiles: "**/*.jar",
-                                                        remoteDirectory: "/home/minecraft/test/plugins/",
-                                                        flatten: true,
-                                                        excludes: "**/*original*.jar"
-                                                )
+                                            sshTransfer(
+                                                    sourceFiles: "**/*.jar",
+                                                    remoteDirectory: "/home/minecraft/test/plugins/",
+                                                    flatten: true,
+                                                    excludes: "**/*original*.jar"
+                                            ),
+                                            sshTransfer(
+                                                    sourceFiles: "**/*.jar",
+                                                    remoteDirectory: "/home/minecraft/test/plugins/",
+                                                    flatten: true,
+                                                    excludes: "**/*original*.jar"
+                                            )
                                         ]
                                 )
                         ]
