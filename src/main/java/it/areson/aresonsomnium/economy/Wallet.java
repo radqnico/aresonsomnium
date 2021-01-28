@@ -4,22 +4,46 @@ import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 import net.ess3.api.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Wallet {
 
-    private int charonCoins;
-    private int forcedCoins;
+    private BigInteger charonCoins;
+    private BigInteger forcedCoins;
 
-    public Wallet(int charonCoins, int forcedCoins) {
+    public Wallet(BigInteger charonCoins, BigInteger forcedCoins) {
         this.charonCoins = charonCoins;
         this.forcedCoins = forcedCoins;
     }
 
     public static Wallet getNewDefaultWallet() {
-        return new Wallet(0, 0);
+        return new Wallet(BigInteger.ZERO, BigInteger.ZERO);
+    }
+
+    public static int getCheckModelData(){
+        return 999;
+    }
+
+    public static ItemStack generateCheck(double amount, CoinType coinType) {
+        ItemStack itemStack = new ItemStack(Material.PAPER);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if(itemMeta != null){
+            itemMeta.setDisplayName("&aAssegno di &l" + coinType.getCoinName());
+            List<String> lore = new ArrayList<>();
+            lore.add(""+amount);
+            itemMeta.setLore(lore);
+            itemMeta.setCustomModelData(getCheckModelData());
+        }
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
     }
 
     public static BigDecimal getBasicCoins(Player player) {
@@ -47,27 +71,27 @@ public class Wallet {
         }
     }
 
-    public int getCharonCoins() {
+    public BigInteger getCharonCoins() {
         return charonCoins;
     }
 
-    public void setCharonCoins(int charonCoins) {
+    public void setCharonCoins(BigInteger charonCoins) {
         this.charonCoins = charonCoins;
     }
 
-    public int getForcedCoins() {
+    public BigInteger getForcedCoins() {
         return forcedCoins;
     }
 
-    public void setForcedCoins(int forcedCoins) {
+    public void setForcedCoins(BigInteger forcedCoins) {
         this.forcedCoins = forcedCoins;
     }
 
-    public void changeCharonCoins(int amount) {
-        charonCoins += amount;
+    public void changeCharonCoins(BigInteger amount) {
+        charonCoins = charonCoins.add(amount);
     }
 
-    public void changeForcedCoins(int amount) {
-        forcedCoins += amount;
+    public void changeForcedCoins(BigInteger amount) {
+        forcedCoins = forcedCoins.add(amount);
     }
 }

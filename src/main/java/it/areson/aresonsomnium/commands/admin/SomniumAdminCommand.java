@@ -4,14 +4,20 @@ import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
-import it.areson.aresonsomnium.shops.CustomShop;
-import it.areson.aresonsomnium.shops.ShopManager;
-import org.bukkit.ChatColor;
+import it.areson.aresonsomnium.shops.guis.CustomShop;
+import it.areson.aresonsomnium.shops.guis.ShopEditor;
+import it.areson.aresonsomnium.shops.guis.ShopManager;
+import it.areson.aresonsomnium.utils.Debugger;
+import it.areson.aresonsomnium.utils.MessageUtils;
+import it.areson.aresonsomnium.utils.Pair;
 import org.bukkit.command.*;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.StringUtil;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,13 +28,13 @@ import java.util.stream.Collectors;
 @SuppressWarnings("NullableProblems")
 public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
-    private final PluginCommand command;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers",
+            "createShop", "editShop", "reloadShops", "setDebugLevel", "deleteLastLoreLine"};
     private final AresonSomnium aresonSomnium;
 
     public SomniumAdminCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
-        command = this.aresonSomnium.getCommand("SomniumAdmin");
+        PluginCommand command = this.aresonSomnium.getCommand("SomniumAdmin");
         if (command != null) {
             command.setExecutor(this);
             command.setTabCompleter(this);
@@ -41,7 +47,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         switch (args.length) {
             case 0:
-                notEnoughArguments(commandSender);
+                MessageUtils.notEnoughArguments(commandSender, command);
                 break;
             case 1:
                 switch (args[0].toLowerCase()) {
@@ -49,13 +55,17 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "setcoins":
                     case "createshop":
                     case "editshop":
-                        notEnoughArguments(commandSender);
+                    case "setdebuglevel":
+                        MessageUtils.notEnoughArguments(commandSender, command);
                         break;
                     case "listplayers":
                         handleListPlayers(commandSender);
                         break;
                     case "reloadshops":
                         handleReloadShops(commandSender);
+                        break;
+                    case "deletelastloreline":
+                        handleDeleteLastLoreLine(commandSender);
                         break;
                 }
                 break;
@@ -68,26 +78,30 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         handleEditShop(commandSender, args[1]);
                         break;
                     case "listplayers":
-                        tooManyArguments(commandSender, "listPlayers: 2");
+                        MessageUtils.tooManyArguments(commandSender, command);
+                        break;
+                    case "setdebuglevel":
+                        handleSetDebugLevel(commandSender, args[1]);
                         break;
                     case "setcoins":
                     case "createshop":
-                        notEnoughArguments(commandSender);
+                        MessageUtils.notEnoughArguments(commandSender, command);
                         break;
                 }
                 break;
             case 3:
                 switch (args[0].toLowerCase()) {
                     case "setcoins":
-                        notEnoughArguments(commandSender);
+                        MessageUtils.notEnoughArguments(commandSender, command);
                         break;
                     case "createshop":
                         handleCreateShop(commandSender, args[1], args[2].replaceAll("_", " "));
                         break;
+                    case "setdebuglevel":
                     case "stats":
                     case "listplayers":
                     case "editshop":
-                        tooManyArguments(commandSender, "editShop: 3");
+                        MessageUtils.tooManyArguments(commandSender, command);
                         break;
                 }
                 break;
@@ -100,14 +114,13 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "listplayers":
                     case "createshop":
                     case "editshop":
-                        tooManyArguments(commandSender, "editShop: 4");
+                        MessageUtils.tooManyArguments(commandSender, command);
                         break;
                 }
                 break;
         }
         return true;
     }
-
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
@@ -130,70 +143,93 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 case "editshop":
                     StringUtil.copyPartialMatches(
                             strings[1],
-                            aresonSomnium.getGuiManager().getGuis().keySet(),
+                            aresonSomnium.getShopManager().getGuis().keySet(),
+                            suggestions
+                    );
+                    break;
+                case "setdebuglevel":
+                    StringUtil.copyPartialMatches(
+                            strings[1],
+                            Arrays.stream(Debugger.DebugLevel.values()).map(Enum::name).collect(Collectors.toList()),
                             suggestions
                     );
                     break;
             }
         }
         if (strings.length == 3) {
-            switch (strings[0].toLowerCase()) {
-                case "setcoins":
-                    StringUtil.copyPartialMatches(
-                            strings[2],
-                            Arrays.stream(CoinType.values()).map(value -> value.name().toLowerCase()).collect(Collectors.toList()),
-                            suggestions
-                    );
-                    break;
+            if ("setcoins".equals(strings[0].toLowerCase())) {
+                StringUtil.copyPartialMatches(
+                        strings[2],
+                        Arrays.stream(CoinType.values()).map(value -> value.name().toLowerCase()).collect(Collectors.toList()),
+                        suggestions
+                );
             }
         }
         return suggestions;
     }
 
-    private void notEnoughArguments(CommandSender commandSender) {
-        commandSender.sendMessage(errorMessage("Parametri non sufficienti"));
-        commandSender.sendMessage(command.getUsage());
+    private void handleDeleteLastLoreLine(CommandSender commandSender) {
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
+            ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
+            ItemMeta itemMeta = itemInMainHand.getItemMeta();
+            if (Objects.nonNull(itemMeta)) {
+                List<String> lore = itemMeta.getLore();
+                if (Objects.nonNull(lore) && lore.size() > 0) {
+                    lore.remove(lore.size() - 1);
+                }
+                itemMeta.setLore(lore);
+            }
+            itemInMainHand.setItemMeta(itemMeta);
+        } else {
+            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("player-only-command"));
+        }
     }
 
-    private void tooManyArguments(CommandSender commandSender, String function) {
-        commandSender.sendMessage(errorMessage("Troppi parametri forniti a " + function));
-        commandSender.sendMessage(command.getUsage());
+    private void handleSetDebugLevel(CommandSender commandSender, String level) {
+        Debugger.DebugLevel debugLevel = Debugger.DebugLevel.valueOf(level);
+        switch (debugLevel) {
+            case LOW:
+            case HIGH:
+                aresonSomnium.getDebugger().setDebugLevel(debugLevel);
+                break;
+            default:
+                commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("invalid-debug-level"));
+                break;
+        }
     }
 
     private void handleReloadShops(CommandSender commandSender) {
-        aresonSomnium.getGuiManager().fetchAllFromDB();
-        commandSender.sendMessage(successMessage("Tutte le GUI ricaricate dal DB"));
+        aresonSomnium.getShopManager().fetchAllFromDB();
+        commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("guis-reloaded"));
     }
 
     private void handleEditShop(CommandSender commandSender, String guiName) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            ShopManager shopManager = aresonSomnium.getGuiManager();
+            ShopManager shopManager = aresonSomnium.getShopManager();
+            ShopEditor shopEditor = aresonSomnium.getShopEditor();
             if (shopManager.isPermanent(guiName)) {
                 CustomShop permanentGui = shopManager.getPermanentGui(guiName);
                 player.openInventory(permanentGui.createInventory());
-                shopManager.beginEditGui(player, guiName);
+                shopEditor.beginEditGui(player, guiName);
             } else {
-                player.sendMessage("La GUI richiesta non è una GUI salvata");
+                player.sendMessage(aresonSomnium.getMessages().getPlainMessage("guis-reloaded"));
             }
         } else {
-            commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
+            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("player-only-command"));
         }
     }
 
     private void handleCreateShop(CommandSender commandSender, String guiName, String guiTitle) {
-        ShopManager shopManager = aresonSomnium.getGuiManager();
+        ShopManager shopManager = aresonSomnium.getShopManager();
+        ShopEditor shopEditor = aresonSomnium.getShopEditor();
         CustomShop newGui = shopManager.createNewGui(guiName, guiTitle);
-        String message;
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             player.openInventory(newGui.createInventory());
-            shopManager.beginEditGui(player, guiName);
-            message = "GUI '" + guiName + "' creata e aperta al giocatore '" + player.getName() + "'";
-        } else {
-            message = "GUI '" + guiName + "' creata";
+            shopEditor.beginEditGui(player, guiName);
         }
-        commandSender.sendMessage(successMessage(message));
     }
 
     private void handleStatsCommand(CommandSender commandSender, String playerName) {
@@ -201,18 +237,21 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         if (Objects.nonNull(player)) {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (Objects.nonNull(somniumPlayer)) {
-                String toSend = ChatColor.GOLD + somniumPlayer.getPlayerName() + ChatColor.RESET + "'s stats:\n" +
-                        "   Secondi giocati: " + somniumPlayer.getSecondsPlayedTotal() + "\n" +
-                        "   Wallet:\n" +
-                        "      Basic coins: " + Wallet.getBasicCoins(player) + "\n" +
-                        "      Charon coins: " + somniumPlayer.getWallet().getCharonCoins() + "\n" +
-                        "      Forced coins: " + somniumPlayer.getWallet().getForcedCoins();
+                String toSend = aresonSomnium.getMessages().getPlainMessage(
+                        "stats-format",
+                        Pair.of("%player%", playerName),
+                        Pair.of("%secondsPlayed%", somniumPlayer.getSecondsPlayedTotal() + ""),
+                        Pair.of("%basicCoins%", Wallet.getBasicCoins(player).toPlainString()),
+                        Pair.of("%charonCoins%", somniumPlayer.getWallet().getCharonCoins().toString()),
+                        Pair.of("%forcedCoins%", somniumPlayer.getWallet().getForcedCoins().toString())
+                );
                 commandSender.sendMessage(toSend);
             } else {
-                commandSender.sendMessage(errorMessage("Impossibile reperire il SomniumPlayer per " + playerName));
+                commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("somniumplayer-not-found",
+                        Pair.of("%player%", playerName)));
             }
         } else {
-            commandSender.sendMessage(errorMessage("Il giocatore " + playerName + " non esiste"));
+            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("player-not-found", Pair.of("%player%", playerName)));
         }
     }
 
@@ -222,41 +261,34 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (Objects.nonNull(somniumPlayer)) {
                 try {
-                    int amount = Integer.parseInt(amountString);
+                    BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(amountString));
                     CoinType type = CoinType.valueOf(coinType.toUpperCase());
                     switch (type) {
                         case CHARON:
-                            somniumPlayer.getWallet().setCharonCoins(amount);
-                            commandSender.sendMessage(successMessage("Valore dei Charon Coins impostato"));
+                            somniumPlayer.getWallet().setCharonCoins(amount.toBigInteger());
+                            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("coins-set"));
                             break;
                         case FORCED:
-                            somniumPlayer.getWallet().setForcedCoins(amount);
-                            commandSender.sendMessage(successMessage("Valore dei Forced Coins impostato"));
+                            somniumPlayer.getWallet().setForcedCoins(amount.toBigInteger());
+                            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("coins-set"));
+                            break;
+                        case BASIC:
+                            Wallet.setBasicCoins(player, amount);
+                            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("coins-set"));
                             break;
                         default:
-                            commandSender.sendMessage(errorMessage("Tipo di moneta non esistente"));
+                            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("coins-set"));
                     }
                 } catch (NumberFormatException exception) {
-                    commandSender.sendMessage(errorMessage("Numero non valido"));
+                    commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("not-a-number"));
                 }
             } else {
-                commandSender.sendMessage(errorMessage("Impossibile reperire il SomniumPlayer per " + playerName));
+                commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("somniumplayer-not-found",
+                        Pair.of("%player%", playerName)));
             }
         } else {
-            commandSender.sendMessage(errorMessage("Il giocatore " + playerName + " non esiste"));
+            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("player-not-found", Pair.of("%player%", playerName)));
         }
-    }
-
-    private String successMessage(String message) {
-        return ChatColor.GREEN + message;
-    }
-
-    private String warningMessage(String message) {
-        return ChatColor.YELLOW + message;
-    }
-
-    private String errorMessage(String message) {
-        return ChatColor.RED + message;
     }
 
     private void handleListPlayers(CommandSender commandSender) {

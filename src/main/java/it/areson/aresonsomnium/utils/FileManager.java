@@ -14,16 +14,16 @@ import java.util.Optional;
 public class FileManager {
 
     private final File file;
-    protected AresonSomnium aresonDeathSwap;
+    protected AresonSomnium aresonSomnium;
     protected FileConfiguration fileConfiguration;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public FileManager(AresonSomnium plugin, String fileName) {
-        aresonDeathSwap = plugin;
-        file = new File(aresonDeathSwap.getDataFolder(), fileName);
+        aresonSomnium = plugin;
+        file = new File(aresonSomnium.getDataFolder(), fileName);
         if (!file.exists()) {
             file.getParentFile().mkdirs();
-            aresonDeathSwap.saveResource(fileName, true);
+            aresonSomnium.saveResource(fileName, true);
 
         }
         fileConfiguration = YamlConfiguration.loadConfiguration(file);
@@ -58,7 +58,7 @@ public class FileManager {
     public Optional<Location> getLocation(String path) {
         String worldName = fileConfiguration.getString(path + ".world");
         if (worldName != null) {
-            World world = aresonDeathSwap.getServer().getWorld(worldName);
+            World world = aresonSomnium.getServer().getWorld(worldName);
             if (world != null) {
                 return Optional.of(new Location(
                         world,

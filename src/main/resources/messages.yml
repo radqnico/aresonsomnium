@@ -1,0 +1,37 @@
+prefix: "&4[Areson] &r"
+
+sql-connect-error: "Impossibile connettersi all'SQL."
+
+# Commands response ADMIN
+invalid-debug-level: "&cLivello di debug non valido"
+guis-reloaded: "&aTutte le GUI ricaricate dal DB"
+gui-not-found: "&cLa GUI richiesta non è una GUI salvata"
+player-only-command: "&cComando disponibile solo da Player"
+somniumplayer-not-found: "&cImpossibile reperire il SomniumPlayer per %player%"
+player-not-found: "&cIl giocatore %player% non esiste"
+coins-set: "&aValore dei coins impostato"
+not-a-number: "&cNumero non valido"
+coins-type-error: "&cIl tipo di moneta non esiste."
+
+shop-not-ready: "&cIl negozio richiesto non e' pronto. Segnala il problema allo staff."
+
+item-buy-success: "&aOggetto acquistato per %basicCoins% coins, %charonCoins% oboli e %forcedCoins% gemme !"
+item-buy-not-enough-space: "&cNon hai abbastanza spazio nell'inventario"
+item-buy-not-enough-money: "&cNon te lo puoi permettere!"
+item-buy-error: "&cRiscontrato un problema con i tuoi dati. Segnala il problema  allo staff.!"
+
+gomma-item-give: "&aHai ottenuto un oggetto dal Gomma Gomma"
+gomma-error-give: "&cFai spazio nell'inventario"
+
+gomma-item-name: "&lGomma"
+gomma-material: "IRON_NUGGET"
+
+check-created: "&aBuono creato."
+
+# Stats format
+stats-format: "&6&l%player%&r's stats: \n
+  Secondi giocati: %secondsPlayed% \n
+  Portafoglio: \n
+  >   Basic coins:  %basicCoins% \n
+  >   Charon coins: %charonCoins% \n
+  >   Forced coins: %forcedCoins% "

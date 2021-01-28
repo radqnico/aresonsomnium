@@ -1,10 +1,10 @@
-package it.areson.aresonsomnium.shops;
+package it.areson.aresonsomnium.shops.guis;
 
+import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.utils.PlayerComparator;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -15,7 +15,6 @@ import java.util.TreeMap;
 public class ShopManager {
 
     private final TreeMap<String, CustomShop> guis;
-    private final TreeMap<Player, String> editingGuis;
     private final TreeMap<Player, String> openedGuis;
     private final MySqlDBConnection mySqlDBConnection;
     private final String tableName;
@@ -23,7 +22,6 @@ public class ShopManager {
     public ShopManager(MySqlDBConnection connection, String tableName) {
         this.guis = new TreeMap<>();
         PlayerComparator playerComparator = new PlayerComparator();
-        this.editingGuis = new TreeMap<>(playerComparator);
         this.openedGuis = new TreeMap<>(playerComparator);
         this.mySqlDBConnection = connection;
         this.tableName = tableName;
@@ -48,7 +46,7 @@ public class ShopManager {
             }
             connection.close();
         } catch (SQLException exception) {
-            mySqlDBConnection.getLogger().severe("Impossibile connettersi per recuperare la GUI '" + guiName + "'");
+            mySqlDBConnection.getDebugger().debugError("Impossibile connettersi per recuperare la GUI '" + guiName + "'");
             mySqlDBConnection.printSqlExceptionDetails(exception);
         }
     }
@@ -74,21 +72,6 @@ public class ShopManager {
         return customShop;
     }
 
-    public void beginEditGui(Player player, String guiName) {
-        editingGuis.put(player, guiName);
-    }
-
-    public boolean endEditGui(Player player, Inventory inventory) {
-        String guiName = editingGuis.remove(player);
-        if (Objects.nonNull(guiName)) {
-            CustomShop customShop = guis.get(guiName);
-            customShop.updateFromInventory(inventory);
-            customShop.saveToDB();
-            return true;
-        }
-        return false;
-    }
-
     public void openGuiToPlayer(Player player, String guiName) {
         CustomShop customShop = guis.get(guiName);
         if (Objects.nonNull(customShop)) {
@@ -96,10 +79,10 @@ public class ShopManager {
                 player.openInventory(customShop.createInventory());
                 openedGuis.put(player, guiName);
             } else {
-                player.sendMessage(MessageUtils.errorMessage("Il negozio richiesto non e' pronto. Segnala il problema allo staff."));
+                player.sendMessage(AresonSomnium.getInstance().getMessages().getPlainMessage("shop-not-ready"));
             }
         } else {
-            player.sendMessage(MessageUtils.errorMessage("L'interfaccia '" + guiName + "' non esiste"));
+            player.sendMessage(AresonSomnium.getInstance().getMessages().getPlainMessage("shop-not-ready"));
         }
     }
 
@@ -118,14 +101,5 @@ public class ShopManager {
         return null;
     }
 
-    public CustomShop getEditingCustomShop(Player player){
-        if(isEditingCustomGui(player)){
-            return guis.get(editingGuis.get(player));
-        }
-        return null;
-    }
 
-    public boolean isEditingCustomGui(Player player) {
-        return editingGuis.containsKey(player);
-    }
 }

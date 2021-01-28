@@ -8,6 +8,10 @@ commands:
     description: "AresonSomnium admin command"
     permission: aresonsomnium.admin
     usage: /somniumadmin <function> [args...]
+  gomma:
+    description: "AresonSomnium gomma command"
+    permission: aresonsomnium.admin
+    usage: /gomma <function>
   somniumtest:
     description: "AresonSomnium testing command"
     permission: aresonsomnium.admin
@@ -17,10 +21,23 @@ commands:
     permission: aresonsomnium.player
     usage: /opengui <guiName>
     aliases: [shop]
+  stats:
+    description: "See your stats"
+    permission: aresonsomnium.player
+    usage: /stats
+    aliases: [ statistiche ]
+  assegno:
+    description: "Crea un assegno"
+    permission: aresonsomnium.player
+    usage: /assegno <amount>
+    aliases: [ buono ]
   sell:
     description: "Sell items"
     permission: aresonsomnium.player
     usage: /sell <hand|all>
+
+depend:
+  - Essentials
 
 permissions:
   aresonsomnium.admin:

@@ -1,19 +1,21 @@
 package it.areson.aresonsomnium.database;
 
+import it.areson.aresonsomnium.AresonSomnium;
+import it.areson.aresonsomnium.utils.Debugger;
+
 import java.sql.*;
-import java.util.logging.Logger;
 
 public class MySqlDBConnection {
 
-    protected final Logger logger;
+    protected final Debugger debugger;
 
-    public MySqlDBConnection(Logger logger) {
-        this.logger = logger;
+    public MySqlDBConnection(Debugger debugger) {
+        this.debugger = debugger;
         testConnection();
     }
 
-    public Logger getLogger() {
-        return logger;
+    public Debugger getDebugger() {
+        return debugger;
     }
 
     public void testConnection() {
@@ -21,7 +23,7 @@ public class MySqlDBConnection {
             Connection connection = connect();
             connection.close();
         } catch (SQLException e) {
-            logger.severe("Impossibile connettersi all'SQL.");
+            debugger.debugError(AresonSomnium.getInstance().getMessages().getPlainMessage("sql-connect-error"));
             printSqlExceptionDetails(e);
         }
     }
@@ -34,7 +36,7 @@ public class MySqlDBConnection {
             String pass = MySqlConfig.PASS;
             return DriverManager.getConnection("jdbc:mysql://" + host + "/" + database + "?user=" + user + "&password=" + pass);
         } catch (SQLException e) {
-            logger.severe("Impossibile connettersi all'SQL.");
+            debugger.debugError(AresonSomnium.getInstance().getMessages().getPlainMessage("sql-connect-error"));
             printSqlExceptionDetails(e);
         }
         return null;
@@ -51,8 +53,8 @@ public class MySqlDBConnection {
     }
 
     public void printSqlExceptionDetails(SQLException exception) {
-        logger.severe("SQL State: " + exception.getSQLState());
-        logger.severe("SQL Error: " + exception.getErrorCode());
+        debugger.debugError("SQL State: " + exception.getSQLState());
+        debugger.debugError("SQL Error: " + exception.getErrorCode());
         exception.printStackTrace();
     }
 }
