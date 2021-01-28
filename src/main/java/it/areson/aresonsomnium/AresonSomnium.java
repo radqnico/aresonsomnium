@@ -70,7 +70,7 @@ public class AresonSomnium extends JavaPlugin {
         // Auto Save Task interval
         // 1m  = 1200
         // 10m = 12000
-        AutoSaveManager.startAutoSaveTask(this, 6000); // 5m
+        AutoSaveManager.startAutoSaveTask(this, 12000);
 
         // Init prices map
         BlockPrice.initPrices();
