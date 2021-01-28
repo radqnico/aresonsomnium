@@ -60,14 +60,12 @@ public class AresonSomnium extends JavaPlugin {
         shopManager = new ShopManager(mySqlDBConnection, GUIS_TABLE_NAME);
         shopEditor = new ShopEditor(this);
 
-        // Events
-        initAllEvents();
-
-        // Commands
-        registerCommands();
-
         // Files
         registerFiles();
+        // Events
+        initAllEvents();
+        // Commands
+        registerCommands();
 
         // Auto Save Task interval
         // 1m  = 1200
