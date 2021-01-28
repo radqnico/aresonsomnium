@@ -35,6 +35,10 @@ commands:
     description: "Sell all items"
     permission: aresonsomnium.player
     usage: /sellall
+  sellhand:
+    description: "Sell the item in main hand"
+    permission: aresonsomnium.player
+    usage: /sellhand
 
 depend:
   - Essentials

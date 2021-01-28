@@ -13,4 +13,6 @@ public class Constants {
     public static final String sellAllCommand = "sellall";
     public static final String sellHandCommand = "sellhand";
 
+    public static final String sellMultiplierPermission = "aresonsomnium.multiplier";
+
 }

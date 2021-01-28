@@ -2,14 +2,18 @@ package it.areson.aresonsomnium.commands.player;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.Constants;
+import it.areson.aresonsomnium.economy.Wallet;
+import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
+import it.areson.aresonsomnium.shops.items.BlockPrice;
 import org.bukkit.Material;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.PermissionAttachmentInfo;
+import org.bukkit.util.StringUtil;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.util.*;
 
 @SuppressWarnings("NullableProblems")
 public class SellCommand implements CommandExecutor, TabCompleter {
@@ -40,36 +44,82 @@ public class SellCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] arguments) {
-        if(commandSender instanceof Player) {
+        if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             String commandName = command.getName();
 
-            if(commandName.equalsIgnoreCase(Constants.sellHandCommand)) {
-                player.getInventory().getItemInMainHand();
+            if (commandName.equalsIgnoreCase(Constants.sellHandCommand)) {
+                ItemStack[] itemArray = {player.getInventory().getItemInMainHand()};
+                sellItems(player, itemArray);
+            } else if (commandName.equalsIgnoreCase(Constants.sellAllCommand)) {
+                sellItems(player, player.getInventory().getContents());
+            } else {
+                aresonSomnium.getLogger().severe("Command not registered in SellCommand");
             }
         } else {
-            commandSender.sendMessage("Comando eseguibile solo da giocatore");
+            commandSender.sendMessage("Player only command");
         }
 
         return true;
     }
 
-    private Optional<String> sellItem(ItemStack itemStack, Boolean verbose) {
-        String permissionRequired = blocksPermission.get(itemStack.getType());
-        if(permissionRequired != null) {
+    private double getMultiplier(Player player) {
+        double multiplier = 1.0;
 
-        } else {
-            return Optional.of("Quest'oggetto non è vendibile");
+        //Getting multiplier
+        Optional<PermissionAttachmentInfo> optionalMultiplierPermission = player.getEffectivePermissions().stream().parallel()
+                .filter(permission -> permission.getPermission().startsWith(Constants.sellMultiplierPermission))
+                .findFirst();
+
+        if (optionalMultiplierPermission.isPresent()) {
+            String permission = optionalMultiplierPermission.get().getPermission();
+            int lastDotPosition = permission.lastIndexOf(".");
+            String stringMultiplier = permission.substring(lastDotPosition + 1);
+
+            try {
+                double value = Double.parseDouble(stringMultiplier);
+                multiplier = value / 100;
+            } catch (NumberFormatException event) {
+                aresonSomnium.getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
+            }
         }
-        return Optional.empty();
+
+        return multiplier;
     }
 
-    private Optional<String> sellItem(ItemStack itemStack) {
-        return sellItem(itemStack, true);
+    private BigDecimal sellItems(Player player, ItemStack[] itemStacks) {
+        double multiplier = getMultiplier(player);
+
+        //Getting amount
+        BigDecimal coinsToGive = Arrays.stream(itemStacks).parallel().reduce(BigDecimal.ZERO, (total, itemStack) -> {
+            try {
+                String permissionRequired = blocksPermission.get(itemStack.getType());
+                if (permissionRequired != null && player.hasPermission(permissionRequired)) {
+                    BigDecimal itemValue = BlockPrice.getPrice(itemStack.getType());
+                    itemValue = itemValue.multiply(BigDecimal.valueOf(itemStack.getAmount()));
+
+                    total = total.add(itemValue);
+                    player.getInventory().remove(itemStack);
+                }
+            } catch (MaterialNotSellableException ignored) {
+            }
+            return total;
+        }, BigDecimal::add);
+
+        coinsToGive = coinsToGive.multiply(BigDecimal.valueOf(multiplier));
+        Wallet.addBasicCoins(player, coinsToGive);
+
+        return coinsToGive;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+        //TODO
+//        List<String> suggestions = new ArrayList<>();
+//        if (strings.length == 1) {
+//            StringUtil.copyPartialMatches(strings[0], pluginCommand.ge, suggestions);
+//        }
+//        return suggestions;
         return null;
     }
 
