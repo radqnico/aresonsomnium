@@ -22,12 +22,6 @@ import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
 
 public class CustomShop extends MySQLObject {
 
-    public static String tableQuery = "create table if not exists %s (" +
-            "guiName varchar(255) not null primary key,\n" +
-            "guiTitle varchar(255) not null,\n" +
-            "shopItems text not null\n" +
-            ");";
-
     private final String name;
     private final TreeMap<Integer, ShopItem> items;
     private String title;
@@ -37,8 +31,6 @@ public class CustomShop extends MySQLObject {
         this.title = title;
         this.name = name;
         this.items = new TreeMap<>();
-
-        createTableIfNotExists(String.format(tableQuery, tableName));
     }
 
     public static CustomShop getFromDB(MySqlDBConnection connection, String name) {
