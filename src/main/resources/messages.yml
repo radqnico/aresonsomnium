@@ -1,4 +1,4 @@
-prefix: "&9[Areson]&7» "
+prefix: "&9[Areson]&7 "
 
 sql-connect-error: "Impossibile connettersi all'SQL."
 
