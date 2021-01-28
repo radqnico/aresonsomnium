@@ -31,10 +31,10 @@ commands:
     permission: aresonsomnium.player
     usage: /assegno <amount>
     aliases: [ buono ]
-  sell:
-    description: "Sell items"
+  sellall:
+    description: "Sell all items"
     permission: aresonsomnium.player
-    usage: /sell <hand|all>
+    usage: /sellall
 
 depend:
   - Essentials

@@ -8,6 +8,7 @@ import it.areson.aresonsomnium.commands.admin.SomniumTestCommand;
 import it.areson.aresonsomnium.commands.player.OpenGuiCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
+import it.areson.aresonsomnium.commands.player.SellAllCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.gomma.GommaGommaEventListener;
 import it.areson.aresonsomnium.gomma.GommaObjectsFileReader;
@@ -45,6 +46,8 @@ public class AresonSomnium extends JavaPlugin {
     public static AresonSomnium getInstance() {
         return instance;
     }
+
+    public final String MULTIPLIER_PERMISSION = "aresonsomnium.multiplier";
 
     @Override
     public void onDisable() {
