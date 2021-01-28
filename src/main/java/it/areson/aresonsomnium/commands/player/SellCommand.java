@@ -5,9 +5,11 @@ import it.areson.aresonsomnium.Constants;
 import org.bukkit.Material;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @SuppressWarnings("NullableProblems")
 public class SellCommand implements CommandExecutor, TabCompleter {
@@ -37,14 +39,33 @@ public class SellCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+    public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] arguments) {
         if(commandSender instanceof Player) {
-            commandSender.sendMessage("Fiko");
+            Player player = (Player) commandSender;
+            String commandName = command.getName();
+
+            if(commandName.equalsIgnoreCase(Constants.sellHandCommand)) {
+                player.getInventory().getItemInMainHand();
+            }
         } else {
             commandSender.sendMessage("Comando eseguibile solo da giocatore");
         }
 
         return true;
+    }
+
+    private Optional<String> sellItem(ItemStack itemStack, Boolean verbose) {
+        String permissionRequired = blocksPermission.get(itemStack.getType());
+        if(permissionRequired != null) {
+
+        } else {
+            return Optional.of("Quest'oggetto non è vendibile");
+        }
+        return Optional.empty();
+    }
+
+    private Optional<String> sellItem(ItemStack itemStack) {
+        return sellItem(itemStack, true);
     }
 
     @Override
