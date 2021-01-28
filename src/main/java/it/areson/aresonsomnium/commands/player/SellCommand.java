@@ -5,9 +5,13 @@ import it.areson.aresonsomnium.Constants;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import it.areson.aresonsomnium.shops.items.BlockPrice;
-import org.bukkit.ChatColor;
+import it.areson.aresonsomnium.utils.MessageManager;
+import it.areson.aresonsomnium.utils.Pair;
 import org.bukkit.Material;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -15,25 +19,24 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("NullableProblems")
-public class SellCommand implements CommandExecutor, TabCompleter {
+public class SellCommand implements CommandExecutor {
 
     private final AresonSomnium aresonSomnium;
-    private final PluginCommand pluginCommand;
     private final HashMap<Material, String> blocksPermission;
+    private final MessageManager messageManager;
 
-    public SellCommand(AresonSomnium aresonSomnium, String command) {
-        this.aresonSomnium = aresonSomnium;
+    public SellCommand(AresonSomnium plugin, String command) {
+        aresonSomnium = plugin;
+        messageManager = aresonSomnium.getMessageManager();
 
-        pluginCommand = this.aresonSomnium.getCommand(command);
+        PluginCommand pluginCommand = aresonSomnium.getCommand(command);
         if (pluginCommand != null) {
             pluginCommand.setExecutor(this);
-            pluginCommand.setTabCompleter(this);
         } else {
-            this.aresonSomnium.getLogger().warning("Comando 'sell' non dichiarato");
+            aresonSomnium.getLogger().warning("Comando " + command + " non dichiarato");
         }
 
         blocksPermission = new HashMap<>();
@@ -56,17 +59,17 @@ public class SellCommand implements CommandExecutor, TabCompleter {
                 BigDecimal sold = sellItems(player, itemArray);
 
                 if (sold.compareTo(BigDecimal.ZERO) > 0) {
-                    player.sendMessage(ChatColor.GOLD + "Hai venduto quest'oggetto per " + sold);
+                    messageManager.sendPlainMessage(player, "item-sold", Pair.of("%money%", "" + sold));
                 } else {
-                    player.sendMessage(ChatColor.RED + "Quest'oggetto non è vendibile");
+                    messageManager.sendPlainMessage(player, "item-not-sellable");
                 }
             } else if (commandName.equalsIgnoreCase(Constants.sellAllCommand)) {
                 BigDecimal sold = sellItems(player, player.getInventory().getContents());
 
                 if (sold.compareTo(BigDecimal.ZERO) > 0) {
-                    player.sendMessage(ChatColor.GOLD + "Hai venduto tutti gli oggetti vendibili nel tuo inventario per " + sold);
+                    messageManager.sendPlainMessage(player, "items-sold", Pair.of("%money%", "" + sold));
                 } else {
-                    player.sendMessage(ChatColor.RED + "Non hai nessun oggetto vendibile nell'inventario");
+                    messageManager.sendPlainMessage(player, "items-not-sellable");
                 }
             } else {
                 aresonSomnium.getLogger().severe("Command not registered in SellCommand");
@@ -127,17 +130,6 @@ public class SellCommand implements CommandExecutor, TabCompleter {
         Wallet.addBasicCoins(player, coinsToGive);
 
         return coinsToGive;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        //TODO
-//        List<String> suggestions = new ArrayList<>();
-//        if (strings.length == 1) {
-//            StringUtil.copyPartialMatches(strings[0], pluginCommand.ge, suggestions);
-//        }
-//        return suggestions;
-        return null;
     }
 
 }

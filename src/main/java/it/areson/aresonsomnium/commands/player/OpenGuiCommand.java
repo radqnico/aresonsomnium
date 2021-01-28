@@ -2,7 +2,6 @@ package it.areson.aresonsomnium.commands.player;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
-import it.areson.aresonsomnium.utils.MessageManager;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -51,10 +50,10 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
             if (shopManager.isPermanent(guiName)) {
                 shopManager.openGuiToPlayer(player, guiName);
             } else {
-                player.sendMessage(aresonSomnium.getMessages().getPlainMessage("gui-not-found"));
+                player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("gui-not-found"));
             }
         } else {
-            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("player-only-command"));
+            commandSender.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("player-only-command"));
         }
     }
 

@@ -5,6 +5,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Objects;
@@ -12,18 +13,20 @@ import java.util.Objects;
 public class MessageManager extends FileManager {
 
     private final String prefix;
+    private final String messageNotFound;
 
     public MessageManager(AresonSomnium plugin, String fileName) {
         super(plugin, fileName);
         prefix = getFileConfiguration().getString("prefix", "");
+        messageNotFound = prefix + ChatColor.RED + "Errore: messaggio non trovato";
     }
 
-    public void sendPlainMessage(Player player, String messageKey) {
+    public void sendPlainMessage(CommandSender commandSender, String messageKey) {
         String message = getFileConfiguration().getString(messageKey);
         if (Objects.nonNull(message)) {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + message));
+            commandSender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + message));
         } else {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&cError: '" + messageKey + "' message does not exists!"));
+            commandSender.sendMessage(messageNotFound);
         }
     }
 
@@ -33,7 +36,7 @@ public class MessageManager extends FileManager {
             BaseComponent[] rawMessage = ComponentSerializer.parse(message);
             player.spigot().sendMessage(rawMessage);
         } else {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "&cError: '" + messageKey + "' message does not exists!"));
+            player.sendMessage(messageNotFound);
         }
     }
 
@@ -47,7 +50,21 @@ public class MessageManager extends FileManager {
 
             return ChatColor.translateAlternateColorCodes('&', prefix + message);
         } else {
-            return ChatColor.translateAlternateColorCodes('&', prefix + "&cError: '" + messageKey + "' message does not exists!");
+            return messageNotFound;
+        }
+    }
+
+    @SafeVarargs
+    public final void sendPlainMessage(CommandSender commandSender, String messageKey, Pair<String, String>... substitutions) {
+        String message = getFileConfiguration().getString(messageKey);
+        if (Objects.nonNull(message)) {
+            for (Pair<String, String> stringPair : substitutions) {
+                message = message.replaceAll(stringPair.left(), stringPair.right());
+            }
+
+            commandSender.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + message));
+        } else {
+            commandSender.sendMessage(messageNotFound);
         }
     }
 

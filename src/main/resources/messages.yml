@@ -1,4 +1,4 @@
-prefix: "&4[Areson] &r"
+prefix: "&4[Areson]&r "
 
 sql-connect-error: "Impossibile connettersi all'SQL."
 
@@ -35,3 +35,9 @@ stats-format: "&6&l%player%&r's stats: \n
   >   Basic coins:  %basicCoins% \n
   >   Charon coins: %charonCoins% \n
   >   Forced coins: %forcedCoins% "
+
+# Sell
+item-sold: "Hai venduto questo oggetto per %money%"
+items-sold: "Hai venduto tutti gli oggetti vendibili nel tuo inventario per %money%"
+item-not-sellable: "Quest'oggetto non è vendibile"
+items-not-sellable: "Non hai nessun oggetto vendibile nell'inventario"

@@ -80,7 +80,7 @@ public class AresonSomnium extends JavaPlugin {
         AresonSomniumAPI.instance = this;
     }
 
-    public MessageManager getMessages() {
+    public MessageManager getMessageManager() {
         return messages;
     }
 

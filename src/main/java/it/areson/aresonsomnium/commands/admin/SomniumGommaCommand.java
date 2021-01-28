@@ -67,11 +67,11 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
     private void handleGiveGomma(CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            ItemStack gommaItem = new ItemStack(Material.valueOf(aresonSomnium.getMessages().getPlainMessageNoPrefix("gomma-material")));
+            ItemStack gommaItem = new ItemStack(Material.valueOf(aresonSomnium.getMessageManager().getPlainMessageNoPrefix("gomma-material")));
 
             ItemMeta itemMeta = gommaItem.getItemMeta();
             if (Objects.nonNull(itemMeta)) {
-                itemMeta.setDisplayName(aresonSomnium.getMessages().getPlainMessageNoPrefix("gomma-item-name"));
+                itemMeta.setDisplayName(aresonSomnium.getMessageManager().getPlainMessageNoPrefix("gomma-item-name"));
 
                 itemMeta.setCustomModelData(GommaConstants.customModelData);
             }

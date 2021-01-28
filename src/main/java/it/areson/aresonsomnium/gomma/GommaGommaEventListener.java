@@ -44,9 +44,9 @@ public class GommaGommaEventListener extends GeneralEventListener {
             if (customModelData == GommaConstants.customModelData) {
                 if (playerInventory.addItem(aresonSomnium.getGommaObjectsFileReader().getRandomItem()).isEmpty()) {
                     itemInMainHand.setAmount(itemInMainHand.getAmount() - 1);
-                    player.sendMessage(aresonSomnium.getMessages().getPlainMessage("gomma-item-give"));
+                    player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("gomma-item-give"));
                 } else {
-                    player.sendMessage(aresonSomnium.getMessages().getPlainMessage("gomma-error-give"));
+                    player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("gomma-error-give"));
                 }
             }
         }
