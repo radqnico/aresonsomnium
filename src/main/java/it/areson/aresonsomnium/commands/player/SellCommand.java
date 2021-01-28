@@ -12,13 +12,14 @@ import java.util.List;
 @SuppressWarnings("NullableProblems")
 public class SellCommand implements CommandExecutor, TabCompleter {
 
-    private final PluginCommand pluginCommand;
     private final AresonSomnium aresonSomnium;
+    private final PluginCommand pluginCommand;
     private final HashMap<Material, String> blocksPermission;
 
-    public SellCommand(AresonSomnium aresonSomnium) {
+    public SellCommand(AresonSomnium aresonSomnium, String command) {
         this.aresonSomnium = aresonSomnium;
-        pluginCommand = this.aresonSomnium.getCommand("sell");
+
+        pluginCommand = this.aresonSomnium.getCommand(command);
         if (pluginCommand != null) {
             pluginCommand.setExecutor(this);
             pluginCommand.setTabCompleter(this);

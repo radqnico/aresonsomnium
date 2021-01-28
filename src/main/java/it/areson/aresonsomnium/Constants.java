@@ -9,4 +9,8 @@ public class Constants {
     public static final String permissionSestoGirone = "aresonsomnium.sestogirone";
     public static final String permissionOttavoGirone = "aresonsomnium.ottavogirone";
 
+
+    public static final String sellAllCommand = "sellall";
+    public static final String sellHandCommand = "sellhand";
+
 }

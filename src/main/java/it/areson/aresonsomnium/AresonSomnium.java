@@ -1,5 +1,6 @@
 package it.areson.aresonsomnium;
 
+import com.sun.org.apache.bcel.internal.Const;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.admin.SomniumAdminCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumGommaCommand;
@@ -99,7 +100,8 @@ public class AresonSomnium extends JavaPlugin {
         new OpenGuiCommand(this);
         new StatsCommand(this);
         new SomniumGommaCommand(this);
-        new SellCommand(this);
+        new SellCommand(this, Constants.sellHandCommand);
+        new SellCommand(this, Constants.sellAllCommand);
     }
 
     private void initAllEvents() {
