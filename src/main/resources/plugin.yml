@@ -17,6 +17,10 @@ commands:
     permission: aresonsomnium.player
     usage: /opengui <guiName>
     aliases: [shop]
+  sell:
+    description: "Sell items"
+    permission: aresonsomnium.player
+    usage: /sell <hand|all>
 
 permissions:
   aresonsomnium.admin:
