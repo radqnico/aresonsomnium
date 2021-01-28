@@ -5,15 +5,18 @@ import it.areson.aresonsomnium.Constants;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import it.areson.aresonsomnium.shops.items.BlockPrice;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachmentInfo;
-import org.bukkit.util.StringUtil;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @SuppressWarnings("NullableProblems")
 public class SellCommand implements CommandExecutor, TabCompleter {
@@ -50,9 +53,21 @@ public class SellCommand implements CommandExecutor, TabCompleter {
 
             if (commandName.equalsIgnoreCase(Constants.sellHandCommand)) {
                 ItemStack[] itemArray = {player.getInventory().getItemInMainHand()};
-                sellItems(player, itemArray);
+                BigDecimal sold = sellItems(player, itemArray);
+
+                if (sold.compareTo(BigDecimal.ZERO) > 0) {
+                    player.sendMessage(ChatColor.GOLD + "Hai venduto quest'oggetto per " + sold);
+                } else {
+                    player.sendMessage(ChatColor.RED + "Quest'oggetto non è vendibile");
+                }
             } else if (commandName.equalsIgnoreCase(Constants.sellAllCommand)) {
-                sellItems(player, player.getInventory().getContents());
+                BigDecimal sold = sellItems(player, player.getInventory().getContents());
+
+                if (sold.compareTo(BigDecimal.ZERO) > 0) {
+                    player.sendMessage(ChatColor.GOLD + "Hai venduto tutti gli oggetti vendibili nel tuo inventario per " + sold);
+                } else {
+                    player.sendMessage(ChatColor.RED + "Non hai nessun oggetto vendibile nell'inventario");
+                }
             } else {
                 aresonSomnium.getLogger().severe("Command not registered in SellCommand");
             }
