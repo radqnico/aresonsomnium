@@ -93,13 +93,15 @@ public class SellCommand implements CommandExecutor, TabCompleter {
         //Getting amount
         BigDecimal coinsToGive = Arrays.stream(itemStacks).parallel().reduce(BigDecimal.ZERO, (total, itemStack) -> {
             try {
-                String permissionRequired = blocksPermission.get(itemStack.getType());
-                if (permissionRequired != null && player.hasPermission(permissionRequired)) {
-                    BigDecimal itemValue = BlockPrice.getPrice(itemStack.getType());
-                    itemValue = itemValue.multiply(BigDecimal.valueOf(itemStack.getAmount()));
+                if (itemStack != null) {
+                    String permissionRequired = blocksPermission.get(itemStack.getType());
+                    if (permissionRequired != null && player.hasPermission(permissionRequired)) {
+                        BigDecimal itemValue = BlockPrice.getPrice(itemStack.getType());
+                        itemValue = itemValue.multiply(BigDecimal.valueOf(itemStack.getAmount()));
 
-                    total = total.add(itemValue);
-                    player.getInventory().remove(itemStack);
+                        total = total.add(itemValue);
+                        player.getInventory().remove(itemStack);
+                    }
                 }
             } catch (MaterialNotSellableException ignored) {
             }
