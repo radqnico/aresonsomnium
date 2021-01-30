@@ -14,7 +14,6 @@ import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
-import it.areson.aresonsomnium.shops.items.BlockPrice;
 import it.areson.aresonsomnium.shops.listener.CustomGuiEventsListener;
 import it.areson.aresonsomnium.shops.listener.SetPriceInChatListener;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
@@ -71,9 +70,6 @@ public class AresonSomnium extends JavaPlugin {
         // 1m  = 1200
         // 10m = 12000
         AutoSaveManager.startAutoSaveTask(this, 12000);
-
-        // Init prices map
-        BlockPrice.initPrices();
 
         AresonSomniumAPI.instance = this;
     }
