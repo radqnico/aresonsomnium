@@ -9,6 +9,7 @@ lp group default permission set essentials.warp true
 lp group default permission set essentials.warp.list true
 lp group default permission set essentials.sethome true
 lp group default permission set essentials.home true
+lp group default permission set acidisland.* false
 
 lp group default permission set essentials.warps.selva true
 lp group default permission set ezranks.rank.default true
@@ -37,6 +38,8 @@ lp group zero_primogirone permission set ezranks.rank.zero_primogirone true
 lp group zero_primogirone permission set portal.primogirone true
 lp group zero_primogirone permission set jetsprisonmines.blockbreak.primogirone true
 lp group zero_primogirone permission set aresonsomnium.primogirone true
+lp group zero_primogirone permission set acidisland.island.create true
+lp group zero_primogirone permission set acidisland.island true
 lp group zero_primogirone meta addprefix 0 "&4&l[&c&lI° Girone&4&l]&f"
 
 
