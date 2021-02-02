@@ -175,20 +175,20 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             if (somniumPlayer.canAfford(price)) {
                 if (player.getInventory().addItem(new ItemStack(shopItem.getItemStack())).isEmpty()) {
                     price.removeFrom(somniumPlayer);
-                    player.sendMessage(aresonSomnium.getMessages().getPlainMessage(
+                    player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage(
                             "item-buy-success",
                             Pair.of("%basicCoins%", price.getBasicCoins().toPlainString()),
                             Pair.of("%charonCoins%", price.getCharonCoins().toString()),
                             Pair.of("%forcedCoins%", price.getForcedCoins().toString())
                     ));
                 } else {
-                    player.sendMessage(aresonSomnium.getMessages().getPlainMessage("item-buy-not-enough-space"));
+                    player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
                 }
             } else {
-                player.sendMessage(aresonSomnium.getMessages().getPlainMessage("item-buy-not-enough-money"));
+                player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-money"));
             }
         } else {
-            player.sendMessage(aresonSomnium.getMessages().getPlainMessage("item-buy-error"));
+            player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-error"));
         }
     }
 

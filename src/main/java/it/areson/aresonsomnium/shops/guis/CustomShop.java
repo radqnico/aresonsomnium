@@ -9,7 +9,6 @@ import it.areson.aresonsomnium.shops.items.ShopItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.Type;
@@ -22,12 +21,6 @@ import java.util.stream.Collectors;
 import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
 
 public class CustomShop extends MySQLObject {
-
-    public static String tableQuery = "create table if not exists %s (" +
-            "guiName varchar(255) not null primary key,\n" +
-            "guiTitle varchar(255) not null,\n" +
-            "shopItems text not null\n" +
-            ");";
 
     private final String name;
     private final TreeMap<Integer, ShopItem> items;
@@ -80,7 +73,6 @@ public class CustomShop extends MySQLObject {
 
     @Override
     public void saveToDB() {
-        createTableIfNotExists(String.format(tableQuery, tableName));
         String saveQuery = getSaveQuery();
 
         try {
@@ -119,7 +111,6 @@ public class CustomShop extends MySQLObject {
 
     @Override
     public boolean updateFromDB() {
-        createTableIfNotExists(String.format(tableQuery, tableName));
         String query = "select * from " + GUIS_TABLE_NAME + " where guiName='" + name + "'";
         try {
             Connection connection = mySqlDBConnection.connect();

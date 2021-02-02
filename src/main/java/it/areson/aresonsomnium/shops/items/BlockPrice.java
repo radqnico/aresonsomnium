@@ -4,31 +4,29 @@ import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import org.bukkit.Material;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Objects;
-import java.util.TreeMap;
 
 public class BlockPrice {
 
-    static final TreeMap<Material, BigDecimal> prices = new TreeMap<>();
-
-    public static void initPrices() {
-        prices.put(Material.COBBLESTONE, BigDecimal.valueOf(1.5));
-        prices.put(Material.NETHERRACK, BigDecimal.valueOf(3));
-        prices.put(Material.COAL_BLOCK, BigDecimal.valueOf(7));
-        prices.put(Material.RED_NETHER_BRICKS, BigDecimal.valueOf(13));
-        prices.put(Material.MAGMA_BLOCK, BigDecimal.valueOf(27));
-        prices.put(Material.RED_CONCRETE, BigDecimal.valueOf(60));
-        prices.put(Material.ANDESITE, BigDecimal.valueOf(100));
-        prices.put(Material.POLISHED_ANDESITE, BigDecimal.valueOf(180));
-        prices.put(Material.DIORITE, BigDecimal.valueOf(300));
-        prices.put(Material.POLISHED_DIORITE, BigDecimal.valueOf(500));
-        prices.put(Material.LIME_CONCRETE, BigDecimal.valueOf(850));
-        prices.put(Material.PRISMARINE, BigDecimal.valueOf(1500));
-        prices.put(Material.PRISMARINE_BRICKS, BigDecimal.valueOf(2650));
-        prices.put(Material.QUARTZ_BLOCK, BigDecimal.valueOf(4250));
-        prices.put(Material.CHISELED_QUARTZ_BLOCK, BigDecimal.valueOf(9000));
-        prices.put(Material.LIGHT_BLUE_CONCRETE, BigDecimal.valueOf(20000));
-    }
+    private static final HashMap<Material, BigDecimal> prices = new HashMap<Material, BigDecimal>() {{
+        put(Material.COBBLESTONE, BigDecimal.valueOf(1));
+        put(Material.NETHERRACK, BigDecimal.valueOf(2.5));
+        put(Material.COAL_BLOCK, BigDecimal.valueOf(6));
+        put(Material.RED_NETHER_BRICKS, BigDecimal.valueOf(11));
+        put(Material.MAGMA_BLOCK, BigDecimal.valueOf(25));
+        put(Material.RED_CONCRETE, BigDecimal.valueOf(55));
+        put(Material.ANDESITE, BigDecimal.valueOf(90));
+        put(Material.POLISHED_ANDESITE, BigDecimal.valueOf(170));
+        put(Material.DIORITE, BigDecimal.valueOf(290));
+        put(Material.POLISHED_DIORITE, BigDecimal.valueOf(480));
+        put(Material.LIME_CONCRETE, BigDecimal.valueOf(800));
+        put(Material.PRISMARINE, BigDecimal.valueOf(1400));
+        put(Material.PRISMARINE_BRICKS, BigDecimal.valueOf(2450));
+        put(Material.QUARTZ_BLOCK, BigDecimal.valueOf(3800));
+        put(Material.CHISELED_QUARTZ_BLOCK, BigDecimal.valueOf(8000));
+        put(Material.LIGHT_BLUE_CONCRETE, BigDecimal.valueOf(18000));
+    }};
 
     public static BigDecimal getPrice(Material material) throws MaterialNotSellableException {
         BigDecimal price = prices.get(material);

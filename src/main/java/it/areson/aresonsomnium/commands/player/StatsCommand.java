@@ -5,7 +5,6 @@ import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.utils.Pair;
-import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
@@ -47,7 +46,7 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
             Player player = (Player) commandSender;
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (Objects.nonNull(somniumPlayer)) {
-                String toSend = aresonSomnium.getMessages().getPlainMessage(
+                String toSend = aresonSomnium.getMessageManager().getPlainMessage(
                         "stats-format",
                         Pair.of("%player%", player.getName()),
                         Pair.of("%secondsPlayed%", somniumPlayer.getSecondsPlayedTotal()+""),

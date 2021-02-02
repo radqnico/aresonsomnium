@@ -1,0 +1,216 @@
+lp deletegroup primo_selva
+lp creategroup primo_selva
+lp group primo_selva parent set default
+lp group primo_selva permission set ezranks.rank.primo_selva true
+lp group primo_selva meta addprefix 0 "&6&l[&e❇&6&l]&2&l[&a&lSelva&2&l]&f"
+
+lp deletegroup primo_antinferno
+lp creategroup primo_antinferno
+lp group primo_antinferno parent set zero_antinferno
+lp group primo_antinferno permission set ezranks.rank.primo_antinferno true
+lp group primo_antinferno meta addprefix 0 "&6&l[&e❇&6&l]&4&l[&c&lAntinferno&4&l]&f"
+
+
+lp deletegroup primo_primogirone
+lp creategroup primo_primogirone
+lp group primo_primogirone parent set zero_primogirone
+lp group primo_primogirone permission set ezranks.rank.primo_primogirone true
+lp group primo_primogirone meta addprefix 0 "&6&l[&e❇&6&l]&4&l[&c&lI° Girone&4&l]&f"
+
+
+lp deletegroup primo_secondogirone
+lp creategroup primo_secondogirone
+lp group primo_secondogirone parent set zero_secondogirone
+lp group primo_secondogirone permission set ezranks.rank.primo_secondogirone true
+lp group primo_secondogirone meta addprefix 0 "&6&l[&e❇&6&l]&4&l[&c&lII° Girone&4&l]&f"
+
+
+lp deletegroup primo_terzogirone
+lp creategroup primo_terzogirone
+lp group primo_terzogirone parent set zero_terzogirone
+lp group primo_terzogirone permission set ezranks.rank.primo_terzogirone true
+lp group primo_terzogirone meta addprefix 0 "&6&l[&e❇&6&l]&4&l[&c&lIII° Girone&4&l]&f"
+
+
+lp deletegroup primo_quartogirone
+lp creategroup primo_quartogirone
+lp group primo_quartogirone parent set zero_quartogirone
+lp group primo_quartogirone permission set ezranks.rank.primo_quartogirone true
+lp group primo_quartogirone meta addprefix 0 "&6&l[&e❇&6&l]&4&l[&c&lIV° Girone&4&l]&f"
+
+
+lp deletegroup primo_quintogirone
+lp creategroup primo_quintogirone
+lp group primo_quintogirone parent set zero_quintogirone
+lp group primo_quintogirone permission set ezranks.rank.primo_quintogirone true
+lp group primo_quintogirone meta addprefix 0 "&6&l[&e❇&6&l]&4&l[&c&lV° Girone&4&l]&f"
+
+
+lp deletegroup primo_sestogirone
+lp creategroup primo_sestogirone
+lp group primo_sestogirone parent set zero_sestogirone
+lp group primo_sestogirone permission set ezranks.rank.primo_sestogirone true
+lp group primo_sestogirone meta addprefix 0 "&6&l[&e❇&6&l]&4&l[&c&lVI° Girone&4&l]&f"
+
+
+lp deletegroup primo_settimogirone
+lp creategroup primo_settimogirone
+lp group primo_settimogirone parent set zero_settimogirone
+lp group primo_settimogirone permission set ezranks.rank.primo_settimogirone true
+lp group primo_settimogirone meta addprefix 0 "&6&l[&e❇&6&l]&4&l[&c&lVII° Girone&4&l]&f"
+
+
+lp deletegroup primo_ottavogirone
+lp creategroup primo_ottavogirone
+lp group primo_ottavogirone parent set zero_ottavogirone
+lp group primo_ottavogirone permission set ezranks.rank.primo_ottavogirone true
+lp group primo_ottavogirone meta addprefix 0 "&6&l[&e❇&6&l]&4&l[&c&lVIII° Girone&4&l]&f"
+
+
+lp deletegroup primo_nonogirone
+lp creategroup primo_nonogirone
+lp group primo_nonogirone parent set zero_nonogirone
+lp group primo_nonogirone permission set ezranks.rank.primo_nonogirone true
+lp group primo_nonogirone meta addprefix 0 "&6&l[&e❇&6&l]&4&l[&c&lIX° Girone&4&l]&f"
+
+
+lp deletegroup primo_lucifero
+lp creategroup primo_lucifero
+lp group primo_lucifero parent set zero_lucifero
+lp group primo_lucifero permission set ezranks.rank.primo_lucifero true
+lp group primo_lucifero meta addprefix 0 "&6&l[&e❇&6&l]&4&l[&0&k&l0&c&lLucifero&0&k&l0&4&l]&f"
+
+
+
+lp deletegroup primo_antipurgatorio
+lp creategroup primo_antipurgatorio
+lp group primo_antipurgatorio parent set zero_antipurgatorio
+lp group primo_antipurgatorio permission set ezranks.rank.primo_antipurgatorio true
+lp group primo_antipurgatorio meta addprefix 0 "&6&l[&e❇&6&l]&3&l[&b&lAntipurgatorio&3&l]&f"
+
+
+lp deletegroup primo_primacornice
+lp creategroup primo_primacornice
+lp group primo_primacornice parent set zero_primacornice
+lp group primo_primacornice permission set ezranks.rank.primo_primacornice true
+lp group primo_primacornice meta addprefix 0 "&6&l[&e❇&6&l]&3&l[&b&lI° Cornice&3&l]&f"
+
+
+lp deletegroup primo_secondacornice
+lp creategroup primo_secondacornice
+lp group primo_secondacornice parent set zero_secondacornice
+lp group primo_secondacornice permission set ezranks.rank.primo_secondacornice true
+lp group primo_secondacornice meta addprefix 0 "&6&l[&e❇&6&l]&3&l[&b&lII° Cornice&3&l]&f"
+
+
+lp deletegroup primo_terzacornice
+lp creategroup primo_terzacornice
+lp group primo_terzacornice parent set zero_terzacornice
+lp group primo_terzacornice permission set ezranks.rank.primo_terzacornice true
+lp group primo_terzacornice meta addprefix 0 "&6&l[&e❇&6&l]&3&l[&b&lIII° Cornice&3&l]&f"
+
+
+lp deletegroup primo_quartacornice
+lp creategroup primo_quartacornice
+lp group primo_quartacornice parent set zero_quartacornice
+lp group primo_quartacornice permission set ezranks.rank.primo_quartacornice true
+lp group primo_quartacornice meta addprefix 0 "&6&l[&e❇&6&l]&3&l[&b&lIV° Cornice&3&l]&f"
+
+
+lp deletegroup primo_quintacornice
+lp creategroup primo_quintacornice
+lp group primo_quintacornice parent set zero_quintacornice
+lp group primo_quintacornice permission set ezranks.rank.primo_quintacornice true
+lp group primo_quintacornice meta addprefix 0 "&6&l[&e❇&6&l]&3&l[&b&lV° Cornice&3&l]&f"
+
+
+lp deletegroup primo_sestacornice
+lp creategroup primo_sestacornice
+lp group primo_sestacornice parent set zero_sestacornice
+lp group primo_sestacornice permission set ezranks.rank.primo_sestacornice true
+lp group primo_sestacornice meta addprefix 0 "&6&l[&e❇&6&l]&3&l[&b&lVI° Cornice&3&l]&f"
+
+
+lp deletegroup primo_settimacornice
+lp creategroup primo_settimacornice
+lp group primo_settimacornice parent set zero_settimacornice
+lp group primo_settimacornice permission set ezranks.rank.primo_settimacornice true
+lp group primo_settimacornice meta addprefix 0 "&6&l[&e❇&6&l]&3&l[&b&lVII° Cornice&3&l]&f"
+
+
+lp deletegroup primo_eden
+lp creategroup primo_eden
+lp group primo_eden parent set zero_eden
+lp group primo_eden permission set ezranks.rank.primo_eden true
+lp group primo_eden meta addprefix 0 "&6&l[&e❇&6&l]&3&l[&2&k&l0&b&lEden&2&k&l0&3&l]&f"
+
+
+
+lp deletegroup primo_primocielo
+lp creategroup primo_primocielo
+lp group primo_primocielo parent set zero_primocielo
+lp group primo_primocielo permission set ezranks.rank.primo_primocielo true
+lp group primo_primocielo meta addprefix 0 "&6&l[&e❇&6&l]&b&l[&f&lI° Cielo&b&l]&f"
+
+
+lp deletegroup primo_secondocielo
+lp creategroup primo_secondocielo
+lp group primo_secondocielo parent set zero_secondocielo
+lp group primo_secondocielo permission set ezranks.rank.primo_secondocielo true
+lp group primo_secondocielo meta addprefix 0 "&6&l[&e❇&6&l]&b&l[&f&lII° Cielo&b&l]&f"
+
+
+lp deletegroup primo_terzocielo
+lp creategroup primo_terzocielo
+lp group primo_terzocielo parent set zero_terzocielo
+lp group primo_terzocielo permission set ezranks.rank.primo_terzocielo true
+lp group primo_terzocielo meta addprefix 0 "&6&l[&e❇&6&l]&b&l[&f&lIII° Cielo&b&l]&f"
+
+
+lp deletegroup primo_quartocielo
+lp creategroup primo_quartocielo
+lp group primo_quartocielo parent set zero_quartocielo
+lp group primo_quartocielo permission set ezranks.rank.primo_quartocielo true
+lp group primo_quartocielo meta addprefix 0 "&6&l[&e❇&6&l]&b&l[&f&lIV° Cielo&b&l]&f"
+
+
+lp deletegroup primo_quintocielo
+lp creategroup primo_quintocielo
+lp group primo_quintocielo parent set zero_quintocielo
+lp group primo_quintocielo permission set ezranks.rank.primo_quintocielo true
+lp group primo_quintocielo meta addprefix 0 "&6&l[&e❇&6&l]&b&l[&f&lV° Cielo&b&l]&f"
+
+
+lp deletegroup primo_sestocielo
+lp creategroup primo_sestocielo
+lp group primo_sestocielo parent set zero_sestocielo
+lp group primo_sestocielo permission set ezranks.rank.primo_sestocielo true
+lp group primo_sestocielo meta addprefix 0 "&6&l[&e❇&6&l]&b&l[&f&lVI° Cielo&b&l]&f"
+
+
+lp deletegroup primo_settimocielo
+lp creategroup primo_settimocielo
+lp group primo_settimocielo parent set zero_settimocielo
+lp group primo_settimocielo permission set ezranks.rank.primo_settimocielo true
+lp group primo_settimocielo meta addprefix 0 "&6&l[&e❇&6&l]&b&l[&f&lVII° Cielo&b&l]&f"
+
+
+lp deletegroup primo_ottavocielo
+lp creategroup primo_ottavocielo
+lp group primo_ottavocielo parent set zero_ottavocielo
+lp group primo_ottavocielo permission set ezranks.rank.primo_ottavocielo true
+lp group primo_ottavocielo meta addprefix 0 "&6&l[&e❇&6&l]&b&l[&f&lVIII° Cielo&b&l]&f"
+
+
+lp deletegroup primo_nonocielo
+lp creategroup primo_nonocielo
+lp group primo_nonocielo parent set zero_nonocielo
+lp group primo_nonocielo permission set ezranks.rank.primo_nonocielo true
+lp group primo_nonocielo meta addprefix 0 "&6&l[&e❇&6&l]&b&l[&f&lIX° Cielo&b&l]&f"
+
+
+lp deletegroup primo_dio
+lp creategroup primo_dio
+lp group primo_dio parent set zero_dio
+lp group primo_dio permission set ezranks.rank.primo_dio true
+lp group primo_dio meta addprefix 0 "&6&l[&e❇&6&l]&b&l[&e&k&l0&f&lDio&e&k&l0&b&l]&f"

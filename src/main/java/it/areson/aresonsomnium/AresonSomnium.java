@@ -5,6 +5,7 @@ import it.areson.aresonsomnium.commands.admin.SomniumAdminCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumGommaCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumTestCommand;
 import it.areson.aresonsomnium.commands.player.OpenGuiCommand;
+import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.gomma.GommaGommaEventListener;
@@ -13,7 +14,6 @@ import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
-import it.areson.aresonsomnium.shops.items.BlockPrice;
 import it.areson.aresonsomnium.shops.listener.CustomGuiEventsListener;
 import it.areson.aresonsomnium.shops.listener.SetPriceInChatListener;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
@@ -63,24 +63,22 @@ public class AresonSomnium extends JavaPlugin {
         shopManager = new ShopManager(mySqlDBConnection, GUIS_TABLE_NAME);
         shopEditor = new ShopEditor(this);
 
+        // Files
+        registerFiles();
         // Events
         initAllEvents();
-
         // Commands
         registerCommands();
 
         // Auto Save Task interval
         // 1m  = 1200
         // 10m = 12000
-        AutoSaveManager.startAutoSaveTask(this, 6000); // 5m
-
-        // Init prices map
-        BlockPrice.initPrices();
+        AutoSaveManager.startAutoSaveTask(this, 12000);
 
         AresonSomniumAPI.instance = this;
     }
 
-    public MessageManager getMessages() {
+    public MessageManager getMessageManager() {
         return messages;
     }
 
@@ -99,6 +97,8 @@ public class AresonSomnium extends JavaPlugin {
         new OpenGuiCommand(this);
         new StatsCommand(this);
         new SomniumGommaCommand(this);
+        new SellCommand(this, Constants.sellHandCommand);
+        new SellCommand(this, Constants.sellAllCommand);
     }
 
     private void initAllEvents() {

@@ -23,7 +23,7 @@ public class MySqlDBConnection {
             Connection connection = connect();
             connection.close();
         } catch (SQLException e) {
-            debugger.debugError(AresonSomnium.getInstance().getMessages().getPlainMessage("sql-connect-error"));
+            debugger.debugError(AresonSomnium.getInstance().getMessageManager().getPlainMessage("sql-connect-error"));
             printSqlExceptionDetails(e);
         }
     }
@@ -36,7 +36,7 @@ public class MySqlDBConnection {
             String pass = MySqlConfig.PASS;
             return DriverManager.getConnection("jdbc:mysql://" + host + "/" + database + "?user=" + user + "&password=" + pass);
         } catch (SQLException e) {
-            debugger.debugError(AresonSomnium.getInstance().getMessages().getPlainMessage("sql-connect-error"));
+            debugger.debugError(AresonSomnium.getInstance().getMessageManager().getPlainMessage("sql-connect-error"));
             printSqlExceptionDetails(e);
         }
         return null;

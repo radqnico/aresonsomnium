@@ -8,6 +8,7 @@ import it.areson.aresonsomnium.shops.guis.CustomShop;
 import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
 import it.areson.aresonsomnium.utils.Debugger;
+import it.areson.aresonsomnium.utils.MessageManager;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.utils.Pair;
 import org.bukkit.command.*;
@@ -28,18 +29,20 @@ import java.util.stream.Collectors;
 @SuppressWarnings("NullableProblems")
 public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers",
-            "createShop", "editShop", "reloadShops", "setDebugLevel", "deleteLastLoreLine"};
-    private final AresonSomnium aresonSomnium;
 
-    public SomniumAdminCommand(AresonSomnium aresonSomnium) {
-        this.aresonSomnium = aresonSomnium;
-        PluginCommand command = this.aresonSomnium.getCommand("SomniumAdmin");
+    private final AresonSomnium aresonSomnium;
+    private final MessageManager messageManager;
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops", "setDebugLevel", "deleteLastLoreLine"};
+
+    public SomniumAdminCommand(AresonSomnium plugin) {
+        aresonSomnium = plugin;
+        messageManager = plugin.getMessageManager();
+        PluginCommand command = aresonSomnium.getCommand("SomniumAdmin");
         if (command != null) {
             command.setExecutor(this);
             command.setTabCompleter(this);
         } else {
-            this.aresonSomnium.getLogger().warning("Comando 'somniumadmin' non dichiarato");
+            aresonSomnium.getLogger().warning("Comando 'somniumadmin' non dichiarato");
         }
     }
 
@@ -157,7 +160,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             }
         }
         if (strings.length == 3) {
-            if ("setcoins".equals(strings[0].toLowerCase())) {
+            if ("setcoins".equalsIgnoreCase(strings[0])) {
                 StringUtil.copyPartialMatches(
                         strings[2],
                         Arrays.stream(CoinType.values()).map(value -> value.name().toLowerCase()).collect(Collectors.toList()),
@@ -182,7 +185,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             }
             itemInMainHand.setItemMeta(itemMeta);
         } else {
-            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("player-only-command"));
+            messageManager.sendPlainMessage(commandSender, "player-only-command");
         }
     }
 
@@ -194,14 +197,14 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 aresonSomnium.getDebugger().setDebugLevel(debugLevel);
                 break;
             default:
-                commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("invalid-debug-level"));
+                messageManager.sendPlainMessage(commandSender, "invalid-debug-level");
                 break;
         }
     }
 
     private void handleReloadShops(CommandSender commandSender) {
         aresonSomnium.getShopManager().fetchAllFromDB();
-        commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("guis-reloaded"));
+        messageManager.sendPlainMessage(commandSender, "guis-reloaded");
     }
 
     private void handleEditShop(CommandSender commandSender, String guiName) {
@@ -214,10 +217,10 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 player.openInventory(permanentGui.createInventory());
                 shopEditor.beginEditGui(player, guiName);
             } else {
-                player.sendMessage(aresonSomnium.getMessages().getPlainMessage("guis-reloaded"));
+                messageManager.sendPlainMessage(player, "guis-reloaded");
             }
         } else {
-            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("player-only-command"));
+            messageManager.sendPlainMessage(commandSender, "player-only-command");
         }
     }
 
@@ -237,7 +240,8 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         if (Objects.nonNull(player)) {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (Objects.nonNull(somniumPlayer)) {
-                String toSend = aresonSomnium.getMessages().getPlainMessage(
+                messageManager.sendPlainMessage(
+                        player,
                         "stats-format",
                         Pair.of("%player%", playerName),
                         Pair.of("%secondsPlayed%", somniumPlayer.getSecondsPlayedTotal() + ""),
@@ -245,13 +249,11 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         Pair.of("%charonCoins%", somniumPlayer.getWallet().getCharonCoins().toString()),
                         Pair.of("%forcedCoins%", somniumPlayer.getWallet().getForcedCoins().toString())
                 );
-                commandSender.sendMessage(toSend);
             } else {
-                commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("somniumplayer-not-found",
-                        Pair.of("%player%", playerName)));
+                messageManager.sendPlainMessage(player, "somniumplayer-not-found", Pair.of("%player%", playerName));
             }
         } else {
-            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("player-not-found", Pair.of("%player%", playerName)));
+            messageManager.sendPlainMessage(player, "player-not-found", Pair.of("%player%", playerName));
         }
     }
 
@@ -266,28 +268,27 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     switch (type) {
                         case CHARON:
                             somniumPlayer.getWallet().setCharonCoins(amount.toBigInteger());
-                            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("coins-set"));
+                            messageManager.sendPlainMessage(player, "coins-set");
                             break;
                         case FORCED:
                             somniumPlayer.getWallet().setForcedCoins(amount.toBigInteger());
-                            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("coins-set"));
+                            messageManager.sendPlainMessage(player, "coins-set");
                             break;
                         case BASIC:
                             Wallet.setBasicCoins(player, amount);
-                            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("coins-set"));
+                            messageManager.sendPlainMessage(player, "coins-set");
                             break;
                         default:
-                            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("coins-set"));
+                            messageManager.sendPlainMessage(player, "coins-set");
                     }
                 } catch (NumberFormatException exception) {
-                    commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("not-a-number"));
+                    messageManager.sendPlainMessage(player, "not-a-number");
                 }
             } else {
-                commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("somniumplayer-not-found",
-                        Pair.of("%player%", playerName)));
+                messageManager.sendPlainMessage(player, "somniumplayer-not-found", Pair.of("%player%", playerName));
             }
         } else {
-            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("player-not-found", Pair.of("%player%", playerName)));
+            messageManager.sendPlainMessage(commandSender, "player-not-found", Pair.of("%player%", playerName));
         }
     }
 

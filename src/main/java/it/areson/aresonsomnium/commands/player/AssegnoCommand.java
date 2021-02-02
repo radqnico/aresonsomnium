@@ -47,7 +47,7 @@ public class AssegnoCommand implements CommandExecutor, TabCompleter {
                         CoinType type = CoinType.valueOf(strings[0].toUpperCase());
                         createNewCheck(somniumPlayer, amount, type);
                     } catch (NumberFormatException exception) {
-                        commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("not-a-number"));
+                        commandSender.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("not-a-number"));
                     }
                 } else {
                     commandSender.sendMessage(MessageUtils.errorMessage("Riscontrato un problema con i tuoi dati. Segnala il problema  allo staff."));
@@ -56,7 +56,7 @@ public class AssegnoCommand implements CommandExecutor, TabCompleter {
                 MessageUtils.notEnoughArguments(commandSender, command);
             }
         } else {
-            commandSender.sendMessage(aresonSomnium.getMessages().getPlainMessage("player-only-command"));
+            commandSender.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("player-only-command"));
         }
         return true;
     }
@@ -67,31 +67,31 @@ public class AssegnoCommand implements CommandExecutor, TabCompleter {
                 if (somniumPlayer.canAfford(new Price(BigDecimal.ZERO, amount.toBigInteger(), BigInteger.ZERO))) {
                     ItemStack itemStack = Wallet.generateCheck(amount.doubleValue(), type);
                     if (!somniumPlayer.getPlayer().getInventory().addItem(itemStack).isEmpty()) {
-                        somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessages().getPlainMessage("item-buy-not-enough-space"));
+                        somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
                     }
                 }
-                somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessages().getPlainMessage("check-created"));
+                somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-created"));
                 break;
             case FORCED:
                 if (somniumPlayer.canAfford(new Price(BigDecimal.ZERO, BigInteger.ZERO, amount.toBigInteger()))) {
                     ItemStack itemStack = Wallet.generateCheck(amount.doubleValue(), type);
                     if (!somniumPlayer.getPlayer().getInventory().addItem(itemStack).isEmpty()) {
-                        somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessages().getPlainMessage("item-buy-not-enough-space"));
+                        somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
                     }
                 }
-                somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessages().getPlainMessage("check-created"));
+                somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-created"));
                 break;
             case BASIC:
                 if (somniumPlayer.canAfford(new Price(amount, BigInteger.ZERO, BigInteger.ZERO))) {
                     ItemStack itemStack = Wallet.generateCheck(amount.doubleValue(), type);
                     if (!somniumPlayer.getPlayer().getInventory().addItem(itemStack).isEmpty()) {
-                        somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessages().getPlainMessage("item-buy-not-enough-space"));
+                        somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
                     }
                 }
-                somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessages().getPlainMessage("check-created"));
+                somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-created"));
                 break;
             default:
-                somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessages().getPlainMessage("coins-type-error"));
+                somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("coins-type-error"));
         }
     }
 

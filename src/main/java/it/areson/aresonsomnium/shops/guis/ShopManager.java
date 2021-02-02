@@ -2,7 +2,6 @@ package it.areson.aresonsomnium.shops.guis;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
-import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.utils.PlayerComparator;
 import org.bukkit.entity.Player;
 
@@ -79,10 +78,10 @@ public class ShopManager {
                 player.openInventory(customShop.createInventory());
                 openedGuis.put(player, guiName);
             } else {
-                player.sendMessage(AresonSomnium.getInstance().getMessages().getPlainMessage("shop-not-ready"));
+                player.sendMessage(AresonSomnium.getInstance().getMessageManager().getPlainMessage("shop-not-ready"));
             }
         } else {
-            player.sendMessage(AresonSomnium.getInstance().getMessages().getPlainMessage("shop-not-ready"));
+            player.sendMessage(AresonSomnium.getInstance().getMessageManager().getPlainMessage("shop-not-ready"));
         }
     }
 
