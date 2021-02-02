@@ -53,6 +53,10 @@ public class AresonSomnium extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
+        // Files
+        registerFiles();
+
         debugger = new Debugger(this, Debugger.DebugLevel.LOW);
         MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(debugger);
         somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection, PLAYER_TABLE_NAME);
@@ -64,9 +68,6 @@ public class AresonSomnium extends JavaPlugin {
 
         // Commands
         registerCommands();
-
-        // Files
-        registerFiles();
 
         // Auto Save Task interval
         // 1m  = 1200
