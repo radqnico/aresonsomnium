@@ -31,10 +31,6 @@ public class ShopEditor {
         this.activePriceConfigs = new TreeMap<>(playerComparator);
     }
 
-    public void executeActionOf(Player player){
-
-    }
-
     public MoveShopItemAction beginMoveItemAction(Player player) {
         MoveShopItemAction moveShopItemAction = new MoveShopItemAction();
         movingItems.put(player, moveShopItemAction);
