@@ -10,7 +10,6 @@ lp group default permission set essentials.warp.list true
 lp group default permission set essentials.sethome true
 lp group default permission set essentials.home true
 lp group default permission set acidisland.* false
-
 lp group default permission set essentials.warps.selva true
 lp group default permission set ezranks.rank.default true
 lp group default permission set portal.selva true
