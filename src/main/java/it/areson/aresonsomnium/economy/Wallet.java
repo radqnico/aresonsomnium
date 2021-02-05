@@ -2,10 +2,14 @@ package it.areson.aresonsomnium.economy;
 
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
+import it.areson.aresonsomnium.players.SomniumPlayer;
 import net.ess3.api.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -36,15 +40,47 @@ public class Wallet {
         ItemStack itemStack = new ItemStack(Material.PAPER);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
-            itemMeta.setDisplayName("&aAssegno di &l" + coinType.getCoinName());
+            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&aAssegno di &l" + coinType.getCoinName()));
             List<String> lore = new ArrayList<>();
             lore.add("Valore:");
             lore.add("" + amount);
+            lore.add(coinType.getCoinName());
             itemMeta.setLore(lore);
             itemMeta.setCustomModelData(getCheckModelData());
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            itemMeta.addEnchant(Enchantment.DAMAGE_UNDEAD, 1, true);
         }
         itemStack.setItemMeta(itemMeta);
         return itemStack;
+    }
+
+    public static boolean applyCheck(SomniumPlayer somniumPlayer, ItemStack itemStack) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta.hasCustomModelData()) {
+            if (itemMeta.getCustomModelData() == getCheckModelData()) {
+                if (itemMeta.hasLore()) {
+                    List<String> lore = itemMeta.getLore();
+                    if (lore != null && lore.size() >= 3) {
+                        String amountString = lore.get(1);
+                        BigDecimal amount = new BigDecimal(amountString);
+                        String coinTypeString = lore.get(2).toUpperCase();
+                        CoinType coinType = CoinType.valueOf(coinTypeString);
+                        switch (coinType) {
+                            case CHARON:
+                                somniumPlayer.getWallet().changeCharonCoins(amount.toBigInteger());
+                                return true;
+                            case FORCED:
+                                somniumPlayer.getWallet().changeForcedCoins(amount.toBigInteger());
+                                return true;
+                            case BASIC:
+                                Wallet.addBasicCoins(somniumPlayer.getPlayer(), amount);
+                                return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public static BigDecimal getBasicCoins(Player player) {

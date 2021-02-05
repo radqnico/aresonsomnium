@@ -70,6 +70,7 @@ public class AssegnoCommand implements CommandExecutor, TabCompleter {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
                     } else {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-created"));
+                        somniumPlayer.getWallet().changeCharonCoins(amount.toBigInteger().negate());
                     }
                 } else {
                     somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-money"));
@@ -82,6 +83,7 @@ public class AssegnoCommand implements CommandExecutor, TabCompleter {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
                     } else {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-created"));
+                        somniumPlayer.getWallet().changeForcedCoins(amount.toBigInteger().negate());
                     }
                 } else {
                     somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-money"));
@@ -94,6 +96,7 @@ public class AssegnoCommand implements CommandExecutor, TabCompleter {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
                     } else {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-created"));
+                        Wallet.addBasicCoins(somniumPlayer.getPlayer(), amount.negate());
                     }
                 } else {
                     somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-money"));
