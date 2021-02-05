@@ -28,17 +28,18 @@ public class Wallet {
         return new Wallet(BigInteger.ZERO, BigInteger.ZERO);
     }
 
-    public static int getCheckModelData(){
+    public static int getCheckModelData() {
         return 999;
     }
 
     public static ItemStack generateCheck(double amount, CoinType coinType) {
         ItemStack itemStack = new ItemStack(Material.PAPER);
         ItemMeta itemMeta = itemStack.getItemMeta();
-        if(itemMeta != null){
+        if (itemMeta != null) {
             itemMeta.setDisplayName("&aAssegno di &l" + coinType.getCoinName());
             List<String> lore = new ArrayList<>();
-            lore.add(""+amount);
+            lore.add("Valore:");
+            lore.add("" + amount);
             itemMeta.setLore(lore);
             itemMeta.setCustomModelData(getCheckModelData());
         }
