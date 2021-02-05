@@ -3,6 +3,7 @@ package it.areson.aresonsomnium.listeners;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -18,6 +19,7 @@ public class CheckApplyListener extends GeneralEventListener {
     @EventHandler
     public void onRightClick(PlayerInteractEvent event) {
         if (EquipmentSlot.HAND.equals(event.getHand())) {
+            Bukkit.getLogger().warning("CIAONE");
             ItemStack item = event.getItem();
             if (item != null && !Material.AIR.equals(item.getType())) {
                 if (Material.PAPER.equals(item.getType())) {
