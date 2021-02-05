@@ -5,7 +5,7 @@ import it.areson.aresonsomnium.commands.admin.SomniumAdminCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumGommaCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumTestCommand;
 import it.areson.aresonsomnium.commands.player.AssegnoCommand;
-import it.areson.aresonsomnium.commands.player.OpenGuiCommand;
+import it.areson.aresonsomnium.commands.admin.OpenGuiCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;

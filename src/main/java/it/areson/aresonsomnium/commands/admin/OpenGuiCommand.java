@@ -1,6 +1,7 @@
-package it.areson.aresonsomnium.commands.player;
+package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
+import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.command.*;
@@ -35,7 +36,10 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
                 MessageUtils.notEnoughArguments(commandSender, command);
                 break;
             case 1:
-                handleOpenGui(commandSender, args[0]);
+                MessageUtils.notEnoughArguments(commandSender, command);
+                break;
+            case 2:
+                handleOpenGui(commandSender, args[0], args[1]);
                 break;
             default:
                 MessageUtils.tooManyArguments(commandSender, command);
@@ -43,17 +47,20 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    private void handleOpenGui(CommandSender commandSender, String guiName) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
-            ShopManager shopManager = aresonSomnium.getShopManager();
-            if (shopManager.isPermanent(guiName)) {
-                shopManager.openGuiToPlayer(player, guiName);
+    private void handleOpenGui(CommandSender commandSender, String playerName, String guiName) {
+        Player player = aresonSomnium.getServer().getPlayer(playerName);
+        if (player != null) {
+            SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
+            if (somniumPlayer != null) {
+                ShopManager shopManager = aresonSomnium.getShopManager();
+                if (shopManager.isPermanent(guiName)) {
+                    shopManager.openGuiToPlayer(player, guiName);
+                } else {
+                    player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("gui-not-found"));
+                }
             } else {
-                player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("gui-not-found"));
+                commandSender.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("somniumplayer-not-found"));
             }
-        } else {
-            commandSender.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("player-only-command"));
         }
     }
 
@@ -62,6 +69,8 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         List<String> suggestions = new ArrayList<>();
         if (strings.length == 1) {
+            StringUtil.copyPartialMatches(strings[0], aresonSomnium.getSomniumPlayerManager().getOnlinePlayersNames(), suggestions);
+        } else if (strings.length == 2) {
             StringUtil.copyPartialMatches(strings[0], aresonSomnium.getShopManager().getGuis().keySet(), suggestions);
         }
         return suggestions;
