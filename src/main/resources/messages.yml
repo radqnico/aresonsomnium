@@ -27,6 +27,7 @@ gomma-item-name: "&lGomma"
 gomma-material: "IRON_NUGGET"
 
 check-created: "&aBuono creato."
+check-applied: "&6Hai incassato l'assegno."
 
 # Stats format
 stats-format: "&6&l%player%&r's stats: \n
