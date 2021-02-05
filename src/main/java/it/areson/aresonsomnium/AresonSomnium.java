@@ -4,6 +4,7 @@ import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.admin.SomniumAdminCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumGommaCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumTestCommand;
+import it.areson.aresonsomnium.commands.player.AssegnoCommand;
 import it.areson.aresonsomnium.commands.player.OpenGuiCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
@@ -99,6 +100,7 @@ public class AresonSomnium extends JavaPlugin {
         new SomniumGommaCommand(this);
         new SellCommand(this, Constants.sellHandCommand);
         new SellCommand(this, Constants.sellAllCommand);
+        new AssegnoCommand(this);
     }
 
     private void initAllEvents() {
