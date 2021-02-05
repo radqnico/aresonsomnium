@@ -71,7 +71,7 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
         if (strings.length == 1) {
             StringUtil.copyPartialMatches(strings[0], aresonSomnium.getSomniumPlayerManager().getOnlinePlayersNames(), suggestions);
         } else if (strings.length == 2) {
-            StringUtil.copyPartialMatches(strings[0], aresonSomnium.getShopManager().getGuis().keySet(), suggestions);
+            StringUtil.copyPartialMatches(strings[1], aresonSomnium.getShopManager().getGuis().keySet(), suggestions);
         }
         return suggestions;
     }
