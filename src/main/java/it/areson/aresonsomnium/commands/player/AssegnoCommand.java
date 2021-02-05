@@ -68,27 +68,36 @@ public class AssegnoCommand implements CommandExecutor, TabCompleter {
                     ItemStack itemStack = Wallet.generateCheck(amount.doubleValue(), type);
                     if (!somniumPlayer.getPlayer().getInventory().addItem(itemStack).isEmpty()) {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
+                    } else {
+                        somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-created"));
                     }
+                } else {
+                    somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-money"));
                 }
-                somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-created"));
                 break;
             case FORCED:
                 if (somniumPlayer.canAfford(new Price(BigDecimal.ZERO, BigInteger.ZERO, amount.toBigInteger()))) {
                     ItemStack itemStack = Wallet.generateCheck(amount.doubleValue(), type);
                     if (!somniumPlayer.getPlayer().getInventory().addItem(itemStack).isEmpty()) {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
+                    } else {
+                        somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-created"));
                     }
+                } else {
+                    somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-money"));
                 }
-                somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-created"));
                 break;
             case BASIC:
                 if (somniumPlayer.canAfford(new Price(amount, BigInteger.ZERO, BigInteger.ZERO))) {
                     ItemStack itemStack = Wallet.generateCheck(amount.doubleValue(), type);
                     if (!somniumPlayer.getPlayer().getInventory().addItem(itemStack).isEmpty()) {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
+                    } else {
+                        somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-created"));
                     }
+                } else {
+                    somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-money"));
                 }
-                somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-created"));
                 break;
             default:
                 somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("coins-type-error"));
