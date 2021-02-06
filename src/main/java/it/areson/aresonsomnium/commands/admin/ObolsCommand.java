@@ -23,7 +23,7 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
 
     private final PluginCommand command;
     private final AresonSomnium aresonSomnium;
-    private final String[] subCommands = new String[]{"generateObolShard"};
+    private final String[] subCommands = new String[]{"generateObolShard", "convertShards"};
 
 
     public ObolsCommand(AresonSomnium aresonSomnium) {
@@ -46,10 +46,10 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
                 break;
             case 2:
                 switch (args[0].toLowerCase()) {
-                    case "generateObolShard":
+                    case "generateobolshard":
                         handleGenerateObolShard(args[1]);
                         break;
-                    case "convertShards":
+                    case "convertshards":
                         handleConvertObols(args[1]);
                         break;
                 }
