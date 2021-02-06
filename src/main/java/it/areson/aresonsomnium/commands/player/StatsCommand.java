@@ -51,8 +51,8 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
                         Pair.of("%player%", player.getName()),
                         Pair.of("%secondsPlayed%", somniumPlayer.getSecondsPlayedTotal()+""),
                         Pair.of("%basicCoins%", Wallet.getBasicCoins(player).toPlainString()),
-                        Pair.of("%charonCoins%", somniumPlayer.getWallet().getCharonCoins().toString()),
-                        Pair.of("%forcedCoins%", somniumPlayer.getWallet().getForcedCoins().toString())
+                        Pair.of("%obols%", somniumPlayer.getWallet().getObols().toString()),
+                        Pair.of("%gems%", somniumPlayer.getWallet().getGems().toString())
                 );
                 commandSender.sendMessage(toSend);
             } else {

@@ -115,17 +115,17 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             if (Objects.nonNull(editingPriceConfig)) {
                 switch (slot) {
                     case 11:
-                        editingPriceConfig.setCoinType(CoinType.BASIC);
+                        editingPriceConfig.setCoinType(CoinType.MONETE);
                         player.closeInventory();
                         player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Basic Coins <--"));
                         break;
                     case 13:
-                        editingPriceConfig.setCoinType(CoinType.CHARON);
+                        editingPriceConfig.setCoinType(CoinType.OBOLI);
                         player.closeInventory();
                         player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Monete di Caronte <--"));
                         break;
                     case 15:
-                        editingPriceConfig.setCoinType(CoinType.FORCED);
+                        editingPriceConfig.setCoinType(CoinType.GEMME);
                         player.closeInventory();
                         player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Gemme <--"));
                         break;
@@ -178,8 +178,8 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage(
                             "item-buy-success",
                             Pair.of("%basicCoins%", price.getBasicCoins().toPlainString()),
-                            Pair.of("%charonCoins%", price.getCharonCoins().toString()),
-                            Pair.of("%forcedCoins%", price.getForcedCoins().toString())
+                            Pair.of("%obols%", price.getObols().toString()),
+                            Pair.of("%gems%", price.getGems().toString())
                     ));
                 } else {
                     player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));

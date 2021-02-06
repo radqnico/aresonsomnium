@@ -15,7 +15,7 @@ coins-type-error: "&cIl tipo di moneta non esiste."
 
 shop-not-ready: "&cIl negozio richiesto non e' pronto. Segnala il problema allo staff."
 
-item-buy-success: "&aOggetto acquistato per %basicCoins% coins, %charonCoins% oboli e %forcedCoins% gemme !"
+item-buy-success: "&aOggetto acquistato per %basicCoins% coins, %obols% oboli e %gems% gemme !"
 item-buy-not-enough-space: "&cNon hai abbastanza spazio nell'inventario"
 item-buy-not-enough-money: "&cNon te lo puoi permettere!"
 item-buy-error: "&cRiscontrato un problema con i tuoi dati. Segnala il problema  allo staff.!"
@@ -33,9 +33,9 @@ check-applied: "&6Hai incassato l'assegno."
 stats-format: "&6&l%player%&r's stats: \n
   Secondi giocati: %secondsPlayed% \n
   Portafoglio: \n
-  >   Basic coins:  %basicCoins% \n
-  >   Charon coins: %charonCoins% \n
-  >   Forced coins: %forcedCoins% "
+  >   Monete:  %basicCoins% \n
+  >   Oboli: %obols% \n
+  >   Gemme: %gems% "
 
 # Sell
 item-sold: "&6Hai venduto questo oggetto per ⛃ %money%"
@@ -43,6 +43,6 @@ items-sold: "&6Hai venduto tutti gli oggetti vendibili nel tuo inventario per �
 item-not-sellable: "&cQuest'oggetto non è vendibile"
 items-not-sellable: "&cNon hai nessun oggetto vendibile nell'inventario"
 
-charon-coin-give: "&aHai ottenuto un Obolo!"
-charon-coin-not-enough: "&cPortami almeno 10 pepite!"
-charon-coin-not-nugget: "&cDevi portarmi le mie pepite!"
+obols-give: "&aHai ottenuto un Obolo!"
+obols-not-enough: "&cPortami almeno 10 pepite!"
+obols-not-nugget: "&cDevi portarmi le mie pepite!"

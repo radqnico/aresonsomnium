@@ -20,11 +20,11 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("NullableProblems")
-public class AssegnoCommand implements CommandExecutor, TabCompleter {
+public class CheckCommand implements CommandExecutor, TabCompleter {
 
     private final AresonSomnium aresonSomnium;
 
-    public AssegnoCommand(AresonSomnium aresonSomnium) {
+    public CheckCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
         PluginCommand command = this.aresonSomnium.getCommand("assegno");
         if (command != null) {
@@ -63,7 +63,7 @@ public class AssegnoCommand implements CommandExecutor, TabCompleter {
 
     private void createNewCheck(SomniumPlayer somniumPlayer, BigDecimal amount, CoinType type) {
         switch (type) {
-            case CHARON:
+            case OBOLI:
                 if (somniumPlayer.canAfford(new Price(BigDecimal.ZERO, amount.toBigInteger(), BigInteger.ZERO))) {
                     ItemStack itemStack = Wallet.generateCheck(amount.doubleValue(), type);
                     if (!somniumPlayer.getPlayer().getInventory().addItem(itemStack).isEmpty()) {
@@ -76,7 +76,7 @@ public class AssegnoCommand implements CommandExecutor, TabCompleter {
                     somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-money"));
                 }
                 break;
-            case FORCED:
+            case GEMME:
                 if (somniumPlayer.canAfford(new Price(BigDecimal.ZERO, BigInteger.ZERO, amount.toBigInteger()))) {
                     ItemStack itemStack = Wallet.generateCheck(amount.doubleValue(), type);
                     if (!somniumPlayer.getPlayer().getInventory().addItem(itemStack).isEmpty()) {
@@ -89,7 +89,7 @@ public class AssegnoCommand implements CommandExecutor, TabCompleter {
                     somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-money"));
                 }
                 break;
-            case BASIC:
+            case MONETE:
                 if (somniumPlayer.canAfford(new Price(amount, BigInteger.ZERO, BigInteger.ZERO))) {
                     ItemStack itemStack = Wallet.generateCheck(amount.doubleValue(), type);
                     if (!somniumPlayer.getPlayer().getInventory().addItem(itemStack).isEmpty()) {

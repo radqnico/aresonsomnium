@@ -32,8 +32,8 @@ public class ShopItem {
         return new SerializedShopItem(
                 Base64.getEncoder().encodeToString(itemStack.serializeAsBytes()),
                 price.getBasicCoins(),
-                price.getCharonCoins(),
-                price.getForcedCoins()
+                price.getObols(),
+                price.getGems()
         );
     }
 }

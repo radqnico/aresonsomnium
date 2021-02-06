@@ -20,12 +20,12 @@ import java.util.List;
 
 public class Wallet {
 
-    private BigInteger charonCoins;
-    private BigInteger forcedCoins;
+    private BigInteger obols;
+    private BigInteger gems;
 
-    public Wallet(BigInteger charonCoins, BigInteger forcedCoins) {
-        this.charonCoins = charonCoins;
-        this.forcedCoins = forcedCoins;
+    public Wallet(BigInteger obols, BigInteger gems) {
+        this.obols = obols;
+        this.gems = gems;
     }
 
     public static Wallet getNewDefaultWallet() {
@@ -87,13 +87,13 @@ public class Wallet {
                         String coinTypeString = lore.get(2).toUpperCase();
                         CoinType coinType = CoinType.valueOf(coinTypeString);
                         switch (coinType) {
-                            case CHARON:
+                            case OBOLI:
                                 somniumPlayer.getWallet().changeCharonCoins(amount.toBigInteger());
                                 return true;
-                            case FORCED:
+                            case GEMME:
                                 somniumPlayer.getWallet().changeForcedCoins(amount.toBigInteger());
                                 return true;
-                            case BASIC:
+                            case MONETE:
                                 Wallet.addBasicCoins(somniumPlayer.getPlayer(), amount);
                                 return true;
                         }
@@ -129,27 +129,27 @@ public class Wallet {
         }
     }
 
-    public BigInteger getCharonCoins() {
-        return charonCoins;
+    public BigInteger getObols() {
+        return obols;
     }
 
-    public void setCharonCoins(BigInteger charonCoins) {
-        this.charonCoins = charonCoins;
+    public void setObols(BigInteger obols) {
+        this.obols = obols;
     }
 
-    public BigInteger getForcedCoins() {
-        return forcedCoins;
+    public BigInteger getGems() {
+        return gems;
     }
 
-    public void setForcedCoins(BigInteger forcedCoins) {
-        this.forcedCoins = forcedCoins;
+    public void setGems(BigInteger gems) {
+        this.gems = gems;
     }
 
     public void changeCharonCoins(BigInteger amount) {
-        charonCoins = charonCoins.add(amount);
+        obols = obols.add(amount);
     }
 
     public void changeForcedCoins(BigInteger amount) {
-        forcedCoins = forcedCoins.add(amount);
+        gems = gems.add(amount);
     }
 }

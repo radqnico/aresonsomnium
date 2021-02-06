@@ -21,10 +21,10 @@ commands:
     permission: aresonsomnium.admin
     usage: /opengui <guiName>
     aliases: [shop]
-  convertcharon:
-    description: "Convert charon nuggets"
+  obols:
+    description: "Obols commands"
     permission: aresonsomnium.admin
-    usage: /convertcharon <guiName>
+    usage: /obols <guiName>
   stats:
     description: "See your stats"
     permission: aresonsomnium.player

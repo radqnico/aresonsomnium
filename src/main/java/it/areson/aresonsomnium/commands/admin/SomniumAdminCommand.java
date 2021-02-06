@@ -32,7 +32,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops", "setDebugLevel", "deleteLastLoreLine", "charonNugget"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops", "setDebugLevel", "deleteLastLoreLine"};
 
     public SomniumAdminCommand(AresonSomnium plugin) {
         aresonSomnium = plugin;
@@ -69,9 +69,6 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         break;
                     case "deletelastloreline":
                         handleDeleteLastLoreLine(commandSender);
-                        break;
-                    case "charonnugget":
-                        handleCharonNugget(commandSender);
                         break;
                 }
                 break;
@@ -192,15 +189,6 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void handleCharonNugget(CommandSender commandSender) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
-            player.getInventory().addItem(Wallet.generateCharonNugget());
-        } else {
-            messageManager.sendPlainMessage(commandSender, "player-only-command");
-        }
-    }
-
     private void handleSetDebugLevel(CommandSender commandSender, String level) {
         Debugger.DebugLevel debugLevel = Debugger.DebugLevel.valueOf(level);
         switch (debugLevel) {
@@ -258,8 +246,8 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         Pair.of("%player%", playerName),
                         Pair.of("%secondsPlayed%", somniumPlayer.getSecondsPlayedTotal() + ""),
                         Pair.of("%basicCoins%", Wallet.getBasicCoins(player).toPlainString()),
-                        Pair.of("%charonCoins%", somniumPlayer.getWallet().getCharonCoins().toString()),
-                        Pair.of("%forcedCoins%", somniumPlayer.getWallet().getForcedCoins().toString())
+                        Pair.of("%obols%", somniumPlayer.getWallet().getObols().toString()),
+                        Pair.of("%gems%", somniumPlayer.getWallet().getGems().toString())
                 );
             } else {
                 messageManager.sendPlainMessage(player, "somniumplayer-not-found", Pair.of("%player%", playerName));
@@ -278,15 +266,15 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(amountString));
                     CoinType type = CoinType.valueOf(coinType.toUpperCase());
                     switch (type) {
-                        case CHARON:
-                            somniumPlayer.getWallet().setCharonCoins(amount.toBigInteger());
+                        case OBOLI:
+                            somniumPlayer.getWallet().setObols(amount.toBigInteger());
                             messageManager.sendPlainMessage(player, "coins-set");
                             break;
-                        case FORCED:
-                            somniumPlayer.getWallet().setForcedCoins(amount.toBigInteger());
+                        case GEMME:
+                            somniumPlayer.getWallet().setGems(amount.toBigInteger());
                             messageManager.sendPlainMessage(player, "coins-set");
                             break;
-                        case BASIC:
+                        case MONETE:
                             Wallet.setBasicCoins(player, amount);
                             messageManager.sendPlainMessage(player, "coins-set");
                             break;

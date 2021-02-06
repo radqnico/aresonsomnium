@@ -3,7 +3,6 @@ package it.areson.aresonsomnium.shops.guis;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.exceptions.PriceConfigNotReadyException;
 import it.areson.aresonsomnium.shops.items.ShopItem;
-import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -43,13 +42,13 @@ public class EditPriceConfig {
         } else {
             ShopItem shopItem = customShop.getItems().get(slot);
             switch (coinType) {
-                case CHARON:
-                    shopItem.getPrice().setCharonCoins(price.toBigInteger());
+                case OBOLI:
+                    shopItem.getPrice().setObols(price.toBigInteger());
                     break;
-                case FORCED:
-                    shopItem.getPrice().setForcedCoins(price.toBigInteger());
+                case GEMME:
+                    shopItem.getPrice().setGems(price.toBigInteger());
                     break;
-                case BASIC:
+                case MONETE:
                     shopItem.getPrice().setBasicCoins(price);
                     break;
             }

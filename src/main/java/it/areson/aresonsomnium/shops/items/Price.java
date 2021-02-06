@@ -13,13 +13,13 @@ import java.util.ArrayList;
 public class Price {
 
     private BigDecimal basicCoins;
-    private BigInteger charonCoins;
-    private BigInteger forcedCoins;
+    private BigInteger obols;
+    private BigInteger gems;
 
-    public Price(BigDecimal basicCoins, BigInteger charonCoins, BigInteger forcedCoins) {
+    public Price(BigDecimal basicCoins, BigInteger obols, BigInteger gems) {
         this.basicCoins = basicCoins;
-        this.charonCoins = charonCoins;
-        this.forcedCoins = forcedCoins;
+        this.obols = obols;
+        this.gems = gems;
     }
 
     public Price() {
@@ -34,43 +34,43 @@ public class Price {
         this.basicCoins = basicCoins;
     }
 
-    public BigInteger getCharonCoins() {
-        return charonCoins;
+    public BigInteger getObols() {
+        return obols;
     }
 
-    public void setCharonCoins(BigInteger charonCoins) {
-        this.charonCoins = charonCoins;
+    public void setObols(BigInteger obols) {
+        this.obols = obols;
     }
 
-    public BigInteger getForcedCoins() {
-        return forcedCoins;
+    public BigInteger getGems() {
+        return gems;
     }
 
-    public void setForcedCoins(BigInteger forcedCoins) {
-        this.forcedCoins = forcedCoins;
+    public void setGems(BigInteger gems) {
+        this.gems = gems;
     }
 
     public boolean canAffordThis(SomniumPlayer somniumPlayer) {
         return Wallet.getBasicCoins(somniumPlayer.getPlayer()).compareTo(basicCoins) >= 0 &&
-                somniumPlayer.getWallet().getCharonCoins().compareTo(charonCoins) >= 0 &&
-                somniumPlayer.getWallet().getForcedCoins().compareTo(forcedCoins) >= 0;
+                somniumPlayer.getWallet().getObols().compareTo(obols) >= 0 &&
+                somniumPlayer.getWallet().getGems().compareTo(gems) >= 0;
     }
 
     public void removeFrom(SomniumPlayer somniumPlayer) {
         Wallet.addBasicCoins(somniumPlayer.getPlayer(), basicCoins.negate());
-        somniumPlayer.getWallet().changeCharonCoins(charonCoins.negate());
-        somniumPlayer.getWallet().changeForcedCoins(forcedCoins.negate());
+        somniumPlayer.getWallet().changeCharonCoins(obols.negate());
+        somniumPlayer.getWallet().changeForcedCoins(gems.negate());
     }
 
     public boolean isPriceReady() {
         return basicCoins.compareTo(BigDecimal.valueOf(0)) > 0 ||
-                charonCoins.compareTo(BigInteger.valueOf(0)) > 0 ||
-                forcedCoins.compareTo(BigInteger.valueOf(0)) > 0;
+                obols.compareTo(BigInteger.valueOf(0)) > 0 ||
+                gems.compareTo(BigInteger.valueOf(0)) > 0;
     }
 
     @Override
     public String toString() {
-        return "Price{basicCoins=" + basicCoins + ",charonCoins=" + charonCoins + ",forcedCoins=" + forcedCoins + "}";
+        return "Price{basicCoins=" + basicCoins + ",obols=" + obols + ",gems=" + gems + "}";
     }
 
     public ArrayList<String> toLore() {
@@ -78,24 +78,24 @@ public class Price {
         if (basicCoins.compareTo(BigDecimal.valueOf(0)) > 0) {
             lore.add(ChatColor.translateAlternateColorCodes('&', "&f$ " + basicCoins.toPlainString()));
         }
-        if (charonCoins.compareTo(BigInteger.valueOf(0)) > 0) {
-            lore.add(MessageUtils.errorMessage("Oboli " + charonCoins.toString()));
+        if (obols.compareTo(BigInteger.valueOf(0)) > 0) {
+            lore.add(MessageUtils.errorMessage("Oboli " + obols.toString()));
         }
-        if (forcedCoins.compareTo(BigInteger.valueOf(0)) > 0) {
-            lore.add(MessageUtils.successMessage("Gemme " + forcedCoins.toString()));
+        if (gems.compareTo(BigInteger.valueOf(0)) > 0) {
+            lore.add(MessageUtils.successMessage("Gemme " + gems.toString()));
         }
         return lore;
     }
 
     public void setCoins(CoinType coinType, BigDecimal price) {
         switch (coinType) {
-            case CHARON:
-                setCharonCoins(price.toBigInteger());
+            case OBOLI:
+                setObols(price.toBigInteger());
                 break;
-            case FORCED:
-                setForcedCoins(price.toBigInteger());
+            case GEMME:
+                setGems(price.toBigInteger());
                 break;
-            case BASIC:
+            case MONETE:
                 setBasicCoins(price);
                 break;
         }

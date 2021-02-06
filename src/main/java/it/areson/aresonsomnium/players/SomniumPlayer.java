@@ -6,7 +6,6 @@ import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.shops.items.Price;
 import org.bukkit.entity.Player;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -22,8 +21,8 @@ public class SomniumPlayer extends MySQLObject {
             "    playerName  varchar(255)     not null\n" +
             "        primary key,\n" +
             "    timePlayed  bigint default 0 null,\n" +
-            "    charonCoins float  default 0 not null,\n" +
-            "    forcedCoins float  default 0 not null\n" +
+            "    obols float  default 0 not null,\n" +
+            "    gems float  default 0 not null\n" +
             ");";
 
     private final Player player;
@@ -106,18 +105,18 @@ public class SomniumPlayer extends MySQLObject {
     }
 
     public String getSaveQuery() {
-        return String.format("INSERT INTO %s (playerName, timePlayed, charonCoins, forcedCoins) " +
+        return String.format("INSERT INTO %s (playerName, timePlayed, obols, gems) " +
                         "values ('%s', %d, %d, %d) ON DUPLICATE KEY " +
-                        "UPDATE timePlayed=%d, charonCoins=%d, forcedCoins=%d",
+                        "UPDATE timePlayed=%d, obols=%d, gems=%d",
                 tableName,
-                getPlayerName(), getSecondsPlayedTotal(), wallet.getCharonCoins(), wallet.getForcedCoins(),
-                getSecondsPlayedTotal(), wallet.getCharonCoins(), wallet.getForcedCoins());
+                getPlayerName(), getSecondsPlayedTotal(), wallet.getObols(), wallet.getGems(),
+                getSecondsPlayedTotal(), wallet.getObols(), wallet.getGems());
     }
 
     public void setFromResultSet(ResultSet resultSet) throws SQLException {
         this.timePlayed = resultSet.getLong("timePlayed");
-        this.wallet.changeCharonCoins(BigInteger.valueOf(resultSet.getLong("charonCoins")));
-        this.wallet.changeForcedCoins(BigInteger.valueOf(resultSet.getLong("forcedCoins")));
+        this.wallet.changeCharonCoins(BigInteger.valueOf(resultSet.getLong("obols")));
+        this.wallet.changeForcedCoins(BigInteger.valueOf(resultSet.getLong("gems")));
     }
 
     public boolean canAfford(Price price) {

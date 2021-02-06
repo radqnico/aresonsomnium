@@ -13,23 +13,26 @@ import org.bukkit.util.StringUtil;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
 @SuppressWarnings("NullableProblems")
-public class ConvertCharonCommand implements CommandExecutor, TabCompleter {
+public class ObolsCommand implements CommandExecutor, TabCompleter {
 
     private final PluginCommand command;
     private final AresonSomnium aresonSomnium;
+    private final String[] subCommands = new String[]{"generateObolShard"};
 
-    public ConvertCharonCommand(AresonSomnium aresonSomnium) {
+
+    public ObolsCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
-        command = this.aresonSomnium.getCommand("ConvertCharon");
+        command = this.aresonSomnium.getCommand("obols");
         if (command != null) {
             command.setExecutor(this);
             command.setTabCompleter(this);
         } else {
-            this.aresonSomnium.getLogger().warning("Comando 'ConvertCharon' non dichiarato");
+            this.aresonSomnium.getLogger().warning("Comando 'obols' non dichiarato");
         }
     }
 
@@ -37,10 +40,18 @@ public class ConvertCharonCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         switch (args.length) {
             case 0:
+            case 1:
                 MessageUtils.notEnoughArguments(commandSender, command);
                 break;
-            case 1:
-                handleConvertCharon(commandSender, args[0]);
+            case 2:
+                switch (args[0].toLowerCase()) {
+                    case "generateObolShard":
+                        handleGenerateObolShard(args[1]);
+                        break;
+                    case "convertShards":
+                        handleConvertCharon(args[1]);
+                        break;
+                }
                 break;
             default:
                 MessageUtils.tooManyArguments(commandSender, command);
@@ -48,7 +59,19 @@ public class ConvertCharonCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    private void handleConvertCharon(CommandSender commandSender, String playerName) {
+    private void handleGenerateObolShard(String playerName) {
+        Player player = aresonSomnium.getServer().getPlayer(playerName);
+        if (player != null) {
+            HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(Wallet.generateCharonNugget());
+            if (!remaining.isEmpty()) {
+                for (Integer integer : remaining.keySet()) {
+                    player.getWorld().dropItem(player.getLocation(), remaining.get(integer));
+                }
+            }
+        }
+    }
+
+    private void handleConvertCharon(String playerName) {
         Player player = aresonSomnium.getServer().getPlayer(playerName);
         if (player != null) {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
@@ -60,16 +83,18 @@ public class ConvertCharonCommand implements CommandExecutor, TabCompleter {
                         if (itemInMainHand.getAmount() >= 10) {
                             itemInMainHand.setAmount(itemInMainHand.getAmount() - 10);
                             somniumPlayer.getWallet().changeCharonCoins(BigInteger.ONE);
-                            player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("charon-coin-give"));
+                            player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("obols-give"));
+                        } else {
+                            player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("obols-not-enough"));
                         }
                     } else {
-                        player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("charon-coin-not-nugget"));
+                        player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("obols-not-nugget"));
                     }
                 } else {
-                    player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("charon-coin-not-nugget"));
+                    player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("obols-not-nugget"));
                 }
             } else {
-                commandSender.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("somniumplayer-not-found"));
+                player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("somniumplayer-not-found"));
             }
         }
     }

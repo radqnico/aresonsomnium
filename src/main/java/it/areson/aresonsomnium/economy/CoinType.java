@@ -1,9 +1,9 @@
 package it.areson.aresonsomnium.economy;
 
 public enum CoinType {
-    CHARON("Charon"),
-    FORCED("Forced"),
-    BASIC("Basic");
+    MONETE("Monete"),
+    GEMME("Gemme"),
+    OBOLI("Oboli");
 
     String coinName;
 

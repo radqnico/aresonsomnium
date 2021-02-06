@@ -2,7 +2,7 @@ package it.areson.aresonsomnium;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.admin.*;
-import it.areson.aresonsomnium.commands.player.AssegnoCommand;
+import it.areson.aresonsomnium.commands.player.CheckCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
@@ -99,8 +99,8 @@ public class AresonSomnium extends JavaPlugin {
         new SomniumGommaCommand(this);
         new SellCommand(this, Constants.sellHandCommand);
         new SellCommand(this, Constants.sellAllCommand);
-        new AssegnoCommand(this);
-        new ConvertCharonCommand(this);
+        new CheckCommand(this);
+        new ObolsCommand(this);
     }
 
     private void initAllEvents() {

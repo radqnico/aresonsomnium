@@ -10,14 +10,14 @@ public class SerializedShopItem {
 
     private final String serializedItemStack;
     private final BigDecimal basicCoins;
-    private final BigInteger charonCoins;
-    private final BigInteger forcedCoins;
+    private final BigInteger obols;
+    private final BigInteger gems;
 
-    public SerializedShopItem(String serializedItemStack, BigDecimal basicCoins, BigInteger charonCoins, BigInteger forcedCoins) {
+    public SerializedShopItem(String serializedItemStack, BigDecimal basicCoins, BigInteger obols, BigInteger gems) {
         this.serializedItemStack = serializedItemStack;
         this.basicCoins = basicCoins;
-        this.charonCoins = charonCoins;
-        this.forcedCoins = forcedCoins;
+        this.obols = obols;
+        this.gems = gems;
     }
 
     public static SerializedShopItem fromJson(String json) {
@@ -31,7 +31,7 @@ public class SerializedShopItem {
     public ShopItem toShopItem() {
         return new ShopItem(
                 org.bukkit.inventory.ItemStack.deserializeBytes(Base64.getDecoder().decode(serializedItemStack)),
-                new Price(basicCoins, charonCoins, forcedCoins)
+                new Price(basicCoins, obols, gems)
         );
     }
 }
