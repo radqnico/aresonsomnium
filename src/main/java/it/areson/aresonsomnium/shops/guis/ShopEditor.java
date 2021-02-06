@@ -57,16 +57,16 @@ public class ShopEditor {
             ItemStack shopItemBasic = new ItemStack(Material.IRON_NUGGET);
             setItemDisplayName(shopItemBasic, "Monete Base");
 
-            ItemStack shopItemCharon = new ItemStack(Material.SUNFLOWER);
-            setItemDisplayName(shopItemCharon, "Monete di Caronte");
+            ItemStack shopItemObol = new ItemStack(Material.SUNFLOWER);
+            setItemDisplayName(shopItemObol, "Monete di Caronte");
 
-            ItemStack shopItemForced = new ItemStack(Material.EMERALD);
-            setItemDisplayName(shopItemForced, "Monete Forzate");
+            ItemStack shopItemGem = new ItemStack(Material.EMERALD);
+            setItemDisplayName(shopItemGem, "Monete Forzate");
 
             pricesInventory = Bukkit.createInventory(null, InventoryType.CHEST, "Seleziona la moneta");
             pricesInventory.setItem(11, shopItemBasic);
-            pricesInventory.setItem(13, shopItemCharon);
-            pricesInventory.setItem(15, shopItemForced);
+            pricesInventory.setItem(13, shopItemObol);
+            pricesInventory.setItem(15, shopItemGem);
         }
         return pricesInventory;
     }

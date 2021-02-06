@@ -49,7 +49,7 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
                         handleGenerateObolShard(args[1]);
                         break;
                     case "convertShards":
-                        handleConvertCharon(args[1]);
+                        handleConvertObols(args[1]);
                         break;
                 }
                 break;
@@ -62,7 +62,7 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
     private void handleGenerateObolShard(String playerName) {
         Player player = aresonSomnium.getServer().getPlayer(playerName);
         if (player != null) {
-            HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(Wallet.generateCharonNugget());
+            HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(Wallet.generateObolNugget());
             if (!remaining.isEmpty()) {
                 for (Integer integer : remaining.keySet()) {
                     player.getWorld().dropItem(player.getLocation(), remaining.get(integer));
@@ -71,7 +71,7 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void handleConvertCharon(String playerName) {
+    private void handleConvertObols(String playerName) {
         Player player = aresonSomnium.getServer().getPlayer(playerName);
         if (player != null) {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
@@ -79,10 +79,10 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
                 ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
                 if (Material.GOLD_NUGGET.equals(itemInMainHand.getType())) {
                     ItemMeta itemMeta = itemInMainHand.getItemMeta();
-                    if (itemMeta != null && itemMeta.hasCustomModelData() && itemMeta.getCustomModelData() == Wallet.getCharonNuggetModelData()) {
+                    if (itemMeta != null && itemMeta.hasCustomModelData() && itemMeta.getCustomModelData() == Wallet.getObolNuggetModelData()) {
                         if (itemInMainHand.getAmount() >= 10) {
                             itemInMainHand.setAmount(itemInMainHand.getAmount() - 10);
-                            somniumPlayer.getWallet().changeCharonCoins(BigInteger.ONE);
+                            somniumPlayer.getWallet().changeObols(BigInteger.ONE);
                             player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("obols-give"));
                         } else {
                             player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("obols-not-enough"));

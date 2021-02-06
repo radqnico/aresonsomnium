@@ -58,8 +58,8 @@ public class Price {
 
     public void removeFrom(SomniumPlayer somniumPlayer) {
         Wallet.addBasicCoins(somniumPlayer.getPlayer(), basicCoins.negate());
-        somniumPlayer.getWallet().changeCharonCoins(obols.negate());
-        somniumPlayer.getWallet().changeForcedCoins(gems.negate());
+        somniumPlayer.getWallet().changeObols(obols.negate());
+        somniumPlayer.getWallet().changeGems(gems.negate());
     }
 
     public boolean isPriceReady() {

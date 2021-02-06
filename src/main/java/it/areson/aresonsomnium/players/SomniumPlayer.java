@@ -115,8 +115,8 @@ public class SomniumPlayer extends MySQLObject {
 
     public void setFromResultSet(ResultSet resultSet) throws SQLException {
         this.timePlayed = resultSet.getLong("timePlayed");
-        this.wallet.changeCharonCoins(BigInteger.valueOf(resultSet.getLong("obols")));
-        this.wallet.changeForcedCoins(BigInteger.valueOf(resultSet.getLong("gems")));
+        this.wallet.changeObols(BigInteger.valueOf(resultSet.getLong("obols")));
+        this.wallet.changeGems(BigInteger.valueOf(resultSet.getLong("gems")));
     }
 
     public boolean canAfford(Price price) {

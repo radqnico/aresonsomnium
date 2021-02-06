@@ -35,7 +35,7 @@ public class Wallet {
     public static int getCheckModelData() {
         return 999;
     }
-    public static int getCharonNuggetModelData() {
+    public static int getObolNuggetModelData() {
         return 998;
     }
 
@@ -57,7 +57,7 @@ public class Wallet {
         return itemStack;
     }
 
-    public static ItemStack generateCharonNugget(){
+    public static ItemStack generateObolNugget(){
         ItemStack itemStack = new ItemStack(Material.GOLD_NUGGET);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
@@ -67,7 +67,7 @@ public class Wallet {
             lore.add("&6pepite a &lCaronte &6per");
             lore.add("&6ottenere gli Oboli");
             itemMeta.setLore(lore);
-            itemMeta.setCustomModelData(getCharonNuggetModelData());
+            itemMeta.setCustomModelData(getObolNuggetModelData());
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             itemMeta.addEnchant(Enchantment.DAMAGE_UNDEAD, 1, true);
         }
@@ -88,10 +88,10 @@ public class Wallet {
                         CoinType coinType = CoinType.valueOf(coinTypeString);
                         switch (coinType) {
                             case OBOLI:
-                                somniumPlayer.getWallet().changeCharonCoins(amount.toBigInteger());
+                                somniumPlayer.getWallet().changeObols(amount.toBigInteger());
                                 return true;
                             case GEMME:
-                                somniumPlayer.getWallet().changeForcedCoins(amount.toBigInteger());
+                                somniumPlayer.getWallet().changeGems(amount.toBigInteger());
                                 return true;
                             case MONETE:
                                 Wallet.addBasicCoins(somniumPlayer.getPlayer(), amount);
@@ -145,11 +145,11 @@ public class Wallet {
         this.gems = gems;
     }
 
-    public void changeCharonCoins(BigInteger amount) {
+    public void changeObols(BigInteger amount) {
         obols = obols.add(amount);
     }
 
-    public void changeForcedCoins(BigInteger amount) {
+    public void changeGems(BigInteger amount) {
         gems = gems.add(amount);
     }
 }
