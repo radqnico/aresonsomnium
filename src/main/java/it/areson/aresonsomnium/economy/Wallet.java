@@ -35,6 +35,7 @@ public class Wallet {
     public static int getCheckModelData() {
         return 999;
     }
+
     public static int getObolNuggetModelData() {
         return 998;
     }
@@ -57,15 +58,15 @@ public class Wallet {
         return itemStack;
     }
 
-    public static ItemStack generateObolNugget(){
+    public static ItemStack generateObolNugget() {
         ItemStack itemStack = new ItemStack(Material.GOLD_NUGGET);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
-            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Pepita di &lCaronte"));
+            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Frammento di &lObolo"));
             List<String> lore = new ArrayList<>();
-            lore.add("&6Colleziona e consegna queste");
-            lore.add("&6pepite a &lCaronte &6per");
-            lore.add("&6ottenere gli Oboli");
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&6Colleziona e consegna questi"));
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&6frammenti a &lCaronte &6per"));
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&6ottenere gli Oboli"));
             itemMeta.setLore(lore);
             itemMeta.setCustomModelData(getObolNuggetModelData());
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

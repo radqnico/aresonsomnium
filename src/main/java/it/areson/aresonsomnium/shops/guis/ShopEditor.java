@@ -55,15 +55,15 @@ public class ShopEditor {
     public Inventory getPricesInventory() {
         if (Objects.isNull(pricesInventory)) {
             ItemStack shopItemBasic = new ItemStack(Material.IRON_NUGGET);
-            setItemDisplayName(shopItemBasic, "Monete Base");
+            setItemDisplayName(shopItemBasic, "Monete");
 
             ItemStack shopItemObol = new ItemStack(Material.SUNFLOWER);
-            setItemDisplayName(shopItemObol, "Monete di Caronte");
+            setItemDisplayName(shopItemObol, "Oboli");
 
             ItemStack shopItemGem = new ItemStack(Material.EMERALD);
-            setItemDisplayName(shopItemGem, "Monete Forzate");
+            setItemDisplayName(shopItemGem, "Gemme");
 
-            pricesInventory = Bukkit.createInventory(null, InventoryType.CHEST, "Seleziona la moneta");
+            pricesInventory = Bukkit.createInventory(null, InventoryType.CHEST, "Seleziona la valuta");
             pricesInventory.setItem(11, shopItemBasic);
             pricesInventory.setItem(13, shopItemObol);
             pricesInventory.setItem(15, shopItemGem);
