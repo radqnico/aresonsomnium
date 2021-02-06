@@ -32,7 +32,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops", "setDebugLevel", "deleteLastLoreLine"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops", "setDebugLevel", "deleteLastLoreLine", "charonNugget"};
 
     public SomniumAdminCommand(AresonSomnium plugin) {
         aresonSomnium = plugin;
@@ -69,6 +69,9 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         break;
                     case "deletelastloreline":
                         handleDeleteLastLoreLine(commandSender);
+                        break;
+                    case "charonnugget":
+                        handleCharonNugget(commandSender);
                         break;
                 }
                 break;
@@ -184,6 +187,15 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 itemMeta.setLore(lore);
             }
             itemInMainHand.setItemMeta(itemMeta);
+        } else {
+            messageManager.sendPlainMessage(commandSender, "player-only-command");
+        }
+    }
+
+    private void handleCharonNugget(CommandSender commandSender) {
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
+            player.getInventory().addItem(Wallet.generateCharonNugget());
         } else {
             messageManager.sendPlainMessage(commandSender, "player-only-command");
         }

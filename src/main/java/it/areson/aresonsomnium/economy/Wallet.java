@@ -35,6 +35,9 @@ public class Wallet {
     public static int getCheckModelData() {
         return 999;
     }
+    public static int getCharonNuggetModelData() {
+        return 998;
+    }
 
     public static ItemStack generateCheck(double amount, CoinType coinType) {
         ItemStack itemStack = new ItemStack(Material.PAPER);
@@ -47,6 +50,24 @@ public class Wallet {
             lore.add(coinType.getCoinName());
             itemMeta.setLore(lore);
             itemMeta.setCustomModelData(getCheckModelData());
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            itemMeta.addEnchant(Enchantment.DAMAGE_UNDEAD, 1, true);
+        }
+        itemStack.setItemMeta(itemMeta);
+        return itemStack;
+    }
+
+    public static ItemStack generateCharonNugget(){
+        ItemStack itemStack = new ItemStack(Material.GOLD_NUGGET);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta != null) {
+            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Pepita di &lCaronte"));
+            List<String> lore = new ArrayList<>();
+            lore.add("&6Colleziona e consegna queste");
+            lore.add("&6pepite a &lCaronte &6per");
+            lore.add("&6ottenere gli Oboli");
+            itemMeta.setLore(lore);
+            itemMeta.setCustomModelData(getCharonNuggetModelData());
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             itemMeta.addEnchant(Enchantment.DAMAGE_UNDEAD, 1, true);
         }
