@@ -62,7 +62,11 @@ public class ConvertCharonCommand implements CommandExecutor, TabCompleter {
                             somniumPlayer.getWallet().changeCharonCoins(BigInteger.ONE);
                             player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("charon-coin-give"));
                         }
+                    } else {
+                        player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("charon-coin-not-nugget"));
                     }
+                } else {
+                    player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("charon-coin-not-nugget"));
                 }
             } else {
                 commandSender.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("somniumplayer-not-found"));

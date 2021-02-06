@@ -45,3 +45,4 @@ items-not-sellable: "&cNon hai nessun oggetto vendibile nell'inventario"
 
 charon-coin-give: "&aHai ottenuto un Obolo!"
 charon-coin-not-enough: "&cPortami almeno 10 pepite!"
+charon-coin-not-nugget: "&cDevi portarmi le mie pepite!"
