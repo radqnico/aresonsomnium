@@ -13,6 +13,7 @@ import org.bukkit.util.StringUtil;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -104,9 +105,9 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         List<String> suggestions = new ArrayList<>();
         if (strings.length == 1) {
-            StringUtil.copyPartialMatches(strings[0], aresonSomnium.getSomniumPlayerManager().getOnlinePlayersNames(), suggestions);
+            StringUtil.copyPartialMatches(strings[0], Arrays.asList(subCommands.clone()), suggestions);
         } else if (strings.length == 2) {
-            StringUtil.copyPartialMatches(strings[1], aresonSomnium.getShopManager().getGuis().keySet(), suggestions);
+            StringUtil.copyPartialMatches(strings[1], aresonSomnium.getSomniumPlayerManager().getOnlinePlayersNames(), suggestions);
         }
         return suggestions;
     }
