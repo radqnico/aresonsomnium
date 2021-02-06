@@ -49,7 +49,7 @@ public class EditPriceConfig {
                     shopItem.getPrice().setGems(price.toBigInteger());
                     break;
                 case MONETE:
-                    shopItem.getPrice().setBasicCoins(price);
+                    shopItem.getPrice().setCoins(price);
                     break;
             }
         }

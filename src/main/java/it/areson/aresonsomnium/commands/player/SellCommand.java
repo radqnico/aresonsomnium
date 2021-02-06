@@ -127,7 +127,7 @@ public class SellCommand implements CommandExecutor {
         }, BigDecimal::add);
 
         coinsToGive = coinsToGive.multiply(BigDecimal.valueOf(multiplier));
-        Wallet.addBasicCoins(player, coinsToGive);
+        Wallet.addCoins(player, coinsToGive);
 
         return coinsToGive;
     }

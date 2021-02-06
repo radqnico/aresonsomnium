@@ -245,7 +245,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         "stats-format",
                         Pair.of("%player%", playerName),
                         Pair.of("%secondsPlayed%", somniumPlayer.getSecondsPlayedTotal() + ""),
-                        Pair.of("%basicCoins%", Wallet.getBasicCoins(player).toPlainString()),
+                        Pair.of("%coins%", Wallet.getCoins(player).toPlainString()),
                         Pair.of("%obols%", somniumPlayer.getWallet().getObols().toString()),
                         Pair.of("%gems%", somniumPlayer.getWallet().getGems().toString())
                 );
@@ -275,7 +275,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                             messageManager.sendPlainMessage(player, "coins-set");
                             break;
                         case MONETE:
-                            Wallet.setBasicCoins(player, amount);
+                            Wallet.setCoins(player, amount);
                             messageManager.sendPlainMessage(player, "coins-set");
                             break;
                         default:

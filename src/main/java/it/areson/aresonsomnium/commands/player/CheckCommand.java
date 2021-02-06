@@ -96,7 +96,7 @@ public class CheckCommand implements CommandExecutor, TabCompleter {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
                     } else {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-created"));
-                        Wallet.addBasicCoins(somniumPlayer.getPlayer(), amount.negate());
+                        Wallet.addCoins(somniumPlayer.getPlayer(), amount.negate());
                     }
                 } else {
                     somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-money"));

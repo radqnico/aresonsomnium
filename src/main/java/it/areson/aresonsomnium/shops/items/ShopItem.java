@@ -31,7 +31,7 @@ public class ShopItem {
     public SerializedShopItem toSerializedShopItem() {
         return new SerializedShopItem(
                 Base64.getEncoder().encodeToString(itemStack.serializeAsBytes()),
-                price.getBasicCoins(),
+                price.getCoins(),
                 price.getObols(),
                 price.getGems()
         );

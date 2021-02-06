@@ -9,13 +9,13 @@ import java.util.Base64;
 public class SerializedShopItem {
 
     private final String serializedItemStack;
-    private final BigDecimal basicCoins;
+    private final BigDecimal coins;
     private final BigInteger obols;
     private final BigInteger gems;
 
-    public SerializedShopItem(String serializedItemStack, BigDecimal basicCoins, BigInteger obols, BigInteger gems) {
+    public SerializedShopItem(String serializedItemStack, BigDecimal coins, BigInteger obols, BigInteger gems) {
         this.serializedItemStack = serializedItemStack;
-        this.basicCoins = basicCoins;
+        this.coins = coins;
         this.obols = obols;
         this.gems = gems;
     }
@@ -31,7 +31,7 @@ public class SerializedShopItem {
     public ShopItem toShopItem() {
         return new ShopItem(
                 org.bukkit.inventory.ItemStack.deserializeBytes(Base64.getDecoder().decode(serializedItemStack)),
-                new Price(basicCoins, obols, gems)
+                new Price(coins, obols, gems)
         );
     }
 }

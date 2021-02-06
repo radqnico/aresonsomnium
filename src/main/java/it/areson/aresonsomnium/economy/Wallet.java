@@ -94,7 +94,7 @@ public class Wallet {
                                 somniumPlayer.getWallet().changeGems(amount.toBigInteger());
                                 return true;
                             case MONETE:
-                                Wallet.addBasicCoins(somniumPlayer.getPlayer(), amount);
+                                Wallet.addCoins(somniumPlayer.getPlayer(), amount);
                                 return true;
                         }
                     }
@@ -104,7 +104,7 @@ public class Wallet {
         return false;
     }
 
-    public static BigDecimal getBasicCoins(Player player) {
+    public static BigDecimal getCoins(Player player) {
         try {
             return Economy.getMoneyExact(player.getName());
         } catch (UserDoesNotExistException exception) {
@@ -113,7 +113,7 @@ public class Wallet {
         }
     }
 
-    public static void setBasicCoins(Player player, BigDecimal amount) {
+    public static void setCoins(Player player, BigDecimal amount) {
         try {
             Economy.setMoney(player.getName(), amount);
         } catch (UserDoesNotExistException | NoLoanPermittedException exception) {
@@ -121,7 +121,7 @@ public class Wallet {
         }
     }
 
-    public static void addBasicCoins(Player player, BigDecimal amount) {
+    public static void addCoins(Player player, BigDecimal amount) {
         try {
             Economy.add(player.getName(), amount);
         } catch (UserDoesNotExistException | NoLoanPermittedException exception) {

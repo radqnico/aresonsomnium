@@ -12,12 +12,12 @@ import java.util.ArrayList;
 
 public class Price {
 
-    private BigDecimal basicCoins;
+    private BigDecimal coins;
     private BigInteger obols;
     private BigInteger gems;
 
-    public Price(BigDecimal basicCoins, BigInteger obols, BigInteger gems) {
-        this.basicCoins = basicCoins;
+    public Price(BigDecimal coins, BigInteger obols, BigInteger gems) {
+        this.coins = coins;
         this.obols = obols;
         this.gems = gems;
     }
@@ -26,12 +26,12 @@ public class Price {
         this(BigDecimal.valueOf(0), BigInteger.valueOf(0), BigInteger.valueOf(0));
     }
 
-    public BigDecimal getBasicCoins() {
-        return basicCoins;
+    public BigDecimal getCoins() {
+        return coins;
     }
 
-    public void setBasicCoins(BigDecimal basicCoins) {
-        this.basicCoins = basicCoins;
+    public void setCoins(BigDecimal coins) {
+        this.coins = coins;
     }
 
     public BigInteger getObols() {
@@ -51,32 +51,32 @@ public class Price {
     }
 
     public boolean canAffordThis(SomniumPlayer somniumPlayer) {
-        return Wallet.getBasicCoins(somniumPlayer.getPlayer()).compareTo(basicCoins) >= 0 &&
+        return Wallet.getCoins(somniumPlayer.getPlayer()).compareTo(coins) >= 0 &&
                 somniumPlayer.getWallet().getObols().compareTo(obols) >= 0 &&
                 somniumPlayer.getWallet().getGems().compareTo(gems) >= 0;
     }
 
     public void removeFrom(SomniumPlayer somniumPlayer) {
-        Wallet.addBasicCoins(somniumPlayer.getPlayer(), basicCoins.negate());
+        Wallet.addCoins(somniumPlayer.getPlayer(), coins.negate());
         somniumPlayer.getWallet().changeObols(obols.negate());
         somniumPlayer.getWallet().changeGems(gems.negate());
     }
 
     public boolean isPriceReady() {
-        return basicCoins.compareTo(BigDecimal.valueOf(0)) > 0 ||
+        return coins.compareTo(BigDecimal.valueOf(0)) > 0 ||
                 obols.compareTo(BigInteger.valueOf(0)) > 0 ||
                 gems.compareTo(BigInteger.valueOf(0)) > 0;
     }
 
     @Override
     public String toString() {
-        return "Price{basicCoins=" + basicCoins + ",obols=" + obols + ",gems=" + gems + "}";
+        return "Price{coins=" + coins + ",obols=" + obols + ",gems=" + gems + "}";
     }
 
     public ArrayList<String> toLore() {
         ArrayList<String> lore = new ArrayList<>();
-        if (basicCoins.compareTo(BigDecimal.valueOf(0)) > 0) {
-            lore.add(ChatColor.translateAlternateColorCodes('&', "&f$ " + basicCoins.toPlainString()));
+        if (coins.compareTo(BigDecimal.valueOf(0)) > 0) {
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&f$ " + coins.toPlainString()));
         }
         if (obols.compareTo(BigInteger.valueOf(0)) > 0) {
             lore.add(MessageUtils.errorMessage("Oboli " + obols.toString()));
@@ -96,7 +96,7 @@ public class Price {
                 setGems(price.toBigInteger());
                 break;
             case MONETE:
-                setBasicCoins(price);
+                setCoins(price);
                 break;
         }
     }

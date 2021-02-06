@@ -117,12 +117,12 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     case 11:
                         editingPriceConfig.setCoinType(CoinType.MONETE);
                         player.closeInventory();
-                        player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Basic Coins <--"));
+                        player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Monete <--"));
                         break;
                     case 13:
                         editingPriceConfig.setCoinType(CoinType.OBOLI);
                         player.closeInventory();
-                        player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Monete di Caronte <--"));
+                        player.sendMessage(MessageUtils.warningMessage(" --> Inserisci Oboli <--"));
                         break;
                     case 15:
                         editingPriceConfig.setCoinType(CoinType.GEMME);
@@ -177,7 +177,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     price.removeFrom(somniumPlayer);
                     player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage(
                             "item-buy-success",
-                            Pair.of("%basicCoins%", price.getBasicCoins().toPlainString()),
+                            Pair.of("%coins%", price.getCoins().toPlainString()),
                             Pair.of("%obols%", price.getObols().toString()),
                             Pair.of("%gems%", price.getGems().toString())
                     ));
