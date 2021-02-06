@@ -21,6 +21,10 @@ commands:
     permission: aresonsomnium.admin
     usage: /opengui <guiName>
     aliases: [shop]
+  convertcharon:
+    description: "Convert charon nuggets"
+    permission: aresonsomnium.admin
+    usage: /convertcharon <guiName>
   stats:
     description: "See your stats"
     permission: aresonsomnium.player
