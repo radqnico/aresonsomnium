@@ -25,6 +25,7 @@ import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
 import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 
 public class AresonSomnium extends JavaPlugin {
+    //TODO Comment to remove
 
     private static AresonSomnium instance;
     private SomniumPlayerManager somniumPlayerManager;
