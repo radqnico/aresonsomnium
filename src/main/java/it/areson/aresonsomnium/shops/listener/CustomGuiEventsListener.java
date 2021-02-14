@@ -16,6 +16,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -58,6 +59,13 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     }
 
     @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        aresonSomnium.getShopEditor().endEditGui(player);
+        aresonSomnium.getShopEditor().endEditPrice(player);
+    }
+
+    @EventHandler
     public void onInventoryClickEvent(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         Inventory clickedInventory = event.getClickedInventory();
@@ -97,8 +105,15 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 break;
             case PICKUP_HALF:
                 if (Objects.nonNull(involvedItem)) {
-                    EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop);
-                    player.openInventory(shopEditor.getPricesInventory());
+                    EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop, false);
+                    player.openInventory(shopEditor.getPricesInventory(false));
+                    editPriceConfig.setSlot(event.getSlot());
+                }
+                break;
+            case CLONE_STACK:
+                if (Objects.nonNull(involvedItem)) {
+                    EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop, true);
+                    player.openInventory(shopEditor.getPricesInventory(true));
                     editPriceConfig.setSlot(event.getSlot());
                 }
                 break;
@@ -171,7 +186,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     private void buyItem(Player player, ShopItem shopItem) {
         SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
         if (Objects.nonNull(somniumPlayer)) {
-            Price price = shopItem.getPrice();
+            Price price = shopItem.getShoppingPrice();
             if (somniumPlayer.canAfford(price)) {
                 if (player.getInventory().addItem(new ItemStack(shopItem.getItemStack())).isEmpty()) {
                     price.removeFrom(somniumPlayer);

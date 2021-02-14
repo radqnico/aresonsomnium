@@ -1,7 +1,6 @@
 package it.areson.aresonsomnium.shops.guis;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.shops.items.ShopItem;
 import it.areson.aresonsomnium.utils.PlayerComparator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -41,14 +40,14 @@ public class ShopEditor {
         return movingItems.get(player);
     }
 
-    public void endMoveItemAction(Player player, CustomShop customShop){
+    public void endMoveItemAction(Player player, CustomShop customShop) {
         MoveShopItemAction remove = movingItems.remove(player);
-        if(Objects.nonNull(remove)){
+        if (Objects.nonNull(remove)) {
             remove.executeIfValid(customShop);
         }
     }
 
-    public Inventory getPricesInventory() {
+    public Inventory getPricesInventory(boolean isSelling) {
         if (Objects.isNull(pricesInventory)) {
             ItemStack shopItemBasic = new ItemStack(Material.IRON_NUGGET);
             setItemDisplayName(shopItemBasic, "Monete");
@@ -59,7 +58,7 @@ public class ShopEditor {
             ItemStack shopItemGem = new ItemStack(Material.EMERALD);
             setItemDisplayName(shopItemGem, "Gemme");
 
-            pricesInventory = Bukkit.createInventory(null, InventoryType.CHEST, "Seleziona la valuta");
+            pricesInventory = Bukkit.createInventory(null, InventoryType.CHEST, isSelling ? "Prezzo di VENDITA" : "Prezzo di ACQUISTO");
             pricesInventory.setItem(11, shopItemBasic);
             pricesInventory.setItem(13, shopItemObol);
             pricesInventory.setItem(15, shopItemGem);
@@ -94,8 +93,8 @@ public class ShopEditor {
         return editingGuis.containsKey(player);
     }
 
-    public EditPriceConfig newEditPrice(Player player, CustomShop customShop) {
-        EditPriceConfig editPriceConfig = new EditPriceConfig(customShop);
+    public EditPriceConfig newEditPrice(Player player, CustomShop customShop, boolean isSelling) {
+        EditPriceConfig editPriceConfig = new EditPriceConfig(customShop, isSelling);
         activePriceConfigs.put(player, editPriceConfig);
         return editPriceConfig;
     }

@@ -66,7 +66,7 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
     private void handleOpenPricesGui(CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            player.openInventory(aresonSomnium.getShopEditor().getPricesInventory());
+            player.openInventory(aresonSomnium.getShopEditor().getPricesInventory(true));
         } else {
             commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
         }

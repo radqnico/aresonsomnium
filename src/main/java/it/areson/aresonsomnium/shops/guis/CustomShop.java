@@ -57,11 +57,11 @@ public class CustomShop extends MySQLObject {
                 List<String> lore = itemMeta.getLore();
                 if (Objects.nonNull(lore)) {
                     lore.add("");
-                    lore.addAll(shopItem.getPrice().toLore());
+                    lore.addAll(shopItem.getShoppingPrice().toLore());
                 } else {
                     lore = new ArrayList<>();
                     lore.add("");
-                    lore.addAll(shopItem.getPrice().toLore());
+                    lore.addAll(shopItem.getShoppingPrice().toLore());
                 }
                 itemMeta.setLore(lore);
                 itemStack.setItemMeta(itemMeta);
@@ -146,7 +146,7 @@ public class CustomShop extends MySQLObject {
     }
 
     public boolean isShopReady() {
-        return items.values().stream().allMatch(value -> value.getPrice().isPriceReady());
+        return items.values().stream().allMatch(value -> value.getShoppingPrice().isPriceReady());
     }
 
     @Override

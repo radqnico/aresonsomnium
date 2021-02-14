@@ -13,9 +13,11 @@ public class EditPriceConfig {
     private int slot = -1;
     private CoinType coinType;
     private BigDecimal price;
+    private final boolean isSelling;
 
-    public EditPriceConfig(CustomShop customShop) {
+    public EditPriceConfig(CustomShop customShop, boolean isSelling) {
         this.customShop = customShop;
+        this.isSelling = isSelling;
     }
 
     public void setSlot(int slot) {
@@ -41,16 +43,30 @@ public class EditPriceConfig {
             throw new PriceConfigNotReadyException("Manca il prezzo");
         } else {
             ShopItem shopItem = customShop.getItems().get(slot);
-            switch (coinType) {
-                case OBOLI:
-                    shopItem.getPrice().setObols(price.toBigInteger());
-                    break;
-                case GEMME:
-                    shopItem.getPrice().setGems(price.toBigInteger());
-                    break;
-                case MONETE:
-                    shopItem.getPrice().setCoins(price);
-                    break;
+            if (!isSelling) {
+                switch (coinType) {
+                    case OBOLI:
+                        shopItem.getShoppingPrice().setObols(price.toBigInteger());
+                        break;
+                    case GEMME:
+                        shopItem.getShoppingPrice().setGems(price.toBigInteger());
+                        break;
+                    case MONETE:
+                        shopItem.getShoppingPrice().setCoins(price);
+                        break;
+                }
+            } else {
+                switch (coinType) {
+                    case OBOLI:
+                        shopItem.getSellingPrice().setObols(price.toBigInteger());
+                        break;
+                    case GEMME:
+                        shopItem.getSellingPrice().setGems(price.toBigInteger());
+                        break;
+                    case MONETE:
+                        shopItem.getSellingPrice().setCoins(price);
+                        break;
+                }
             }
         }
     }
@@ -62,6 +78,7 @@ public class EditPriceConfig {
                 ", slot=" + slot +
                 ", coinType=" + coinType.getCoinName() +
                 ", price=" + price +
+                ", isSelling=" + isSelling +
                 '}';
     }
 }

@@ -1,6 +1,7 @@
 package it.areson.aresonsomnium.shops.items;
 
 import com.google.gson.Gson;
+import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -9,15 +10,21 @@ import java.util.Base64;
 public class SerializedShopItem {
 
     private final String serializedItemStack;
-    private final BigDecimal coins;
-    private final BigInteger obols;
-    private final BigInteger gems;
+    private final BigDecimal shopCoins;
+    private final BigInteger shopObols;
+    private final BigInteger shopGems;
+    private final BigDecimal sellCoins;
+    private final BigInteger sellObols;
+    private final BigInteger sellGems;
 
-    public SerializedShopItem(String serializedItemStack, BigDecimal coins, BigInteger obols, BigInteger gems) {
+    public SerializedShopItem(String serializedItemStack, BigDecimal shopCoins, BigInteger shopObols, BigInteger shopGems, BigDecimal sellCoins, BigInteger sellObols, BigInteger sellGems) {
         this.serializedItemStack = serializedItemStack;
-        this.coins = coins;
-        this.obols = obols;
-        this.gems = gems;
+        this.shopCoins = shopCoins;
+        this.shopObols = shopObols;
+        this.shopGems = shopGems;
+        this.sellCoins = sellCoins;
+        this.sellObols = sellObols;
+        this.sellGems = sellGems;
     }
 
     public static SerializedShopItem fromJson(String json) {
@@ -30,8 +37,9 @@ public class SerializedShopItem {
 
     public ShopItem toShopItem() {
         return new ShopItem(
-                org.bukkit.inventory.ItemStack.deserializeBytes(Base64.getDecoder().decode(serializedItemStack)),
-                new Price(coins, obols, gems)
+                ItemStack.deserializeBytes(Base64.getDecoder().decode(serializedItemStack)),
+                new Price(shopCoins, shopObols, shopGems),
+                new Price(sellCoins, sellObols, sellGems)
         );
     }
 }
