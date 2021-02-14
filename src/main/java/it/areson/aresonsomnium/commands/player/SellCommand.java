@@ -25,7 +25,15 @@ import java.util.Optional;
 public class SellCommand implements CommandExecutor {
 
     private final AresonSomnium aresonSomnium;
-    private final HashMap<Material, String> blocksPermission;
+    private final HashMap<Material, String> blocksPermission = new HashMap<Material, String>() {{
+        put(Material.COBBLESTONE, Constants.permissionSelva);
+        put(Material.NETHERRACK, Constants.permissionAntinferno);
+        put(Material.COAL_BLOCK, Constants.permissionSecondoGirone);
+        put(Material.RED_NETHER_BRICKS, Constants.permissionQuartoGirone);
+        put(Material.MAGMA_BLOCK, Constants.permissionSestoGirone);
+        put(Material.RED_CONCRETE, Constants.permissionOttavoGirone);
+    }};
+
     private final MessageManager messageManager;
 
     public SellCommand(AresonSomnium plugin, String command) {
@@ -38,14 +46,6 @@ public class SellCommand implements CommandExecutor {
         } else {
             aresonSomnium.getLogger().warning("Comando " + command + " non dichiarato");
         }
-
-        blocksPermission = new HashMap<>();
-        blocksPermission.put(Material.COBBLESTONE, Constants.permissionSelva);
-        blocksPermission.put(Material.NETHERRACK, Constants.permissionAntinferno);
-        blocksPermission.put(Material.COAL_BLOCK, Constants.permissionSecondoGirone);
-        blocksPermission.put(Material.RED_NETHER_BRICKS, Constants.permissionQuartoGirone);
-        blocksPermission.put(Material.MAGMA_BLOCK, Constants.permissionSestoGirone);
-        blocksPermission.put(Material.RED_CONCRETE, Constants.permissionOttavoGirone);
     }
 
     @Override
