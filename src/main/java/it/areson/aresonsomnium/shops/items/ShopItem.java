@@ -47,4 +47,8 @@ public class ShopItem {
                 sellingPrice.getGems()
         );
     }
+
+    public boolean isSellable(){
+        return sellingPrice.isPriceReady();
+    }
 }

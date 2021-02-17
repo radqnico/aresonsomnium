@@ -22,8 +22,9 @@ item-buy-error: "&cRiscontrato un problema con i tuoi dati. Segnala il problema 
 
 item-sell-success: "&aOggetto venduto per %coins% coins, %obols% oboli e %gems% gemme !"
 item-sell-not-present: "&cNon hai questo oggetto nell'inventario"
-item-sell-not-enough: "%cNon ne hai abbastanza per poter vendere"
+item-sell-not-enough: "&cNon ne hai abbastanza per poter vendere"
 item-sell-error: "&cRiscontrato un problema con i tuoi dati. Segnala il problema  allo staff.!"
+item-sell-not-sellable: "&cQuesto oggetto non e' vendibile"
 
 gomma-item-give: "&aHai ottenuto un oggetto dal Gomma Gomma"
 gomma-error-give: "&cFai spazio nell'inventario"

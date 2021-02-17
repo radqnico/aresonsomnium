@@ -215,25 +215,29 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         if (Objects.nonNull(somniumPlayer)) {
             Price price = shopItem.getSellingPrice();
             Material sellItemType = shopItem.getItemStack().getType();
-            if (player.getInventory().contains(shopItem.getItemStack().getType())) {
+            if(shopItem.isSellable()) {
+                if (player.getInventory().contains(shopItem.getItemStack().getType())) {
 
-                long totalAmountOfItem = Arrays.stream(player.getInventory().getContents())
-                        .filter(itemStack -> sellItemType.equals(itemStack.getType()))
-                        .count();
+                    long totalAmountOfItem = Arrays.stream(player.getInventory().getContents())
+                            .filter(itemStack -> sellItemType.equals(itemStack.getType()))
+                            .count();
 
-                if(totalAmountOfItem >= shopItem.getItemStack().getAmount()){
-                    price.addTo(somniumPlayer);
-                    player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage(
-                            "item-sell-success",
-                            Pair.of("%coins%", price.getCoins().toPlainString()),
-                            Pair.of("%obols%", price.getObols().toString()),
-                            Pair.of("%gems%", price.getGems().toString())
-                    ));
-                }else{
-                    player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-sell-not-enough"));
+                    if (totalAmountOfItem >= shopItem.getItemStack().getAmount()) {
+                        price.addTo(somniumPlayer);
+                        player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage(
+                                "item-sell-success",
+                                Pair.of("%coins%", price.getCoins().toPlainString()),
+                                Pair.of("%obols%", price.getObols().toString()),
+                                Pair.of("%gems%", price.getGems().toString())
+                        ));
+                    } else {
+                        player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-sell-not-enough"));
+                    }
+                } else {
+                    player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-sell-not-present"));
                 }
             } else {
-                player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-sell-not-present"));
+                player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-sell-not-sellable"));
             }
         } else {
             player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-sell-error"));
