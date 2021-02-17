@@ -62,6 +62,12 @@ public class Price {
         somniumPlayer.getWallet().changeGems(gems.negate());
     }
 
+    public void addTo(SomniumPlayer somniumPlayer) {
+        Wallet.addCoins(somniumPlayer.getPlayer(), coins);
+        somniumPlayer.getWallet().changeObols(obols);
+        somniumPlayer.getWallet().changeGems(gems);
+    }
+
     public boolean isPriceReady() {
         return coins.compareTo(BigDecimal.valueOf(0)) > 0 ||
                 obols.compareTo(BigInteger.valueOf(0)) > 0 ||

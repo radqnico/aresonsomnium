@@ -13,12 +13,17 @@ coins-set: "&aValore dei coins impostato"
 not-a-number: "&cNumero non valido"
 coins-type-error: "&cIl tipo di moneta non esiste."
 
-shop-not-ready: "&cIl negozio richiesto non e' pronto. Segnala il problema allo staff."
+shop-not-ready: "&cIl negozio richiesto non e' pronto. Segnala il problema allo staff"
 
 item-buy-success: "&aOggetto acquistato per %coins% coins, %obols% oboli e %gems% gemme !"
 item-buy-not-enough-space: "&cNon hai abbastanza spazio nell'inventario"
 item-buy-not-enough-money: "&cNon te lo puoi permettere!"
 item-buy-error: "&cRiscontrato un problema con i tuoi dati. Segnala il problema  allo staff.!"
+
+item-sell-success: "&aOggetto venduto per %coins% coins, %obols% oboli e %gems% gemme !"
+item-sell-not-present: "&cNon hai questo oggetto nell'inventario"
+item-sell-not-enough: "%cNon ne hai abbastanza per poter vendere"
+item-sell-error: "&cRiscontrato un problema con i tuoi dati. Segnala il problema  allo staff.!"
 
 gomma-item-give: "&aHai ottenuto un oggetto dal Gomma Gomma"
 gomma-error-give: "&cFai spazio nell'inventario"
