@@ -22,22 +22,29 @@ public class InventoryListener extends GeneralEventListener {
     @EventHandler
     public void onInventoryClickEvent(InventoryClickEvent event) {
         HumanEntity whoClicked = event.getWhoClicked();
-        if(whoClicked instanceof Player && event.getAction().equals(InventoryAction.SWAP_WITH_CURSOR)) {
+        if (whoClicked instanceof Player && event.getAction().equals(InventoryAction.SWAP_WITH_CURSOR)) {
             Player player = (Player) whoClicked;
             ItemStack handItemStack = event.getCursor();
             ItemStack clickedItemStack = event.getCurrentItem();
 
-            if(handItemStack != null && handItemStack.getType().equals(Material.ENCHANTED_BOOK) && clickedItemStack != null) {
+            if (handItemStack != null && handItemStack.getType().equals(Material.ENCHANTED_BOOK) && clickedItemStack != null) {
                 EnchantmentStorageMeta enchantmentMeta = (EnchantmentStorageMeta) handItemStack.getItemMeta();
-                if(enchantmentMeta != null) {
+                if (enchantmentMeta != null) {
                     Map<Enchantment, Integer> storedEnchants = enchantmentMeta.getStoredEnchants();
 
-                    boolean result = storedEnchants.entrySet().stream().parallel().allMatch(entry -> {
+                    boolean validateEnchants = storedEnchants.entrySet().stream().parallel().allMatch(entry -> {
                         Enchantment enchantment = entry.getKey();
                         Integer currentEnchantmentLevel = clickedItemStack.getEnchantments().get(enchantment);
-                        return enchantment.canEnchantItem(clickedItemStack) && currentEnchantmentLevel != null && currentEnchantmentLevel < entry.getValue();
+                        return enchantment.canEnchantItem(clickedItemStack) && (currentEnchantmentLevel == null || currentEnchantmentLevel < entry.getValue());
                     });
-                    player.sendMessage("Risultato: " + result);
+
+//                    if(validateEnchants) {
+//                        storedEnchants.entrySet().stream().parallel().forEach(entry -> {
+//                            clickedItemStack.addEnchantment(entry.getKey(), entry.getValue());
+//                        });
+//
+//                    }
+                    player.sendMessage("Risultato: " + validateEnchants);
                 }
             }
         }
