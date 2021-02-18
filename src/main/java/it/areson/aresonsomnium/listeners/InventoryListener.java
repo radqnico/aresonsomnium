@@ -39,13 +39,14 @@ public class InventoryListener extends GeneralEventListener {
                     player.sendMessage("Here");
 
 
-                    BiFunction<ItemStack, Map.Entry<Enchantment, Integer>, ItemStack> add = (a, b) -> a.add(2);
+                    BiFunction<ItemStack, Map.Entry<Enchantment, Integer>, ItemStack> add = (a, b) -> a = a.add(2);
                     BinaryOperator<ItemStack> func2 = (old, niu) -> {
                         player.sendMessage("Old " + old.getAmount());
                         player.sendMessage("Niu " + niu.getAmount());
                         return old;
                     };
-                    storedEnchants.entrySet().stream().parallel().reduce(clickedItemStack, add, func2);
+                    ItemStack reduce = storedEnchants.entrySet().stream().parallel().reduce(clickedItemStack, add, func2);
+                    player.sendMessage(reduce.toString());
 
 
 //                    boolean validateEnchants = storedEnchants.entrySet().stream().parallel().reduce(, (we, entry) -> {
