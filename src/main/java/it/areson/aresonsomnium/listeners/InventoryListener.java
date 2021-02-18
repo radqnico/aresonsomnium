@@ -36,6 +36,8 @@ public class InventoryListener extends GeneralEventListener {
                 if (enchantmentMeta != null && clickedItemMeta != null) {
                     Map<Enchantment, Integer> storedEnchants = enchantmentMeta.getStoredEnchants();
 
+                    player.sendMessage("Here");
+
 
                     BiFunction<ItemStack, Map.Entry<Enchantment, Integer>, ItemStack> add = (a, b) -> a.add(2);
                     BinaryOperator<ItemStack> func2 = (old, niu) -> {
