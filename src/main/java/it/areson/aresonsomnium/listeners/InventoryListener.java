@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Map;
@@ -28,9 +29,13 @@ public class InventoryListener extends GeneralEventListener {
             ItemStack clickedItemStack = event.getCurrentItem();
 
             if(handItemStack != null && handItemStack.getType().equals(Material.ENCHANTED_BOOK) && clickedItemStack != null) {
-                Map<Enchantment, Integer> enchantments = handItemStack.getEnchantments();
+                EnchantmentStorageMeta enchantmentMeta = (EnchantmentStorageMeta) handItemStack.getItemMeta();
+                if(enchantmentMeta != null) {
+                    Map<Enchantment, Integer> storedEnchants = enchantmentMeta.getStoredEnchants();
 
-                player.sendMessage(enchantments.toString());
+                    boolean result = storedEnchants.keySet().stream().parallel().allMatch(we -> we.canEnchantItem(clickedItemStack));
+                    player.sendMessage("Risultato: " + result);
+                }
             }
         }
     }
