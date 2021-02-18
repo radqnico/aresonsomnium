@@ -10,7 +10,6 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Map;
 
@@ -27,11 +26,14 @@ public class InventoryListener extends GeneralEventListener {
             Player player = (Player) whoClicked;
             ItemStack handItemStack = event.getCursor();
             ItemStack clickedItemStack = event.getCurrentItem();
+            player.sendMessage("Swap player");
 
             if(handItemStack != null && handItemStack.getType().equals(Material.ENCHANTED_BOOK) && clickedItemStack != null) {
+                player.sendMessage("Enchant book");
                 EnchantmentStorageMeta enchantmentMeta = (EnchantmentStorageMeta) handItemStack.getItemMeta();
                 if(enchantmentMeta != null) {
                     Map<Enchantment, Integer> storedEnchants = enchantmentMeta.getStoredEnchants();
+                    player.sendMessage("Meta not empty: " + storedEnchants.toString());
 
                     boolean result = storedEnchants.keySet().stream().parallel().allMatch(we -> we.canEnchantItem(clickedItemStack));
                     player.sendMessage("Risultato: " + result);
