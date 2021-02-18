@@ -10,6 +10,7 @@ import it.areson.aresonsomnium.commands.player.StatsCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.gomma.GommaGommaEventListener;
 import it.areson.aresonsomnium.gomma.GommaObjectsFileReader;
+import it.areson.aresonsomnium.listeners.InventoryListener;
 import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.shops.guis.ShopEditor;
@@ -102,6 +103,7 @@ public class AresonSomnium extends JavaPlugin {
         customGuiEventsListener = new CustomGuiEventsListener(this);
         setPriceInChatListener = new SetPriceInChatListener(this);
         gommaGommaEventListener = new GommaGommaEventListener(this);
+        new InventoryListener(this);
 
         playerDBEvents.registerEvents();
         customGuiEventsListener.registerEvents();

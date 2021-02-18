@@ -21,4 +21,5 @@ public class InventoryListener extends GeneralEventListener {
             player.sendMessage(event.getCurrentItem().toString());
         }
     }
+
 }
