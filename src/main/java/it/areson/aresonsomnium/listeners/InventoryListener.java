@@ -64,7 +64,7 @@ public class InventoryListener extends GeneralEventListener {
 ////                        });
 ////
 ////                    }
-                    player.sendMessage("Risultato: " + validateEnchants);
+//                    player.sendMessage("Risultato: " + validateEnchants);
                 }
             }
         }
