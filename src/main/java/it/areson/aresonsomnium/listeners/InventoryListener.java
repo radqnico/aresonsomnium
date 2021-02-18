@@ -34,10 +34,9 @@ public class InventoryListener extends GeneralEventListener {
 
                     boolean result = storedEnchants.entrySet().stream().parallel().allMatch(entry -> {
                         Enchantment enchantment = entry.getKey();
-                        boolean rightEnchant = enchantment.canEnchantItem(clickedItemStack);
-                        Integer enchantmentLevel = clickedItemStack.getEnchantments().get(enchantment);
-                        player.sendMessage(enchantmentLevel + " ");
-                        return rightEnchant;
+                        int currentEnchantmentLevel = clickedItemStack.getEnchantments().get(enchantment);
+                        player.sendMessage(currentEnchantmentLevel + " ");
+                        return enchantment.canEnchantItem(clickedItemStack) && currentEnchantmentLevel != 0 && currentEnchantmentLevel < entry.getValue();
                     });
                     player.sendMessage("Risultato: " + result);
                 }
