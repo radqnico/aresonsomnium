@@ -10,8 +10,11 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 
 public class InventoryListener extends GeneralEventListener {
 
@@ -29,21 +32,38 @@ public class InventoryListener extends GeneralEventListener {
 
             if (handItemStack != null && handItemStack.getType().equals(Material.ENCHANTED_BOOK) && clickedItemStack != null) {
                 EnchantmentStorageMeta enchantmentMeta = (EnchantmentStorageMeta) handItemStack.getItemMeta();
-                if (enchantmentMeta != null) {
+                ItemMeta clickedItemMeta = clickedItemStack.getItemMeta();
+                if (enchantmentMeta != null && clickedItemMeta != null) {
                     Map<Enchantment, Integer> storedEnchants = enchantmentMeta.getStoredEnchants();
 
-                    boolean validateEnchants = storedEnchants.entrySet().stream().parallel().allMatch(entry -> {
-                        Enchantment enchantment = entry.getKey();
-                        Integer currentEnchantmentLevel = clickedItemStack.getEnchantments().get(enchantment);
-                        return enchantment.canEnchantItem(clickedItemStack) && (currentEnchantmentLevel == null || currentEnchantmentLevel < entry.getValue());
-                    });
 
-//                    if(validateEnchants) {
-//                        storedEnchants.entrySet().stream().parallel().forEach(entry -> {
-//                            clickedItemStack.addEnchantment(entry.getKey(), entry.getValue());
-//                        });
+                    BiFunction<ItemStack, Map.Entry<Enchantment, Integer>, ItemStack> add = (a, b) -> a;
+                    BinaryOperator<ItemStack> func2 = (old, niu) -> {
+                        player.sendMessage("Old " + old.toString());
+                        player.sendMessage("Niu " + niu.toString());
+                        return old;
+                    };
+                    storedEnchants.entrySet().stream().parallel().reduce(clickedItemStack, add, func2);
+
+
+//                    boolean validateEnchants = storedEnchants.entrySet().stream().parallel().reduce(, (we, entry) -> {
+//                        Enchantment enchantment = entry.getKey();
+//                        Integer currentEnchantmentLevel = clickedItemStack.getEnchantments().get(enchantment);
 //
-//                    }
+//
+//                        return we;
+////                        return clickedItemStack;
+////                        return enchantment.canEnchantItem(clickedItemStack)
+////                                && !clickedItemMeta.hasConflictingEnchant(enchantment)
+////                                && (currentEnchantmentLevel == null || currentEnchantmentLevel < entry.getValue());
+//                    }, ItemStack::addEnchantment);
+//
+////                    if(validateEnchants) {
+////                        storedEnchants.entrySet().stream().parallel().forEach(entry -> {
+////                            clickedItemStack.addEnchantment(entry.getKey(), entry.getValue());
+////                        });
+////
+////                    }
                     player.sendMessage("Risultato: " + validateEnchants);
                 }
             }
