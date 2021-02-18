@@ -2,12 +2,16 @@ package it.areson.aresonsomnium.listeners;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.Map;
 
 public class InventoryListener extends GeneralEventListener {
 
@@ -24,8 +28,9 @@ public class InventoryListener extends GeneralEventListener {
             ItemStack clickedItemStack = event.getCurrentItem();
 
             if(handItemStack != null && handItemStack.getType().equals(Material.ENCHANTED_BOOK) && clickedItemStack != null) {
+                Map<Enchantment, Integer> enchantments = handItemStack.getEnchantments();
 
-                player.sendMessage("Okay");
+                player.sendMessage(enchantments.toString());
             }
         }
     }
