@@ -35,6 +35,7 @@ public class AresonSomnium extends JavaPlugin {
     private CustomGuiEventsListener customGuiEventsListener;
     private SetPriceInChatListener setPriceInChatListener;
     private GommaGommaEventListener gommaGommaEventListener;
+    private InventoryListener inventoryListener;
 
     private GommaObjectsFileReader gommaObjectsFileReader;
 
@@ -103,11 +104,12 @@ public class AresonSomnium extends JavaPlugin {
         customGuiEventsListener = new CustomGuiEventsListener(this);
         setPriceInChatListener = new SetPriceInChatListener(this);
         gommaGommaEventListener = new GommaGommaEventListener(this);
-        new InventoryListener(this);
+        inventoryListener = new InventoryListener(this);
 
         playerDBEvents.registerEvents();
         customGuiEventsListener.registerEvents();
         gommaGommaEventListener.registerEvents();
+        inventoryListener.registerEvents();
     }
 
     public SomniumPlayerManager getSomniumPlayerManager() {
