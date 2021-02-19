@@ -36,7 +36,7 @@ public class InventoryListener extends GeneralEventListener {
                 if (enchantmentMeta != null && clickedItemMeta != null) {
                     Map<Enchantment, Integer> storedEnchants = enchantmentMeta.getStoredEnchants();
 
-                    boolean hasValidEnchants = storedEnchants.entrySet().stream().parallel().reduce(true, (valid, entry) -> {
+                    boolean hasValidEnchants = storedEnchants.entrySet().parallelStream().reduce(true, (valid, entry) -> {
                         Enchantment enchantment = entry.getKey();
                         Integer currentEnchantmentLevel = clickedItemStack.getEnchantments().get(enchantment);
 
@@ -47,6 +47,7 @@ public class InventoryListener extends GeneralEventListener {
                     }, Boolean::logicalAnd);
 
                     if(hasValidEnchants) {
+                        player.sendMessage(storedEnchants.toString());
                         handItemStack.setAmount(0);
                         storedEnchants.entrySet().parallelStream().forEach(entry -> clickedItemStack.addEnchantment(entry.getKey(), entry.getValue()));
                     }
