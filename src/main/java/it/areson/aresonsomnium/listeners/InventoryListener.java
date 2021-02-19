@@ -39,17 +39,35 @@ public class InventoryListener extends GeneralEventListener {
                     player.sendMessage("Here");
 
 
-                    BiFunction<ItemStack, Map.Entry<Enchantment, Integer>, ItemStack> add = (a, b) -> {
-                        a = a.add(2);
-                        return a.add(2);
+
+                    BiFunction<ItemStack, Map.Entry<Enchantment, Integer>, ItemStack> biFunction = new BiFunction<ItemStack, Map.Entry<Enchantment, Integer>, ItemStack>() {
+                        @Override
+                        public ItemStack apply(ItemStack itemStack, Map.Entry<Enchantment, Integer> enchantmentIntegerEntry) {
+                            return itemStack.add(1);
+                        }
                     };
-                    BinaryOperator<ItemStack> func2 = (old, niu) -> {
-                        player.sendMessage("Old " + old.getAmount());
-                        player.sendMessage("Niu " + niu.getAmount());
-                        return niu;
+                    BinaryOperator<ItemStack> itemStackBinaryOperator = new BinaryOperator<ItemStack>() {
+                        @Override
+                        public ItemStack apply(ItemStack itemStack, ItemStack itemStack2) {
+                            return itemStack2.add(itemStack.getAmount() + itemStack2.getAmount());
+                        }
                     };
-                    ItemStack reduce = storedEnchants.entrySet().stream().parallel().reduce(clickedItemStack, add, func2);
-                    player.sendMessage(reduce.toString());
+                    ItemStack reduce = storedEnchants.entrySet().stream().reduce(clickedItemStack, biFunction, itemStackBinaryOperator);
+                    System.out.println(reduce.toString());
+
+
+//                    BiFunction<ItemStack, Map.Entry<Enchantment, Integer>, ItemStack> add = (a, b) -> {
+//                        a = a.add(2);
+//                        return a.add(2);
+//                    };
+//                    BinaryOperator<ItemStack> func2 = (old, niu) -> {
+//                        player.sendMessage("Old " + old.getAmount());
+//                        player.sendMessage("Niu " + niu.getAmount());
+//                        old
+//                        return niu;
+//                    };
+//                    ItemStack reduce = storedEnchants.entrySet().stream().parallel().reduce(clickedItemStack, add, func2);
+//                    player.sendMessage(reduce.toString());
 
 
 //                    boolean validateEnchants = storedEnchants.entrySet().stream().parallel().reduce(, (we, entry) -> {
