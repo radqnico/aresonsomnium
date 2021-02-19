@@ -31,13 +31,13 @@ public class InventoryListener extends GeneralEventListener {
             if (handItemStack != null && handItemStack.getType().equals(Material.ENCHANTED_BOOK) && clickedItemStack != null) {
                 EnchantmentStorageMeta enchantmentMeta = (EnchantmentStorageMeta) handItemStack.getItemMeta();
                 ItemMeta clickedItemMeta = clickedItemStack.getItemMeta();
+
                 if (enchantmentMeta != null && clickedItemMeta != null) {
                     Map<Enchantment, Integer> storedEnchants = enchantmentMeta.getStoredEnchants();
 
                     boolean hasValidEnchants = storedEnchants.entrySet().parallelStream().reduce(true, (valid, entry) -> {
                         Enchantment enchantment = entry.getKey();
                         Integer currentEnchantmentLevel = clickedItemStack.getEnchantments().get(enchantment);
-
 
                         return enchantment.canEnchantItem(clickedItemStack)
                                 && !clickedItemMeta.hasConflictingEnchant(enchantment)
