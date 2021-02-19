@@ -36,59 +36,21 @@ public class InventoryListener extends GeneralEventListener {
                 if (enchantmentMeta != null && clickedItemMeta != null) {
                     Map<Enchantment, Integer> storedEnchants = enchantmentMeta.getStoredEnchants();
 
-                    player.sendMessage("Here");
+                    boolean hasValidEnchants = storedEnchants.entrySet().stream().parallel().reduce(true, (valid, entry) -> {
+                        Enchantment enchantment = entry.getKey();
+                        Integer currentEnchantmentLevel = clickedItemStack.getEnchantments().get(enchantment);
 
 
+                        return enchantment.canEnchantItem(clickedItemStack)
+                                && !clickedItemMeta.hasConflictingEnchant(enchantment)
+                                && (currentEnchantmentLevel == null || currentEnchantmentLevel < entry.getValue());
+                    }, Boolean::logicalAnd);
 
-                    BiFunction<ItemStack, Map.Entry<Enchantment, Integer>, ItemStack> biFunction = new BiFunction<ItemStack, Map.Entry<Enchantment, Integer>, ItemStack>() {
-                        @Override
-                        public ItemStack apply(ItemStack itemStack, Map.Entry<Enchantment, Integer> enchantmentIntegerEntry) {
-                            return itemStack.add(1);
-                        }
-                    };
-                    BinaryOperator<ItemStack> itemStackBinaryOperator = new BinaryOperator<ItemStack>() {
-                        @Override
-                        public ItemStack apply(ItemStack itemStack, ItemStack itemStack2) {
-                            return itemStack2.add(itemStack.getAmount() + itemStack2.getAmount());
-                        }
-                    };
-                    ItemStack reduce = storedEnchants.entrySet().stream().reduce(clickedItemStack, biFunction, itemStackBinaryOperator);
-                    System.out.println(reduce.toString());
-
-
-//                    BiFunction<ItemStack, Map.Entry<Enchantment, Integer>, ItemStack> add = (a, b) -> {
-//                        a = a.add(2);
-//                        return a.add(2);
-//                    };
-//                    BinaryOperator<ItemStack> func2 = (old, niu) -> {
-//                        player.sendMessage("Old " + old.getAmount());
-//                        player.sendMessage("Niu " + niu.getAmount());
-//                        old
-//                        return niu;
-//                    };
-//                    ItemStack reduce = storedEnchants.entrySet().stream().parallel().reduce(clickedItemStack, add, func2);
-//                    player.sendMessage(reduce.toString());
-
-
-//                    boolean validateEnchants = storedEnchants.entrySet().stream().parallel().reduce(, (we, entry) -> {
-//                        Enchantment enchantment = entry.getKey();
-//                        Integer currentEnchantmentLevel = clickedItemStack.getEnchantments().get(enchantment);
-//
-//
-//                        return we;
-////                        return clickedItemStack;
-////                        return enchantment.canEnchantItem(clickedItemStack)
-////                                && !clickedItemMeta.hasConflictingEnchant(enchantment)
-////                                && (currentEnchantmentLevel == null || currentEnchantmentLevel < entry.getValue());
-//                    }, ItemStack::addEnchantment);
-//
-////                    if(validateEnchants) {
-////                        storedEnchants.entrySet().stream().parallel().forEach(entry -> {
-////                            clickedItemStack.addEnchantment(entry.getKey(), entry.getValue());
-////                        });
-////
-////                    }
-//                    player.sendMessage("Risultato: " + validateEnchants);
+                    if(hasValidEnchants) {
+                        handItemStack.setAmount(0);
+                        storedEnchants.entrySet().parallelStream().forEach(entry -> clickedItemStack.addEnchantment(entry.getKey(), entry.getValue()));
+                    }
+                    player.sendMessage("Risultato: " + hasValidEnchants);
                 }
             }
         }
