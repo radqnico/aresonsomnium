@@ -13,9 +13,8 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
 
+@SuppressWarnings("unused")
 public class InventoryListener extends GeneralEventListener {
 
     public InventoryListener(AresonSomnium aresonSomnium) {
@@ -26,7 +25,6 @@ public class InventoryListener extends GeneralEventListener {
     public void onInventoryClickEvent(InventoryClickEvent event) {
         HumanEntity whoClicked = event.getWhoClicked();
         if (whoClicked instanceof Player && event.getAction().equals(InventoryAction.SWAP_WITH_CURSOR)) {
-            Player player = (Player) whoClicked;
             ItemStack handItemStack = event.getCursor();
             ItemStack clickedItemStack = event.getCurrentItem();
 
@@ -46,12 +44,12 @@ public class InventoryListener extends GeneralEventListener {
                                 && (currentEnchantmentLevel == null || currentEnchantmentLevel < entry.getValue());
                     }, Boolean::logicalAnd);
 
-                    if(hasValidEnchants) {
-                        player.sendMessage(storedEnchants.toString());
+                    if (hasValidEnchants) {
                         handItemStack.setAmount(0);
-                        storedEnchants.entrySet().parallelStream().forEach(entry -> clickedItemStack.addEnchantment(entry.getKey(), entry.getValue()));
+                        for (Map.Entry<Enchantment, Integer> entry : storedEnchants.entrySet()) {
+                            clickedItemStack.addEnchantment(entry.getKey(), entry.getValue());
+                        }
                     }
-                    player.sendMessage("Risultato: " + hasValidEnchants);
                 }
             }
         }
