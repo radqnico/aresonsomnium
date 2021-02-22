@@ -9,6 +9,7 @@ import it.areson.aresonsomnium.shops.items.ShopItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.Type;
@@ -51,7 +52,7 @@ public class CustomShop extends MySQLObject {
         for (Map.Entry<Integer, ShopItem> entry : items.entrySet()) {
             Integer key = entry.getKey();
             ShopItem shopItem = entry.getValue();
-            org.bukkit.inventory.ItemStack itemStack = new org.bukkit.inventory.ItemStack(shopItem.getItemStack());
+            ItemStack itemStack = new ItemStack(shopItem.getItemStack()).clone();
             ItemMeta itemMeta = itemStack.getItemMeta();
             if (Objects.nonNull(itemMeta)) {
                 List<String> lore = itemMeta.getLore();
