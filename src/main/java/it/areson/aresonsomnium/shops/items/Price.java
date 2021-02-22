@@ -3,7 +3,6 @@ package it.areson.aresonsomnium.shops.items;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
-import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.ChatColor;
 
 import java.math.BigDecimal;
@@ -82,13 +81,13 @@ public class Price {
     public ArrayList<String> toLore() {
         ArrayList<String> lore = new ArrayList<>();
         if (coins.compareTo(BigDecimal.valueOf(0)) > 0) {
-            lore.add(ChatColor.translateAlternateColorCodes('&', "&a$ " + coins.toPlainString()));
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&e" + coins.toPlainString() + " ⛃"));
         }
         if (obols.compareTo(BigInteger.valueOf(0)) > 0) {
-            lore.add(MessageUtils.errorMessage("Oboli " + obols.toString()));
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&6" + obols.toString() + " ❂"));
         }
         if (gems.compareTo(BigInteger.valueOf(0)) > 0) {
-            lore.add(MessageUtils.successMessage("Gemme " + gems.toString()));
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&a" + gems.toString() + " ♦"));
         }
         return lore;
     }
