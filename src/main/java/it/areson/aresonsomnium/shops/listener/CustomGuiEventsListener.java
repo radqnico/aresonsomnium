@@ -73,14 +73,16 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     public void onInventoryClickEvent(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         Inventory clickedInventory = event.getClickedInventory();
-        if (Objects.nonNull(clickedInventory)) {
+        if (clickedInventory != null) {
             if (shopEditor.isEditingCustomGui(player)) {
                 // Editing
                 CustomShop editingCustomShop = shopEditor.getEditingCustomShop(player);
                 if (shopEditor.isEditingPrice(player)) {
                     switchPriceAction(player, event);
+                    aresonSomnium.getDebugger().debugInfo("Price Action");
                 } else {
                     switchEditingAction(player, editingCustomShop, event);
+                    aresonSomnium.getDebugger().debugInfo("Edit Action");
                 }
             } else if (shopManager.isViewingCustomGui(player)) {
                 // Shopping
@@ -218,7 +220,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         if (Objects.nonNull(somniumPlayer)) {
             Price price = shopItem.getSellingPrice();
             Material sellItemType = shopItem.getItemStack().getType();
-            if(shopItem.isSellable()) {
+            if (shopItem.isSellable()) {
                 if (player.getInventory().contains(shopItem.getItemStack().getType())) {
 
                     long totalAmountOfItem = Arrays.stream(player.getInventory().getContents())
