@@ -68,6 +68,7 @@ public class Price {
     }
 
     public boolean isPriceReady() {
+        System.out.println(coins.compareTo(BigDecimal.valueOf(0)));
         return coins.compareTo(BigDecimal.valueOf(0)) > 0 ||
                 obols.compareTo(BigInteger.valueOf(0)) > 0 ||
                 gems.compareTo(BigInteger.valueOf(0)) > 0;

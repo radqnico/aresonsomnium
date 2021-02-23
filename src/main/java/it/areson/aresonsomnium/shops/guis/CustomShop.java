@@ -64,7 +64,7 @@ public class CustomShop extends MySQLObject {
                         lore = new ArrayList<>();
                         lore.add("");
                     }
-                    lore.add("Prezzo di &lacquisto:");
+                    lore.add(ChatColor.translateAlternateColorCodes('&', "Prezzo di &lacquisto:"));
                     lore.addAll(shopItem.getShoppingPrice().toLore());
                 }
                 if (shopItem.getSellingPrice().isPriceReady()) {
@@ -74,7 +74,7 @@ public class CustomShop extends MySQLObject {
                         lore = new ArrayList<>();
                         lore.add("");
                     }
-                    lore.add("Prezzo di &lvendita:");
+                    lore.add(ChatColor.translateAlternateColorCodes('&', "Prezzo di &lvendita:"));
                     lore.addAll(shopItem.getShoppingPrice().toLore());
                 }
                 itemMeta.setLore(lore);
