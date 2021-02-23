@@ -75,7 +75,7 @@ public class CustomShop extends MySQLObject {
                         lore.add("");
                     }
                     lore.add(ChatColor.translateAlternateColorCodes('&', "Prezzo di &lvendita:"));
-                    lore.addAll(shopItem.getShoppingPrice().toLore());
+                    lore.addAll(shopItem.getSellingPrice().toLore());
                 }
                 itemMeta.setLore(lore);
                 itemStack.setItemMeta(itemMeta);

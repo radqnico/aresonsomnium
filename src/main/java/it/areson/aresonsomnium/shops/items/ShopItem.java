@@ -7,8 +7,8 @@ import java.util.Base64;
 public class ShopItem {
 
     private final ItemStack itemStack;
-    private Price shoppingPrice;
-    private Price sellingPrice;
+    private final Price shoppingPrice;
+    private final Price sellingPrice;
 
     public ShopItem(ItemStack itemStack, Price shoppingPrice, Price sellingPrice) {
         this.itemStack = itemStack;
@@ -16,20 +16,16 @@ public class ShopItem {
         this.sellingPrice = sellingPrice;
     }
 
-    public ShopItem(org.bukkit.inventory.ItemStack itemStack) {
+    public ShopItem(ItemStack itemStack) {
         this(itemStack, new Price(), new Price());
     }
 
-    public org.bukkit.inventory.ItemStack getItemStack() {
+    public ItemStack getItemStack() {
         return itemStack;
     }
 
     public Price getShoppingPrice() {
         return shoppingPrice;
-    }
-
-    public void setShoppingPrice(Price shoppingPrice) {
-        this.shoppingPrice = shoppingPrice;
     }
 
     public Price getSellingPrice() {
