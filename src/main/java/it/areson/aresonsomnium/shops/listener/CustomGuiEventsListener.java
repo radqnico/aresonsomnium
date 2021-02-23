@@ -120,14 +120,14 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 }
                 break;
             case PICKUP_HALF:
-                if (Objects.nonNull(involvedItem)) {
+                if (Objects.nonNull(involvedItem) && event.getClickedInventory() != null && event.getClickedInventory().getType().equals(InventoryType.CHEST)) {
                     EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop, false);
                     player.openInventory(shopEditor.getPricesInventory(false));
                     editPriceConfig.setSlot(event.getSlot());
                 }
                 break;
             case CLONE_STACK:
-                if (Objects.nonNull(involvedItem)) {
+                if (Objects.nonNull(involvedItem) && event.getClickedInventory() != null && event.getClickedInventory().getType().equals(InventoryType.CHEST)) {
                     EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop, true);
                     player.openInventory(shopEditor.getPricesInventory(true));
                     editPriceConfig.setSlot(event.getSlot());
@@ -221,8 +221,12 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 if (player.getInventory().contains(shopItem.getItemStack().getType())) {
 
                     long totalAmountOfItem = Arrays.stream(player.getInventory().getContents())
-                            .filter(itemStack -> itemStack != null && sellItemType.equals(itemStack.getType()))
-                            .count();
+                            .reduce(0, (integer, itemStack) -> {
+                                if (itemStack != null && itemStack.getType().equals(sellItemType)) {
+                                    return itemStack.getAmount();
+                                }
+                                return 0;
+                            }, Integer::sum);
 
                     if (totalAmountOfItem >= shopItem.getItemStack().getAmount()) {
                         price.addTo(somniumPlayer);
