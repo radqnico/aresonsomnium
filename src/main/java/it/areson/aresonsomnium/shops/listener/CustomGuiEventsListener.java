@@ -48,9 +48,6 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             } else if (shopManager.isViewingCustomGui(player)) {
                 shopManager.playerCloseGui(player);
             }
-        } else {
-            shopEditor.endEditGui(player);
-            shopEditor.endEditPrice(player);
         }
     }
 
@@ -124,15 +121,15 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 break;
             case PICKUP_HALF:
                 if (Objects.nonNull(involvedItem)) {
-                    EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop, false);
                     player.openInventory(shopEditor.getPricesInventory(false));
+                    EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop, false);
                     editPriceConfig.setSlot(event.getSlot());
                 }
                 break;
             case CLONE_STACK:
                 if (Objects.nonNull(involvedItem)) {
-                    EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop, true);
                     player.openInventory(shopEditor.getPricesInventory(true));
+                    EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop, true);
                     editPriceConfig.setSlot(event.getSlot());
                 }
                 break;
