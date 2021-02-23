@@ -221,7 +221,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 if (player.getInventory().contains(shopItem.getItemStack().getType())) {
 
                     long totalAmountOfItem = Arrays.stream(player.getInventory().getContents())
-                            .filter(itemStack -> sellItemType.equals(itemStack.getType()))
+                            .filter(itemStack -> itemStack != null && sellItemType.equals(itemStack.getType()))
                             .count();
 
                     if (totalAmountOfItem >= shopItem.getItemStack().getAmount()) {
