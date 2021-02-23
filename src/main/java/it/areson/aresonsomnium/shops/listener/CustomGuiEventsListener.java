@@ -223,9 +223,9 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     long totalAmountOfItem = Arrays.stream(player.getInventory().getContents())
                             .reduce(0, (integer, itemStack) -> {
                                 if (itemStack != null && itemStack.getType().equals(sellItemType)) {
-                                    return itemStack.getAmount();
+                                    return integer + (itemStack.getAmount());
                                 }
-                                return 0;
+                                return integer;
                             }, Integer::sum);
                     aresonSomnium.getLogger().info("Total: " + totalAmountOfItem);
 
