@@ -227,6 +227,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                                 }
                                 return 0;
                             }, Integer::sum);
+                    aresonSomnium.getLogger().info("Total: " + totalAmountOfItem);
 
                     if (totalAmountOfItem >= shopItem.getItemStack().getAmount()) {
                         price.addTo(somniumPlayer);
