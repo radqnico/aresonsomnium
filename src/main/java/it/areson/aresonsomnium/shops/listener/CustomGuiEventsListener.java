@@ -121,15 +121,15 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 break;
             case PICKUP_HALF:
                 if (Objects.nonNull(involvedItem)) {
-                    player.openInventory(shopEditor.getPricesInventory(false));
                     EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop, false);
+                    player.openInventory(shopEditor.getPricesInventory(false));
                     editPriceConfig.setSlot(event.getSlot());
                 }
                 break;
             case CLONE_STACK:
                 if (Objects.nonNull(involvedItem)) {
-                    player.openInventory(shopEditor.getPricesInventory(true));
                     EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop, true);
+                    player.openInventory(shopEditor.getPricesInventory(true));
                     editPriceConfig.setSlot(event.getSlot());
                 }
                 break;
