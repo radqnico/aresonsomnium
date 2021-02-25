@@ -121,6 +121,11 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 }
                 break;
             case PICKUP_HALF:
+                if (Objects.nonNull(involvedItem) && (event.getClickedInventory() != null && event.getClickedInventory().getType().equals(InventoryType.PLAYER))) {
+                    MoveShopItemAction moveShopItemAction = shopEditor.beginMoveItemAction(player);
+                    moveShopItemAction.setSource(Pair.of(event.getClickedInventory(), event.getSlot()));
+                    moveShopItemAction.setItem(involvedItem);
+                }
                 if (Objects.nonNull(involvedItem) && event.getClickedInventory() != null && event.getClickedInventory().getType().equals(InventoryType.CHEST)) {
                     EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop, false);
                     player.openInventory(shopEditor.getPricesInventory(false));
@@ -128,6 +133,11 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 }
                 break;
             case CLONE_STACK:
+                if (Objects.nonNull(involvedItem) && (event.getClickedInventory() != null && event.getClickedInventory().getType().equals(InventoryType.PLAYER))) {
+                    MoveShopItemAction moveShopItemAction = shopEditor.beginMoveItemAction(player);
+                    moveShopItemAction.setSource(Pair.of(event.getClickedInventory(), event.getSlot()));
+                    moveShopItemAction.setItem(involvedItem);
+                }
                 if (Objects.nonNull(involvedItem) && event.getClickedInventory() != null && event.getClickedInventory().getType().equals(InventoryType.CHEST)) {
                     EditPriceConfig editPriceConfig = shopEditor.newEditPrice(player, customShop, true);
                     player.openInventory(shopEditor.getPricesInventory(true));
