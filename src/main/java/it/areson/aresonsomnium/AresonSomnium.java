@@ -11,6 +11,7 @@ import it.areson.aresonsomnium.gomma.GommaObjectsFileReader;
 import it.areson.aresonsomnium.listeners.CheckApplyListener;
 import it.areson.aresonsomnium.listeners.InventoryListener;
 import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
+import it.areson.aresonsomnium.placeholders.CoinsPlaceholders;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
@@ -76,6 +77,10 @@ public class AresonSomnium extends JavaPlugin {
         // 1m  = 1200
         // 10m = 12000
         AutoSaveManager.startAutoSaveTask(this, 12000);
+
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new CoinsPlaceholders(this).register();
+        }
 
         AresonSomniumAPI.instance = this;
     }

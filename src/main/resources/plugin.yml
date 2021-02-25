@@ -46,6 +46,7 @@ commands:
 
 depend:
   - Essentials
+  - PlaceholderAPI
 
 permissions:
   aresonsomnium.admin:
