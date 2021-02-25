@@ -270,9 +270,6 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     long totalAmountOfItem = Arrays.stream(player.getInventory().getContents()).parallel()
                             .reduce(0, (integer, itemStack) -> {
                                 if (itemStack != null && itemStack.getType().equals(sellItemType)) {
-                                    if (shopItemStack.getType().equals(Material.ENCHANTED_BOOK) && checkIfEnchantsAreEqual(shopItemStack, itemStack)) {
-                                        return integer + 1;
-                                    }
                                     return integer + (itemStack.getAmount());
                                 }
                                 return integer;
@@ -287,6 +284,10 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                                     .findFirst();
                             if (first.isPresent()) {
                                 ItemStack itemStack = first.get();
+                                if (sellItemType.equals(Material.ENCHANTED_BOOK) && !checkIfEnchantsAreEqual(shopItemStack, itemStack)) {
+                                    --toRemove;
+                                    break;
+                                }
                                 price.addTo(somniumPlayer);
                                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage(
                                         "item-sell-success",
