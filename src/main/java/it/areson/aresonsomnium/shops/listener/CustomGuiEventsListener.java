@@ -284,10 +284,6 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                                     .findFirst();
                             if (first.isPresent()) {
                                 ItemStack itemStack = first.get();
-                                if (sellItemType.equals(Material.ENCHANTED_BOOK) && !checkIfEnchantsAreEqual(shopItemStack, itemStack)) {
-                                    --toRemove;
-                                    break;
-                                }
                                 price.addTo(somniumPlayer);
                                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage(
                                         "item-sell-success",
