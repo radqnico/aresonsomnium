@@ -19,7 +19,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -225,8 +225,8 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     }
 
     private boolean checkIfEnchantsAreEqual(ItemStack itemStack1, ItemStack itemStack2) {
-        BookMeta bookMeta1 = (BookMeta) itemStack1.getItemMeta();
-        BookMeta bookMeta2 = (BookMeta) itemStack2.getItemMeta();
+        EnchantmentStorageMeta bookMeta1 = (EnchantmentStorageMeta) itemStack1.getItemMeta();
+        EnchantmentStorageMeta bookMeta2 = (EnchantmentStorageMeta) itemStack2.getItemMeta();
         if (bookMeta1 != null && bookMeta2 != null) {
             return bookMeta1.equals(bookMeta2);
         } else {
