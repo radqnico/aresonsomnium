@@ -18,7 +18,7 @@ public class CoinsPlaceholders extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getIdentifier() {
-        return "coins";
+        return "somnium_wallet";
     }
 
     @Override
