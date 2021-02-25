@@ -19,6 +19,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -223,25 +224,39 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         }
     }
 
+    private boolean checkIfEnchantsAreEqual(ItemStack itemStack1, ItemStack itemStack2) {
+        BookMeta bookMeta1 = (BookMeta) itemStack1.getItemMeta();
+        BookMeta bookMeta2 = (BookMeta) itemStack2.getItemMeta();
+        if (bookMeta1 != null && bookMeta2 != null) {
+            return bookMeta1.equals(bookMeta2);
+        } else {
+            return false;
+        }
+    }
+
     private void sellItem(Player player, ShopItem shopItem) {
         SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
         if (Objects.nonNull(somniumPlayer)) {
             Price price = shopItem.getSellingPrice();
+            ItemStack shopItemStack = shopItem.getItemStack();
             Material sellItemType = shopItem.getItemStack().getType();
             if (shopItem.isSellable()) {
-                if (player.getInventory().contains(shopItem.getItemStack().getType())) {
+                if (player.getInventory().contains(shopItemStack.getType())) {
 
                     long totalAmountOfItem = Arrays.stream(player.getInventory().getContents()).parallel()
                             .reduce(0, (integer, itemStack) -> {
                                 if (itemStack != null && itemStack.getType().equals(sellItemType)) {
+                                    if (shopItemStack.getType().equals(Material.ENCHANTED_BOOK) && checkIfEnchantsAreEqual(shopItemStack, itemStack)) {
+                                        return integer + 1;
+                                    }
                                     return integer + (itemStack.getAmount());
                                 }
                                 return integer;
                             }, Integer::sum);
                     aresonSomnium.getLogger().info("Total: " + totalAmountOfItem);
 
-                    if (totalAmountOfItem >= shopItem.getItemStack().getAmount()) {
-                        int toRemove = shopItem.getItemStack().getAmount();
+                    if (totalAmountOfItem >= shopItemStack.getAmount()) {
+                        int toRemove = shopItemStack.getAmount();
                         while (toRemove > 0) {
                             Optional<ItemStack> first = Arrays.stream(player.getInventory().getContents()).parallel()
                                     .filter(itemStack -> itemStack != null && itemStack.getType().equals(sellItemType))
