@@ -10,6 +10,7 @@ import it.areson.aresonsomnium.shops.items.ShopItem;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.utils.Pair;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -22,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -228,7 +230,12 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         EnchantmentStorageMeta bookMeta1 = (EnchantmentStorageMeta) itemStack1.getItemMeta();
         EnchantmentStorageMeta bookMeta2 = (EnchantmentStorageMeta) itemStack2.getItemMeta();
         if (bookMeta1 != null && bookMeta2 != null) {
-            return bookMeta1.equals(bookMeta2);
+            Map<Enchantment, Integer> storedEnchants1 = bookMeta1.getStoredEnchants();
+            Map<Enchantment, Integer> storedEnchants2 = bookMeta2.getStoredEnchants();
+            boolean anyMismatch = storedEnchants1.entrySet().parallelStream()
+                    .anyMatch(enchantmentIntegerEntry1 -> storedEnchants2.entrySet().parallelStream()
+                            .anyMatch(enchantmentIntegerEntry2 -> !enchantmentIntegerEntry1.getKey().equals(enchantmentIntegerEntry2.getKey()) || !enchantmentIntegerEntry1.getValue().equals(enchantmentIntegerEntry2.getValue())));
+            return !anyMismatch;
         } else {
             return false;
         }
