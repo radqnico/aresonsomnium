@@ -75,7 +75,7 @@ public class ShopManager {
         CustomShop customShop = guis.get(guiName);
         if (Objects.nonNull(customShop)) {
             if (customShop.isShopReady()) {
-                player.openInventory(customShop.createInventory());
+                player.openInventory(customShop.createInventory(true));
                 openedGuis.put(player, guiName);
             } else {
                 player.sendMessage(AresonSomnium.getInstance().getMessageManager().getPlainMessage("shop-not-ready"));

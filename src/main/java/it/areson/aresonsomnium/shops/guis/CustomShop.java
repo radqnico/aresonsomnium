@@ -8,6 +8,7 @@ import it.areson.aresonsomnium.shops.items.SerializedShopItem;
 import it.areson.aresonsomnium.shops.items.ShopItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -47,7 +48,7 @@ public class CustomShop extends MySQLObject {
         return items;
     }
 
-    public Inventory createInventory() {
+    public Inventory createInventory(boolean isShopping) {
         Inventory inventory = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', title));
         for (Map.Entry<Integer, ShopItem> entry : items.entrySet()) {
             Integer key = entry.getKey();
@@ -81,6 +82,12 @@ public class CustomShop extends MySQLObject {
                 itemStack.setItemMeta(itemMeta);
             }
             inventory.setItem(key, itemStack);
+        }
+        for (int i = 0; i < inventory.getSize() && isShopping; i++) {
+            ItemStack item = inventory.getItem(i);
+            if (item == null || Material.AIR.equals(item.getType())) {
+                inventory.setItem(i, new ItemStack(Material.WHITE_STAINED_GLASS_PANE));
+            }
         }
         return inventory;
     }

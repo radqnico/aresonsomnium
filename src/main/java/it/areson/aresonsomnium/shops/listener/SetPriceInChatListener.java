@@ -41,7 +41,7 @@ public class SetPriceInChatListener extends GeneralEventListener {
                 player.sendMessage(MessageUtils.successMessage("Prezzo impostato."));
                 Bukkit.getScheduler().runTask(
                         aresonSomnium,
-                        () -> player.openInventory(shopEditor.getEditingCustomShop(player).createInventory())
+                        () -> player.openInventory(shopEditor.getEditingCustomShop(player).createInventory(false))
                 );
 
                 shopEditor.endEditPrice(player);

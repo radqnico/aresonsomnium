@@ -214,7 +214,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             ShopEditor shopEditor = aresonSomnium.getShopEditor();
             if (shopManager.isPermanent(guiName)) {
                 CustomShop permanentGui = shopManager.getPermanentGui(guiName);
-                player.openInventory(permanentGui.createInventory());
+                player.openInventory(permanentGui.createInventory(false));
                 if (shopEditor.isEditingCustomGui(player) || shopEditor.isEditingPrice(player)) {
                     shopEditor.endEditGui(player);
                     shopEditor.endEditPrice(player);
@@ -234,7 +234,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         CustomShop newGui = shopManager.createNewGui(guiName, guiTitle);
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            player.openInventory(newGui.createInventory());
+            player.openInventory(newGui.createInventory(false));
             if (shopEditor.isEditingCustomGui(player) || shopEditor.isEditingPrice(player)) {
                 shopEditor.endEditGui(player);
                 shopEditor.endEditPrice(player);
