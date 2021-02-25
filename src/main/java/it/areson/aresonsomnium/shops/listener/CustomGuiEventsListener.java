@@ -232,10 +232,25 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         if (bookMeta1 != null && bookMeta2 != null) {
             Map<Enchantment, Integer> storedEnchants1 = bookMeta1.getStoredEnchants();
             Map<Enchantment, Integer> storedEnchants2 = bookMeta2.getStoredEnchants();
-            boolean anyMismatch = storedEnchants1.entrySet().parallelStream()
-                    .anyMatch(enchantmentIntegerEntry1 -> storedEnchants2.entrySet().parallelStream()
-                            .anyMatch(enchantmentIntegerEntry2 -> !enchantmentIntegerEntry1.getKey().equals(enchantmentIntegerEntry2.getKey()) || !enchantmentIntegerEntry1.getValue().equals(enchantmentIntegerEntry2.getValue())));
-            return !anyMismatch;
+
+            for (Map.Entry<Enchantment, Integer> entry1 : storedEnchants1.entrySet()) {
+                boolean isThereEnchant = false;
+                for (Map.Entry<Enchantment, Integer> entry2 : storedEnchants2.entrySet()) {
+                    Enchantment key1 = entry1.getKey();
+                    Enchantment key2 = entry2.getKey();
+                    boolean keyEquals = key1.getKey().equals(key2.getKey());
+                    boolean valueEquals = entry1.getValue().equals(entry2.getValue());
+                    if (keyEquals && valueEquals) {
+                        isThereEnchant = true;
+                        break;
+                    }
+                }
+                if (!isThereEnchant) {
+                    return false;
+                }
+            }
+
+            return true;
         } else {
             return false;
         }
