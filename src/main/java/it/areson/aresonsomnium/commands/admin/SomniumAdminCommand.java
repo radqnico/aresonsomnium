@@ -235,6 +235,10 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             player.openInventory(newGui.createInventory());
+            if (shopEditor.isEditingCustomGui(player) || shopEditor.isEditingPrice(player)) {
+                shopEditor.endEditGui(player);
+                shopEditor.endEditPrice(player);
+            }
             shopEditor.beginEditGui(player, guiName);
         }
     }
