@@ -83,12 +83,21 @@ public class CustomShop extends MySQLObject {
             }
             inventory.setItem(key, itemStack);
         }
-        for (int i = 0; i < inventory.getSize() && isShopping; i++) {
-            ItemStack item = inventory.getItem(i);
-            if (item == null || Material.AIR.equals(item.getType())) {
-                inventory.setItem(i, new ItemStack(Material.WHITE_STAINED_GLASS_PANE));
+        if (isShopping) {
+            ItemStack itemStack = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            if (itemMeta != null) {
+                itemMeta.setDisplayName("");
+            }
+            itemStack.setItemMeta(itemMeta);
+            for (int i = 0; i < inventory.getSize(); i++) {
+                ItemStack item = inventory.getItem(i);
+                if (item == null || Material.AIR.equals(item.getType())) {
+                    inventory.setItem(i, itemStack);
+                }
             }
         }
+
         return inventory;
     }
 
