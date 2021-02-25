@@ -53,7 +53,7 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
                 }
                 break;
             case 2:
-                if ("openpermanentgui".equals(args[0].toLowerCase())) {
+                if ("openpermanentgui".equalsIgnoreCase(args[0])) {
                     openPermanentGuiHandler(commandSender, args[1]);
                 } else {
                     commandSender.sendMessage(errorMessage("Funzione non trovata"));
@@ -78,7 +78,7 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
             ShopManager shopManager = aresonSomnium.getShopManager();
             if (shopManager.isPermanent(guiName)) {
                 CustomShop permanentGui = shopManager.getPermanentGui(guiName);
-                player.openInventory(permanentGui.createInventory());
+                player.openInventory(permanentGui.createInventory(true));
             } else {
                 player.sendMessage("La GUI richiesta non è una GUI salvata");
             }
