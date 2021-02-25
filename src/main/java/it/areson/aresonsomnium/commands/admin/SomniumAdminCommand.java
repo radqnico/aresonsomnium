@@ -215,6 +215,10 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             if (shopManager.isPermanent(guiName)) {
                 CustomShop permanentGui = shopManager.getPermanentGui(guiName);
                 player.openInventory(permanentGui.createInventory());
+                if (shopEditor.isEditingCustomGui(player) || shopEditor.isEditingPrice(player)) {
+                    shopEditor.endEditGui(player);
+                    shopEditor.endEditPrice(player);
+                }
                 shopEditor.beginEditGui(player, guiName);
             } else {
                 messageManager.sendPlainMessage(player, "guis-reloaded");
