@@ -18,7 +18,7 @@ public class CoinsPlaceholders extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getIdentifier() {
-        return "stats";
+        return "playerstats";
     }
 
     @Override
@@ -45,6 +45,8 @@ public class CoinsPlaceholders extends PlaceholderExpansion {
                             return somniumPlayer.getWallet().getObols().toString();
                         case "gems":
                             return somniumPlayer.getWallet().getGems().toString();
+                        case "playedseconds":
+                            return somniumPlayer.getSecondsPlayedTotal() + "";
                     }
                 }
             }
