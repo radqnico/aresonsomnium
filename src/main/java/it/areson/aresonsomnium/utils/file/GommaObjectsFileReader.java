@@ -1,7 +1,7 @@
-package it.areson.aresonsomnium.gomma;
+package it.areson.aresonsomnium.utils.file;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.utils.FileManager;
+import it.areson.aresonsomnium.utils.file.FileManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;

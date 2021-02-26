@@ -6,9 +6,8 @@ import it.areson.aresonsomnium.commands.player.CheckCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
-import it.areson.aresonsomnium.gomma.GommaGommaEventListener;
-import it.areson.aresonsomnium.gomma.GommaObjectsFileReader;
-import it.areson.aresonsomnium.listeners.CheckApplyListener;
+import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
+import it.areson.aresonsomnium.listeners.RightClickListener;
 import it.areson.aresonsomnium.listeners.InventoryListener;
 import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
 import it.areson.aresonsomnium.placeholders.CoinsPlaceholders;
@@ -19,7 +18,7 @@ import it.areson.aresonsomnium.shops.listener.CustomGuiEventsListener;
 import it.areson.aresonsomnium.shops.listener.SetPriceInChatListener;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.Debugger;
-import it.areson.aresonsomnium.utils.MessageManager;
+import it.areson.aresonsomnium.utils.file.MessageManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
@@ -34,8 +33,7 @@ public class AresonSomnium extends JavaPlugin {
     private SomniumPlayerDBEvents playerDBEvents;
     private CustomGuiEventsListener customGuiEventsListener;
     private SetPriceInChatListener setPriceInChatListener;
-    private GommaGommaEventListener gommaGommaEventListener;
-    private CheckApplyListener checkApplyListener;
+    private RightClickListener rightClickListener;
     private InventoryListener inventoryListener;
 
     private GommaObjectsFileReader gommaObjectsFileReader;
@@ -104,8 +102,8 @@ public class AresonSomnium extends JavaPlugin {
         new OpenGuiCommand(this);
         new StatsCommand(this);
         new SomniumGommaCommand(this);
-        new SellCommand(this, Constants.sellHandCommand);
-        new SellCommand(this, Constants.sellAllCommand);
+        new SellCommand(this, Constants.SELL_HAND_COMMAND);
+        new SellCommand(this, Constants.SELL_ALL_COMMAND);
         new CheckCommand(this);
         new ObolsCommand(this);
     }
@@ -114,15 +112,13 @@ public class AresonSomnium extends JavaPlugin {
         playerDBEvents = new SomniumPlayerDBEvents(this);
         customGuiEventsListener = new CustomGuiEventsListener(this);
         setPriceInChatListener = new SetPriceInChatListener(this);
-        gommaGommaEventListener = new GommaGommaEventListener(this);
         inventoryListener = new InventoryListener(this);
-        checkApplyListener = new CheckApplyListener(this);
+        rightClickListener = new RightClickListener(this);
 
         playerDBEvents.registerEvents();
         customGuiEventsListener.registerEvents();
-        gommaGommaEventListener.registerEvents();
         inventoryListener.registerEvents();
-        checkApplyListener.registerEvents();
+        rightClickListener.registerEvents();
     }
 
     public SomniumPlayerManager getSomniumPlayerManager() {

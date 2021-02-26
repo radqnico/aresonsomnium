@@ -2,7 +2,6 @@ package it.areson.aresonsomnium.commands.admin;
 
 import com.destroystokyo.paper.block.TargetBlockInfo;
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.gomma.GommaConstants;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,6 +14,7 @@ import org.bukkit.util.StringUtil;
 
 import java.util.*;
 
+import static it.areson.aresonsomnium.Constants.GOMMA_MODEL_DATA;
 import static it.areson.aresonsomnium.utils.MessageUtils.errorMessage;
 import static it.areson.aresonsomnium.utils.MessageUtils.successMessage;
 
@@ -73,7 +73,7 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
             if (Objects.nonNull(itemMeta)) {
                 itemMeta.setDisplayName(aresonSomnium.getMessageManager().getPlainMessageNoPrefix("gomma-item-name"));
 
-                itemMeta.setCustomModelData(GommaConstants.customModelData);
+                itemMeta.setCustomModelData(GOMMA_MODEL_DATA);
             }
             gommaItem.setItemMeta(itemMeta);
 

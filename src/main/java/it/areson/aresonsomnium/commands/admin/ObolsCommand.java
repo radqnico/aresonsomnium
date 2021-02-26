@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import static it.areson.aresonsomnium.Constants.OBOL_MODEL_DATA;
+
 
 @SuppressWarnings("NullableProblems")
 public class ObolsCommand implements CommandExecutor, TabCompleter {
@@ -80,7 +82,7 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
                 ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
                 if (Material.GOLD_NUGGET.equals(itemInMainHand.getType())) {
                     ItemMeta itemMeta = itemInMainHand.getItemMeta();
-                    if (itemMeta != null && itemMeta.hasCustomModelData() && itemMeta.getCustomModelData() == Wallet.getObolNuggetModelData()) {
+                    if (itemMeta != null && itemMeta.hasCustomModelData() && itemMeta.getCustomModelData() == OBOL_MODEL_DATA) {
                         if (itemInMainHand.getAmount() >= 10) {
                             itemInMainHand.setAmount(itemInMainHand.getAmount() - 10);
                             somniumPlayer.getWallet().changeObols(BigInteger.ONE);

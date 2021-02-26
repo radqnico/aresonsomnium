@@ -5,7 +5,7 @@ import it.areson.aresonsomnium.Constants;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import it.areson.aresonsomnium.shops.items.BlockPrice;
-import it.areson.aresonsomnium.utils.MessageManager;
+import it.areson.aresonsomnium.utils.file.MessageManager;
 import it.areson.aresonsomnium.utils.Pair;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -14,24 +14,24 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Optional;
+
+import static it.areson.aresonsomnium.Constants.SELL_MULTIPLIER_PERMISSION;
 
 @SuppressWarnings("NullableProblems")
 public class SellCommand implements CommandExecutor {
 
     private final AresonSomnium aresonSomnium;
     private final HashMap<Material, String> blocksPermission = new HashMap<Material, String>() {{
-        put(Material.COBBLESTONE, Constants.permissionSelva);
-        put(Material.NETHERRACK, Constants.permissionAntinferno);
-        put(Material.COAL_BLOCK, Constants.permissionSecondoGirone);
-        put(Material.RED_NETHER_BRICKS, Constants.permissionQuartoGirone);
-        put(Material.MAGMA_BLOCK, Constants.permissionSestoGirone);
-        put(Material.RED_CONCRETE, Constants.permissionOttavoGirone);
+        put(Material.COBBLESTONE, Constants.PERMISSION_SELVA);
+        put(Material.NETHERRACK, Constants.PERMISSION_ANTINFERNO);
+        put(Material.COAL_BLOCK, Constants.PERMISSION_SECONDO_GIRONE);
+        put(Material.RED_NETHER_BRICKS, Constants.PERMISSION_QUARTO_GIRONE);
+        put(Material.MAGMA_BLOCK, Constants.PERMISSION_SESTO_GIRONE);
+        put(Material.RED_CONCRETE, Constants.PERMISSION_OTTAVO_GIRONE);
     }};
 
     private final MessageManager messageManager;
@@ -54,7 +54,7 @@ public class SellCommand implements CommandExecutor {
             Player player = (Player) commandSender;
             String commandName = command.getName();
 
-            if (commandName.equalsIgnoreCase(Constants.sellHandCommand)) {
+            if (commandName.equalsIgnoreCase(Constants.SELL_HAND_COMMAND)) {
                 ItemStack[] itemArray = {player.getInventory().getItemInMainHand()};
                 BigDecimal sold = sellItems(player, itemArray);
 
@@ -63,7 +63,7 @@ public class SellCommand implements CommandExecutor {
                 } else {
                     messageManager.sendPlainMessage(player, "item-not-sellable");
                 }
-            } else if (commandName.equalsIgnoreCase(Constants.sellAllCommand)) {
+            } else if (commandName.equalsIgnoreCase(Constants.SELL_ALL_COMMAND)) {
                 BigDecimal sold = sellItems(player, player.getInventory().getContents());
 
                 if (sold.compareTo(BigDecimal.ZERO) > 0) {
@@ -82,27 +82,24 @@ public class SellCommand implements CommandExecutor {
     }
 
     private double getMultiplier(Player player) {
-        double multiplier = 1.0;
+        return player.getEffectivePermissions().parallelStream().reduce(1.0, (multiplier, permissionAttachmentInfo) -> {
+            double tempMultiplier = 1.0;
+            String permission = permissionAttachmentInfo.getPermission();
 
-        //Getting multiplier
-        Optional<PermissionAttachmentInfo> optionalMultiplierPermission = player.getEffectivePermissions().stream().parallel()
-                .filter(permission -> permission.getPermission().startsWith(Constants.sellMultiplierPermission))
-                .findFirst();
+            if (permission.startsWith(SELL_MULTIPLIER_PERMISSION)) {
+                int lastDotPosition = permission.lastIndexOf(".");
+                String stringMultiplier = permission.substring(lastDotPosition + 1);
 
-        if (optionalMultiplierPermission.isPresent()) {
-            String permission = optionalMultiplierPermission.get().getPermission();
-            int lastDotPosition = permission.lastIndexOf(".");
-            String stringMultiplier = permission.substring(lastDotPosition + 1);
-
-            try {
-                double value = Double.parseDouble(stringMultiplier);
-                multiplier = value / 100;
-            } catch (NumberFormatException event) {
-                aresonSomnium.getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
+                try {
+                    double value = Double.parseDouble(stringMultiplier);
+                    tempMultiplier = value / 100;
+                } catch (NumberFormatException event) {
+                    aresonSomnium.getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
+                }
             }
-        }
 
-        return multiplier;
+            return tempMultiplier;
+        }, Double::max);
     }
 
     private BigDecimal sellItems(Player player, ItemStack[] itemStacks) {
