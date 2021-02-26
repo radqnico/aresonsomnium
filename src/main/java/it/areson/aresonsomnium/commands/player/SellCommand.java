@@ -14,12 +14,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Optional;
 
 @SuppressWarnings("NullableProblems")
 public class SellCommand implements CommandExecutor {
@@ -82,31 +80,24 @@ public class SellCommand implements CommandExecutor {
     }
 
     private double getMultiplier(Player player) {
-        double multiplier = 1.0;
-
-        //Getting multiplier
-        Optional<PermissionAttachmentInfo> optionalMultiplierPermission = player.getEffectivePermissions().stream().parallel()
-                .filter(permission -> permission.getPermission().startsWith(Constants.sellMultiplierPermission))
-                .findFirst();
-
-        if (optionalMultiplierPermission.isPresent()) {
-            String permission = optionalMultiplierPermission.get().getPermission();
+        return player.getEffectivePermissions().parallelStream().reduce(1.0, (multiplier, permissionAttachmentInfo) -> {
+            String permission = permissionAttachmentInfo.getPermission();
             int lastDotPosition = permission.lastIndexOf(".");
             String stringMultiplier = permission.substring(lastDotPosition + 1);
 
             try {
                 double value = Double.parseDouble(stringMultiplier);
-                multiplier = value / 100;
+                return value / 100;
             } catch (NumberFormatException event) {
                 aresonSomnium.getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
+                return multiplier;
             }
-        }
-
-        return multiplier;
+        }, Double::max);
     }
 
     private BigDecimal sellItems(Player player, ItemStack[] itemStacks) {
         double multiplier = getMultiplier(player);
+        player.sendMessage("Moltiplicatore: " + multiplier);
 
         //Getting amount
         BigDecimal coinsToGive = Arrays.stream(itemStacks).parallel().reduce(BigDecimal.ZERO, (total, itemStack) -> {
