@@ -14,10 +14,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static it.areson.aresonsomnium.Constants.sellMultiplierPermission;
 
 @SuppressWarnings("NullableProblems")
 public class SellCommand implements CommandExecutor {
@@ -81,17 +87,22 @@ public class SellCommand implements CommandExecutor {
 
     private double getMultiplier(Player player) {
         return player.getEffectivePermissions().parallelStream().reduce(1.0, (multiplier, permissionAttachmentInfo) -> {
+            double tempMultiplier = 1.0;
             String permission = permissionAttachmentInfo.getPermission();
-            int lastDotPosition = permission.lastIndexOf(".");
-            String stringMultiplier = permission.substring(lastDotPosition + 1);
 
-            try {
-                double value = Double.parseDouble(stringMultiplier);
-                return value / 100;
-            } catch (NumberFormatException event) {
-                aresonSomnium.getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
-                return multiplier;
+            if (permission.startsWith(sellMultiplierPermission)) {
+                int lastDotPosition = permission.lastIndexOf(".");
+                String stringMultiplier = permission.substring(lastDotPosition + 1);
+
+                try {
+                    double value = Double.parseDouble(stringMultiplier);
+                    tempMultiplier = value / 100;
+                } catch (NumberFormatException event) {
+                    aresonSomnium.getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
+                }
             }
+
+            return tempMultiplier;
         }, Double::max);
     }
 
