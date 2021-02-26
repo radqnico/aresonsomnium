@@ -89,6 +89,7 @@ public class SellCommand implements CommandExecutor {
         return player.getEffectivePermissions().parallelStream().reduce(1.0, (multiplier, permissionAttachmentInfo) -> {
             double tempMultiplier = 1.0;
             String permission = permissionAttachmentInfo.getPermission();
+            player.sendMessage(permission);
 
             if (permission.startsWith(sellMultiplierPermission)) {
                 int lastDotPosition = permission.lastIndexOf(".");
