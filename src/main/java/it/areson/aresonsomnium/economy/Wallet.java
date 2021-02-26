@@ -18,6 +18,9 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.areson.aresonsomnium.Constants.CHECK_MODEL_DATA;
+import static it.areson.aresonsomnium.Constants.OBOL_MODEL_DATA;
+
 public class Wallet {
 
     private BigInteger obols;
@@ -32,14 +35,8 @@ public class Wallet {
         return new Wallet(BigInteger.ZERO, BigInteger.ZERO);
     }
 
-    public static int getCheckModelData() {
-        return 999;
-    }
 
-    public static int getObolNuggetModelData() {
-        return 998;
-    }
-
+    // TODO Salvare un oggetto "stampo" e modificare il dato che serve all'occasione
     public static ItemStack generateCheck(double amount, CoinType coinType) {
         ItemStack itemStack = new ItemStack(Material.PAPER);
         ItemMeta itemMeta = itemStack.getItemMeta();
@@ -50,7 +47,7 @@ public class Wallet {
             lore.add("" + amount);
             lore.add(coinType.getCoinName());
             itemMeta.setLore(lore);
-            itemMeta.setCustomModelData(getCheckModelData());
+            itemMeta.setCustomModelData(CHECK_MODEL_DATA);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             itemMeta.addEnchant(Enchantment.DAMAGE_UNDEAD, 1, true);
         }
@@ -68,7 +65,7 @@ public class Wallet {
             lore.add(ChatColor.translateAlternateColorCodes('&', "&6frammenti a &lCaronte &6per"));
             lore.add(ChatColor.translateAlternateColorCodes('&', "&6ottenere gli Oboli"));
             itemMeta.setLore(lore);
-            itemMeta.setCustomModelData(getObolNuggetModelData());
+            itemMeta.setCustomModelData(OBOL_MODEL_DATA);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             itemMeta.addEnchant(Enchantment.DAMAGE_UNDEAD, 1, true);
         }
@@ -78,26 +75,25 @@ public class Wallet {
 
     public static boolean applyCheck(SomniumPlayer somniumPlayer, ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta.hasCustomModelData()) {
-            if (itemMeta.getCustomModelData() == getCheckModelData()) {
-                if (itemMeta.hasLore()) {
-                    List<String> lore = itemMeta.getLore();
-                    if (lore != null && lore.size() >= 3) {
-                        String amountString = lore.get(1);
-                        BigDecimal amount = new BigDecimal(amountString);
-                        String coinTypeString = lore.get(2).toUpperCase();
-                        CoinType coinType = CoinType.valueOf(coinTypeString);
-                        switch (coinType) {
-                            case OBOLI:
-                                somniumPlayer.getWallet().changeObols(amount.toBigInteger());
-                                return true;
-                            case GEMME:
-                                somniumPlayer.getWallet().changeGems(amount.toBigInteger());
-                                return true;
-                            case MONETE:
-                                Wallet.addCoins(somniumPlayer.getPlayer(), amount);
-                                return true;
-                        }
+
+        if (itemMeta.hasCustomModelData() && itemMeta.getCustomModelData() == CHECK_MODEL_DATA) {
+            if (itemMeta.hasLore()) {
+                List<String> lore = itemMeta.getLore();
+                if (lore != null && lore.size() >= 3) {
+                    String amountString = lore.get(1);
+                    BigDecimal amount = new BigDecimal(amountString);
+                    String coinTypeString = lore.get(2).toUpperCase();
+                    CoinType coinType = CoinType.valueOf(coinTypeString);
+                    switch (coinType) {
+                        case OBOLI:
+                            somniumPlayer.getWallet().changeObols(amount.toBigInteger());
+                            return true;
+                        case GEMME:
+                            somniumPlayer.getWallet().changeGems(amount.toBigInteger());
+                            return true;
+                        case MONETE:
+                            Wallet.addCoins(somniumPlayer.getPlayer(), amount);
+                            return true;
                     }
                 }
             }

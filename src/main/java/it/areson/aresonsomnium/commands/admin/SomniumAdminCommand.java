@@ -8,7 +8,7 @@ import it.areson.aresonsomnium.shops.guis.CustomShop;
 import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
 import it.areson.aresonsomnium.utils.Debugger;
-import it.areson.aresonsomnium.utils.MessageManager;
+import it.areson.aresonsomnium.utils.file.MessageManager;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.utils.Pair;
 import org.bukkit.command.*;

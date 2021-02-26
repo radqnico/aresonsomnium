@@ -1,6 +1,7 @@
-package it.areson.aresonsomnium.utils;
+package it.areson.aresonsomnium.utils.file;
 
 import it.areson.aresonsomnium.AresonSomnium;
+import it.areson.aresonsomnium.utils.Pair;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;

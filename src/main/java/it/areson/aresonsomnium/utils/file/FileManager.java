@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.utils;
+package it.areson.aresonsomnium.utils.file;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import org.bukkit.Location;
