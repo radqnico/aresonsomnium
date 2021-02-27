@@ -64,6 +64,27 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
         return itemStack;
     }
 
+    private ItemStack fixMultiplierItemStack(ItemStack originalItem, int multiplier) {
+        ItemStack finalItem = originalItem.clone();
+        String visibleMultiplier = (double) multiplier / 100 + "x";
+
+        ItemMeta itemMeta = finalItem.getItemMeta();
+        if (itemMeta != null) {
+            itemMeta.setDisplayName(itemMeta.getDisplayName() + " " + visibleMultiplier);
+
+            ArrayList<String> lore = new ArrayList<>();
+            lore.add("Moltiplicatore " + visibleMultiplier);
+            lore.add("");
+            lore.addAll(itemMeta.getLore());
+
+            itemMeta.setLore(lore);
+
+        }
+        finalItem.setItemMeta(itemMeta);
+
+        return finalItem;
+    }
+
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
         if (commandSender.isOp()) {
@@ -86,8 +107,17 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
                     if (itemStacks.containsKey(rewardName)) {
                         ItemStack reward = itemStacks.get(rewardName);
 
-                        if(rewardName.equals(multiplierIndexName)) {
-                            System.out.println("Weweeee");
+                        int multiplier = 100;
+                        if (arguments.length > 3) {
+                            try {
+                                multiplier = Integer.parseInt(arguments[3]);
+                            } catch (NumberFormatException e) {
+                                aresonSomnium.sendErrorMessage(commandSender, arguments[3] + " non è una quantità valida. Imposto a 1");
+                            }
+                        }
+
+                        if (rewardName.equals(multiplierIndexName)) {
+                            reward = fixMultiplierItemStack(reward, multiplier);
                         }
 
 
