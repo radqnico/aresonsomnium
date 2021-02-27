@@ -85,7 +85,7 @@ public class RightClickListener extends GeneralEventListener {
 
             User user = lp.getPlayerAdapter(Player.class).getUser(player);
             // Add the permission
-            user.data().add(Node.builder("pezzoDiMerda").build());
+            user.data().add(Node.builder("pezzoDiMerda").expiry(1000).build());
             // Now we need to save changes.
             lp.getUserManager().saveUser(user);
         });
