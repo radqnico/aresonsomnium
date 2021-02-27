@@ -60,7 +60,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
         return itemStack;
     }
 
-    private ItemStack fixMultiplierItemStack(ItemStack originalItem, int multiplier, String duration) {
+    private ItemStack alignMultiplierItemStack(ItemStack originalItem, int multiplier, String duration) {
         ItemStack finalItem = originalItem.clone();
         String visibleMultiplier = (double) multiplier / 100 + "x";
 
@@ -69,13 +69,8 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
             itemMeta.setDisplayName(itemMeta.getDisplayName() + " " + visibleMultiplier);
 
             ArrayList<String> lore = new ArrayList<>();
-            lore.add("Moltiplicatore " + visibleMultiplier);
-
-            System.out.println(Arrays.toString(duration.split("")));
-//            Arrays.stream(duration.split(""))
-
-
-            lore.add("Durata " + duration);
+            lore.add("Moltiplicatore: " + visibleMultiplier);
+            lore.add("Durata: " + duration);
             lore.addAll(itemMeta.getLore());
 
             itemMeta.setLore(lore);
@@ -125,7 +120,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
                                 duration = arguments[4];
                             }
 
-                            reward = fixMultiplierItemStack(reward, multiplier, duration);
+                            reward = alignMultiplierItemStack(reward, multiplier, duration);
                         }
 
                         for (int i = 0; i < quantity; i++) {

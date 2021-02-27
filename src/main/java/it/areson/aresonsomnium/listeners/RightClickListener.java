@@ -51,14 +51,19 @@ public class RightClickListener extends GeneralEventListener {
                         redeemCheck(event);
                         break;
                     case MULTIPLIER_MODEL_DATA:
-
+                        activateMultiplier(event);
                         break;
                 }
             }
         }
     }
 
-    public void collectGommaReward(PlayerInteractEvent event) {
+    private void activateMultiplier(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        player.sendMessage("Debug");
+    }
+
+    private void collectGommaReward(PlayerInteractEvent event) {
         Player player = event.getPlayer();
 
         Block clickedBlock = event.getClickedBlock();
