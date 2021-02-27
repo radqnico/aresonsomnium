@@ -18,6 +18,8 @@ import it.areson.aresonsomnium.shops.listener.SetPriceInChatListener;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.Debugger;
 import it.areson.aresonsomnium.utils.file.MessageManager;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
@@ -101,6 +103,7 @@ public class AresonSomnium extends JavaPlugin {
         new SellCommand(this, Constants.SELL_ALL_COMMAND);
         new CheckCommand(this);
         new ObolsCommand(this);
+        new GiveConsumableCommand(this);
     }
 
     private void initAllEvents() {
@@ -134,5 +137,17 @@ public class AresonSomnium extends JavaPlugin {
 
     public SetPriceInChatListener getSetPriceInChatListener() {
         return setPriceInChatListener;
+    }
+
+    public void sendErrorMessage(CommandSender commandSender, String error) {
+        commandSender.sendMessage(ChatColor.BLUE + "[Somnium] " + ChatColor.RED + error);
+    }
+
+    public void sendInfoMessage(CommandSender commandSender, String info) {
+        commandSender.sendMessage(ChatColor.BLUE + "[Somnium] " + ChatColor.GOLD + info);
+    }
+
+    public void sendSuccessMessage(CommandSender commandSender, String success) {
+        commandSender.sendMessage(ChatColor.BLUE + "[Somnium] " + ChatColor.GREEN + success);
     }
 }
