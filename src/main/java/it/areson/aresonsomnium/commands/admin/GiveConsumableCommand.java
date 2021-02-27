@@ -10,10 +10,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -41,7 +38,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
     private void initializeItemStacks() {
         itemStacks = new HashMap<>();
 
-        itemStacks.put(multiplierIndexName, createConsumableItemStack(Material.NETHER_STAR, "Moltiplicatore", new ArrayList<>(), MULTIPLIER_MODEL_DATA));
+        itemStacks.put(multiplierIndexName, createConsumableItemStack(Material.CLOCK, "Moltiplicatore", new ArrayList<>(), MULTIPLIER_MODEL_DATA));
     }
 
     private ItemStack createConsumableItemStack(Material material, String displayName, ArrayList<String> lore, int modelValue) {
@@ -51,8 +48,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
             itemMeta.setDisplayName(displayName);
 
             lore.add("");
-            lore.add(GRAY + "Click destro in aria per");
-            lore.add(GRAY + "utilizzarlo");
+            lore.add(GRAY + "Click destro per utilizzarlo");
             itemMeta.setLore(lore);
 
             itemMeta.addEnchant(Enchantment.DURABILITY, 1, false);
@@ -64,7 +60,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
         return itemStack;
     }
 
-    private ItemStack fixMultiplierItemStack(ItemStack originalItem, int multiplier) {
+    private ItemStack fixMultiplierItemStack(ItemStack originalItem, int multiplier, String duration) {
         ItemStack finalItem = originalItem.clone();
         String visibleMultiplier = (double) multiplier / 100 + "x";
 
@@ -74,11 +70,15 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
 
             ArrayList<String> lore = new ArrayList<>();
             lore.add("Moltiplicatore " + visibleMultiplier);
-            lore.add("");
+
+            System.out.println(Arrays.toString(duration.split("")));
+//            Arrays.stream(duration.split(""))
+
+
+            lore.add("Durata " + duration);
             lore.addAll(itemMeta.getLore());
 
             itemMeta.setLore(lore);
-
         }
         finalItem.setItemMeta(itemMeta);
 
@@ -89,6 +89,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
         if (commandSender.isOp()) {
             if (arguments.length >= 2) {
+                // Getting quantity
                 int quantity = 1;
                 if (arguments.length > 2) {
                     try {
@@ -107,19 +108,25 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
                     if (itemStacks.containsKey(rewardName)) {
                         ItemStack reward = itemStacks.get(rewardName);
 
-                        int multiplier = 100;
-                        if (arguments.length > 3) {
-                            try {
-                                multiplier = Integer.parseInt(arguments[3]);
-                            } catch (NumberFormatException e) {
-                                aresonSomnium.sendErrorMessage(commandSender, arguments[3] + " non è una quantità valida. Imposto a 1");
-                            }
-                        }
-
                         if (rewardName.equals(multiplierIndexName)) {
-                            reward = fixMultiplierItemStack(reward, multiplier);
-                        }
+                            // Getting Multiplier
+                            int multiplier = 100;
+                            if (arguments.length > 3) {
+                                try {
+                                    multiplier = Integer.parseInt(arguments[3]);
+                                } catch (NumberFormatException e) {
+                                    aresonSomnium.sendErrorMessage(commandSender, arguments[3] + " non è una quantità valida. Imposto a 1");
+                                }
+                            }
 
+                            // Getting Duration
+                            String duration = "10m";
+                            if (arguments.length > 4) {
+                                duration = arguments[4];
+                            }
+
+                            reward = fixMultiplierItemStack(reward, multiplier, duration);
+                        }
 
                         for (int i = 0; i < quantity; i++) {
                             targetPlayer.getInventory().addItem(reward);
