@@ -3,6 +3,9 @@ package it.areson.aresonsomnium.listeners;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.Node;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,15 +17,27 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import static it.areson.aresonsomnium.Constants.*;
 
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class RightClickListener extends GeneralEventListener {
+
+    private final Optional<LuckPerms> luckPerms;
 
     public RightClickListener(AresonSomnium aresonSomnium) {
         super(aresonSomnium);
+
+        RegisteredServiceProvider<LuckPerms> provider = aresonSomnium.getServer().getServicesManager().getRegistration(LuckPerms.class);
+        if (provider != null) {
+            luckPerms = Optional.of(provider.getProvider());
+        } else {
+            luckPerms = Optional.empty();
+        }
     }
 
     private boolean isLegitRightClick(EquipmentSlot equipmentSlot, Action action, Event.Result useClickedBlock) {
@@ -58,9 +73,22 @@ public class RightClickListener extends GeneralEventListener {
         }
     }
 
+    public void addPermission(User user, String permission) {
+
+    }
+
     private void activateMultiplier(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         player.sendMessage("Debug");
+        luckPerms.ifPresent(lp -> {
+
+
+            User user = lp.getPlayerAdapter(Player.class).getUser(player);
+            // Add the permission
+            user.data().add(Node.builder("pezzoDiMerda").build());
+            // Now we need to save changes.
+            lp.getUserManager().saveUser(user);
+        });
     }
 
     private void collectGommaReward(PlayerInteractEvent event) {

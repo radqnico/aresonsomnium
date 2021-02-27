@@ -50,6 +50,7 @@ commands:
 
 depend:
   - Essentials
+  - LuckPerms
 
 permissions:
   aresonsomnium.admin:
