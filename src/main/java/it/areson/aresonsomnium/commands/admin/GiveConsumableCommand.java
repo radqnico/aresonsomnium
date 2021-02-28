@@ -10,6 +10,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.time.Duration;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -101,32 +103,38 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
 
                     String rewardName = arguments[1];
                     if (itemStacks.containsKey(rewardName)) {
-                        ItemStack reward = itemStacks.get(rewardName);
+                        try {
+                            ItemStack reward = itemStacks.get(rewardName);
 
-                        if (rewardName.equals(multiplierIndexName)) {
-                            // Getting Multiplier
-                            int multiplier = 100;
-                            if (arguments.length > 3) {
-                                try {
-                                    multiplier = Integer.parseInt(arguments[3]);
-                                } catch (NumberFormatException e) {
-                                    aresonSomnium.sendErrorMessage(commandSender, arguments[3] + " non è una quantità valida. Imposto a 1");
+                            if (rewardName.equals(multiplierIndexName)) {
+                                // Getting Multiplier
+                                int multiplier = 100;
+                                if (arguments.length > 3) {
+                                    try {
+                                        multiplier = Integer.parseInt(arguments[3]);
+                                    } catch (NumberFormatException e) {
+                                        aresonSomnium.sendErrorMessage(commandSender, arguments[3] + " non è una quantità valida. Imposto a 1");
+                                    }
                                 }
+
+                                // Getting Duration
+                                String duration = "10m";
+                                if (arguments.length > 4) {
+                                    duration = arguments[4];
+                                    Duration.parse(duration);
+                                }
+
+                                reward = alignMultiplierItemStack(reward, multiplier, duration);
                             }
 
-                            // Getting Duration
-                            String duration = "10m";
-                            if (arguments.length > 4) {
-                                duration = arguments[4];
+                            for (int i = 0; i < quantity; i++) {
+                                targetPlayer.getInventory().addItem(reward);
                             }
-
-                            reward = alignMultiplierItemStack(reward, multiplier, duration);
+                            aresonSomnium.sendSuccessMessage(commandSender, "Consumabile '" + rewardName + "' generato con successo");
+                        } catch (DateTimeParseException exception) {
+                            aresonSomnium.sendErrorMessage(commandSender, "Durata del consumabile non valida");
+                            exception.printStackTrace();
                         }
-
-                        for (int i = 0; i < quantity; i++) {
-                            targetPlayer.getInventory().addItem(reward);
-                        }
-                        aresonSomnium.sendSuccessMessage(commandSender, "Consumabile '" + rewardName + "' generato con successo");
                     } else {
                         aresonSomnium.sendErrorMessage(commandSender, "Non ho trovato alcun reward chiamato " + rewardName);
                     }
