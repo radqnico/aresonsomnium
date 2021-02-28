@@ -35,9 +35,15 @@
             <id>papermc</id>
             <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
+
         <repository>
             <id>ess-repo</id>
             <url>https://ci.ender.zone/plugin/repository/everything/</url>
+        </repository>
+
+        <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
     </repositories>
 
@@ -45,7 +51,7 @@
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.16.4-R0.1-SNAPSHOT</version>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -73,6 +79,13 @@
             <groupId>net.luckperms</groupId>
             <artifactId>api</artifactId>
             <version>5.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.10.9</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

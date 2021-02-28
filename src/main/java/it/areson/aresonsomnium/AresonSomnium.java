@@ -6,10 +6,10 @@ import it.areson.aresonsomnium.commands.player.CheckCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
-import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
-import it.areson.aresonsomnium.listeners.RightClickListener;
 import it.areson.aresonsomnium.listeners.InventoryListener;
+import it.areson.aresonsomnium.listeners.RightClickListener;
 import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
+import it.areson.aresonsomnium.placeholders.MultiplierPlaceholders;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
@@ -17,6 +17,7 @@ import it.areson.aresonsomnium.shops.listener.CustomGuiEventsListener;
 import it.areson.aresonsomnium.shops.listener.SetPriceInChatListener;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.Debugger;
+import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -73,6 +74,10 @@ public class AresonSomnium extends JavaPlugin {
         initAllEvents();
         // Commands
         registerCommands();
+        // Placeholders
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new MultiplierPlaceholders(this).register();
+        }
 
         // Auto Save Task interval
         // 1m  = 1200

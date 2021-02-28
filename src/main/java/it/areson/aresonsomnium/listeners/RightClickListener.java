@@ -18,7 +18,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.time.Duration;
@@ -96,24 +95,22 @@ public class RightClickListener extends GeneralEventListener {
     }
 
     private Optional<Pair<Integer, Duration>> getMultiplierProperties(ItemStack itemStack) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta != null) {
-            List<String> lore = itemMeta.getLore();
-            if (lore != null && lore.size() >= 2) {
-                try {
-                    String stringMultiplier = lore.get(0);
-                    stringMultiplier = stringMultiplier.substring(stringMultiplier.indexOf(' ') + 1, stringMultiplier.length() - 1);
-                    int multiplier = (int) (Double.parseDouble(stringMultiplier) * 100);
+        List<String> lore = itemStack.getLore();
 
-                    String stringDuration = lore.get(1);
-                    stringDuration = "PT" + stringDuration.substring(stringDuration.indexOf(' ') + 1).toUpperCase();
-                    Duration duration = Duration.parse(stringDuration);
+        if (lore != null && lore.size() >= 2) {
+            try {
+                String stringMultiplier = lore.get(0);
+                stringMultiplier = stringMultiplier.substring(stringMultiplier.indexOf(" ") + 1, stringMultiplier.length() - 1);
+                int multiplier = (int) (Double.parseDouble(stringMultiplier) * 100);
 
-                    return Optional.of(Pair.of(multiplier, duration));
-                } catch (Exception exception) {
-                    aresonSomnium.getLogger().severe("Error while parsing from lore of multiplier consumable item");
-                    exception.printStackTrace();
-                }
+                String stringDuration = lore.get(1);
+                stringDuration = "PT" + stringDuration.substring(stringDuration.indexOf(" ") + 1).toUpperCase();
+                Duration duration = Duration.parse(stringDuration);
+
+                return Optional.of(Pair.of(multiplier, duration));
+            } catch (Exception exception) {
+                aresonSomnium.getLogger().severe("Error while parsing from lore of multiplier consumable item");
+                exception.printStackTrace();
             }
         }
 
