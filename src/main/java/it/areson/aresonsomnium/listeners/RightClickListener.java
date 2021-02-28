@@ -126,6 +126,7 @@ public class RightClickListener extends GeneralEventListener {
                             Duration expiryDuration = sameActiveMultiplier.get().getExpiryDuration();
                             if (expiryDuration != null) {
                                 finalDuration = finalDuration.plus(expiryDuration);
+                                System.out.println("New duration: " + finalDuration);
                             }
                         }
 
