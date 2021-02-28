@@ -127,10 +127,10 @@ public class RightClickListener extends GeneralEventListener {
                             if (expiryDuration != null) {
                                 finalDuration = finalDuration.plus(expiryDuration);
                                 System.out.println("New duration: " + finalDuration);
+                                user.data().remove(sameActiveMultiplier.get());
                             }
                         }
 
-                        user.data().remove(Node.builder(permission).build());
                         user.data().add(Node.builder(permission).expiry(finalDuration).build());
                     });
 
