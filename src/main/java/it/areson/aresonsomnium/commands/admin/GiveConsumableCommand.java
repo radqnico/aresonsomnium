@@ -121,7 +121,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
                                 String duration = "10m";
                                 if (arguments.length > 4) {
                                     duration = arguments[4];
-                                    Duration.parse(duration);
+                                    Duration.parse("PT" + duration);
                                 }
 
                                 reward = alignMultiplierItemStack(reward, multiplier, duration);
