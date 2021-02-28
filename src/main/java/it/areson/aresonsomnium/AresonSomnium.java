@@ -163,8 +163,7 @@ public class AresonSomnium extends JavaPlugin {
                 String stringMultiplier = permission.substring(lastDotPosition + 1);
 
                 try {
-                    double value = Double.parseDouble(stringMultiplier);
-                    tempMultiplier = value / 100;
+                    tempMultiplier = Double.parseDouble(stringMultiplier) / 100;
                 } catch (NumberFormatException event) {
                     getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
                 }

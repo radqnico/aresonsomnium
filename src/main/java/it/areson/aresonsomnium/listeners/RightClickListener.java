@@ -104,14 +104,15 @@ public class RightClickListener extends GeneralEventListener {
         return Optional.empty();
     }
 
+    //TODO AntiSpam
     private void activateMultiplier(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         ItemStack itemStack = event.getItem();
 
         if (itemStack != null) {
             if (luckPerms.isPresent()) {
-
                 Optional<Pair<Integer, Duration>> optionalProperties = getMultiplierProperties(itemStack);
+
                 if (optionalProperties.isPresent()) {
                     Pair<Integer, Duration> properties = optionalProperties.get();
 
