@@ -7,6 +7,7 @@ import it.areson.aresonsomnium.utils.Pair;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
+import net.luckperms.api.node.ScopedNode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -115,22 +116,25 @@ public class RightClickListener extends GeneralEventListener {
                 if (optionalProperties.isPresent()) {
                     Pair<Integer, Duration> properties = optionalProperties.get();
                     String permission = SELL_MULTIPLIER_PERMISSION + "." + properties.left();
+                    Duration finalDuration = properties.right();
 
 
                     luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user -> {
-                        Optional<Node> activeMultiplier = user.getNodes().parallelStream().filter(node -> node.getKey().equals(permission)).findFirst();
-                        if(activeMultiplier.isPresent()) {
+                        Optional<Node> sameActiveMultiplier = user.getNodes().parallelStream().filter(node -> node.getKey().equals(permission)).findFirst();
+                        if(sameActiveMultiplier.isPresent()) {
 
-                            if(activeMultiplier.get().getExpiryDuration() != null) {
-                                System.out.println(activeMultiplier.get().getExpiryDuration());
-                                System.out.println(activeMultiplier.get().getExpiryDuration().plus(properties.right()));
+                            if(sameActiveMultiplier.get().getExpiryDuration() != null) {
+                                System.out.println(sameActiveMultiplier.get().getExpiryDuration());
+                                System.out.println(sameActiveMultiplier.get().getExpiryDuration().plus(properties.right()));
                             }
 
-                            activeMultiplier.get().toBuilder().expiry(activeMultiplier.get().getExpiryDuration().plus(properties.right())).build();
+                            ScopedNode<?, ?> build = sameActiveMultiplier.get().toBuilder().expiry(sameActiveMultiplier.get().getExpiryDuration().plus(properties.right())).build();
+                            user.data().add(build);
                         }
 
                         user.data().add(Node.builder(permission).expiry(properties.right()).build());
                     });
+
 
                     itemStack.setAmount(itemStack.getAmount() - 1);
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_SHOOT, 1f, 1f);
