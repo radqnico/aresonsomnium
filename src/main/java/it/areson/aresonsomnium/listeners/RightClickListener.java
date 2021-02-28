@@ -78,18 +78,26 @@ public class RightClickListener extends GeneralEventListener {
     }
 
 
-    private Optional<Pair<String, String>> getMultiplierProperties(ItemStack itemStack) {
+    private Optional<Pair<Integer, Duration>> getMultiplierProperties(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
-        if(itemMeta != null) {
+        if (itemMeta != null) {
             List<String> lore = itemMeta.getLore();
-            if(lore != null && lore.size() >= 2) {
-                String multiplier = lore.get(0);
-                multiplier = multiplier.substring(multiplier.indexOf(' ') + 1, multiplier.length() - 1);
-                System.out.println(multiplier);
+            if (lore != null && lore.size() >= 2) {
+                try {
+                    String stringMultiplier = lore.get(0);
+                    stringMultiplier = stringMultiplier.substring(stringMultiplier.indexOf(' ') + 1, stringMultiplier.length() - 1);
+                    int Multiplier = Integer.parseInt(stringMultiplier) * 100;
 
-                String duration = lore.get(1);
-                duration = "PT" + duration.substring(duration.indexOf(' ') + 1).toUpperCase();
-                System.out.println(duration);
+
+                    String stringDuration = lore.get(1);
+                    stringDuration = "PT" + stringDuration.substring(stringDuration.indexOf(' ') + 1).toUpperCase();
+                    Duration duration = Duration.parse(stringDuration);
+
+                    return Optional.of(Pair.of(Multiplier, duration));
+                } catch (Exception exception) {
+                    aresonSomnium.getLogger().severe("Error while parsing from lore of multiplier consumable item");
+                    exception.printStackTrace();
+                }
             }
         }
 
@@ -98,27 +106,24 @@ public class RightClickListener extends GeneralEventListener {
 
     private void activateMultiplier(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        if(luckPerms.isPresent()) {
-            Optional<Pair<String, String>> multiplierProperties = getMultiplierProperties(event.getItem());
-        } else {
-            aresonSomnium.sendErrorMessage(player, "Errore nell'API di LuckPerms");
+        ItemStack itemStack = event.getItem();
+
+        if (itemStack != null) {
+            if (luckPerms.isPresent()) {
+                Optional<Pair<Integer, Duration>> multiplierProperties = getMultiplierProperties(itemStack);
+                if (multiplierProperties.isPresent()) {
+                    Pair<Integer, Duration> pair = multiplierProperties.get();
+
+                    User user = luckPerms.get().getPlayerAdapter(Player.class).getUser(player);
+                    user.data().add(Node.builder(SELL_MULTIPLIER_PERMISSION + "." + pair.left()).expiry(pair.right()).build());
+                    luckPerms.get().getUserManager().saveUser(user);
+
+                    itemStack.setAmount(itemStack.getAmount() - 1);
+                }
+            } else {
+                aresonSomnium.sendErrorMessage(player, "Errore nell'API di LuckPerms");
+            }
         }
-
-        luckPerms.ifPresent(lp -> {
-
-            User user = lp.getPlayerAdapter(Player.class).getUser(player);
-            // Add the permission
-            Duration parse = Duration.parse("PT1h30m");
-            Duration parse2 = Duration.parse("PT1H30M");
-
-            System.out.println(parse.toString());
-            System.out.println(parse2.toString());
-            System.out.println(parse.getSeconds());
-            System.out.println(parse2.getSeconds());
-            user.data().add(Node.builder("pezzoDiMerda").expiry(parse).build());
-            // Now we need to save changes.
-            lp.getUserManager().saveUser(user);
-        });
     }
 
     private void collectGommaReward(PlayerInteractEvent event) {
