@@ -107,6 +107,8 @@ public class RightClickListener extends GeneralEventListener {
         Player player = event.getPlayer();
         ItemStack itemStack = event.getItem();
 
+
+        //TODO prevent activating lower multipliers
         if (itemStack != null) {
             if (luckPerms.isPresent()) {
                 Optional<Pair<Integer, Duration>> optionalProperties = getMultiplierProperties(itemStack);
@@ -119,10 +121,12 @@ public class RightClickListener extends GeneralEventListener {
                         Optional<Node> activeMultiplier = user.getNodes().parallelStream().filter(node -> node.getKey().equals(permission)).findFirst();
                         if(activeMultiplier.isPresent()) {
 
-                            System.out.println(activeMultiplier.get().getExpiryDuration());
+                            if(activeMultiplier.get().getExpiryDuration() != null) {
+                                System.out.println(activeMultiplier.get().getExpiryDuration());
+                                System.out.println(activeMultiplier.get().getExpiryDuration().plus(properties.right()));
+                            }
 
-
-                            activeMultiplier.get().toBuilder().expiry(100).build();
+                            activeMultiplier.get().toBuilder().expiry(activeMultiplier.get().getExpiryDuration().plus(properties.right())).build();
                         }
 
                         user.data().add(Node.builder(permission).expiry(properties.right()).build());
@@ -130,7 +134,7 @@ public class RightClickListener extends GeneralEventListener {
 
                     itemStack.setAmount(itemStack.getAmount() - 1);
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_SHOOT, 1f, 1f);
-                    aresonSomnium.sendSuccessMessage(player, "Hai attivato il moltiplicatore " + properties.left() / 100 + "x per " + properties.right().toString().substring(2));
+                    aresonSomnium.sendSuccessMessage(player, "Hai attivato il moltiplicatore " + properties.left() / 100 + "x per " + properties.right().toString().substring(2).toLowerCase());
                     event.setCancelled(true);
                 }
             } else {
