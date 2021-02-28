@@ -30,7 +30,7 @@ import java.util.Optional;
 
 import static it.areson.aresonsomnium.Constants.*;
 
-@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+@SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "FieldCanBeLocal"})
 public class RightClickListener extends GeneralEventListener {
 
     private final HashMap<String, Instant> playerDelays;
