@@ -3,6 +3,7 @@ package it.areson.aresonsomnium.listeners;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
+import it.areson.aresonsomnium.utils.Pair;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
@@ -17,9 +18,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -74,15 +77,30 @@ public class RightClickListener extends GeneralEventListener {
         }
     }
 
-    public void addPermission(User user, String permission) {
 
+    private Optional<Pair<String, String>> getMultiplierProperties(ItemStack itemStack) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if(itemMeta != null && itemMeta.hasLore()) {
+            List<String> lore = itemMeta.getLore();
+            if(lore.size() >= 2) {
+                String multiplierString = lore.get(0);
+                multiplierString = multiplierString.substring(multiplierString.charAt(' '));
+                System.out.println(multiplierString);
+            }
+        }
+
+        return Optional.empty();
     }
 
     private void activateMultiplier(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        player.sendMessage("Debug");
-        luckPerms.ifPresent(lp -> {
+        if(luckPerms.isPresent()) {
+            Optional<Pair<String, String>> multiplierProperties = getMultiplierProperties(event.getItem());
+        } else {
+            aresonSomnium.sendErrorMessage(player, "Errore nell'API di LuckPerms");
+        }
 
+        luckPerms.ifPresent(lp -> {
 
             User user = lp.getPlayerAdapter(Player.class).getUser(player);
             // Add the permission
