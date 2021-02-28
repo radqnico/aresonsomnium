@@ -121,6 +121,7 @@ public class RightClickListener extends GeneralEventListener {
                     itemStack.setAmount(itemStack.getAmount() - 1);
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_SHOOT, 1f, 1f);
                     aresonSomnium.sendSuccessMessage(player, "Hai attivato il moltiplicatore " + properties.left() + " per " + properties.right().toString() + " con successo");
+                    event.setCancelled(true);
                 }
             } else {
                 aresonSomnium.getLogger().severe("Errore nell'API di LuckPerms");
@@ -161,6 +162,7 @@ public class RightClickListener extends GeneralEventListener {
                 if (Wallet.applyCheck(somniumPlayer, itemStack)) {
                     itemStack.setAmount(itemStack.getAmount() - 1);
                     event.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-applied"));
+                    event.setCancelled(true);
                 }
             } else {
                 aresonSomnium.getDebugger().debugError(aresonSomnium.getMessageManager().getPlainMessage("somniumplayer-not-found"));
