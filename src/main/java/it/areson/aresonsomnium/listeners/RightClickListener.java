@@ -120,7 +120,6 @@ public class RightClickListener extends GeneralEventListener {
         return Optional.empty();
     }
 
-    //TODO AntiSpam
     private void activateMultiplier(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         ItemStack itemStack = event.getItem();
