@@ -78,7 +78,6 @@ public class RightClickListener extends GeneralEventListener {
         }
     }
 
-
     private Optional<Pair<Integer, Duration>> getMultiplierProperties(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
@@ -87,13 +86,13 @@ public class RightClickListener extends GeneralEventListener {
                 try {
                     String stringMultiplier = lore.get(0);
                     stringMultiplier = stringMultiplier.substring(stringMultiplier.indexOf(' ') + 1, stringMultiplier.length() - 1);
-                    int Multiplier = (int) Double.parseDouble(stringMultiplier) * 100;
+                    int multiplier = (int) Double.parseDouble(stringMultiplier) * 100;
 
                     String stringDuration = lore.get(1);
                     stringDuration = "PT" + stringDuration.substring(stringDuration.indexOf(' ') + 1).toUpperCase();
                     Duration duration = Duration.parse(stringDuration);
 
-                    return Optional.of(Pair.of(Multiplier, duration));
+                    return Optional.of(Pair.of(multiplier, duration));
                 } catch (Exception exception) {
                     aresonSomnium.getLogger().severe("Error while parsing from lore of multiplier consumable item");
                     exception.printStackTrace();
@@ -115,12 +114,14 @@ public class RightClickListener extends GeneralEventListener {
                     Pair<Integer, Duration> properties = optionalProperties.get();
 
                     User user = luckPerms.get().getPlayerAdapter(Player.class).getUser(player);
+                    //TODO Controllare che già non abbia questa permission altrimenti non cumula
                     user.data().add(Node.builder(SELL_MULTIPLIER_PERMISSION + "." + properties.left()).expiry(properties.right()).build());
                     luckPerms.get().getUserManager().saveUser(user);
 
                     itemStack.setAmount(itemStack.getAmount() - 1);
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_SHOOT, 1f, 1f);
-                    aresonSomnium.sendSuccessMessage(player, "Hai attivato il moltiplicatore " + properties.left() + " per " + properties.right().toString() + " con successo");
+                    //TODO Better duration print
+                    aresonSomnium.sendSuccessMessage(player, "Hai attivato il moltiplicatore " + properties.left() / 100 + "x per " + properties.right() + " con successo");
                     event.setCancelled(true);
                 }
             } else {
