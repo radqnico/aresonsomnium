@@ -198,4 +198,9 @@ public class AresonSomnium extends JavaPlugin {
         playerMultipliers.put(player.getName(), extractPlayerMaxMultiplierFromPermissions(player));
     }
 
+    public double getCachedMultiplier(String playerName) {
+        Double multiplier = playerMultipliers.get(playerName);
+        return multiplier == null ? 1.0 : multiplier;
+    }
+
 }

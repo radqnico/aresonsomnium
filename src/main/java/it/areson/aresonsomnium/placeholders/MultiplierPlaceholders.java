@@ -3,7 +3,6 @@ package it.areson.aresonsomnium.placeholders;
 import it.areson.aresonsomnium.AresonSomnium;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class MultiplierPlaceholders extends PlaceholderExpansion {
@@ -34,9 +33,7 @@ public class MultiplierPlaceholders extends PlaceholderExpansion {
         String value = "Nessun dato";
 
         if (params.equalsIgnoreCase("multiplier")) {
-            if (player instanceof Player) {
-                value = aresonSomnium.extractPlayerMaxMultiplierFromPermissions((Player) player) + "";
-            }
+            value = aresonSomnium.getCachedMultiplier(player.getName()) + "x";
         }
 
         return value;
