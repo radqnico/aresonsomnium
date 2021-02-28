@@ -194,8 +194,12 @@ public class AresonSomnium extends JavaPlugin {
         }, Double::max);
     }
 
-    public void forceMultiplierRefresh(Player player) {
-        playerMultipliers.put(player.getName(), extractPlayerMaxMultiplierFromPermissions(player));
+    public void forceMultiplierRefresh(Player player, boolean upsert) {
+        String playerName = player.getName();
+        if (upsert || playerMultipliers.containsKey(playerName)) {
+            playerMultipliers.put(playerName, extractPlayerMaxMultiplierFromPermissions(player));
+        }
+
     }
 
     public double getCachedMultiplier(String playerName) {
