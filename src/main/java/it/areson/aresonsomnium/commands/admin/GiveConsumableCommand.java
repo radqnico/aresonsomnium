@@ -161,6 +161,12 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
         } else if (arguments.length == 3) {
             List<String> quantities = IntStream.rangeClosed(1, 64).boxed().map(Object::toString).collect(Collectors.toList());
             suggestions.addAll(quantities);
+        } else if (arguments.length == 4 && arguments[2].equals(multiplierIndexName)) {
+            List<String> values = Arrays.asList("100", "150", "200", "275");
+            suggestions.addAll(values);
+        } else if (arguments.length == 5 && arguments[2].equals(multiplierIndexName)) {
+            List<String> values = Arrays.asList("1d", "1d12h30m", "3h20m", "30m");
+            suggestions.addAll(values);
         }
 
         return suggestions;
