@@ -86,10 +86,13 @@ public class RightClickListener extends GeneralEventListener {
 
             User user = lp.getPlayerAdapter(Player.class).getUser(player);
             // Add the permission
-            Duration parse = Duration.parse("1h30m");
+            Duration parse = Duration.parse("PT1h30m");
+            Duration parse2 = Duration.parse("PT1H30M");
 
             System.out.println(parse.toString());
+            System.out.println(parse2.toString());
             System.out.println(parse.getSeconds());
+            System.out.println(parse2.getSeconds());
             user.data().add(Node.builder("pezzoDiMerda").expiry(parse).build());
             // Now we need to save changes.
             lp.getUserManager().saveUser(user);
