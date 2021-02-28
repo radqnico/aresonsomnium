@@ -19,8 +19,6 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static it.areson.aresonsomnium.Constants.PERMISSION_MULTIPLIER;
-
 @SuppressWarnings("NullableProblems")
 public class SellCommand implements CommandExecutor {
 
@@ -84,7 +82,7 @@ public class SellCommand implements CommandExecutor {
 
 
     private BigDecimal sellItems(Player player, ItemStack[] itemStacks) {
-        double multiplier = aresonSomnium.getPlayerMultiplier(player);
+        double multiplier = aresonSomnium.extractPlayerMaxMultiplierFromPermissions(player);
 
         //Getting amount
         BigDecimal coinsToGive = Arrays.stream(itemStacks).parallel().reduce(BigDecimal.ZERO, (total, itemStack) -> {

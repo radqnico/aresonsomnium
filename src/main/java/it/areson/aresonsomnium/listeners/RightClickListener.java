@@ -4,7 +4,6 @@ import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.Pair;
-import net.luckperms.api.LuckPerms;
 import net.luckperms.api.node.Node;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,7 +17,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -29,24 +27,16 @@ import java.util.Optional;
 
 import static it.areson.aresonsomnium.Constants.*;
 
-@SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "FieldCanBeLocal"})
+@SuppressWarnings("FieldCanBeLocal")
 public class RightClickListener extends GeneralEventListener {
 
     private final HashMap<String, Instant> playerDelays;
     private final int delaySeconds = 2;
-    private final Optional<LuckPerms> luckPerms;
 
     public RightClickListener(AresonSomnium aresonSomnium) {
         super(aresonSomnium);
 
         playerDelays = new HashMap<>();
-
-        RegisteredServiceProvider<LuckPerms> provider = aresonSomnium.getServer().getServicesManager().getRegistration(LuckPerms.class);
-        if (provider != null) {
-            luckPerms = Optional.of(provider.getProvider());
-        } else {
-            luckPerms = Optional.empty();
-        }
     }
 
     private boolean isLegitRightClick(EquipmentSlot equipmentSlot, Action action, Event.Result useClickedBlock) {
@@ -122,16 +112,16 @@ public class RightClickListener extends GeneralEventListener {
         ItemStack itemStack = event.getItem();
 
         if (itemStack != null) {
-            if (luckPerms.isPresent()) {
+            if (aresonSomnium.luckPerms.isPresent()) {
                 Optional<Pair<Integer, Duration>> optionalProperties = getMultiplierProperties(itemStack);
 
                 if (optionalProperties.isPresent()) {
                     Pair<Integer, Duration> properties = optionalProperties.get();
 
-                    if (properties.left() >= aresonSomnium.getPlayerMultiplier(player) * 100) {
+                    if (properties.left() >= aresonSomnium.extractPlayerMaxMultiplierFromPermissions(player) * 100) {
                         String permission = PERMISSION_MULTIPLIER + "." + properties.left();
 
-                        luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user -> {
+                        aresonSomnium.luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user -> {
                             Duration finalDuration = properties.right();
                             Optional<Node> sameActiveMultiplier = user.getNodes().parallelStream().filter(node -> node.getKey().equals(permission)).findFirst();
 

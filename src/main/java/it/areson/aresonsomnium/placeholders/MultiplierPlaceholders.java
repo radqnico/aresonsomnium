@@ -35,7 +35,7 @@ public class MultiplierPlaceholders extends PlaceholderExpansion {
 
         if (params.equalsIgnoreCase("multiplier")) {
             if (player instanceof Player) {
-                value = aresonSomnium.getPlayerMultiplier((Player) player) + "";
+                value = aresonSomnium.extractPlayerMaxMultiplierFromPermissions((Player) player) + "";
             }
         }
 

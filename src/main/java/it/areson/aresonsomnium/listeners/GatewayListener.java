@@ -7,9 +7,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class SomniumPlayerDBEvents extends GeneralEventListener {
+public class GatewayListener extends GeneralEventListener {
 
-    public SomniumPlayerDBEvents(AresonSomnium aresonSomnium) {
+    public GatewayListener(AresonSomnium aresonSomnium) {
         super(aresonSomnium);
     }
 
@@ -18,6 +18,9 @@ public class SomniumPlayerDBEvents extends GeneralEventListener {
         Player player = event.getPlayer();
         SomniumPlayerManager somniumPlayerManager = aresonSomnium.getSomniumPlayerManager();
         somniumPlayerManager.addSomniumPlayer(player);
+
+        // Add cached multiplier
+        aresonSomnium.forceMultiplierRefresh(player);
     }
 
     @EventHandler
@@ -25,6 +28,9 @@ public class SomniumPlayerDBEvents extends GeneralEventListener {
         Player player = event.getPlayer();
         SomniumPlayerManager somniumPlayerManager = aresonSomnium.getSomniumPlayerManager();
         somniumPlayerManager.saveAndRemoveSomniumPlayer(player);
+
+        // Remove cached multiplier
+        aresonSomnium.playerMultipliers.remove(player.getName());
     }
 
 }
