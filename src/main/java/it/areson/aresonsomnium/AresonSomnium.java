@@ -6,11 +6,12 @@ import it.areson.aresonsomnium.commands.player.CheckCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
-import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
-import it.areson.aresonsomnium.listeners.RightClickListener;
+import it.areson.aresonsomnium.listeners.GatewayListener;
 import it.areson.aresonsomnium.listeners.InventoryListener;
-import it.areson.aresonsomnium.listeners.SomniumPlayerDBEvents;
+import it.areson.aresonsomnium.listeners.LuckPermsListener;
+import it.areson.aresonsomnium.listeners.RightClickListener;
 import it.areson.aresonsomnium.placeholders.CoinsPlaceholders;
+import it.areson.aresonsomnium.placeholders.MultiplierPlaceholders;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.shops.guis.ShopManager;
@@ -38,14 +39,13 @@ import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 public class AresonSomnium extends JavaPlugin {
 
     private static AresonSomnium instance;
+    public Optional<LuckPerms> luckPerms;
+    public HashMap<String, Double> playerMultipliers;
     private SomniumPlayerManager somniumPlayerManager;
     private ShopManager shopManager;
     private ShopEditor shopEditor;
     private GatewayListener playerDBEvents;
     private SetPriceInChatListener setPriceInChatListener;
-    public Optional<LuckPerms> luckPerms;
-    public HashMap<String, Double> playerMultipliers;
-
     private GommaObjectsFileReader gommaObjectsFileReader;
 
     private MessageManager messages;
