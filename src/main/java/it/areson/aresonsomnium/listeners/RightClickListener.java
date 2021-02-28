@@ -115,7 +115,7 @@ public class RightClickListener extends GeneralEventListener {
                 if (optionalProperties.isPresent()) {
                     Pair<Integer, Duration> properties = optionalProperties.get();
 
-                    if (properties.left() <= aresonSomnium.getPlayerMultiplier(player) * 100) {
+                    if (properties.left() >= aresonSomnium.getPlayerMultiplier(player) * 100) {
                         String permission = PERMISSION_MULTIPLIER + "." + properties.left();
 
                         luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user -> {
