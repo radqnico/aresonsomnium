@@ -90,7 +90,7 @@ public class AresonSomnium extends JavaPlugin {
         RegisteredServiceProvider<LuckPerms> provider = getServer().getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
             luckPerms = Optional.of(provider.getProvider());
-            new LuckPermsListener(this, luckPerms.get());
+            new LuckPermsListener(this, provider.getProvider());
         } else {
             luckPerms = Optional.empty();
         }
