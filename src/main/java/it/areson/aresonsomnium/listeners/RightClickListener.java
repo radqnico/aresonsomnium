@@ -112,16 +112,25 @@ public class RightClickListener extends GeneralEventListener {
                 Optional<Pair<Integer, Duration>> optionalProperties = getMultiplierProperties(itemStack);
                 if (optionalProperties.isPresent()) {
                     Pair<Integer, Duration> properties = optionalProperties.get();
+                    String permission = SELL_MULTIPLIER_PERMISSION + "." + properties.left();
 
-                    User user = luckPerms.get().getPlayerAdapter(Player.class).getUser(player);
-                    //TODO Controllare che già non abbia questa permission altrimenti non cumula
-                    user.data().add(Node.builder(SELL_MULTIPLIER_PERMISSION + "." + properties.left()).expiry(properties.right()).build());
-                    luckPerms.get().getUserManager().saveUser(user);
+
+                    luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user -> {
+                        Optional<Node> activeMultiplier = user.getNodes().parallelStream().filter(node -> node.getKey().equals(permission)).findFirst();
+                        if(activeMultiplier.isPresent()) {
+
+                            System.out.println(activeMultiplier.get().getExpiryDuration());
+
+
+                            activeMultiplier.get().toBuilder().expiry(100).build();
+                        }
+
+                        user.data().add(Node.builder(permission).expiry(properties.right()).build());
+                    });
 
                     itemStack.setAmount(itemStack.getAmount() - 1);
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_SHOOT, 1f, 1f);
-                    //TODO Better duration print
-                    aresonSomnium.sendSuccessMessage(player, "Hai attivato il moltiplicatore " + properties.left() / 100 + "x per " + properties.right());
+                    aresonSomnium.sendSuccessMessage(player, "Hai attivato il moltiplicatore " + properties.left() / 100 + "x per " + properties.right().toString().substring(2));
                     event.setCancelled(true);
                 }
             } else {
