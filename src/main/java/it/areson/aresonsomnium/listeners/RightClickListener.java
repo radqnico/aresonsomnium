@@ -19,24 +19,28 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.time.Duration;
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static it.areson.aresonsomnium.Constants.*;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class RightClickListener extends GeneralEventListener {
 
+    private final HashMap<String, Instant> playerDelays;
+    private final int delaySeconds = 2;
     private final Optional<LuckPerms> luckPerms;
 
     public RightClickListener(AresonSomnium aresonSomnium) {
         super(aresonSomnium);
+
+        playerDelays = new HashMap<>();
 
         RegisteredServiceProvider<LuckPerms> provider = aresonSomnium.getServer().getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
@@ -57,23 +61,35 @@ public class RightClickListener extends GeneralEventListener {
         return !Objects.isNull(itemStack) && !Objects.isNull(itemStack.getItemMeta()) && itemStack.getItemMeta().hasCustomModelData();
     }
 
+    private boolean canExecuteAnotherCommand(Player player) {
+        String playerName = player.getName();
+        return !playerDelays.containsKey(playerName) || Duration.between(playerDelays.get(playerName), Instant.now()).getSeconds() >= delaySeconds;
+    }
+
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         if (isLegitRightClick(event.getHand(), event.getAction(), event.useInteractedBlock())) {
 
             ItemStack itemStack = event.getItem();
             if (hasCustomItemRequirements(itemStack)) {
+                Player player = event.getPlayer();
 
-                switch (Objects.requireNonNull(Objects.requireNonNull(itemStack).getItemMeta()).getCustomModelData()) {
-                    case GOMMA_MODEL_DATA:
-                        collectGommaReward(event);
-                        break;
-                    case CHECK_MODEL_DATA:
-                        redeemCheck(event);
-                        break;
-                    case MULTIPLIER_MODEL_DATA:
-                        activateMultiplier(event);
-                        break;
+                if (canExecuteAnotherCommand(player)) {
+                    playerDelays.put(player.getName(), Instant.now());
+
+                    switch (Objects.requireNonNull(Objects.requireNonNull(itemStack).getItemMeta()).getCustomModelData()) {
+                        case GOMMA_MODEL_DATA:
+                            collectGommaReward(event);
+                            break;
+                        case CHECK_MODEL_DATA:
+                            redeemCheck(event);
+                            break;
+                        case MULTIPLIER_MODEL_DATA:
+                            activateMultiplier(event);
+                            break;
+                    }
+                } else {
+                    aresonSomnium.sendInfoMessage(player, "Devi aspettare qualche secondo prima di poterlo riutilizzare");
                 }
             }
         }
@@ -87,7 +103,7 @@ public class RightClickListener extends GeneralEventListener {
                 try {
                     String stringMultiplier = lore.get(0);
                     stringMultiplier = stringMultiplier.substring(stringMultiplier.indexOf(' ') + 1, stringMultiplier.length() - 1);
-                    int multiplier = (int)(Double.parseDouble(stringMultiplier) * 100);
+                    int multiplier = (int) (Double.parseDouble(stringMultiplier) * 100);
 
                     String stringDuration = lore.get(1);
                     stringDuration = "PT" + stringDuration.substring(stringDuration.indexOf(' ') + 1).toUpperCase();
