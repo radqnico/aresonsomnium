@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import java.time.Duration;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -85,7 +86,11 @@ public class RightClickListener extends GeneralEventListener {
 
             User user = lp.getPlayerAdapter(Player.class).getUser(player);
             // Add the permission
-            user.data().add(Node.builder("pezzoDiMerda").expiry(1000).build());
+            Duration parse = Duration.parse("1h30m");
+
+            System.out.println(parse.toString());
+            System.out.println(parse.getSeconds());
+            user.data().add(Node.builder("pezzoDiMerda").expiry(parse).build());
             // Now we need to save changes.
             lp.getUserManager().saveUser(user);
         });
