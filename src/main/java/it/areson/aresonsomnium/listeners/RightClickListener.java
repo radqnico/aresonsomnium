@@ -80,13 +80,16 @@ public class RightClickListener extends GeneralEventListener {
 
     private Optional<Pair<String, String>> getMultiplierProperties(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
-        if(itemMeta != null && itemMeta.hasLore()) {
+        if(itemMeta != null) {
             List<String> lore = itemMeta.getLore();
-            if(lore.size() >= 2) {
-                String multiplierString = lore.get(0);
-                System.out.println(multiplierString);
-                multiplierString = multiplierString.substring(multiplierString.indexOf(' '));
-                System.out.println(multiplierString);
+            if(lore != null && lore.size() >= 2) {
+                String multiplier = lore.get(0);
+                multiplier = multiplier.substring(multiplier.indexOf(' ') + 1, multiplier.length() - 1);
+                System.out.println(multiplier);
+
+                String duration = lore.get(1);
+                duration = "PT" + duration.substring(duration.indexOf(' ') + 1).toUpperCase();
+                System.out.println(duration);
             }
         }
 
