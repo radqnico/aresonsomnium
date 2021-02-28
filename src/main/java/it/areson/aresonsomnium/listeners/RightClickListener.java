@@ -121,7 +121,7 @@ public class RightClickListener extends GeneralEventListener {
                     itemStack.setAmount(itemStack.getAmount() - 1);
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_SHOOT, 1f, 1f);
                     //TODO Better duration print
-                    aresonSomnium.sendSuccessMessage(player, "Hai attivato il moltiplicatore " + properties.left() / 100 + "x per " + properties.right() + " con successo");
+                    aresonSomnium.sendSuccessMessage(player, "Hai attivato il moltiplicatore " + properties.left() / 100 + "x per " + properties.right());
                     event.setCancelled(true);
                 }
             } else {
