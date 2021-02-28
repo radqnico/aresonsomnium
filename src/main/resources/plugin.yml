@@ -43,9 +43,14 @@ commands:
     description: "Sell the item in main hand"
     permission: aresonsomnium.player
     usage: /sellhand
+  giveConsumable:
+    description: "Give a consumable object"
+    permission: aresonsomniun.admin
+    usage: /giveConsumable
 
 depend:
   - Essentials
+  - LuckPerms
   - PlaceholderAPI
 
 permissions:

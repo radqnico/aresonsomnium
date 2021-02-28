@@ -18,23 +18,33 @@ import it.areson.aresonsomnium.shops.listener.CustomGuiEventsListener;
 import it.areson.aresonsomnium.shops.listener.SetPriceInChatListener;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.Debugger;
+import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
+import net.luckperms.api.LuckPerms;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
+import java.util.Optional;
+
+import static it.areson.aresonsomnium.Constants.PERMISSION_MULTIPLIER;
 import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
 import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class AresonSomnium extends JavaPlugin {
 
     private static AresonSomnium instance;
     private SomniumPlayerManager somniumPlayerManager;
     private ShopManager shopManager;
     private ShopEditor shopEditor;
-    private SomniumPlayerDBEvents playerDBEvents;
-    private CustomGuiEventsListener customGuiEventsListener;
+    private GatewayListener playerDBEvents;
     private SetPriceInChatListener setPriceInChatListener;
-    private RightClickListener rightClickListener;
-    private InventoryListener inventoryListener;
+    public Optional<LuckPerms> luckPerms;
+    public HashMap<String, Double> playerMultipliers;
 
     private GommaObjectsFileReader gommaObjectsFileReader;
 
@@ -54,6 +64,7 @@ public class AresonSomnium extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        playerMultipliers = new HashMap<>();
 
         // Files
         registerFiles();
@@ -70,6 +81,19 @@ public class AresonSomnium extends JavaPlugin {
         initAllEvents();
         // Commands
         registerCommands();
+        // Placeholders
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new MultiplierPlaceholders(this).register();
+        }
+
+        // LuckPerms
+        RegisteredServiceProvider<LuckPerms> provider = getServer().getServicesManager().getRegistration(LuckPerms.class);
+        if (provider != null) {
+            luckPerms = Optional.of(provider.getProvider());
+            new LuckPermsListener(this, provider.getProvider());
+        } else {
+            luckPerms = Optional.empty();
+        }
 
         // Auto Save Task interval
         // 1m  = 1200
@@ -106,14 +130,15 @@ public class AresonSomnium extends JavaPlugin {
         new SellCommand(this, Constants.SELL_ALL_COMMAND);
         new CheckCommand(this);
         new ObolsCommand(this);
+        new GiveConsumableCommand(this);
     }
 
     private void initAllEvents() {
-        playerDBEvents = new SomniumPlayerDBEvents(this);
-        customGuiEventsListener = new CustomGuiEventsListener(this);
+        playerDBEvents = new GatewayListener(this);
+        CustomGuiEventsListener customGuiEventsListener = new CustomGuiEventsListener(this);
         setPriceInChatListener = new SetPriceInChatListener(this);
-        inventoryListener = new InventoryListener(this);
-        rightClickListener = new RightClickListener(this);
+        InventoryListener inventoryListener = new InventoryListener(this);
+        RightClickListener rightClickListener = new RightClickListener(this);
 
         playerDBEvents.registerEvents();
         customGuiEventsListener.registerEvents();
@@ -140,4 +165,50 @@ public class AresonSomnium extends JavaPlugin {
     public SetPriceInChatListener getSetPriceInChatListener() {
         return setPriceInChatListener;
     }
+
+    public void sendErrorMessage(CommandSender commandSender, String error) {
+        commandSender.sendMessage(ChatColor.BLUE + "[Somnium] " + ChatColor.RED + error);
+    }
+
+    public void sendInfoMessage(CommandSender commandSender, String info) {
+        commandSender.sendMessage(ChatColor.BLUE + "[Somnium] " + ChatColor.GOLD + info);
+    }
+
+    public void sendSuccessMessage(CommandSender commandSender, String success) {
+        commandSender.sendMessage(ChatColor.BLUE + "[Somnium] " + ChatColor.GREEN + success);
+    }
+
+    public double extractPlayerMaxMultiplierFromPermissions(Player player) {
+        return player.getEffectivePermissions().parallelStream().reduce(1.0, (multiplier, permissionAttachmentInfo) -> {
+            double tempMultiplier = 1.0;
+            String permission = permissionAttachmentInfo.getPermission();
+
+            if (permission.startsWith(PERMISSION_MULTIPLIER)) {
+                int lastDotPosition = permission.lastIndexOf(".");
+                String stringMultiplier = permission.substring(lastDotPosition + 1);
+
+                try {
+                    tempMultiplier = Double.parseDouble(stringMultiplier) / 100;
+                } catch (NumberFormatException event) {
+                    getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
+                }
+            }
+
+            return tempMultiplier;
+        }, Double::max);
+    }
+
+    public void forceMultiplierRefresh(Player player, boolean upsert) {
+        String playerName = player.getName();
+        if (upsert || playerMultipliers.containsKey(playerName)) {
+            playerMultipliers.put(playerName, extractPlayerMaxMultiplierFromPermissions(player));
+        }
+
+    }
+
+    public double getCachedMultiplier(String playerName) {
+        Double multiplier = playerMultipliers.get(playerName);
+        return multiplier == null ? 1.0 : multiplier;
+    }
+
 }
