@@ -16,7 +16,7 @@ public class MultiplierPlaceholders extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getIdentifier() {
-        return "aresonsomnium_multiplier";
+        return "aresonsomnium";
     }
 
     @Override
@@ -32,9 +32,13 @@ public class MultiplierPlaceholders extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {
         String value = "Nessun dato";
-        if(player instanceof Player) {
-            value = aresonSomnium.getPlayerMultiplier((Player) player) + "";
+
+        if (params.equalsIgnoreCase("multiplier")) {
+            if (player instanceof Player) {
+                value = aresonSomnium.getPlayerMultiplier((Player) player) + "";
+            }
         }
+
         return value;
     }
 
