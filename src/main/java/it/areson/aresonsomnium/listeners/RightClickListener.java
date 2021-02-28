@@ -87,7 +87,7 @@ public class RightClickListener extends GeneralEventListener {
                 try {
                     String stringMultiplier = lore.get(0);
                     stringMultiplier = stringMultiplier.substring(stringMultiplier.indexOf(' ') + 1, stringMultiplier.length() - 1);
-                    int multiplier = (int) Double.parseDouble(stringMultiplier) * 100;
+                    int multiplier = (int)(Double.parseDouble(stringMultiplier) * 100);
 
                     String stringDuration = lore.get(1);
                     stringDuration = "PT" + stringDuration.substring(stringDuration.indexOf(' ') + 1).toUpperCase();
