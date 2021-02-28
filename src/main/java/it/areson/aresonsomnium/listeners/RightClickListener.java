@@ -61,7 +61,7 @@ public class RightClickListener extends GeneralEventListener {
         return !Objects.isNull(itemStack) && !Objects.isNull(itemStack.getItemMeta()) && itemStack.getItemMeta().hasCustomModelData();
     }
 
-    private boolean canExecuteAnotherCommand(Player player) {
+    private boolean canUseAnotherConsumable(Player player) {
         String playerName = player.getName();
         return !playerDelays.containsKey(playerName) || Duration.between(playerDelays.get(playerName), Instant.now()).getSeconds() >= delaySeconds;
     }
@@ -74,7 +74,7 @@ public class RightClickListener extends GeneralEventListener {
             if (hasCustomItemRequirements(itemStack)) {
                 Player player = event.getPlayer();
 
-                if (canExecuteAnotherCommand(player)) {
+                if (canUseAnotherConsumable(player)) {
                     playerDelays.put(player.getName(), Instant.now());
 
                     switch (Objects.requireNonNull(Objects.requireNonNull(itemStack).getItemMeta()).getCustomModelData()) {
