@@ -116,23 +116,21 @@ public class RightClickListener extends GeneralEventListener {
                 if (optionalProperties.isPresent()) {
                     Pair<Integer, Duration> properties = optionalProperties.get();
                     String permission = SELL_MULTIPLIER_PERMISSION + "." + properties.left();
-                    Duration finalDuration = properties.right();
 
 
                     luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user -> {
+                        Duration finalDuration = properties.right();
                         Optional<Node> sameActiveMultiplier = user.getNodes().parallelStream().filter(node -> node.getKey().equals(permission)).findFirst();
-                        if(sameActiveMultiplier.isPresent()) {
 
-                            if(sameActiveMultiplier.get().getExpiryDuration() != null) {
-                                System.out.println(sameActiveMultiplier.get().getExpiryDuration());
-                                System.out.println(sameActiveMultiplier.get().getExpiryDuration().plus(properties.right()));
+                        if (sameActiveMultiplier.isPresent()) {
+                            Duration expiryDuration = sameActiveMultiplier.get().getExpiryDuration();
+                            if (expiryDuration != null) {
+                                finalDuration = finalDuration.plus(expiryDuration);
                             }
-
-                            ScopedNode<?, ?> build = sameActiveMultiplier.get().toBuilder().expiry(sameActiveMultiplier.get().getExpiryDuration().plus(properties.right())).build();
-                            user.data().add(build);
                         }
 
-                        user.data().add(Node.builder(permission).expiry(properties.right()).build());
+                        user.data().remove(Node.builder(permission).build());
+                        user.data().add(Node.builder(permission).expiry(finalDuration).build());
                     });
 
 
