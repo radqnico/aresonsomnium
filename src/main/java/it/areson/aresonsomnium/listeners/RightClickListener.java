@@ -112,6 +112,9 @@ public class RightClickListener extends GeneralEventListener {
         //TODO prevent activating lower multipliers
         if (itemStack != null) {
             if (luckPerms.isPresent()) {
+
+                player.sendMessage(player.getEffectivePermissions().toString());
+
                 Optional<Pair<Integer, Duration>> optionalProperties = getMultiplierProperties(itemStack);
                 if (optionalProperties.isPresent()) {
                     Pair<Integer, Duration> properties = optionalProperties.get();
@@ -126,7 +129,6 @@ public class RightClickListener extends GeneralEventListener {
                             Duration expiryDuration = sameActiveMultiplier.get().getExpiryDuration();
                             if (expiryDuration != null) {
                                 finalDuration = finalDuration.plus(expiryDuration);
-                                System.out.println("New duration: " + finalDuration);
                                 user.data().remove(sameActiveMultiplier.get());
                             }
                         }
