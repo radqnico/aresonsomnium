@@ -9,6 +9,7 @@ import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -109,18 +110,20 @@ public class RightClickListener extends GeneralEventListener {
 
         if (itemStack != null) {
             if (luckPerms.isPresent()) {
-                Optional<Pair<Integer, Duration>> multiplierProperties = getMultiplierProperties(itemStack);
-                if (multiplierProperties.isPresent()) {
-                    Pair<Integer, Duration> pair = multiplierProperties.get();
+                Optional<Pair<Integer, Duration>> optionalProperties = getMultiplierProperties(itemStack);
+                if (optionalProperties.isPresent()) {
+                    Pair<Integer, Duration> properties = optionalProperties.get();
 
                     User user = luckPerms.get().getPlayerAdapter(Player.class).getUser(player);
-                    user.data().add(Node.builder(SELL_MULTIPLIER_PERMISSION + "." + pair.left()).expiry(pair.right()).build());
+                    user.data().add(Node.builder(SELL_MULTIPLIER_PERMISSION + "." + properties.left()).expiry(properties.right()).build());
                     luckPerms.get().getUserManager().saveUser(user);
 
                     itemStack.setAmount(itemStack.getAmount() - 1);
+                    player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_SHOOT, 1f, 1f);
+                    aresonSomnium.sendSuccessMessage(player, "Hai attivato il moltiplicatore " + properties.left() + " per " + properties.right().toString() + " con successo");
                 }
             } else {
-                aresonSomnium.sendErrorMessage(player, "Errore nell'API di LuckPerms");
+                aresonSomnium.getLogger().severe("Errore nell'API di LuckPerms");
             }
         }
     }
