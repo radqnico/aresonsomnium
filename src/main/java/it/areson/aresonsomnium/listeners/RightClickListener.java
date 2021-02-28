@@ -84,7 +84,8 @@ public class RightClickListener extends GeneralEventListener {
             List<String> lore = itemMeta.getLore();
             if(lore.size() >= 2) {
                 String multiplierString = lore.get(0);
-                multiplierString = multiplierString.substring(multiplierString.charAt(' '));
+                System.out.println(multiplierString);
+                multiplierString = multiplierString.substring(multiplierString.indexOf(' '));
                 System.out.println(multiplierString);
             }
         }
