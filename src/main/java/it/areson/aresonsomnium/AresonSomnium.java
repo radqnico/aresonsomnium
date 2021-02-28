@@ -20,8 +20,10 @@ import it.areson.aresonsomnium.utils.Debugger;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import static it.areson.aresonsomnium.Constants.PERMISSION_MULTIPLIER;
 import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
 import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 
@@ -150,4 +152,26 @@ public class AresonSomnium extends JavaPlugin {
     public void sendSuccessMessage(CommandSender commandSender, String success) {
         commandSender.sendMessage(ChatColor.BLUE + "[Somnium] " + ChatColor.GREEN + success);
     }
+
+    public double getPlayerMultiplier(Player player) {
+        return player.getEffectivePermissions().parallelStream().reduce(1.0, (multiplier, permissionAttachmentInfo) -> {
+            double tempMultiplier = 1.0;
+            String permission = permissionAttachmentInfo.getPermission();
+
+            if (permission.startsWith(PERMISSION_MULTIPLIER)) {
+                int lastDotPosition = permission.lastIndexOf(".");
+                String stringMultiplier = permission.substring(lastDotPosition + 1);
+
+                try {
+                    double value = Double.parseDouble(stringMultiplier);
+                    tempMultiplier = value / 100;
+                } catch (NumberFormatException event) {
+                    getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
+                }
+            }
+
+            return tempMultiplier;
+        }, Double::max);
+    }
+
 }

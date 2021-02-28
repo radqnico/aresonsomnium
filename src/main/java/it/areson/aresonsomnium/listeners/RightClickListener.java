@@ -5,9 +5,7 @@ import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.Pair;
 import net.luckperms.api.LuckPerms;
-import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
-import net.luckperms.api.node.ScopedNode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -21,12 +19,14 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static it.areson.aresonsomnium.Constants.*;
 
@@ -108,39 +108,39 @@ public class RightClickListener extends GeneralEventListener {
         Player player = event.getPlayer();
         ItemStack itemStack = event.getItem();
 
-
-        //TODO prevent activating lower multipliers
         if (itemStack != null) {
             if (luckPerms.isPresent()) {
-
-                player.sendMessage(player.getEffectivePermissions().toString());
 
                 Optional<Pair<Integer, Duration>> optionalProperties = getMultiplierProperties(itemStack);
                 if (optionalProperties.isPresent()) {
                     Pair<Integer, Duration> properties = optionalProperties.get();
-                    String permission = SELL_MULTIPLIER_PERMISSION + "." + properties.left();
 
+                    if (properties.left() <= aresonSomnium.getPlayerMultiplier(player) * 100) {
+                        String permission = PERMISSION_MULTIPLIER + "." + properties.left();
 
-                    luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user -> {
-                        Duration finalDuration = properties.right();
-                        Optional<Node> sameActiveMultiplier = user.getNodes().parallelStream().filter(node -> node.getKey().equals(permission)).findFirst();
+                        luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user -> {
+                            Duration finalDuration = properties.right();
+                            Optional<Node> sameActiveMultiplier = user.getNodes().parallelStream().filter(node -> node.getKey().equals(permission)).findFirst();
 
-                        if (sameActiveMultiplier.isPresent()) {
-                            Duration expiryDuration = sameActiveMultiplier.get().getExpiryDuration();
-                            if (expiryDuration != null) {
-                                finalDuration = finalDuration.plus(expiryDuration);
-                                user.data().remove(sameActiveMultiplier.get());
+                            if (sameActiveMultiplier.isPresent()) {
+                                Duration expiryDuration = sameActiveMultiplier.get().getExpiryDuration();
+                                if (expiryDuration != null) {
+                                    finalDuration = finalDuration.plus(expiryDuration);
+                                    user.data().remove(sameActiveMultiplier.get());
+                                }
                             }
-                        }
 
-                        user.data().add(Node.builder(permission).expiry(finalDuration).build());
-                    });
+                            user.data().add(Node.builder(permission).expiry(finalDuration).build());
+                        });
 
 
-                    itemStack.setAmount(itemStack.getAmount() - 1);
-                    player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_SHOOT, 1f, 1f);
-                    aresonSomnium.sendSuccessMessage(player, "Hai attivato il moltiplicatore " + properties.left() / 100 + "x per " + properties.right().toString().substring(2).toLowerCase());
-                    event.setCancelled(true);
+                        itemStack.setAmount(itemStack.getAmount() - 1);
+                        player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_SHOOT, 1f, 1f);
+                        aresonSomnium.sendSuccessMessage(player, "Hai attivato il moltiplicatore " + properties.left() / 100 + "x per " + properties.right().toString().substring(2).toLowerCase());
+                        event.setCancelled(true);
+                    } else {
+                        aresonSomnium.sendErrorMessage(player, "Hai già un moltiplicatore maggiore attivo");
+                    }
                 }
             } else {
                 aresonSomnium.getLogger().severe("Errore nell'API di LuckPerms");

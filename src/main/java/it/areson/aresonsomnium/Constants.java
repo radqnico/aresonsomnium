@@ -8,7 +8,7 @@ public class Constants {
     public static final String PERMISSION_QUARTO_GIRONE = "aresonsomnium.quartogirone";
     public static final String PERMISSION_SESTO_GIRONE = "aresonsomnium.sestogirone";
     public static final String PERMISSION_OTTAVO_GIRONE = "aresonsomnium.ottavogirone";
-    public static final String SELL_MULTIPLIER_PERMISSION = "aresonsomnium.multiplier";
+    public static final String PERMISSION_MULTIPLIER = "aresonsomnium.multiplier";
 
 
     public static final String SELL_ALL_COMMAND = "sellall";
