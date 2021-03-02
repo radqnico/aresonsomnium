@@ -39,6 +39,10 @@ public class InventoryListener extends GeneralEventListener {
                         Enchantment enchantment = entry.getKey();
                         Integer currentEnchantmentLevel = clickedItemStack.getEnchantments().get(enchantment);
 
+                        System.out.println(enchantment.canEnchantItem(clickedItemStack));
+                        System.out.println(!clickedItemMeta.hasConflictingEnchant(enchantment));
+                        System.out.println((currentEnchantmentLevel == null || currentEnchantmentLevel < entry.getValue()));
+
                         return enchantment.canEnchantItem(clickedItemStack)
                                 && !clickedItemMeta.hasConflictingEnchant(enchantment)
                                 && (currentEnchantmentLevel == null || currentEnchantmentLevel < entry.getValue());
