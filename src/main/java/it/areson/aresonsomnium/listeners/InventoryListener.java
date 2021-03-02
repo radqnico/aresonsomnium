@@ -43,8 +43,11 @@ public class InventoryListener extends GeneralEventListener {
                         System.out.println(!clickedItemMeta.hasConflictingEnchant(enchantment));
                         System.out.println((currentEnchantmentLevel == null || currentEnchantmentLevel < entry.getValue()));
 
+                        ItemMeta clonedItemMeta = clickedItemMeta.clone();
+                        clonedItemMeta.removeEnchant(enchantment);
+
                         return enchantment.canEnchantItem(clickedItemStack)
-                                && !clickedItemMeta.hasConflictingEnchant(enchantment)
+                                && !clonedItemMeta.hasConflictingEnchant(enchantment)
                                 && (currentEnchantmentLevel == null || currentEnchantmentLevel < entry.getValue());
                     }, Boolean::logicalAnd);
 
