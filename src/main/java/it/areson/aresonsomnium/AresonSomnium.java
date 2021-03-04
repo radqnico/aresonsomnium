@@ -211,7 +211,7 @@ public class AresonSomnium extends JavaPlugin {
                     System.out.println("Or2: " + LocalDateTime.ofInstant(expiry, ZoneId.systemDefault()));
                     if (expiry != null) {
                         System.out.println("We: " + dateTimeFormatter.format(LocalDateTime.ofInstant(expiry, ZoneId.systemDefault())));
-                        expiryString = dateTimeFormatter.format(expiry);
+                        expiryString = dateTimeFormatter.format(LocalDateTime.ofInstant(expiry, ZoneId.systemDefault()));
                     }
 
                     return Pair.of(newValue, expiryString);
