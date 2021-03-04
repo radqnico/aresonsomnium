@@ -31,7 +31,9 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static it.areson.aresonsomnium.Constants.PERMISSION_MULTIPLIER;
@@ -189,7 +191,6 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public CompletableFuture<Pair<Double, String>> extractPlayerMaxMultiplierTupleFromPermissions(Collection<Node> permissions) {
-        System.out.println("extractPlayerMaxMultiplierTupleFromPermissions");
         return CompletableFuture.supplyAsync(() -> permissions.parallelStream().reduce(defaultMultiplier, (optionalValue, node) -> {
             String permission = node.getKey();
 
@@ -213,7 +214,6 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public CompletableFuture<Pair<Double, String>> forceMultiplierRefresh(Player player, Collection<Node> permissions) {
-        System.out.println("forceMultiplierRefresh complete");
         CompletableFuture<Pair<Double, String>> multiplierFuture = extractPlayerMaxMultiplierTupleFromPermissions(permissions);
 
         multiplierFuture.thenAcceptAsync((multiplierPair) -> playerMultipliers.put(player.getName(), multiplierPair));
@@ -222,7 +222,6 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public CompletableFuture<Pair<Double, String>> forceMultiplierRefresh(Player player) {
-        System.out.println("forceMultiplierRefresh easy");
         if (luckPerms.isPresent()) {
             return luckPerms.get().getUserManager().loadUser(player.getUniqueId()).thenCompose(
                     (user) -> forceMultiplierRefresh(player, user.getNodes())
@@ -233,14 +232,12 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public Pair<Double, String> getCachedMultiplier(Player player) {
-        System.out.println("getCachedMultiplier");
         Pair<Double, String> cachedMultiplier = playerMultipliers.get(player.getName());
 
         if (cachedMultiplier == null) {
             cachedMultiplier = forceMultiplierRefresh(player).join();
         }
 
-        System.out.println("Cached: " + cachedMultiplier);
         return cachedMultiplier;
     }
 
