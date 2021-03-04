@@ -4,6 +4,7 @@ import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -20,7 +21,7 @@ public class GatewayListener extends GeneralEventListener {
         somniumPlayerManager.addSomniumPlayer(player);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         SomniumPlayerManager somniumPlayerManager = aresonSomnium.getSomniumPlayerManager();
