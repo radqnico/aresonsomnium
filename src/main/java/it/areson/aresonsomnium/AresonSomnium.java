@@ -184,26 +184,6 @@ public class AresonSomnium extends JavaPlugin {
         commandSender.sendMessage(ChatColor.BLUE + "[Somnium] " + ChatColor.GREEN + success);
     }
 
-    public double extractPlayerMaxMultiplierFromPermissions(Player player) {
-        return player.getEffectivePermissions().parallelStream().reduce(1.0, (multiplier, permissionAttachmentInfo) -> {
-            double tempMultiplier = 1.0;
-            String permission = permissionAttachmentInfo.getPermission();
-
-            if (permission.startsWith(PERMISSION_MULTIPLIER)) {
-                int lastDotPosition = permission.lastIndexOf(".");
-                String stringMultiplier = permission.substring(lastDotPosition + 1);
-
-                try {
-                    tempMultiplier = Double.parseDouble(stringMultiplier) / 100;
-                } catch (NumberFormatException event) {
-                    getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
-                }
-            }
-
-            return tempMultiplier;
-        }, Double::max);
-    }
-
     private Pair<Double, String> getMaxOrFirst(Pair<Double, String> newValue, Pair<Double, String> oldValue) {
         return newValue.left() > oldValue.left() ? newValue : oldValue;
     }
@@ -217,7 +197,7 @@ public class AresonSomnium extends JavaPlugin {
                 String stringMultiplier = permission.substring(lastDotPosition + 1);
 
                 try {
-                    double newValue = Double.parseDouble(stringMultiplier);
+                    double newValue = Double.parseDouble(stringMultiplier) / 100;
                     Instant expiry = node.getExpiry();
                     String expiryString = expiry != null ? expiry.toString() : "Mai";
 
