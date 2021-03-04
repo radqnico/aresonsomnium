@@ -24,15 +24,16 @@ import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.node.Node;
-import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Optional;
@@ -206,8 +207,8 @@ public class AresonSomnium extends JavaPlugin {
                     Instant expiry = node.getExpiry();
                     String expiryString = "Mai";
                     if (expiry != null) {
-                        Duration difference = Duration.between(Instant.now(), expiry);
-                        expiryString = DurationFormatUtils.formatDuration(difference.toMillis(), "**H:mm:ss**", true);
+                        LocalDateTime localDateTime = LocalDateTime.ofInstant(expiry, ZoneOffset.of("Rome"));
+                        expiryString = localDateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
                     }
 
                     return Pair.of(newValue, expiryString);
