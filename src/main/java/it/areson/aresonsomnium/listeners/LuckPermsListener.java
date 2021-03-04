@@ -20,17 +20,12 @@ public class LuckPermsListener {
     }
 
     private void onNodeMutateEvent(NodeMutateEvent event) {
-
-        System.out.println("AAAAA Before" + event.getDataBefore());
-        System.out.println("AAAAA After" + event.getDataAfter());
-
-
         if (event.isUser()) {
             String username = ((User) event.getTarget()).getUsername();
             if (username != null) {
                 Player player = aresonSomnium.getServer().getPlayer(username);
                 if (player != null) {
-                    aresonSomnium.forceMultiplierRefresh(player);
+                    aresonSomnium.forceMultiplierRefresh(player, event.getDataAfter());
                 }
             }
         }

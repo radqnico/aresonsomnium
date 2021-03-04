@@ -23,6 +23,7 @@ import it.areson.aresonsomnium.utils.Pair;
 import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import net.luckperms.api.LuckPerms;
+import net.luckperms.api.node.Node;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -31,7 +32,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static it.areson.aresonsomnium.Constants.PERMISSION_MULTIPLIER;
 import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
@@ -204,10 +207,10 @@ public class AresonSomnium extends JavaPlugin {
         return second.isPresent() ? second : first;
     }
 
-    public Pair<Double, Duration> extractPlayerMaxMultiplierTupleFromPermissions(Player player) {
-        luckPerms.ifPresent(perms -> perms.getUserManager().loadUser(player.getUniqueId()).thenApplyAsync((user) -> {
+    public void extractPlayerMaxMultiplierTupleFromPermissions(Player player, Set<Node> permissions) {
+//        luckPerms.ifPresent(perms -> perms.getUserManager().loadUser(player.getUniqueId()).thenApplyAsync((user) -> {
 
-            Optional<Double> reduce = user.getNodes().parallelStream().reduce(Optional.empty(), (optionalValue, node) -> {
+            Optional<Double> reduce = permissions.parallelStream().reduce(Optional.empty(), (optionalValue, node) -> {
                 String permission = node.getKey();
                 System.out.println("Evaluating " + permission + ", expiry: " + node.getExpiry());
 
@@ -227,15 +230,13 @@ public class AresonSomnium extends JavaPlugin {
             }, this::getSecondIfPresent);
 
             System.out.println(reduce);
-
-            return "we";
-        }));
-
-        return Pair.emptyMultiplier();
+//        }));
+//
+//        return Pair.emptyMultiplier();
     }
 
-    public Double forceMultiplierRefresh(Player player) {
-        extractPlayerMaxMultiplierTupleFromPermissions(player);
+    public Double forceMultiplierRefresh(Player player, Set<Node> permissions) {
+        extractPlayerMaxMultiplierTupleFromPermissions(player, permissions);
 
         double multiplier = extractPlayerMaxMultiplierFromPermissions(player);
         playerMultipliers.put(player.getName(), multiplier);
@@ -247,7 +248,7 @@ public class AresonSomnium extends JavaPlugin {
         Double multiplier = playerMultipliers.get(player.getName());
 
         if (multiplier == null) {
-            multiplier = forceMultiplierRefresh(player);
+            multiplier = forceMultiplierRefresh(player, new HashSet<>());
         }
 
         return multiplier;
