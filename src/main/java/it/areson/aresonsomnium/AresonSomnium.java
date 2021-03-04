@@ -23,7 +23,6 @@ import it.areson.aresonsomnium.utils.Pair;
 import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import net.luckperms.api.LuckPerms;
-import net.luckperms.api.node.Node;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -201,31 +200,31 @@ public class AresonSomnium extends JavaPlugin {
         }, Double::max);
     }
 
-    private Optional<Node> optionalOr(Optional<Node> first, Optional<Node> second) {
-        return first.map(Optional::of).orElse(second);
+    private Optional<Double> getSecondIfPresent(Optional<Double> first, Optional<Double> second) {
+        return second.isPresent() ? second : first;
     }
 
     public Pair<Double, Duration> extractPlayerMaxMultiplierTupleFromPermissions(Player player) {
         luckPerms.ifPresent(perms -> perms.getUserManager().loadUser(player.getUniqueId()).thenApplyAsync((user) -> {
 
-            Optional<Node> reduce = user.getNodes().parallelStream().reduce(Optional.empty(), (optionalNode, node) -> {
+            Optional<Double> reduce = user.getNodes().parallelStream().reduce(Optional.empty(), (optionalValue, node) -> {
                 String permission = node.getKey();
-                System.out.println("Evaluating " + permission);
+                System.out.println("Evaluating " + permission + ", expiry: " + node.getExpiry());
 
                 if (permission.startsWith(PERMISSION_MULTIPLIER)) {
                     int lastDotPosition = permission.lastIndexOf(".");
                     String stringMultiplier = permission.substring(lastDotPosition + 1);
 
                     try {
-                        Double.parseDouble(stringMultiplier);
-                        return Optional.of(node);
+                        double newValue = Double.parseDouble(stringMultiplier);
+                        return optionalValue.map(oldValue -> Optional.of(Double.max(oldValue, newValue)).orElse(newValue));
                     } catch (NumberFormatException event) {
                         getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
                     }
                 }
 
-                return optionalNode;
-            }, this::optionalOr);
+                return Optional.empty();
+            }, this::getSecondIfPresent);
 
             System.out.println(reduce);
 
