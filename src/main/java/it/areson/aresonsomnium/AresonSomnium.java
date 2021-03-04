@@ -201,27 +201,36 @@ public class AresonSomnium extends JavaPlugin {
         }, Double::max);
     }
 
+    public Optional<Node> we(Optional<Node> a, Optional<Node> b) {
+        if(a.isPresent()) {
+            return a;
+        }
+        return b;
+    }
+
     public Pair<Double, Duration> extractPlayerMaxMultiplierTupleFromPermissions(Player player) {
 
         luckPerms.ifPresent(perms -> perms.getUserManager().loadUser(player.getUniqueId()).thenApplyAsync((user) -> {
             user.getNodes().parallelStream().forEachOrdered((we) -> System.out.println(we.getKey()));
 
 
-            Optional<Node> reduce = user.getNodes().parallelStream().reduce((nodeEvaluated, nodeToEvaluate) -> {
+            Optional<Node> emptyStart = Optional.empty();
+            Optional<Node> reduce = user.getNodes().parallelStream().reduce(emptyStart, (nodeEvaluated, nodeToEvaluate) -> {
                 String permission = nodeToEvaluate.getKey();
-                if(permission.startsWith(PERMISSION_MULTIPLIER)) {
+                if (permission.startsWith(PERMISSION_MULTIPLIER)) {
                     int lastDotPosition = permission.lastIndexOf(".");
                     String stringMultiplier = permission.substring(lastDotPosition + 1);
 
                     try {
                         Double.parseDouble(stringMultiplier);
-                        return nodeToEvaluate;
+//                        return nodeToEvaluate;
+                        return Optional.empty();
                     } catch (NumberFormatException event) {
                         getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
                     }
                 }
-                return nodeEvaluated;
-            });
+                return Optional.empty();
+            }, this::we);
 
             System.out.println(reduce);
 
