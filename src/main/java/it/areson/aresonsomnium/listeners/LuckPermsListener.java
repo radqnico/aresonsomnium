@@ -19,12 +19,11 @@ public class LuckPermsListener {
     }
 
     private void onUserDataRecalculateEvent(UserDataRecalculateEvent event) {
-        System.out.println("UEEEEEE");
         String username = event.getUser().getUsername();
         if (username != null) {
             Player player = aresonSomnium.getServer().getPlayer(username);
             if (player != null) {
-                aresonSomnium.forceMultiplierRefresh(player, false);
+                aresonSomnium.getCachedMultiplier(player);
             }
         }
 

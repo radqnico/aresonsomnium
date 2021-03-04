@@ -210,20 +210,24 @@ public class AresonSomnium extends JavaPlugin {
         return Pair.emptyMultiplier();
     }
 
-    public void forceMultiplierRefresh(Player player, boolean upsert) {
-        String playerName = player.getName();
-        if (upsert || playerMultipliers.containsKey(playerName)) {
-            extractPlayerMaxMultiplierTupleFromPermissions(player);
-            System.out.println("Debug");
-            playerMultipliers.put(playerName, extractPlayerMaxMultiplierFromPermissions(player));
-        }
+    public Double forceMultiplierRefresh(Player player) {
+        extractPlayerMaxMultiplierTupleFromPermissions(player);
 
+        double multiplier = extractPlayerMaxMultiplierFromPermissions(player);
+        playerMultipliers.put(player.getName(), multiplier);
+
+        return multiplier;
     }
 
-    public double getCachedMultiplier(String playerName) {
+    public double getCachedMultiplier(Player player) {
         System.out.println("getCachedMultiplier");
-        Double multiplier = playerMultipliers.get(playerName);
-        return multiplier == null ? 1.0 : multiplier;
+        Double multiplier = playerMultipliers.get(player.getName());
+
+        if (multiplier == null) {
+            multiplier = forceMultiplierRefresh(player);
+        }
+
+        return multiplier;
     }
 
 }

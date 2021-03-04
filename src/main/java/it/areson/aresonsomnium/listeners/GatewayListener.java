@@ -18,9 +18,6 @@ public class GatewayListener extends GeneralEventListener {
         Player player = event.getPlayer();
         SomniumPlayerManager somniumPlayerManager = aresonSomnium.getSomniumPlayerManager();
         somniumPlayerManager.addSomniumPlayer(player);
-
-        // Add cached multiplier
-//        aresonSomnium.forceMultiplierRefresh(player, true);
     }
 
     @EventHandler

@@ -82,7 +82,7 @@ public class SellCommand implements CommandExecutor {
 
 
     private BigDecimal sellItems(Player player, ItemStack[] itemStacks) {
-        double multiplier = aresonSomnium.getCachedMultiplier(player.getName());
+        double multiplier = aresonSomnium.getCachedMultiplier(player);
 
         //Getting amount
         BigDecimal coinsToGive = Arrays.stream(itemStacks).parallel().reduce(BigDecimal.ZERO, (total, itemStack) -> {
