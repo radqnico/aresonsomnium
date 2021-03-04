@@ -118,7 +118,6 @@ public class RightClickListener extends GeneralEventListener {
                 if (optionalProperties.isPresent()) {
                     Pair<Double, Duration> properties = optionalProperties.get();
 
-                    System.out.println(properties.left() + " " + aresonSomnium.getCachedMultiplier(player).left());
                     if (properties.left() >= aresonSomnium.getCachedMultiplier(player).left()) {
                         String permission = PERMISSION_MULTIPLIER + "." + properties.left();
 

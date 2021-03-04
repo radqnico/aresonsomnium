@@ -240,6 +240,7 @@ public class AresonSomnium extends JavaPlugin {
             cachedMultiplier = forceMultiplierRefresh(player).join();
         }
 
+        System.out.println("Cached: " + cachedMultiplier);
         return cachedMultiplier;
     }
 
