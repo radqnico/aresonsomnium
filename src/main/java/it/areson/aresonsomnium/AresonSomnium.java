@@ -30,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.HashMap;
@@ -200,8 +201,13 @@ public class AresonSomnium extends JavaPlugin {
 
                 try {
                     double newValue = Double.parseDouble(stringMultiplier) / 100;
+
                     Instant expiry = node.getExpiry();
-                    String expiryString = expiry != null ? expiry.toString() : "Mai";
+                    String expiryString = "Mai";
+                    if (expiry != null) {
+                        Duration difference = Duration.between(expiry, Instant.now());
+                        expiryString = difference.toString();
+                    }
 
                     return Pair.of(newValue, expiryString);
                 } catch (NumberFormatException event) {
