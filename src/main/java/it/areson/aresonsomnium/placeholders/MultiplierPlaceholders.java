@@ -40,7 +40,6 @@ public class MultiplierPlaceholders extends PlaceholderExpansion {
                 value = aresonSomnium.getCachedMultiplier(player).left() + "x";
             } else if (params.equalsIgnoreCase("multipliertime")) {
                 value = aresonSomnium.getCachedMultiplier(player).right();
-                System.out.println(value);
             }
         }
 
