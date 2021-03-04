@@ -211,6 +211,7 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public Double forceMultiplierRefresh(Player player) {
+        System.out.println("forceMultiplierRefresh");
         extractPlayerMaxMultiplierTupleFromPermissions(player);
 
         double multiplier = extractPlayerMaxMultiplierFromPermissions(player);
