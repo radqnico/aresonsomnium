@@ -19,7 +19,6 @@ import it.areson.aresonsomnium.shops.listener.CustomGuiEventsListener;
 import it.areson.aresonsomnium.shops.listener.SetPriceInChatListener;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.Debugger;
-import it.areson.aresonsomnium.utils.Pair;
 import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import net.luckperms.api.LuckPerms;
@@ -30,7 +29,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
@@ -203,45 +201,41 @@ public class AresonSomnium extends JavaPlugin {
         }, Double::max);
     }
 
-    private Optional<Double> getSecondIfPresent(Optional<Double> first, Optional<Double> second) {
-        System.out.println("First: " + first);
-        System.out.println("Second: " + second);
-        System.out.println("Result: " + (second.isPresent() ? second : first));
-        return second.isPresent() ? second : first;
+    private Optional<Double> getSecondIfPresent(Optional<Double> newValue, Optional<Double> oldValue) {
+        if (newValue.isPresent()) {
+            if (oldValue.isPresent()) {
+                return newValue.get() > oldValue.get() ? newValue : oldValue;
+            } else {
+                return newValue;
+            }
+        } else {
+            return oldValue;
+        }
     }
 
     public void extractPlayerMaxMultiplierTupleFromPermissions(Player player, Set<Node> permissions) {
 //        luckPerms.ifPresent(perms -> perms.getUserManager().loadUser(player.getUniqueId()).thenApplyAsync((user) -> {
 
-            Optional<Double> reduce = permissions.parallelStream().reduce(Optional.empty(), (optionalValue, node) -> {
-                String permission = node.getKey();
-                System.out.println("Evaluating " + permission + ", expiry: " + node.getExpiry());
+        Optional<Double> reduce = permissions.parallelStream().reduce(Optional.empty(), (optionalValue, node) -> {
+            String permission = node.getKey();
+            System.out.println("Evaluating " + permission + ", expiry: " + node.getExpiry());
 
-                if (permission.startsWith(PERMISSION_MULTIPLIER)) {
-                    int lastDotPosition = permission.lastIndexOf(".");
-                    String stringMultiplier = permission.substring(lastDotPosition + 1);
+            if (permission.startsWith(PERMISSION_MULTIPLIER)) {
+                int lastDotPosition = permission.lastIndexOf(".");
+                String stringMultiplier = permission.substring(lastDotPosition + 1);
 
-                    try {
-                        double newValue = Double.parseDouble(stringMultiplier);
-
-                        return optionalValue.map(aDouble -> Optional.of(Double.max(aDouble, newValue))).orElseGet(() -> Optional.of(newValue));
-
-//                        System.out.println("Old value: " + optionalValue);
-//                        System.out.println("New value: " + newValue);
-//                        System.out.println("Result: " + optionalValue);
-//                        System.out.println("Result alternative: " + optionalValue.map(oldValue -> Optional.of(Double.max(oldValue, newValue)).orElse(newValue)));
-                    } catch (NumberFormatException event) {
-                        getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
-                    }
+                try {
+                    double newValue = Double.parseDouble(stringMultiplier);
+                    return Optional.of(newValue);
+                } catch (NumberFormatException event) {
+                    getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
                 }
+            }
 
-                return optionalValue;
-            }, this::getSecondIfPresent);
+            return optionalValue;
+        }, this::getSecondIfPresent);
 
-            System.out.println(reduce);
-//        }));
-//
-//        return Pair.emptyMultiplier();
+        System.out.println(reduce);
     }
 
     public Double forceMultiplierRefresh(Player player, Set<Node> permissions) {
