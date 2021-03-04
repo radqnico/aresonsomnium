@@ -214,12 +214,14 @@ public class AresonSomnium extends JavaPlugin {
         String playerName = player.getName();
         if (upsert || playerMultipliers.containsKey(playerName)) {
             extractPlayerMaxMultiplierTupleFromPermissions(player);
+            System.out.println("Debug");
             playerMultipliers.put(playerName, extractPlayerMaxMultiplierFromPermissions(player));
         }
 
     }
 
     public double getCachedMultiplier(String playerName) {
+        System.out.println("getCachedMultiplier");
         Double multiplier = playerMultipliers.get(playerName);
         return multiplier == null ? 1.0 : multiplier;
     }
