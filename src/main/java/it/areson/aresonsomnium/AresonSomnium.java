@@ -206,6 +206,7 @@ public class AresonSomnium extends JavaPlugin {
                     Instant expiry = node.getExpiry();
                     String expiryString = "Mai";
                     if (expiry != null) {
+                        System.out.println(dateTimeFormatter.format(expiry));
                         expiryString = dateTimeFormatter.format(expiry);
                     }
 
