@@ -19,6 +19,7 @@ import it.areson.aresonsomnium.shops.listener.CustomGuiEventsListener;
 import it.areson.aresonsomnium.shops.listener.SetPriceInChatListener;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.Debugger;
+import it.areson.aresonsomnium.utils.Pair;
 import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import net.luckperms.api.LuckPerms;
@@ -29,6 +30,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
@@ -201,10 +203,10 @@ public class AresonSomnium extends JavaPlugin {
         }, Double::max);
     }
 
-    private Optional<Double> getSecondIfPresent(Optional<Double> newValue, Optional<Double> oldValue) {
+    private Optional<Pair<Double, Instant>> getMaxOrFirst(Optional<Pair<Double, Instant>> newValue, Optional<Pair<Double, Instant>> oldValue) {
         if (newValue.isPresent()) {
             if (oldValue.isPresent()) {
-                return newValue.get() > oldValue.get() ? newValue : oldValue;
+                return newValue.get().left() > oldValue.get().left() ? newValue : oldValue;
             } else {
                 return newValue;
             }
@@ -213,12 +215,10 @@ public class AresonSomnium extends JavaPlugin {
         }
     }
 
-    public void extractPlayerMaxMultiplierTupleFromPermissions(Player player, Set<Node> permissions) {
+    public Optional<Pair<Double, Instant>> extractPlayerMaxMultiplierTupleFromPermissions(Set<Node> permissions) {
 //        luckPerms.ifPresent(perms -> perms.getUserManager().loadUser(player.getUniqueId()).thenApplyAsync((user) -> {
-
-        Optional<Double> reduce = permissions.parallelStream().reduce(Optional.empty(), (optionalValue, node) -> {
+        return permissions.parallelStream().reduce(Optional.empty(), (optionalValue, node) -> {
             String permission = node.getKey();
-            System.out.println("Evaluating " + permission + ", expiry: " + node.getExpiry());
 
             if (permission.startsWith(PERMISSION_MULTIPLIER)) {
                 int lastDotPosition = permission.lastIndexOf(".");
@@ -226,20 +226,19 @@ public class AresonSomnium extends JavaPlugin {
 
                 try {
                     double newValue = Double.parseDouble(stringMultiplier);
-                    return Optional.of(newValue);
+                    return Optional.of(Pair.of(newValue, node.getExpiry()));
                 } catch (NumberFormatException event) {
                     getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
                 }
             }
 
             return optionalValue;
-        }, this::getSecondIfPresent);
-
-        System.out.println(reduce);
+        }, this::getMaxOrFirst);
     }
 
     public Double forceMultiplierRefresh(Player player, Set<Node> permissions) {
-        extractPlayerMaxMultiplierTupleFromPermissions(player, permissions);
+        Optional<Pair<Double, Instant>> doubleInstantPair = extractPlayerMaxMultiplierTupleFromPermissions(permissions);
+        System.out.println(doubleInstantPair);
 
         double multiplier = extractPlayerMaxMultiplierFromPermissions(player);
         playerMultipliers.put(player.getName(), multiplier);
