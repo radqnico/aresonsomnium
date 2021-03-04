@@ -224,6 +224,10 @@ public class AresonSomnium extends JavaPlugin {
                     try {
                         double newValue = Double.parseDouble(stringMultiplier);
                         optionalValue = optionalValue.map(oldValue -> Optional.of(Double.max(oldValue, newValue)).orElse(newValue));
+
+                        System.out.println("Old value: " + optionalValue);
+                        System.out.println("New value: " + newValue);
+                        System.out.println("Result: " + optionalValue);
                     } catch (NumberFormatException event) {
                         getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
                     }
