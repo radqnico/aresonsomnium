@@ -18,7 +18,6 @@ import org.bukkit.inventory.ItemStack;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings("NullableProblems")
 public class SellCommand implements CommandExecutor {
@@ -55,21 +54,19 @@ public class SellCommand implements CommandExecutor {
 
             if (commandName.equalsIgnoreCase(Constants.SELL_HAND_COMMAND)) {
                 ItemStack[] itemArray = {player.getInventory().getItemInMainHand()};
-                sellItems(player, itemArray).thenAcceptAsync((sold) -> {
-                    if (sold.compareTo(BigDecimal.ZERO) > 0) {
-                        messageManager.sendPlainMessage(player, "item-sold", Pair.of("%money%", "" + sold));
-                    } else {
-                        messageManager.sendPlainMessage(player, "item-not-sellable");
-                    }
-                });
+                BigDecimal sold = sellItems(player, itemArray);
+                if (sold.compareTo(BigDecimal.ZERO) > 0) {
+                    messageManager.sendPlainMessage(player, "item-sold", Pair.of("%money%", "" + sold));
+                } else {
+                    messageManager.sendPlainMessage(player, "item-not-sellable");
+                }
             } else if (commandName.equalsIgnoreCase(Constants.SELL_ALL_COMMAND)) {
-                sellItems(player, player.getInventory().getContents()).thenAcceptAsync((sold) -> {
-                    if (sold.compareTo(BigDecimal.ZERO) > 0) {
-                        messageManager.sendPlainMessage(player, "items-sold", Pair.of("%money%", "" + sold));
-                    } else {
-                        messageManager.sendPlainMessage(player, "items-not-sellable");
-                    }
-                });
+                BigDecimal sold = sellItems(player, player.getInventory().getContents());
+                if (sold.compareTo(BigDecimal.ZERO) > 0) {
+                    messageManager.sendPlainMessage(player, "items-sold", Pair.of("%money%", "" + sold));
+                } else {
+                    messageManager.sendPlainMessage(player, "items-not-sellable");
+                }
             } else {
                 aresonSomnium.getLogger().severe("Command not registered in SellCommand");
             }
@@ -81,30 +78,29 @@ public class SellCommand implements CommandExecutor {
     }
 
 
-    private CompletableFuture<BigDecimal> sellItems(Player player, ItemStack[] itemStacks) {
-        return aresonSomnium.getCachedMultiplier(player).thenApplyAsync((cachedMultiplier) -> {
-            //Getting amount
-            BigDecimal coinsToGive = Arrays.stream(itemStacks).parallel().reduce(BigDecimal.ZERO, (total, itemStack) -> {
-                try {
-                    if (itemStack != null) {
-                        String permissionRequired = blocksPermission.get(itemStack.getType());
-                        if (permissionRequired != null && player.hasPermission(permissionRequired)) {
-                            BigDecimal itemValue = BlockPrice.getPrice(itemStack.getType());
-                            itemValue = itemValue.multiply(BigDecimal.valueOf(itemStack.getAmount()));
+    private BigDecimal sellItems(Player player, ItemStack[] itemStacks) {
+        Pair<Double, String> cachedMultiplier = aresonSomnium.getCachedMultiplier(player);
+        //Getting amount
+        BigDecimal coinsToGive = Arrays.stream(itemStacks).parallel().reduce(BigDecimal.ZERO, (total, itemStack) -> {
+            try {
+                if (itemStack != null) {
+                    String permissionRequired = blocksPermission.get(itemStack.getType());
+                    if (permissionRequired != null && player.hasPermission(permissionRequired)) {
+                        BigDecimal itemValue = BlockPrice.getPrice(itemStack.getType());
+                        itemValue = itemValue.multiply(BigDecimal.valueOf(itemStack.getAmount()));
 
-                            total = total.add(itemValue);
-                            player.getInventory().remove(itemStack);
-                        }
+                        total = total.add(itemValue);
+                        player.getInventory().remove(itemStack);
                     }
-                } catch (MaterialNotSellableException ignored) {
                 }
-                return total;
-            }, BigDecimal::add);
+            } catch (MaterialNotSellableException ignored) {
+            }
+            return total;
+        }, BigDecimal::add);
 
-            coinsToGive = coinsToGive.multiply(BigDecimal.valueOf(cachedMultiplier.left()));
-            Wallet.addCoins(player, coinsToGive);
-            return coinsToGive;
-        });
+        coinsToGive = coinsToGive.multiply(BigDecimal.valueOf(cachedMultiplier.left()));
+        Wallet.addCoins(player, coinsToGive);
+        return coinsToGive;
     }
 
 }

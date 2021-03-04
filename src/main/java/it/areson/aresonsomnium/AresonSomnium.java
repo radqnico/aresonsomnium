@@ -189,6 +189,7 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public CompletableFuture<Pair<Double, String>> extractPlayerMaxMultiplierTupleFromPermissions(Collection<Node> permissions) {
+        System.out.println("extractPlayerMaxMultiplierTupleFromPermissions");
         return CompletableFuture.supplyAsync(() -> permissions.parallelStream().reduce(defaultMultiplier, (optionalValue, node) -> {
             String permission = node.getKey();
 
@@ -212,6 +213,7 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public CompletableFuture<Pair<Double, String>> forceMultiplierRefresh(Player player, Collection<Node> permissions) {
+        System.out.println("forceMultiplierRefresh complete");
         CompletableFuture<Pair<Double, String>> multiplierFuture = extractPlayerMaxMultiplierTupleFromPermissions(permissions);
 
         multiplierFuture.thenAcceptAsync((multiplierPair) -> playerMultipliers.put(player.getName(), multiplierPair));
@@ -220,6 +222,7 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public CompletableFuture<Pair<Double, String>> forceMultiplierRefresh(Player player) {
+        System.out.println("forceMultiplierRefresh easy");
         if (luckPerms.isPresent()) {
             return luckPerms.get().getUserManager().loadUser(player.getUniqueId()).thenCompose(
                     (user) -> forceMultiplierRefresh(player, user.getNodes())
@@ -229,14 +232,15 @@ public class AresonSomnium extends JavaPlugin {
         }
     }
 
-    public CompletableFuture<Pair<Double, String>> getCachedMultiplier(Player player) {
+    public Pair<Double, String> getCachedMultiplier(Player player) {
+        System.out.println("getCachedMultiplier");
         Pair<Double, String> cachedMultiplier = playerMultipliers.get(player.getName());
 
         if (cachedMultiplier == null) {
-            return forceMultiplierRefresh(player);
-        } else {
-            return CompletableFuture.completedFuture(cachedMultiplier);
+            cachedMultiplier = forceMultiplierRefresh(player).join();
         }
+
+        return cachedMultiplier;
     }
 
 }

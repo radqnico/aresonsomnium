@@ -34,7 +34,7 @@ public class MultiplierPlaceholders extends PlaceholderExpansion {
         String value = "Nessun dato";
 
         if (params.equalsIgnoreCase("multipliervalue") && player instanceof Player) {
-            value = aresonSomnium.getCachedMultiplier((Player) player).join().left() + "x";
+            value = aresonSomnium.getCachedMultiplier((Player) player).left() + "x";
         }
 
         return value;

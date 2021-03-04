@@ -119,35 +119,33 @@ public class RightClickListener extends GeneralEventListener {
                 if (optionalProperties.isPresent()) {
                     Pair<Integer, Duration> properties = optionalProperties.get();
 
-                    aresonSomnium.getCachedMultiplier(player).thenAcceptAsync((cachedMultiplier) -> {
-                        System.out.println(properties.left() + " " + cachedMultiplier.left());
-                        if (properties.left() >= cachedMultiplier.left() * 100) {
-                            String permission = PERMISSION_MULTIPLIER + "." + properties.left();
+                    System.out.println(properties.left() + " " + aresonSomnium.getCachedMultiplier(player).left());
+                    if (properties.left() >= aresonSomnium.getCachedMultiplier(player).left() * 100) {
+                        String permission = PERMISSION_MULTIPLIER + "." + properties.left();
 
-                            aresonSomnium.luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user -> {
-                                Duration finalDuration = properties.right();
-                                Optional<Node> sameActiveMultiplier = user.getNodes().parallelStream().filter(node -> node.getKey().equals(permission)).findFirst();
+                        aresonSomnium.luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user -> {
+                            Duration finalDuration = properties.right();
+                            Optional<Node> sameActiveMultiplier = user.getNodes().parallelStream().filter(node -> node.getKey().equals(permission)).findFirst();
 
-                                if (sameActiveMultiplier.isPresent()) {
-                                    Duration expiryDuration = sameActiveMultiplier.get().getExpiryDuration();
-                                    if (expiryDuration != null) {
-                                        finalDuration = finalDuration.plus(expiryDuration);
-                                        user.data().remove(sameActiveMultiplier.get());
-                                    }
+                            if (sameActiveMultiplier.isPresent()) {
+                                Duration expiryDuration = sameActiveMultiplier.get().getExpiryDuration();
+                                if (expiryDuration != null) {
+                                    finalDuration = finalDuration.plus(expiryDuration);
+                                    user.data().remove(sameActiveMultiplier.get());
                                 }
+                            }
 
-                                user.data().add(Node.builder(permission).expiry(finalDuration).build());
-                            });
+                            user.data().add(Node.builder(permission).expiry(finalDuration).build());
+                        });
 
 
-                            itemStack.setAmount(itemStack.getAmount() - 1);
-                            player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_SHOOT, 1f, 1f);
-                            aresonSomnium.sendSuccessMessage(player, "Hai attivato il moltiplicatore " + ((double) properties.left()) / 100 + "x per " + properties.right().toString().substring(2).toLowerCase());
-                            event.setCancelled(true);
-                        } else {
-                            aresonSomnium.sendErrorMessage(player, "Hai già un moltiplicatore maggiore attivo");
-                        }
-                    });
+                        itemStack.setAmount(itemStack.getAmount() - 1);
+                        player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_SHOOT, 1f, 1f);
+                        aresonSomnium.sendSuccessMessage(player, "Hai attivato il moltiplicatore " + ((double) properties.left()) / 100 + "x per " + properties.right().toString().substring(2).toLowerCase());
+                        event.setCancelled(true);
+                    } else {
+                        aresonSomnium.sendErrorMessage(player, "Hai già un moltiplicatore maggiore attivo");
+                    }
                 }
             } else {
                 aresonSomnium.getLogger().severe("Errore nell'API di LuckPerms");
