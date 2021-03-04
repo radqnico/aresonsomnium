@@ -31,10 +31,8 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 import static it.areson.aresonsomnium.Constants.PERMISSION_MULTIPLIER;
 import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
@@ -44,8 +42,11 @@ import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 public class AresonSomnium extends JavaPlugin {
 
     private static AresonSomnium instance;
+
     public Optional<LuckPerms> luckPerms;
-    public HashMap<String, Double> playerMultipliers;
+    public HashMap<String, Pair<Double, String>> playerMultipliers;
+    private final Pair<Double, String> defaultMultiplier = Pair.of(1.0, "Mai");
+
     private SomniumPlayerManager somniumPlayerManager;
     private ShopManager shopManager;
     private ShopEditor shopEditor;
@@ -203,21 +204,12 @@ public class AresonSomnium extends JavaPlugin {
         }, Double::max);
     }
 
-    private Optional<Pair<Double, Instant>> getMaxOrFirst(Optional<Pair<Double, Instant>> newValue, Optional<Pair<Double, Instant>> oldValue) {
-        if (newValue.isPresent()) {
-            if (oldValue.isPresent()) {
-                return newValue.get().left() > oldValue.get().left() ? newValue : oldValue;
-            } else {
-                return newValue;
-            }
-        } else {
-            return oldValue;
-        }
+    private Pair<Double, String> getMaxOrFirst(Pair<Double, String> newValue, Pair<Double, String> oldValue) {
+        return newValue.left() > oldValue.left() ? newValue : oldValue;
     }
 
-    public Optional<Pair<Double, Instant>> extractPlayerMaxMultiplierTupleFromPermissions(Set<Node> permissions) {
-//        luckPerms.ifPresent(perms -> perms.getUserManager().loadUser(player.getUniqueId()).thenApplyAsync((user) -> {
-        return permissions.parallelStream().reduce(Optional.empty(), (optionalValue, node) -> {
+    public CompletableFuture<Pair<Double, String>> extractPlayerMaxMultiplierTupleFromPermissions(Collection<Node> permissions) {
+        return CompletableFuture.supplyAsync(() -> permissions.parallelStream().reduce(defaultMultiplier, (optionalValue, node) -> {
             String permission = node.getKey();
 
             if (permission.startsWith(PERMISSION_MULTIPLIER)) {
@@ -226,34 +218,45 @@ public class AresonSomnium extends JavaPlugin {
 
                 try {
                     double newValue = Double.parseDouble(stringMultiplier);
-                    return Optional.of(Pair.of(newValue, node.getExpiry()));
+                    Instant expiry = node.getExpiry();
+                    String expiryString = expiry != null ? expiry.toString() : "Mai";
+
+                    return Pair.of(newValue, expiryString);
                 } catch (NumberFormatException event) {
                     getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
                 }
             }
 
             return optionalValue;
-        }, this::getMaxOrFirst);
+        }, this::getMaxOrFirst));
     }
 
-    public Double forceMultiplierRefresh(Player player, Set<Node> permissions) {
-        Optional<Pair<Double, Instant>> doubleInstantPair = extractPlayerMaxMultiplierTupleFromPermissions(permissions);
-        System.out.println(doubleInstantPair);
+    public CompletableFuture<Pair<Double, String>> forceMultiplierRefresh(Player player, Collection<Node> permissions) {
+        CompletableFuture<Pair<Double, String>> multiplierFuture = extractPlayerMaxMultiplierTupleFromPermissions(permissions);
 
-        double multiplier = extractPlayerMaxMultiplierFromPermissions(player);
-        playerMultipliers.put(player.getName(), multiplier);
+        multiplierFuture.thenAcceptAsync((multiplierPair) -> playerMultipliers.put(player.getName(), multiplierPair));
 
-        return multiplier;
+        return multiplierFuture;
     }
 
-    public double getCachedMultiplier(Player player) {
-        Double multiplier = playerMultipliers.get(player.getName());
-
-        if (multiplier == null) {
-            multiplier = forceMultiplierRefresh(player, new HashSet<>());
+    public CompletableFuture<Pair<Double, String>> forceMultiplierRefresh(Player player) {
+        if (luckPerms.isPresent()) {
+            return luckPerms.get().getUserManager().loadUser(player.getUniqueId()).thenCompose(
+                    (user) -> forceMultiplierRefresh(player, user.getNodes())
+            );
+        } else {
+            return CompletableFuture.completedFuture(defaultMultiplier);
         }
+    }
 
-        return multiplier;
+    public CompletableFuture<Pair<Double, String>> getCachedMultiplier(Player player) {
+        Pair<Double, String> cachedMultiplier = playerMultipliers.get(player.getName());
+
+        if (cachedMultiplier == null) {
+            return forceMultiplierRefresh(player);
+        } else {
+            return CompletableFuture.completedFuture(cachedMultiplier);
+        }
     }
 
 }

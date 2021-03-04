@@ -22,7 +22,7 @@ public class GatewayListener extends GeneralEventListener {
         somniumPlayerManager.addSomniumPlayer(player);
 
         // Add cached multiplier
-        aresonSomnium.forceMultiplierRefresh(player, new HashSet<>());
+        aresonSomnium.forceMultiplierRefresh(player);
     }
 
     @EventHandler
