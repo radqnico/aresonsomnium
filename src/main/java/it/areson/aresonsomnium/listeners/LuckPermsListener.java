@@ -3,6 +3,7 @@ package it.areson.aresonsomnium.listeners;
 import it.areson.aresonsomnium.AresonSomnium;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.event.EventBus;
+import net.luckperms.api.event.node.NodeMutateEvent;
 import net.luckperms.api.event.user.UserDataRecalculateEvent;
 import org.bukkit.entity.Player;
 
@@ -16,6 +17,7 @@ public class LuckPermsListener {
         EventBus eventBus = luckPerms.getEventBus();
 
         eventBus.subscribe(this.aresonSomnium, UserDataRecalculateEvent.class, this::onUserDataRecalculateEvent);
+        eventBus.subscribe(this.aresonSomnium, NodeMutateEvent.class, (event) -> System.out.println("NodeMutateEvent"));
     }
 
     private void onUserDataRecalculateEvent(UserDataRecalculateEvent event) {
