@@ -21,7 +21,7 @@ public class GatewayListener extends GeneralEventListener {
         somniumPlayerManager.addSomniumPlayer(player);
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         SomniumPlayerManager somniumPlayerManager = aresonSomnium.getSomniumPlayerManager();
