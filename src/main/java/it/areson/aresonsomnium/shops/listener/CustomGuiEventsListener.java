@@ -240,8 +240,6 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     Enchantment key2 = entry2.getKey();
                     boolean keyEquals = key1.getKey().equals(key2.getKey());
                     boolean valueEquals = entry1.getValue().equals(entry2.getValue());
-                    System.out.println(keyEquals);
-                    System.out.println(valueEquals);
                     if (keyEquals && valueEquals) {
                         isThereEnchant = true;
                         break;

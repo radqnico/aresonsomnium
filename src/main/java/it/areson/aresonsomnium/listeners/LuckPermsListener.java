@@ -20,7 +20,6 @@ public class LuckPermsListener {
     }
 
     private void onNodeMutateEvent(NodeMutateEvent event) {
-        System.out.println("onNodeMutateEvent");
         if (event.isUser()) {
             String username = ((User) event.getTarget()).getUsername();
             if (username != null) {
