@@ -24,6 +24,7 @@ import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.node.Node;
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -205,8 +206,8 @@ public class AresonSomnium extends JavaPlugin {
                     Instant expiry = node.getExpiry();
                     String expiryString = "Mai";
                     if (expiry != null) {
-                        Duration difference = Duration.between(expiry, Instant.now());
-                        expiryString = difference.toString();
+                        Duration difference = Duration.between(Instant.now(), expiry);
+                        expiryString = DurationFormatUtils.formatDuration(difference.toMillis(), "**H:mm:ss**", true);
                     }
 
                     return Pair.of(newValue, expiryString);
