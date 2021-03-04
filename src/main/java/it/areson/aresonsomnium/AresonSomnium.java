@@ -223,8 +223,8 @@ public class AresonSomnium extends JavaPlugin {
 
                     try {
                         double newValue = Double.parseDouble(stringMultiplier);
-                        optionalValue = optionalValue.map(oldValue -> Optional.of(Double.max(oldValue, newValue)).orElse(newValue));
 
+                        optionalValue = optionalValue.map(aDouble -> Optional.of(Double.max(aDouble, newValue))).orElseGet(() -> Optional.of(newValue));
 
                         System.out.println("Old value: " + optionalValue);
                         System.out.println("New value: " + newValue);
