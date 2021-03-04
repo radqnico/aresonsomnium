@@ -31,8 +31,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashMap;
@@ -47,10 +45,11 @@ import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 public class AresonSomnium extends JavaPlugin {
 
     private static AresonSomnium instance;
+    private final Pair<Double, String> defaultMultiplier = Pair.of(1.0, "Mai");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     public Optional<LuckPerms> luckPerms;
     public HashMap<String, Pair<Double, String>> playerMultipliers;
-    private final Pair<Double, String> defaultMultiplier = Pair.of(1.0, "Mai");
 
     private SomniumPlayerManager somniumPlayerManager;
     private ShopManager shopManager;
@@ -207,7 +206,7 @@ public class AresonSomnium extends JavaPlugin {
                     Instant expiry = node.getExpiry();
                     String expiryString = "Mai";
                     if (expiry != null) {
-                        expiryString = expiry.toString();
+                        expiryString = dateTimeFormatter.format(expiry);
                     }
 
                     return Pair.of(newValue, expiryString);
