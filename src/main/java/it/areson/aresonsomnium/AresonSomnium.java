@@ -19,6 +19,7 @@ import it.areson.aresonsomnium.shops.listener.CustomGuiEventsListener;
 import it.areson.aresonsomnium.shops.listener.SetPriceInChatListener;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.Debugger;
+import it.areson.aresonsomnium.utils.Pair;
 import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import net.luckperms.api.LuckPerms;
@@ -28,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -198,9 +200,20 @@ public class AresonSomnium extends JavaPlugin {
         }, Double::max);
     }
 
+    public Pair<Double, Duration> extractPlayerMaxMultiplierTupleFromPermissions(Player player) {
+
+        luckPerms.ifPresent(perms -> perms.getUserManager().loadUser(player.getUniqueId()).thenApplyAsync((user) -> {
+            user.getNodes().parallelStream().forEachOrdered((we) -> System.out.println(we.getKey()));
+            return "we";
+        }));
+
+        return Pair.emptyMultiplier();
+    }
+
     public void forceMultiplierRefresh(Player player, boolean upsert) {
         String playerName = player.getName();
         if (upsert || playerMultipliers.containsKey(playerName)) {
+            extractPlayerMaxMultiplierTupleFromPermissions(player);
             playerMultipliers.put(playerName, extractPlayerMaxMultiplierFromPermissions(player));
         }
 
