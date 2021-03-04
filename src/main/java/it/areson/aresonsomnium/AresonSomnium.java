@@ -99,6 +99,7 @@ public class AresonSomnium extends JavaPlugin {
         // LuckPerms
         RegisteredServiceProvider<LuckPerms> provider = getServer().getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
+            System.out.println("Registered LuckPerms");
             luckPerms = Optional.of(provider.getProvider());
             new LuckPermsListener(this, provider.getProvider());
         } else {
@@ -205,6 +206,7 @@ public class AresonSomnium extends JavaPlugin {
 
                     Instant expiry = node.getExpiry();
                     String expiryString = "Mai";
+                    System.out.println(expiry.toString());
                     if (expiry != null) {
                         System.out.println(dateTimeFormatter.format(expiry));
                         expiryString = dateTimeFormatter.format(expiry);
