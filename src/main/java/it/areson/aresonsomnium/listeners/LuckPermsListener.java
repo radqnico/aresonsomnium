@@ -19,6 +19,7 @@ public class LuckPermsListener {
     }
 
     private void onUserDataRecalculateEvent(UserDataRecalculateEvent event) {
+        System.out.println("onUserDataRecalculateEvent");
         String username = event.getUser().getUsername();
         if (username != null) {
             Player player = aresonSomnium.getServer().getPlayer(username);
