@@ -223,13 +223,13 @@ public class AresonSomnium extends JavaPlugin {
 
                     try {
                         double newValue = Double.parseDouble(stringMultiplier);
-                        return optionalValue.map(oldValue -> Optional.of(Double.max(oldValue, newValue)).orElse(newValue));
+                        optionalValue = optionalValue.map(oldValue -> Optional.of(Double.max(oldValue, newValue)).orElse(newValue));
                     } catch (NumberFormatException event) {
                         getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
                     }
                 }
 
-                return Optional.empty();
+                return optionalValue;
             }, this::getSecondIfPresent);
 
             System.out.println(reduce);
