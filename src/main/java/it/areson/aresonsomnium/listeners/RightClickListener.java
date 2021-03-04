@@ -1,5 +1,6 @@
 package it.areson.aresonsomnium.listeners;
 
+import com.mysql.cj.jdbc.SuspendableXAConnection;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
@@ -119,6 +120,7 @@ public class RightClickListener extends GeneralEventListener {
                     Pair<Integer, Duration> properties = optionalProperties.get();
 
                     aresonSomnium.getCachedMultiplier(player).thenAcceptAsync((cachedMultiplier) -> {
+                        System.out.println(properties.left() + " " + cachedMultiplier.left());
                         if (properties.left() >= cachedMultiplier.left() * 100) {
                             String permission = PERMISSION_MULTIPLIER + "." + properties.left();
 
