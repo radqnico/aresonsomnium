@@ -31,6 +31,8 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashMap;
@@ -206,8 +208,9 @@ public class AresonSomnium extends JavaPlugin {
                     Instant expiry = node.getExpiry();
                     String expiryString = "Mai";
                     System.out.println("Or: " + expiry.toString());
+                    System.out.println("Or2: " + LocalDateTime.ofInstant(expiry, ZoneId.systemDefault()));
                     if (expiry != null) {
-                        System.out.println("We: " + dateTimeFormatter.format(expiry));
+                        System.out.println("We: " + dateTimeFormatter.format(LocalDateTime.ofInstant(expiry, ZoneId.systemDefault())));
                         expiryString = dateTimeFormatter.format(expiry);
                     }
 
