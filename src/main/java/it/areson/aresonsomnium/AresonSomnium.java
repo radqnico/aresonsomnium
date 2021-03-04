@@ -103,6 +103,7 @@ public class AresonSomnium extends JavaPlugin {
             luckPerms = Optional.of(provider.getProvider());
             new LuckPermsListener(this, provider.getProvider());
         } else {
+            System.out.println("NOT Registered LuckPerms");
             luckPerms = Optional.empty();
         }
 
