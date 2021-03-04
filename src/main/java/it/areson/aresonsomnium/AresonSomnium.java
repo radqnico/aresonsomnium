@@ -207,8 +207,7 @@ public class AresonSomnium extends JavaPlugin {
                     Instant expiry = node.getExpiry();
                     String expiryString = "Mai";
                     if (expiry != null) {
-                        LocalDateTime localDateTime = LocalDateTime.ofInstant(expiry, ZoneOffset.of("Rome"));
-                        expiryString = localDateTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+                        expiryString = expiry.toString();
                     }
 
                     return Pair.of(newValue, expiryString);
