@@ -204,6 +204,9 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     private Optional<Double> getSecondIfPresent(Optional<Double> first, Optional<Double> second) {
+        System.out.println("First: " + first);
+        System.out.println("Second: " + second);
+        System.out.println("Result: " + (second.isPresent() ? second : first));
         return second.isPresent() ? second : first;
     }
 
