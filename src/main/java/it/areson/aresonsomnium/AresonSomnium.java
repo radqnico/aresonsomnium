@@ -23,6 +23,7 @@ import it.areson.aresonsomnium.utils.Pair;
 import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import net.luckperms.api.LuckPerms;
+import net.luckperms.api.node.Node;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -204,6 +205,26 @@ public class AresonSomnium extends JavaPlugin {
 
         luckPerms.ifPresent(perms -> perms.getUserManager().loadUser(player.getUniqueId()).thenApplyAsync((user) -> {
             user.getNodes().parallelStream().forEachOrdered((we) -> System.out.println(we.getKey()));
+
+
+            Optional<Node> reduce = user.getNodes().parallelStream().reduce((nodeEvaluated, nodeToEvaluate) -> {
+                String permission = nodeToEvaluate.getKey();
+                if(permission.startsWith(PERMISSION_MULTIPLIER)) {
+                    int lastDotPosition = permission.lastIndexOf(".");
+                    String stringMultiplier = permission.substring(lastDotPosition + 1);
+
+                    try {
+                        Double.parseDouble(stringMultiplier);
+                        return nodeToEvaluate;
+                    } catch (NumberFormatException event) {
+                        getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
+                    }
+                }
+                return nodeEvaluated;
+            });
+
+            System.out.println(reduce);
+
             return "we";
         }));
 
