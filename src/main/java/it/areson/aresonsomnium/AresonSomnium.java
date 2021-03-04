@@ -201,36 +201,31 @@ public class AresonSomnium extends JavaPlugin {
         }, Double::max);
     }
 
-    public Optional<Node> we(Optional<Node> a, Optional<Node> b) {
-        if(a.isPresent()) {
-            return a;
-        }
-        return b;
+    private Optional<Node> optionalOr(Optional<Node> first, Optional<Node> second) {
+        return first.map(Optional::of).orElse(second);
     }
 
     public Pair<Double, Duration> extractPlayerMaxMultiplierTupleFromPermissions(Player player) {
-
         luckPerms.ifPresent(perms -> perms.getUserManager().loadUser(player.getUniqueId()).thenApplyAsync((user) -> {
-            user.getNodes().parallelStream().forEachOrdered((we) -> System.out.println(we.getKey()));
 
+            Optional<Node> reduce = user.getNodes().parallelStream().reduce(Optional.empty(), (optionalNode, node) -> {
+                String permission = node.getKey();
+                System.out.println("Evaluating " + permission);
 
-            Optional<Node> emptyStart = Optional.empty();
-            Optional<Node> reduce = user.getNodes().parallelStream().reduce(emptyStart, (nodeEvaluated, nodeToEvaluate) -> {
-                String permission = nodeToEvaluate.getKey();
                 if (permission.startsWith(PERMISSION_MULTIPLIER)) {
                     int lastDotPosition = permission.lastIndexOf(".");
                     String stringMultiplier = permission.substring(lastDotPosition + 1);
 
                     try {
                         Double.parseDouble(stringMultiplier);
-//                        return nodeToEvaluate;
-                        return Optional.empty();
+                        return Optional.of(node);
                     } catch (NumberFormatException event) {
                         getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
                     }
                 }
-                return Optional.empty();
-            }, this::we);
+
+                return optionalNode;
+            }, this::optionalOr);
 
             System.out.println(reduce);
 
