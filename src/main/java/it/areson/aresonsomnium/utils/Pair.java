@@ -32,4 +32,9 @@ public class Pair<A, B> {
         return b;
     }
 
+    @Override
+    public String toString() {
+        return "Left: " + left + ", Right: " + right;
+    }
+
 }
