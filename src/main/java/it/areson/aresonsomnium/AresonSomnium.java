@@ -190,7 +190,7 @@ public class AresonSomnium extends JavaPlugin {
         commandSender.sendMessage(ChatColor.BLUE + "[Somnium] " + ChatColor.GREEN + success);
     }
 
-    private Pair<Double, String> getMaxOrFirst(Pair<Double, String> newValue, Pair<Double, String> oldValue) {
+    private Pair<Double, String> getMaxMultiplier(Pair<Double, String> newValue, Pair<Double, String> oldValue) {
         return newValue.left() > oldValue.left() ? newValue : oldValue;
     }
 
@@ -218,7 +218,7 @@ public class AresonSomnium extends JavaPlugin {
             }
 
             return optionalValue;
-        }, this::getMaxOrFirst));
+        }, this::getMaxMultiplier));
     }
 
     public CompletableFuture<Pair<Double, String>> forceMultiplierRefresh(Player player, Collection<Node> permissions) {
