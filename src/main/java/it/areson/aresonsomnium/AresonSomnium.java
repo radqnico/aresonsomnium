@@ -222,7 +222,7 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public CompletableFuture<Pair<Double, String>> forceMultiplierRefresh(Player player, Collection<Node> permissions) {
-        getLogger().info("Forcing update of multiplier for player " + player.getName());
+        getLogger().info("Forcing the update of multiplier for player " + player.getName());
         CompletableFuture<Pair<Double, String>> multiplierFuture = extractPlayerMaxMultiplierTupleFromPermissions(permissions);
 
         multiplierFuture.thenAcceptAsync((multiplierPair) -> playerMultipliers.put(player.getName(), multiplierPair));
