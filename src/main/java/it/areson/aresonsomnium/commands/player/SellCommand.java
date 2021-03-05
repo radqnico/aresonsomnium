@@ -30,6 +30,15 @@ public class SellCommand implements CommandExecutor {
         put(Material.RED_NETHER_BRICKS, Constants.PERMISSION_QUARTO_GIRONE);
         put(Material.MAGMA_BLOCK, Constants.PERMISSION_SESTO_GIRONE);
         put(Material.RED_CONCRETE, Constants.PERMISSION_OTTAVO_GIRONE);
+        put(Material.ANDESITE, Constants.PERMISSION_ANTIPURGATORIO);
+        put(Material.POLISHED_ANDESITE, Constants.PERMISSION_PRIMA_CORNICE);
+        put(Material.DIORITE, Constants.PERMISSION_TERZA_CORNICE);
+        put(Material.POLISHED_DIORITE, Constants.PERMISSION_QUINTA_CORNICE);
+        put(Material.LIME_CONCRETE, Constants.PERMISSION_SESTA_CORNICE);
+        put(Material.PRISMARINE, Constants.PERMISSION_PRIMO_CIELO);
+        put(Material.PRISMARINE_BRICKS, Constants.PERMISSION_TERZO_CIELO);
+        put(Material.QUARTZ_BLOCK, Constants.PERMISSION_QUINTO_CIELO);
+        put(Material.CHISELED_QUARTZ_BLOCK, Constants.PERMISSION_SETTIMO_CIELO);
     }};
 
     private final MessageManager messageManager;

@@ -47,7 +47,7 @@ import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 public class AresonSomnium extends JavaPlugin {
 
     private static AresonSomnium instance;
-    private final Pair<Double, String> defaultMultiplier = Pair.of(1.0, "Mai");
+    private final Pair<Double, String> defaultMultiplier = Pair.of(1.0, "Permanente");
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     public Optional<LuckPerms> luckPerms;
@@ -206,7 +206,7 @@ public class AresonSomnium extends JavaPlugin {
                     double newValue = Double.parseDouble(stringMultiplier) / 100;
 
                     Instant expiry = node.getExpiry();
-                    String expiryString = "Mai";
+                    String expiryString = defaultMultiplier.right();
                     if (expiry != null) {
                         expiryString = dateTimeFormatter.format(LocalDateTime.ofInstant(expiry, ZoneId.systemDefault()));
                     }
