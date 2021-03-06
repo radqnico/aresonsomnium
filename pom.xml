@@ -28,6 +28,15 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <!-- JUnit 5 requires Surefire version 2.22.0 or higher -->
+                <version>3.0.0-M5</version>
+            </plugin>
+        </plugins>
     </build>
 
     <repositories>
@@ -48,6 +57,7 @@
     </repositories>
 
     <dependencies>
+        <!-- RUN -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
@@ -59,8 +69,16 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.22</version>
+            <scope>provided</scope>
         </dependency>
 
+        <!-- TEST -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.8.0-M1</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -68,24 +86,27 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Required to MockBukkit -->
         <dependency>
             <groupId>it.unimi.dsi</groupId>
             <artifactId>fastutil</artifactId>
             <version>8.5.2</version>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>com.github.seeseemelk</groupId>
             <artifactId>MockBukkit-v1.16</artifactId>
             <version>0.31.0</version>
+            <scope>test</scope>
         </dependency>
 
+        <!-- Required to mariaDB4j -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.8.0</version>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>ch.vorburger.mariaDB4j</groupId>
             <artifactId>mariaDB4j</artifactId>
@@ -93,6 +114,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- PLUGINS -->
         <dependency>
             <groupId>net.ess3</groupId>
             <artifactId>EssentialsX</artifactId>

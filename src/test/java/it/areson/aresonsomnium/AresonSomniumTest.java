@@ -1,31 +1,25 @@
 package it.areson.aresonsomnium;
 
-
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DB;
-import ch.vorburger.mariadb4j.DBConfigurationBuilder;
-import org.junit.After;
-import org.junit.Before;
+import it.areson.aresonsomnium.utils.Pair;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Test {
+public class AresonSomniumTest {
 
     private static ServerMock server;
     private static AresonSomnium plugin;
 
     @BeforeAll
     public static void load() throws ManagedProcessException {
-        DBConfigurationBuilder config = DBConfigurationBuilder.newBuilder();
-        config.setPort(3306); // 0 => autom. detect free port
-        DB database = DB.newEmbeddedDB(config.build());
+        System.out.println("Loading TESTS");
+        DB database = DB.newEmbeddedDB(3306);
         database.start();
         database.run("CREATE DATABASE IF NOT EXISTS aresonsomnium;\n" +
                 "\n" +
@@ -36,7 +30,6 @@ public class Test {
                 "    guiTitle varchar(255) not null,\n" +
                 "    shopItems text not null\n" +
                 ");");
-//        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/test", "root", "");
 
         server = MockBukkit.mock();
         plugin = MockBukkit.load(AresonSomnium.class);
@@ -44,14 +37,16 @@ public class Test {
 
     @AfterAll
     public static void unload() {
+        System.out.println("Unloading TESTS");
         MockBukkit.unmock();
     }
 
     @org.junit.jupiter.api.Test
-    public void test() {
+    public void testingMultiplier() {
         PlayerMock player = server.addPlayer("username");
-        System.out.println(plugin.getCachedMultiplier(player).left());
-        assertEquals(1, 1);
+        Pair<Double, String> cachedMultiplier = plugin.getCachedMultiplier(player);
+        assertEquals(cachedMultiplier.left(), 1.0, 0.0);
+        assertEquals(cachedMultiplier.right(), "Permanente");
     }
 
 }
