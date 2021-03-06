@@ -36,7 +36,7 @@ public class MySqlDBConnection {
             String database = MySqlConfig.DB;
             String user = MySqlConfig.USER;
             String pass = MySqlConfig.PASS;
-            return DriverManager.getConnection("jdbc:mysql://" + host + "/" + database + "?user=" + user + "&password=" + pass);
+            return DriverManager.getConnection("jdbc:mysql://" + host + "/" + database + "?user=" + user + "&password=" + pass + "&serverTimezone=CET");
         } catch (SQLException e) {
             debugger.debugError(aresonSomnium.getMessageManager().getPlainMessage("sql-connect-error"));
             printSqlExceptionDetails(e);
