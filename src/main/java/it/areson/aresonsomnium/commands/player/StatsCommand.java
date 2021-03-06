@@ -50,7 +50,7 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
                         "stats-format",
                         Pair.of("%player%", player.getName()),
                         Pair.of("%secondsPlayed%", somniumPlayer.getSecondsPlayedTotal()+""),
-                        Pair.of("%coins%", Wallet.getCoins(player).toPlainString()),
+                        Pair.of("%coins%", Wallet.getCoins(player).toString()),
                         Pair.of("%obols%", somniumPlayer.getWallet().getObols().toString()),
                         Pair.of("%gems%", somniumPlayer.getWallet().getGems().toString())
                 );

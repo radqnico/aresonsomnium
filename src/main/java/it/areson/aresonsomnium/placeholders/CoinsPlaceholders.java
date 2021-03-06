@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class CoinsPlaceholders extends PlaceholderExpansion {
 
-    private AresonSomnium aresonSomnium;
+    private final AresonSomnium aresonSomnium;
 
     public CoinsPlaceholders(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
@@ -40,7 +40,7 @@ public class CoinsPlaceholders extends PlaceholderExpansion {
                 if (somniumPlayer != null) {
                     switch (query.toLowerCase()) {
                         case "coins":
-                            return Wallet.getCoins(player).toPlainString();
+                            return Wallet.getCoins(player).toString();
                         case "obols":
                             return somniumPlayer.getWallet().getObols().toString();
                         case "gems":

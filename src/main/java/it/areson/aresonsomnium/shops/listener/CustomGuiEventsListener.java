@@ -287,7 +287,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                                 price.addTo(somniumPlayer);
                                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage(
                                         "item-sell-success",
-                                        Pair.of("%coins%", price.getCoins().toPlainString()),
+                                        Pair.of("%coins%", price.getCoins().toString()),
                                         Pair.of("%obols%", price.getObols().toString()),
                                         Pair.of("%gems%", price.getGems().toString())
                                 ));
@@ -325,7 +325,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     price.removeFrom(somniumPlayer);
                     player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage(
                             "item-buy-success",
-                            Pair.of("%coins%", price.getCoins().toPlainString()),
+                            Pair.of("%coins%", price.getCoins().toString()),
                             Pair.of("%obols%", price.getObols().toString()),
                             Pair.of("%gems%", price.getGems().toString())
                     ));
