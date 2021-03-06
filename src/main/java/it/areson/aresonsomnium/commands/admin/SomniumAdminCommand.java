@@ -140,6 +140,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             switch (strings[0].toLowerCase()) {
                 case "stats":
                 case "setcoins":
+                case "addcoins":
                     StringUtil.copyPartialMatches(
                             strings[1],
                             aresonSomnium.getServer().getOnlinePlayers().stream()
@@ -165,7 +166,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             }
         }
         if (strings.length == 3) {
-            if ("setcoins".equalsIgnoreCase(strings[0])) {
+            if ("setcoins".equalsIgnoreCase(strings[0]) || "addcoins".equalsIgnoreCase(strings[0])) {
                 StringUtil.copyPartialMatches(
                         strings[2],
                         Arrays.stream(CoinType.values()).map(value -> value.name().toLowerCase()).collect(Collectors.toList()),
