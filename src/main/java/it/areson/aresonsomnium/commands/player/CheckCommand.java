@@ -4,7 +4,7 @@ import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
-import it.areson.aresonsomnium.shops.items.Price;
+import it.areson.aresonsomnium.economy.shops.items.Price;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;

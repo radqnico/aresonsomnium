@@ -6,6 +6,9 @@ import it.areson.aresonsomnium.commands.player.CheckCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
+import it.areson.aresonsomnium.economy.Wallet;
+import it.areson.aresonsomnium.economy.shops.items.BlockPrice;
+import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import it.areson.aresonsomnium.listeners.GatewayListener;
 import it.areson.aresonsomnium.listeners.InventoryListener;
 import it.areson.aresonsomnium.listeners.LuckPermsListener;
@@ -13,10 +16,10 @@ import it.areson.aresonsomnium.listeners.RightClickListener;
 import it.areson.aresonsomnium.placeholders.CoinsPlaceholders;
 import it.areson.aresonsomnium.placeholders.MultiplierPlaceholders;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
-import it.areson.aresonsomnium.shops.guis.ShopEditor;
-import it.areson.aresonsomnium.shops.guis.ShopManager;
-import it.areson.aresonsomnium.shops.listener.CustomGuiEventsListener;
-import it.areson.aresonsomnium.shops.listener.SetPriceInChatListener;
+import it.areson.aresonsomnium.economy.shops.guis.ShopEditor;
+import it.areson.aresonsomnium.economy.shops.guis.ShopManager;
+import it.areson.aresonsomnium.economy.shops.listener.CustomGuiEventsListener;
+import it.areson.aresonsomnium.economy.shops.listener.SetPriceInChatListener;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.Debugger;
 import it.areson.aresonsomnium.utils.Pair;
@@ -25,15 +28,22 @@ import it.areson.aresonsomnium.utils.file.MessageManager;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.node.Node;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 
+import java.io.File;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Optional;
@@ -46,10 +56,6 @@ import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class AresonSomnium extends JavaPlugin {
 
-    private static AresonSomnium instance;
-    private final Pair<Double, String> defaultMultiplier = Pair.of(1.0, "Permanente");
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-
     public Optional<LuckPerms> luckPerms;
     public HashMap<String, Pair<Double, String>> playerMultipliers;
 
@@ -59,12 +65,38 @@ public class AresonSomnium extends JavaPlugin {
     private GatewayListener playerDBEvents;
     private SetPriceInChatListener setPriceInChatListener;
     private GommaObjectsFileReader gommaObjectsFileReader;
-
     private MessageManager messages;
     private Debugger debugger;
 
-    public static AresonSomnium getInstance() {
-        return instance;
+    private final Pair<Double, String> defaultMultiplier = Pair.of(1.0, "Permanente");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private final HashMap<Material, String> blocksPermission = new HashMap<Material, String>() {{
+        put(Material.COBBLESTONE, Constants.PERMISSION_SELVA);
+        put(Material.NETHERRACK, Constants.PERMISSION_ANTINFERNO);
+        put(Material.COAL_BLOCK, Constants.PERMISSION_SECONDO_GIRONE);
+        put(Material.RED_NETHER_BRICKS, Constants.PERMISSION_QUARTO_GIRONE);
+        put(Material.MAGMA_BLOCK, Constants.PERMISSION_SESTO_GIRONE);
+        put(Material.RED_CONCRETE, Constants.PERMISSION_OTTAVO_GIRONE);
+        put(Material.ANDESITE, Constants.PERMISSION_ANTIPURGATORIO);
+        put(Material.POLISHED_ANDESITE, Constants.PERMISSION_PRIMA_CORNICE);
+        put(Material.DIORITE, Constants.PERMISSION_TERZA_CORNICE);
+        put(Material.POLISHED_DIORITE, Constants.PERMISSION_QUINTA_CORNICE);
+        put(Material.LIME_CONCRETE, Constants.PERMISSION_SESTA_CORNICE);
+        put(Material.PRISMARINE, Constants.PERMISSION_PRIMO_CIELO);
+        put(Material.PRISMARINE_BRICKS, Constants.PERMISSION_TERZO_CIELO);
+        put(Material.QUARTZ_BLOCK, Constants.PERMISSION_QUINTO_CIELO);
+        put(Material.CHISELED_QUARTZ_BLOCK, Constants.PERMISSION_SETTIMO_CIELO);
+    }};
+
+
+    // Required for testing
+    public AresonSomnium() {
+        super();
+    }
+
+    // Required for testing
+    protected AresonSomnium(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
+        super(loader, description, dataFolder, file);
     }
 
     @Override
@@ -75,16 +107,15 @@ public class AresonSomnium extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        instance = this;
         playerMultipliers = new HashMap<>();
 
         // Files
         registerFiles();
 
         debugger = new Debugger(this, Debugger.DebugLevel.LOW);
-        MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(debugger);
+        MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(this, debugger);
         somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection, PLAYER_TABLE_NAME);
-        shopManager = new ShopManager(mySqlDBConnection, GUIS_TABLE_NAME);
+        shopManager = new ShopManager(this, mySqlDBConnection, GUIS_TABLE_NAME);
         shopEditor = new ShopEditor(this);
 
         // Files
@@ -248,6 +279,31 @@ public class AresonSomnium extends JavaPlugin {
         }
 
         return cachedMultiplier;
+    }
+
+    public BigDecimal sellItems(Player player, ItemStack[] itemStacks) {
+        Pair<Double, String> cachedMultiplier = getCachedMultiplier(player);
+        //Getting amount
+        BigDecimal coinsToGive = Arrays.stream(itemStacks).parallel().reduce(BigDecimal.ZERO, (total, itemStack) -> {
+            try {
+                if (itemStack != null) {
+                    String permissionRequired = blocksPermission.get(itemStack.getType());
+                    if (permissionRequired != null && player.hasPermission(permissionRequired)) {
+                        BigDecimal itemValue = BlockPrice.getPrice(itemStack.getType());
+                        itemValue = itemValue.multiply(BigDecimal.valueOf(itemStack.getAmount()));
+
+                        total = total.add(itemValue);
+                        player.getInventory().remove(itemStack);
+                    }
+                }
+            } catch (MaterialNotSellableException ignored) {
+            }
+            return total;
+        }, BigDecimal::add);
+
+        coinsToGive = coinsToGive.multiply(BigDecimal.valueOf(cachedMultiplier.left()));
+        Wallet.addCoins(player, coinsToGive);
+        return coinsToGive;
     }
 
 }
