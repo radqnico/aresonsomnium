@@ -21,14 +21,12 @@ public class AresonSomniumTest {
         System.out.println("Loading TESTS");
         DB database = DB.newEmbeddedDB(3306);
         database.start();
-        database.run("CREATE DATABASE IF NOT EXISTS aresonsomnium;\n" +
-                "\n" +
-                "USE aresonsomnium;\n" +
-                "\n" +
-                "create table if not exists somniumGuis (\n" +
-                "    guiName varchar(255) primary key,\n" +
-                "    guiTitle varchar(255) not null,\n" +
-                "    shopItems text not null\n" +
+        database.run("CREATE DATABASE IF NOT EXISTS aresonsomnium;" +
+                "USE aresonsomnium;" +
+                "create table if not exists somniumGuis (" +
+                "guiName varchar(255) primary key," +
+                "guiTitle varchar(255) not null," +
+                "shopItems text not null" +
                 ");");
 
         server = MockBukkit.mock();
