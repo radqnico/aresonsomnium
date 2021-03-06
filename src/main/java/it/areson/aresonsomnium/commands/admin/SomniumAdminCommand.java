@@ -3,10 +3,10 @@ package it.areson.aresonsomnium.commands.admin;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
-import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.economy.shops.guis.CustomShop;
 import it.areson.aresonsomnium.economy.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.economy.shops.guis.ShopManager;
+import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.Debugger;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.utils.Pair;
@@ -118,6 +118,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         break;
                     case "addcoins":
                         handleAddCoins(commandSender, args[1], args[2], args[3]);
+                        break;
                     case "stats":
                     case "listplayers":
                     case "createshop":
