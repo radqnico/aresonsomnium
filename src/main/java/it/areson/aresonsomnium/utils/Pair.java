@@ -1,5 +1,7 @@
 package it.areson.aresonsomnium.utils;
 
+import java.time.Duration;
+
 public class Pair<A, B> {
 
     private final A left;
@@ -21,4 +23,18 @@ public class Pair<A, B> {
     public B right() {
         return right;
     }
+
+    public static Pair<Double, Duration> emptyMultiplier() {
+        return new Pair<>(0.0, Duration.ZERO);
+    }
+
+    public static Pair<Double, Duration> compare(Pair<Double, Duration> a, Pair<Double, Duration> b) {
+        return b;
+    }
+
+    @Override
+    public String toString() {
+        return "Left: " + left + ", Right: " + right;
+    }
+
 }

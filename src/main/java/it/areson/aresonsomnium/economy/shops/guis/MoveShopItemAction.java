@@ -1,6 +1,6 @@
-package it.areson.aresonsomnium.shops.guis;
+package it.areson.aresonsomnium.economy.shops.guis;
 
-import it.areson.aresonsomnium.shops.items.ShopItem;
+import it.areson.aresonsomnium.economy.shops.items.ShopItem;
 import it.areson.aresonsomnium.utils.Pair;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;

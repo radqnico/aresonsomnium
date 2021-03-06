@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.shops.items;
+package it.areson.aresonsomnium.economy.shops.items;
 
 import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import org.bukkit.Material;

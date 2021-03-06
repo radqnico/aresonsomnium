@@ -3,7 +3,7 @@ package it.areson.aresonsomnium.players;
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.Wallet;
-import it.areson.aresonsomnium.shops.items.Price;
+import it.areson.aresonsomnium.economy.shops.items.Price;
 import org.bukkit.entity.Player;
 
 import java.math.BigInteger;

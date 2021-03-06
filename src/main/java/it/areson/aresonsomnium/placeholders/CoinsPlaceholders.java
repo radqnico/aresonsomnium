@@ -6,8 +6,8 @@ import it.areson.aresonsomnium.players.SomniumPlayer;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("NullableProblems")
 public class CoinsPlaceholders extends PlaceholderExpansion {
 
     private final AresonSomnium aresonSomnium;
@@ -17,22 +17,22 @@ public class CoinsPlaceholders extends PlaceholderExpansion {
     }
 
     @Override
-    public @NotNull String getIdentifier() {
+    public String getIdentifier() {
         return "playerstats";
     }
 
     @Override
-    public @NotNull String getAuthor() {
+    public String getAuthor() {
         return "Areson";
     }
 
     @Override
-    public @NotNull String getVersion() {
+    public String getVersion() {
         return "1.0.0";
     }
 
     @Override
-    public String onRequest(OfflinePlayer offlinePlayer, @NotNull String query) {
+    public String onRequest(OfflinePlayer offlinePlayer, String query) {
         if (offlinePlayer != null && offlinePlayer.getName() != null) {
             Player player = aresonSomnium.getServer().getPlayer(offlinePlayer.getName());
             if (player != null) {

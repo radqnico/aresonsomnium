@@ -84,14 +84,14 @@ public class RightClickListener extends GeneralEventListener {
         }
     }
 
-    private Optional<Pair<Integer, Duration>> getMultiplierProperties(ItemStack itemStack) {
+    private Optional<Pair<Double, Duration>> getMultiplierProperties(ItemStack itemStack) {
         List<String> lore = itemStack.getLore();
 
         if (lore != null && lore.size() >= 2) {
             try {
                 String stringMultiplier = lore.get(0);
                 stringMultiplier = stringMultiplier.substring(stringMultiplier.indexOf(" ") + 1, stringMultiplier.length() - 1);
-                int multiplier = (int) (Double.parseDouble(stringMultiplier) * 100);
+                double multiplier = Double.parseDouble(stringMultiplier);
 
                 String stringDuration = lore.get(1);
                 stringDuration = "PT" + stringDuration.substring(stringDuration.indexOf(" ") + 1).toUpperCase();
@@ -113,13 +113,13 @@ public class RightClickListener extends GeneralEventListener {
 
         if (itemStack != null) {
             if (aresonSomnium.luckPerms.isPresent()) {
-                Optional<Pair<Integer, Duration>> optionalProperties = getMultiplierProperties(itemStack);
+                Optional<Pair<Double, Duration>> optionalProperties = getMultiplierProperties(itemStack);
 
                 if (optionalProperties.isPresent()) {
-                    Pair<Integer, Duration> properties = optionalProperties.get();
+                    Pair<Double, Duration> properties = optionalProperties.get();
 
-                    if (properties.left() >= aresonSomnium.getCachedMultiplier(player.getName()) * 100) {
-                        String permission = PERMISSION_MULTIPLIER + "." + properties.left();
+                    if (properties.left() >= aresonSomnium.getCachedMultiplier(player).left()) {
+                        String permission = PERMISSION_MULTIPLIER + "." + (int) (properties.left() * 100);
 
                         aresonSomnium.luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user -> {
                             Duration finalDuration = properties.right();
@@ -139,7 +139,7 @@ public class RightClickListener extends GeneralEventListener {
 
                         itemStack.setAmount(itemStack.getAmount() - 1);
                         player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_SHOOT, 1f, 1f);
-                        aresonSomnium.sendSuccessMessage(player, "Hai attivato il moltiplicatore " + ((double) properties.left()) / 100 + "x per " + properties.right().toString().substring(2).toLowerCase());
+                        aresonSomnium.sendSuccessMessage(player, "Hai attivato il moltiplicatore " + properties.left() + "x per " + properties.right().toString().substring(2).toLowerCase());
                         event.setCancelled(true);
                     } else {
                         aresonSomnium.sendErrorMessage(player, "Hai già un moltiplicatore maggiore attivo");

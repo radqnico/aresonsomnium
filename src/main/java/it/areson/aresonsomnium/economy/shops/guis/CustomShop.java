@@ -1,11 +1,11 @@
-package it.areson.aresonsomnium.shops.guis;
+package it.areson.aresonsomnium.economy.shops.guis;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
-import it.areson.aresonsomnium.shops.items.SerializedShopItem;
-import it.areson.aresonsomnium.shops.items.ShopItem;
+import it.areson.aresonsomnium.economy.shops.items.SerializedShopItem;
+import it.areson.aresonsomnium.economy.shops.items.ShopItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

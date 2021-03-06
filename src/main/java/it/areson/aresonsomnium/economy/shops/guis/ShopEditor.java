@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.shops.guis;
+package it.areson.aresonsomnium.economy.shops.guis;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.utils.PlayerComparator;

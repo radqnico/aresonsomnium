@@ -1,8 +1,8 @@
-package it.areson.aresonsomnium.shops.guis;
+package it.areson.aresonsomnium.economy.shops.guis;
 
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.exceptions.PriceConfigNotReadyException;
-import it.areson.aresonsomnium.shops.items.ShopItem;
+import it.areson.aresonsomnium.economy.shops.items.ShopItem;
 
 import java.math.BigDecimal;
 import java.util.Objects;

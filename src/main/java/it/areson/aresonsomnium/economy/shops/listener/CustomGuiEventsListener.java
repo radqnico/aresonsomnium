@@ -1,12 +1,12 @@
-package it.areson.aresonsomnium.shops.listener;
+package it.areson.aresonsomnium.economy.shops.listener;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.listeners.GeneralEventListener;
 import it.areson.aresonsomnium.players.SomniumPlayer;
-import it.areson.aresonsomnium.shops.guis.*;
-import it.areson.aresonsomnium.shops.items.Price;
-import it.areson.aresonsomnium.shops.items.ShopItem;
+import it.areson.aresonsomnium.economy.shops.guis.*;
+import it.areson.aresonsomnium.economy.shops.items.Price;
+import it.areson.aresonsomnium.economy.shops.items.ShopItem;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.utils.Pair;
 import org.bukkit.Material;
@@ -240,8 +240,6 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     Enchantment key2 = entry2.getKey();
                     boolean keyEquals = key1.getKey().equals(key2.getKey());
                     boolean valueEquals = entry1.getValue().equals(entry2.getValue());
-                    System.out.println(keyEquals);
-                    System.out.println(valueEquals);
                     if (keyEquals && valueEquals) {
                         isThereEnchant = true;
                         break;

@@ -7,6 +7,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.HashSet;
+
 public class GatewayListener extends GeneralEventListener {
 
     public GatewayListener(AresonSomnium aresonSomnium) {
@@ -20,7 +22,7 @@ public class GatewayListener extends GeneralEventListener {
         somniumPlayerManager.addSomniumPlayer(player);
 
         // Add cached multiplier
-        aresonSomnium.forceMultiplierRefresh(player, true);
+        aresonSomnium.forceMultiplierRefresh(player);
     }
 
     @EventHandler
