@@ -20,6 +20,7 @@ public class AresonSomniumTest {
     @BeforeAll
     public static void load() throws ManagedProcessException {
         System.out.println("Loading TESTS");
+        System.out.println(System.getProperty("os.name"));
 
         DBConfigurationBuilder configBuilder = DBConfigurationBuilder.newBuilder();
         configBuilder.setPort(3306);
