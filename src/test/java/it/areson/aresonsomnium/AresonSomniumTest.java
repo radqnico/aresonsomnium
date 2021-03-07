@@ -25,6 +25,8 @@ public class AresonSomniumTest {
         if(System.getProperty("os.name").equalsIgnoreCase("Linux")) {
             System.out.println("Linux OS");
             configBuilder.setDataDir("/var/lib/jenkins/tmp");
+            configBuilder.setBaseDir("/var/lib/jenkins/tmp");
+            configBuilder.setLibDir("/var/lib/jenkins/tmp");
         }
 
 
