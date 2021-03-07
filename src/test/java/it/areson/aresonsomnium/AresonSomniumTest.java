@@ -20,11 +20,14 @@ public class AresonSomniumTest {
     @BeforeAll
     public static void load() throws ManagedProcessException {
         System.out.println("Loading TESTS");
-        System.out.println(System.getProperty("os.name"));
-
         DBConfigurationBuilder configBuilder = DBConfigurationBuilder.newBuilder();
         configBuilder.setPort(3306);
-        configBuilder.setSocket("");
+        if(System.getProperty("os.name").equalsIgnoreCase("Linux")) {
+            System.out.println("Linux OS");
+            configBuilder.setDataDir("/var/lib/jenkins/tmp");
+        }
+
+
         DB database = DB.newEmbeddedDB(configBuilder.build());
         database.start();
         database.run("CREATE DATABASE IF NOT EXISTS aresonsomnium;" +
