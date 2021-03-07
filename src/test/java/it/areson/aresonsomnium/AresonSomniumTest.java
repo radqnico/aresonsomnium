@@ -5,6 +5,7 @@ import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DB;
+import ch.vorburger.mariadb4j.DBConfigurationBuilder;
 import it.areson.aresonsomnium.utils.Pair;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,7 +20,11 @@ public class AresonSomniumTest {
     @BeforeAll
     public static void load() throws ManagedProcessException {
         System.out.println("Loading TESTS");
-        DB database = DB.newEmbeddedDB(3306);
+
+        DBConfigurationBuilder configBuilder = DBConfigurationBuilder.newBuilder();
+        configBuilder.setPort(3306);
+        configBuilder.setSocket("");
+        DB database = DB.newEmbeddedDB(configBuilder.build());
         database.start();
         database.run("CREATE DATABASE IF NOT EXISTS aresonsomnium;" +
                 "USE aresonsomnium;" +
