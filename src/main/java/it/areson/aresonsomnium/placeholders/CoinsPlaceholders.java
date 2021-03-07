@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 @SuppressWarnings("NullableProblems")
 public class CoinsPlaceholders extends PlaceholderExpansion {
 
-    private AresonSomnium aresonSomnium;
+    private final AresonSomnium aresonSomnium;
 
     public CoinsPlaceholders(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
@@ -33,21 +33,19 @@ public class CoinsPlaceholders extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer offlinePlayer, String query) {
-        if (offlinePlayer != null && offlinePlayer.getName() != null) {
-            Player player = aresonSomnium.getServer().getPlayer(offlinePlayer.getName());
-            if (player != null) {
-                SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
-                if (somniumPlayer != null) {
-                    switch (query.toLowerCase()) {
-                        case "coins":
-                            return Wallet.getCoins(player).toPlainString();
-                        case "obols":
-                            return somniumPlayer.getWallet().getObols().toString();
-                        case "gems":
-                            return somniumPlayer.getWallet().getGems().toString();
-                        case "playedseconds":
-                            return somniumPlayer.getSecondsPlayedTotal() + "";
-                    }
+        if (offlinePlayer != null && offlinePlayer.getName() != null && offlinePlayer instanceof Player) {
+            Player player = (Player) offlinePlayer;
+            SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
+            if (somniumPlayer != null) {
+                switch (query.toLowerCase()) {
+                    case "coins":
+                        return Wallet.getCoins(player).toPlainString();
+                    case "obols":
+                        return somniumPlayer.getWallet().getObols().toString();
+                    case "gems":
+                        return somniumPlayer.getWallet().getGems().toString();
+                    case "playedseconds":
+                        return somniumPlayer.getSecondsPlayedTotal() + "";
                 }
             }
         }
