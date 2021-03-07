@@ -81,7 +81,7 @@ public class Price {
     public ArrayList<String> toLore() {
         ArrayList<String> lore = new ArrayList<>();
         if (coins.compareTo(BigDecimal.valueOf(0)) > 0) {
-            lore.add(ChatColor.translateAlternateColorCodes('&', "&e" + coins.toPlainString() + " ⛃"));
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&e" + coins.toString() + " ⛃"));
         }
         if (obols.compareTo(BigInteger.valueOf(0)) > 0) {
             lore.add(ChatColor.translateAlternateColorCodes('&', "&6" + obols.toString() + " ❂"));

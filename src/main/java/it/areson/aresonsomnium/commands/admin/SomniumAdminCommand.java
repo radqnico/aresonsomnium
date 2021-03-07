@@ -3,14 +3,14 @@ package it.areson.aresonsomnium.commands.admin;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
-import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.economy.shops.guis.CustomShop;
 import it.areson.aresonsomnium.economy.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.economy.shops.guis.ShopManager;
+import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.Debugger;
-import it.areson.aresonsomnium.utils.file.MessageManager;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.utils.Pair;
+import it.areson.aresonsomnium.utils.file.MessageManager;
 import org.bukkit.command.*;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -32,7 +32,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops", "setDebugLevel", "deleteLastLoreLine"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops", "setDebugLevel", "deleteLastLoreLine", "addCoins"};
 
     public SomniumAdminCommand(AresonSomnium plugin) {
         aresonSomnium = plugin;
@@ -56,6 +56,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 switch (args[0].toLowerCase()) {
                     case "stats":
                     case "setcoins":
+                    case "addcoins":
                     case "createshop":
                     case "editshop":
                     case "setdebuglevel":
@@ -87,6 +88,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         handleSetDebugLevel(commandSender, args[1]);
                         break;
                     case "setcoins":
+                    case "addcoins":
                     case "createshop":
                         MessageUtils.notEnoughArguments(commandSender, command);
                         break;
@@ -94,6 +96,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 break;
             case 3:
                 switch (args[0].toLowerCase()) {
+                    case "addcoins":
                     case "setcoins":
                         MessageUtils.notEnoughArguments(commandSender, command);
                         break;
@@ -112,6 +115,9 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 switch (args[0].toLowerCase()) {
                     case "setcoins":
                         handleSetCoins(commandSender, args[1], args[2], args[3]);
+                        break;
+                    case "addcoins":
+                        handleAddCoins(commandSender, args[1], args[2], args[3]);
                         break;
                     case "stats":
                     case "listplayers":
@@ -135,6 +141,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             switch (strings[0].toLowerCase()) {
                 case "stats":
                 case "setcoins":
+                case "addcoins":
                     StringUtil.copyPartialMatches(
                             strings[1],
                             aresonSomnium.getServer().getOnlinePlayers().stream()
@@ -160,7 +167,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             }
         }
         if (strings.length == 3) {
-            if ("setcoins".equalsIgnoreCase(strings[0])) {
+            if ("setcoins".equalsIgnoreCase(strings[0]) || "addcoins".equalsIgnoreCase(strings[0])) {
                 StringUtil.copyPartialMatches(
                         strings[2],
                         Arrays.stream(CoinType.values()).map(value -> value.name().toLowerCase()).collect(Collectors.toList()),
@@ -253,7 +260,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         "stats-format",
                         Pair.of("%player%", playerName),
                         Pair.of("%secondsPlayed%", somniumPlayer.getSecondsPlayedTotal() + ""),
-                        Pair.of("%coins%", Wallet.getCoins(player).toPlainString()),
+                        Pair.of("%coins%", Wallet.getCoins(player).toString()),
                         Pair.of("%obols%", somniumPlayer.getWallet().getObols().toString()),
                         Pair.of("%gems%", somniumPlayer.getWallet().getGems().toString())
                 );
@@ -262,6 +269,41 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             }
         } else {
             messageManager.sendPlainMessage(player, "player-not-found", Pair.of("%player%", playerName));
+        }
+    }
+
+    private void handleAddCoins(CommandSender commandSender, String playerName, String coinType, String amountString) {
+        Player player = aresonSomnium.getServer().getPlayer(playerName);
+        if (Objects.nonNull(player)) {
+            SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
+            if (Objects.nonNull(somniumPlayer)) {
+                try {
+                    BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(amountString));
+                    CoinType type = CoinType.valueOf(coinType.toUpperCase());
+                    switch (type) {
+                        case OBOLI:
+                            somniumPlayer.getWallet().changeObols(amount.toBigInteger());
+                            messageManager.sendPlainMessage(player, "coins-change", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()));
+                            break;
+                        case GEMME:
+                            somniumPlayer.getWallet().changeGems(amount.toBigInteger());
+                            messageManager.sendPlainMessage(player, "coins-change", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()));
+                            break;
+                        case MONETE:
+                            Wallet.addCoins(player, amount);
+                            messageManager.sendPlainMessage(player, "coins-change", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()));
+                            break;
+                        default:
+                            messageManager.sendPlainMessage(player, "coins-type-error");
+                    }
+                } catch (NumberFormatException exception) {
+                    messageManager.sendPlainMessage(player, "not-a-number");
+                }
+            } else {
+                messageManager.sendPlainMessage(player, "somniumplayer-not-found", Pair.of("%player%", playerName));
+            }
+        } else {
+            messageManager.sendPlainMessage(commandSender, "player-not-found", Pair.of("%player%", playerName));
         }
     }
 
@@ -287,7 +329,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                             messageManager.sendPlainMessage(player, "coins-set");
                             break;
                         default:
-                            messageManager.sendPlainMessage(player, "coins-set");
+                            messageManager.sendPlainMessage(player, "coins-type-error");
                     }
                 } catch (NumberFormatException exception) {
                     messageManager.sendPlainMessage(player, "not-a-number");
