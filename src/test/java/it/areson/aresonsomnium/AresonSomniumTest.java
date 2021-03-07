@@ -32,7 +32,7 @@ public class AresonSomniumTest {
 
         DB database = DB.newEmbeddedDB(configBuilder.build());
         database.start();
-        database.run("CREATE DATABASE IF NOT EXISTS aresonsomnium;" +
+        database.run("CREATE DATABASE IF NOT EXISTS aresonSomnium;" +
                 "USE aresonsomnium;" +
                 "create table if not exists somniumGuis (" +
                 "guiName varchar(255) primary key," +
