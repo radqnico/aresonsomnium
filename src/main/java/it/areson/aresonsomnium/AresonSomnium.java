@@ -137,6 +137,7 @@ public class AresonSomnium extends JavaPlugin {
             luckPerms = Optional.of(provider.getProvider());
             new LuckPermsListener(this, provider.getProvider());
         } else {
+            getLogger().warning("LuckPerms API not found");
             luckPerms = Optional.empty();
         }
 
