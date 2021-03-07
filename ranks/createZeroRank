@@ -1,7 +1,7 @@
-lp deletegroup staff
-lp creategroup staff
-lp group staff permission set * true
-lp group staff meta addprefix 0 "&6&l[Staff]&f"
+lp deletegroup founder
+lp creategroup founder
+lp group founder permission set * true
+lp group founder meta addprefix 0 "&2[Founder]&f"
 
 lp group default clear
 lp group default permission set essentials.spawn true

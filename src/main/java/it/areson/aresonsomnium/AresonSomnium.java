@@ -27,9 +27,7 @@ import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.node.Node;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -159,7 +157,7 @@ public class AresonSomnium extends JavaPlugin {
 
     private void registerFiles() {
         messages = new MessageManager(this, "messages.yml");
-        gommaObjectsFileReader = new GommaObjectsFileReader(this, "gommaitems.yml");
+        gommaObjectsFileReader = new GommaObjectsFileReader(this, "gommaItems.yml");
     }
 
     public GommaObjectsFileReader getGommaObjectsFileReader() {
