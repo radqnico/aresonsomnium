@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS aresonsomnium;
+CREATE DATABASE IF NOT EXISTS aresonSomnium;
 
-USE aresonsomnium;
+USE aresonSomnium;
 
 create table if not exists somniumGuis (
     guiName varchar(255) primary key,
