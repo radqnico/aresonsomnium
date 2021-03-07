@@ -19,7 +19,7 @@
 
     <build>
         <!-- Play button -->
-        <defaultGoal>clean test package</defaultGoal>
+        <defaultGoal>clean package</defaultGoal>
 
         <!-- Resource directory -->
         <resources>
@@ -48,6 +48,7 @@
     </repositories>
 
     <dependencies>
+        <!-- RUN -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
@@ -59,15 +60,10 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.22</version>
+            <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.8.0-M1</version>
-            <scope>test</scope>
-        </dependency>
-
+        <!-- PLUGINS -->
         <dependency>
             <groupId>net.ess3</groupId>
             <artifactId>EssentialsX</artifactId>

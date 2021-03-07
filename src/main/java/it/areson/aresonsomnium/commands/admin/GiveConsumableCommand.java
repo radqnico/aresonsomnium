@@ -23,8 +23,8 @@ import static net.md_5.bungee.api.ChatColor.GRAY;
 public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
 
     private final AresonSomnium aresonSomnium;
-    private HashMap<String, ItemStack> itemStacks;
-    private final String multiplierIndexName = "multiplier";
+    public HashMap<String, ItemStack> itemStacks;
+    public final String multiplierIndexName = "multiplier";
 
     public GiveConsumableCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
@@ -43,6 +43,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
         itemStacks.put(multiplierIndexName, createConsumableItemStack(Material.CLOCK, "Moltiplicatore", new ArrayList<>(), MULTIPLIER_MODEL_DATA));
     }
 
+    @SuppressWarnings("SameParameterValue")
     private ItemStack createConsumableItemStack(Material material, String displayName, ArrayList<String> lore, int modelValue) {
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
@@ -62,7 +63,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
         return itemStack;
     }
 
-    private ItemStack alignMultiplierItemStack(ItemStack originalItem, int multiplier, String duration) {
+    public ItemStack alignMultiplierItemStack(ItemStack originalItem, int multiplier, String duration) {
         ItemStack finalItem = originalItem.clone();
         String visibleMultiplier = (double) multiplier / 100 + "x";
 
