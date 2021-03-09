@@ -75,8 +75,9 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
             if (Objects.nonNull(itemMeta)) {
                 itemMeta.setDisplayName(aresonSomnium.getMessageManager().getPlainMessageNoPrefix("gomma-item-name"));
 
-                ArrayList<String> lore = new ArrayList<>();
-                lore.add(aresonSomnium.getMessageManager().getPlainMessageNoPrefix("gomma-item-lore"));
+                String loreString = aresonSomnium.getMessageManager().getPlainMessageNoPrefix("gomma-item-lore");
+                String[] split = loreString.split("\\n");
+                ArrayList<String> lore = (ArrayList<String>) Arrays.asList(split);
                 itemMeta.setLore(lore);
 
                 itemMeta.setCustomModelData(GOMMA_MODEL_DATA);
