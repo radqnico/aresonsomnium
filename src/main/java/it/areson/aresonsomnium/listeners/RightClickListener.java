@@ -5,7 +5,6 @@ import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.Pair;
 import net.luckperms.api.node.Node;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -97,6 +96,7 @@ public class RightClickListener extends GeneralEventListener {
                 double multiplier = Double.parseDouble(stringMultiplier);
 
                 String stringDuration = lore.get(1);
+                stringDuration = stringDuration.replaceAll(COLOR_CHAR + ".", "");
                 stringDuration = "PT" + stringDuration.substring(stringDuration.indexOf(" ") + 1).toUpperCase();
                 Duration duration = Duration.parse(stringDuration);
 
