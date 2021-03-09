@@ -5,6 +5,7 @@ import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.Pair;
 import net.luckperms.api.node.Node;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -26,6 +27,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static it.areson.aresonsomnium.Constants.*;
+import static net.md_5.bungee.api.ChatColor.COLOR_CHAR;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class RightClickListener extends GeneralEventListener {
@@ -90,6 +92,7 @@ public class RightClickListener extends GeneralEventListener {
         if (lore != null && lore.size() >= 2) {
             try {
                 String stringMultiplier = lore.get(0);
+                stringMultiplier = stringMultiplier.replaceAll(COLOR_CHAR + ".", "");
                 stringMultiplier = stringMultiplier.substring(stringMultiplier.indexOf(" ") + 1, stringMultiplier.length() - 1);
                 double multiplier = Double.parseDouble(stringMultiplier);
 
