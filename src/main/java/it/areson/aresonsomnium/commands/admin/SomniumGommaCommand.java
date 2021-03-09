@@ -7,7 +7,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.StringUtil;
@@ -73,7 +75,14 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
             if (Objects.nonNull(itemMeta)) {
                 itemMeta.setDisplayName(aresonSomnium.getMessageManager().getPlainMessageNoPrefix("gomma-item-name"));
 
+                String loreString = aresonSomnium.getMessageManager().getPlainMessageNoPrefix("gomma-item-lore");
+                String[] split = loreString.split("\\n");
+                ArrayList<String> lore = new ArrayList<>(Arrays.asList(split));
+                itemMeta.setLore(lore);
+
                 itemMeta.setCustomModelData(GOMMA_MODEL_DATA);
+                itemMeta.addEnchant(Enchantment.DURABILITY, 2, true);
+                itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
             gommaItem.setItemMeta(itemMeta);
 
