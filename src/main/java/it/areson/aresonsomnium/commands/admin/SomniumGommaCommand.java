@@ -3,7 +3,6 @@ package it.areson.aresonsomnium.commands.admin;
 import com.destroystokyo.paper.block.TargetBlockInfo;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.utils.MessageUtils;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -78,11 +77,8 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
 
                 String loreString = aresonSomnium.getMessageManager().getPlainMessageNoPrefix("gomma-item-lore");
                 String[] split = loreString.split("\\n");
-                ArrayList<Component> lore = new ArrayList<>();
-                for (String s : split) {
-                    lore.add(Component.text(s));
-                }
-                itemMeta.lore(lore);
+                ArrayList<String> lore = new ArrayList<>(Arrays.asList(split));
+                itemMeta.setLore(lore);
 
                 itemMeta.setCustomModelData(GOMMA_MODEL_DATA);
                 itemMeta.addEnchant(Enchantment.DURABILITY, 2, true);
