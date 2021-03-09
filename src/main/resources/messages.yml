@@ -31,6 +31,7 @@ gomma-item-give: "&aHai ottenuto un oggetto dal Gomma Gomma"
 gomma-error-give: "&cFai spazio nell'inventario"
 
 gomma-item-name: "&lGomma"
+gomma-item-lore: "Ciaone burlone \n paperone"
 gomma-material: "IRON_NUGGET"
 
 check-created: "&aBuono creato."
