@@ -65,7 +65,7 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
     private void handleGenerateObolShard(String playerName) {
         Player player = aresonSomnium.getServer().getPlayer(playerName);
         if (player != null) {
-            HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(Wallet.generateObolNugget());
+            HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(Wallet.generateObolShard(aresonSomnium));
             if (!remaining.isEmpty()) {
                 for (Integer integer : remaining.keySet()) {
                     player.getWorld().dropItem(player.getLocation(), remaining.get(integer));

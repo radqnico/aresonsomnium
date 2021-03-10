@@ -2,6 +2,7 @@ package it.areson.aresonsomnium.economy;
 
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
+import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import net.ess3.api.Economy;
 import org.bukkit.Bukkit;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static it.areson.aresonsomnium.Constants.CHECK_MODEL_DATA;
@@ -55,19 +57,20 @@ public class Wallet {
         return itemStack;
     }
 
-    public static ItemStack generateObolNugget() {
+    public static ItemStack generateObolShard(AresonSomnium aresonSomnium) {
         ItemStack itemStack = new ItemStack(Material.GOLD_NUGGET);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
-            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Frammento di &lObolo"));
-            List<String> lore = new ArrayList<>();
-            lore.add(ChatColor.translateAlternateColorCodes('&', "&6Colleziona e consegna questi"));
-            lore.add(ChatColor.translateAlternateColorCodes('&', "&6frammenti a &lCaronte &6per"));
-            lore.add(ChatColor.translateAlternateColorCodes('&', "&6ottenere gli Oboli"));
+            itemMeta.setDisplayName(aresonSomnium.getMessageManager().getPlainMessageNoPrefix("obolshard-item-name"));
+
+            String loreString = aresonSomnium.getMessageManager().getPlainMessageNoPrefix("obolshard-item-lore");
+            String[] split = loreString.split("\\n");
+            ArrayList<String> lore = new ArrayList<>(Arrays.asList(split));
             itemMeta.setLore(lore);
+
             itemMeta.setCustomModelData(OBOL_MODEL_DATA);
+            itemMeta.addEnchant(Enchantment.DURABILITY, 2, true);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            itemMeta.addEnchant(Enchantment.DAMAGE_UNDEAD, 1, true);
         }
         itemStack.setItemMeta(itemMeta);
         return itemStack;
