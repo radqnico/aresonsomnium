@@ -54,3 +54,6 @@ items-not-sellable: "&cNon hai nessun oggetto vendibile nell'inventario"
 obols-give: "&aHai ottenuto un Obolo!"
 obols-not-enough: "&cPortami almeno 10 pepite!"
 obols-not-nugget: "&cDevi portarmi le mie pepite!"
+
+obolshard-item-name: "&6Frammento di &lObolo"
+obolshard-item-lore: "&6Colleziona e consegna questi\n&6frammenti a &lCaronte &6per\n&6ottenere gli Oboli"

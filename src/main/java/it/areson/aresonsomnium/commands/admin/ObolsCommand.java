@@ -46,10 +46,10 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
             case 1:
                 MessageUtils.notEnoughArguments(commandSender, command);
                 break;
-            case 2:
+            case 3:
                 switch (args[0].toLowerCase()) {
                     case "generateobolshard":
-                        handleGenerateObolShard(args[1]);
+                        handleGenerateObolShard(args[1], Integer.parseInt(args[2]));
                         break;
                     case "convertshards":
                         handleConvertObols(args[1]);
@@ -62,10 +62,10 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    private void handleGenerateObolShard(String playerName) {
+    private void handleGenerateObolShard(String playerName, int amount) {
         Player player = aresonSomnium.getServer().getPlayer(playerName);
         if (player != null) {
-            HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(Wallet.generateObolNugget());
+            HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(Wallet.generateObolShard(aresonSomnium, amount));
             if (!remaining.isEmpty()) {
                 for (Integer integer : remaining.keySet()) {
                     player.getWorld().dropItem(player.getLocation(), remaining.get(integer));
