@@ -1,6 +1,7 @@
 package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.*;
 import org.bukkit.enchantments.Enchantment;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static it.areson.aresonsomnium.Constants.MULTIPLIER_MODEL_DATA;
-import static net.md_5.bungee.api.ChatColor.GRAY;
+import static net.md_5.bungee.api.ChatColor.*;
 
 @SuppressWarnings("NullableProblems")
 public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
@@ -69,11 +70,11 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
 
         ItemMeta itemMeta = finalItem.getItemMeta();
         if (itemMeta != null) {
-            itemMeta.setDisplayName(itemMeta.getDisplayName() + " " + visibleMultiplier);
+            itemMeta.setDisplayName(AQUA + "" + BOLD + itemMeta.getDisplayName() + " " + visibleMultiplier);
 
             ArrayList<String> lore = new ArrayList<>();
-            lore.add("Moltiplicatore: " + visibleMultiplier);
-            lore.add("Durata: " + duration);
+            lore.add(GRAY + "Moltiplicatore: " + GREEN + visibleMultiplier);
+            lore.add(GRAY + "Durata: " + GREEN + duration);
             lore.addAll(itemMeta.getLore());
 
             itemMeta.setLore(lore);

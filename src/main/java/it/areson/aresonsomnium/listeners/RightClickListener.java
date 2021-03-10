@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static it.areson.aresonsomnium.Constants.*;
+import static net.md_5.bungee.api.ChatColor.COLOR_CHAR;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class RightClickListener extends GeneralEventListener {
@@ -90,10 +91,12 @@ public class RightClickListener extends GeneralEventListener {
         if (lore != null && lore.size() >= 2) {
             try {
                 String stringMultiplier = lore.get(0);
+                stringMultiplier = stringMultiplier.replaceAll(COLOR_CHAR + ".", "");
                 stringMultiplier = stringMultiplier.substring(stringMultiplier.indexOf(" ") + 1, stringMultiplier.length() - 1);
                 double multiplier = Double.parseDouble(stringMultiplier);
 
                 String stringDuration = lore.get(1);
+                stringDuration = stringDuration.replaceAll(COLOR_CHAR + ".", "");
                 stringDuration = "PT" + stringDuration.substring(stringDuration.indexOf(" ") + 1).toUpperCase();
                 Duration duration = Duration.parse(stringDuration);
 
