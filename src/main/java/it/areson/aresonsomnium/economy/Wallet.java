@@ -92,7 +92,7 @@ public class Wallet {
                     Matcher matcherAmount = patternAmount.matcher(clean);
                     if (matcherAmount.find() && matcherCoinType.find()) {
                         BigDecimal amount = new BigDecimal(matcherAmount.group(0));
-                        CoinType coinType = CoinType.valueOf(matcherCoinType.group(0));
+                        CoinType coinType = CoinType.valueOf(matcherCoinType.group(0).toUpperCase());
                         switch (coinType) {
                             case OBOLI:
                                 somniumPlayer.getWallet().changeObols(amount.toBigInteger());
