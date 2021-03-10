@@ -98,7 +98,7 @@ public class RightClickListener extends GeneralEventListener {
 
                 String stringDuration = lore.get(1);
                 stringDuration = stringDuration.replaceAll(COLOR_CHAR + ".", "");
-                stringDuration = "PT" + stringDuration.substring(stringDuration.indexOf(" ") + 1).toUpperCase();
+                stringDuration = "P" + stringDuration.substring(stringDuration.indexOf(" ") + 1).toUpperCase();
                 Period period = Period.parse(stringDuration);
 
                 return Optional.of(Pair.of(multiplier, period));
