@@ -45,7 +45,7 @@ public class Wallet {
         ItemStack itemStack = new ItemStack(Material.PAPER);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
-            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Assegno in &e" + coinType.getCoinName()));
+            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Assegno in &e&l" + coinType.getCoinName()));
             List<String> lore = new ArrayList<>();
             lore.add(ChatColor.translateAlternateColorCodes('&', "&7Valore:"));
             lore.add(ChatColor.translateAlternateColorCodes('&', "&a" + amount + " " + coinType.getCoinName()));
@@ -58,8 +58,8 @@ public class Wallet {
         return itemStack;
     }
 
-    public static ItemStack generateObolShard(AresonSomnium aresonSomnium) {
-        ItemStack itemStack = new ItemStack(Material.GOLD_NUGGET);
+    public static ItemStack generateObolShard(AresonSomnium aresonSomnium, int amount) {
+        ItemStack itemStack = new ItemStack(Material.GOLD_NUGGET, amount);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
             itemMeta.setDisplayName(aresonSomnium.getMessageManager().getPlainMessageNoPrefix("obolshard-item-name"));
