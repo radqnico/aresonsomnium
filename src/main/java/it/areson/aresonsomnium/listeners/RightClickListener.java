@@ -20,6 +20,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.Period;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -85,7 +86,7 @@ public class RightClickListener extends GeneralEventListener {
         }
     }
 
-    private Optional<Pair<Double, Duration>> getMultiplierProperties(ItemStack itemStack) {
+    private Optional<Pair<Double, Period>> getMultiplierProperties(ItemStack itemStack) {
         List<String> lore = itemStack.getLore();
 
         if (lore != null && lore.size() >= 2) {
@@ -98,9 +99,9 @@ public class RightClickListener extends GeneralEventListener {
                 String stringDuration = lore.get(1);
                 stringDuration = stringDuration.replaceAll(COLOR_CHAR + ".", "");
                 stringDuration = "PT" + stringDuration.substring(stringDuration.indexOf(" ") + 1).toUpperCase();
-                Duration duration = Duration.parse(stringDuration);
+                Period period = Period.parse(stringDuration);
 
-                return Optional.of(Pair.of(multiplier, duration));
+                return Optional.of(Pair.of(multiplier, period));
             } catch (Exception exception) {
                 aresonSomnium.getLogger().severe("Error while parsing from lore of multiplier consumable item");
                 exception.printStackTrace();
@@ -116,27 +117,27 @@ public class RightClickListener extends GeneralEventListener {
 
         if (itemStack != null) {
             if (aresonSomnium.luckPerms.isPresent()) {
-                Optional<Pair<Double, Duration>> optionalProperties = getMultiplierProperties(itemStack);
+                Optional<Pair<Double, Period>> optionalProperties = getMultiplierProperties(itemStack);
 
                 if (optionalProperties.isPresent()) {
-                    Pair<Double, Duration> properties = optionalProperties.get();
+                    Pair<Double, Period> properties = optionalProperties.get();
 
                     if (properties.left() >= aresonSomnium.getCachedMultiplier(player).left()) {
                         String permission = PERMISSION_MULTIPLIER + "." + (int) (properties.left() * 100);
 
                         aresonSomnium.luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user -> {
-                            Duration finalDuration = properties.right();
+                            Period finalPeriod = properties.right();
                             Optional<Node> sameActiveMultiplier = user.getNodes().parallelStream().filter(node -> node.getKey().equals(permission)).findFirst();
 
                             if (sameActiveMultiplier.isPresent()) {
                                 Duration expiryDuration = sameActiveMultiplier.get().getExpiryDuration();
                                 if (expiryDuration != null) {
-                                    finalDuration = finalDuration.plus(expiryDuration);
+                                    finalPeriod = finalPeriod.plus(expiryDuration);
                                     user.data().remove(sameActiveMultiplier.get());
                                 }
                             }
 
-                            user.data().add(Node.builder(permission).expiry(finalDuration).build());
+                            user.data().add(Node.builder(permission).expiry(finalPeriod).build());
                         });
 
 
