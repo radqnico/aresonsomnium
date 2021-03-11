@@ -310,18 +310,14 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public Duration stringToDuration(String duration) throws DateTimeParseException {
-        System.out.println("Input: " + duration);
         if (duration.toLowerCase().contains("d")) {
             int dLocation = duration.indexOf("d");
             if (dLocation < duration.length() - 1) {
                 duration = new StringBuilder(duration).insert(dLocation + 1, "T").toString();
-                System.out.println("If");
             }
         } else {
-            System.out.println("Else");
             duration = "T" + duration;
         }
-        System.out.println("Output: " + duration);
         return Duration.parse("P" + duration);
     }
 
