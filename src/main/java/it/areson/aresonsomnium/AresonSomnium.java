@@ -55,7 +55,6 @@ import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 public class AresonSomnium extends JavaPlugin {
 
     private final Multiplier defaultMultiplier = new Multiplier();
-    private final long jollyEventNumber = -1;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private final HashMap<Material, String> blocksPermission = new HashMap<Material, String>() {{
         put(Material.COBBLESTONE, Constants.PERMISSION_SELVA);
@@ -247,40 +246,25 @@ public class AresonSomnium extends JavaPlugin {
         }, this::getMaxMultiplier));
     }
 
-    public synchronized CompletableFuture<Multiplier> forceMultiplierRefresh(Player player, Collection<Node> permissions, long eventNumber) {
+    public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player, Collection<Node> permissions) {
         getLogger().info("Forcing the update of multiplier for player " + player.getName());
 
-        System.out.println("Event number: " + eventNumber);
-        String playerName = player.getName();
-        Multiplier actualMultiplier = playerMultipliers.get(playerName);
-
-        if (eventNumber == jollyEventNumber || actualMultiplier == null || actualMultiplier.getEventNumber() <= eventNumber) {
-            System.out.println("Evaluated");
-            return extractPlayerMaxMultiplierTupleFromPermissions(permissions)
-                    .thenApplyAsync((newMultiplier) -> {
-                        newMultiplier.setEventNumber(eventNumber);
-                        playerMultipliers.put(player.getName(), newMultiplier);
-                        return newMultiplier;
-                    });
-        } else {
-            System.out.println("Skipping event " + eventNumber + " because found " + actualMultiplier.getEventNumber());
-        }
-
-        return CompletableFuture.completedFuture(actualMultiplier);
-    }
-
-    public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player, long eventNumber) {
-        if (luckPerms.isPresent()) {
-            return luckPerms.get().getUserManager().loadUser(player.getUniqueId()).thenCompose(
-                    (user) -> forceMultiplierRefresh(player, user.getNodes(), eventNumber)
-            );
-        } else {
-            return CompletableFuture.completedFuture(defaultMultiplier);
+        synchronized (playerMultipliers) {
+            return extractPlayerMaxMultiplierTupleFromPermissions(permissions).thenApplyAsync((latestMultiplier) -> {
+                playerMultipliers.put(player.getName(), latestMultiplier);
+                return latestMultiplier;
+            });
         }
     }
 
     public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player) {
-        return forceMultiplierRefresh(player, jollyEventNumber);
+        if (luckPerms.isPresent()) {
+            return luckPerms.get().getUserManager().loadUser(player.getUniqueId()).thenCompose(
+                    (user) -> forceMultiplierRefresh(player, user.getNodes())
+            );
+        } else {
+            return CompletableFuture.completedFuture(defaultMultiplier);
+        }
     }
 
     public Multiplier getCachedMultiplier(Player player) {
