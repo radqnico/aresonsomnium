@@ -71,9 +71,12 @@ public class CommandTree implements CommandExecutor, TabCompleter {
                 }
             }
             int writingParamIndex = (arguments.length - 1 - lastValidIndex);
+            commandSender.sendMessage("I: " + i + "lv: " + lastValidIndex + "witing: " + writingParamIndex);
             if (writingParamIndex < selected.getNumberOfParams()) {
+                commandSender.sendMessage("Param");
                 return Collections.singletonList(selected.getParams().get(writingParamIndex));
             } else {
+                commandSender.sendMessage("No params, showing children");
                 // No params or already written them all
                 return selected.getChildren().stream().map(CommandTreeNode::getCommand).collect(Collectors.toList());
             }
