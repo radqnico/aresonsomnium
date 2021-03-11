@@ -1,11 +1,9 @@
 package it.areson.aresonsomnium.commands.newcommands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class HelloWorldCommand extends CommandTreeNode {
 
@@ -15,6 +13,7 @@ public class HelloWorldCommand extends CommandTreeNode {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String alias, @NotNull String[] arguments) {
-        return false;
+        Bukkit.broadcastMessage("Hello world");
+        return true;
     }
 }
