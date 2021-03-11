@@ -7,7 +7,11 @@ import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.Wallet;
+import it.areson.aresonsomnium.economy.shops.guis.ShopEditor;
+import it.areson.aresonsomnium.economy.shops.guis.ShopManager;
 import it.areson.aresonsomnium.economy.shops.items.BlockPrice;
+import it.areson.aresonsomnium.economy.shops.listener.CustomGuiEventsListener;
+import it.areson.aresonsomnium.economy.shops.listener.SetPriceInChatListener;
 import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import it.areson.aresonsomnium.listeners.GatewayListener;
 import it.areson.aresonsomnium.listeners.InventoryListener;
@@ -16,10 +20,6 @@ import it.areson.aresonsomnium.listeners.RightClickListener;
 import it.areson.aresonsomnium.placeholders.CoinsPlaceholders;
 import it.areson.aresonsomnium.placeholders.MultiplierPlaceholders;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
-import it.areson.aresonsomnium.economy.shops.guis.ShopEditor;
-import it.areson.aresonsomnium.economy.shops.guis.ShopManager;
-import it.areson.aresonsomnium.economy.shops.listener.CustomGuiEventsListener;
-import it.areson.aresonsomnium.economy.shops.listener.SetPriceInChatListener;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.Debugger;
 import it.areson.aresonsomnium.utils.Pair;
@@ -309,12 +309,14 @@ public class AresonSomnium extends JavaPlugin {
         return coinsToGive;
     }
 
-    public void validateStringToDuration(String duration) throws DateTimeParseException {
+    public Duration stringToDuration(String duration) throws DateTimeParseException {
         if (duration.contains("d")) {
-            duration = new StringBuilder(duration).insert(duration.indexOf("d"), "T").toString();
+            duration = new StringBuilder(duration).insert(duration.indexOf("d") + 1, "T").toString();
+        } else {
+            duration = "T" + duration;
         }
         System.out.println(duration);
-        Duration.parse("P" + duration);
+        return Duration.parse("P" + duration);
     }
 
 }
