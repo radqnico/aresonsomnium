@@ -29,8 +29,10 @@ public class LuckPermsListener {
             if (playerName != null) {
                 Player player = aresonSomnium.getServer().getPlayer(playerName);
                 if (player != null) {
+                    System.out.println("Event number before: " + getEventNumber(playerName));
                     aresonSomnium.forceMultiplierRefresh(player, event.getDataAfter(), getEventNumber(playerName));
                     upgradeEventNumber(playerName);
+                    System.out.println("Event number after: " + getEventNumber(playerName));
                 }
             }
         }
@@ -46,7 +48,7 @@ public class LuckPermsListener {
     }
 
     private synchronized void upgradeEventNumber(String playerName) {
-        playerEventNumbers.put(playerName, playerEventNumbers.get(playerName));
+        playerEventNumbers.put(playerName, playerEventNumbers.get(playerName) + 1);
     }
 
 }
