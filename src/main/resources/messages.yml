@@ -12,7 +12,10 @@ player-not-found: "&cIl giocatore %player% non esiste"
 coins-set: "&aValore dei coins impostato"
 not-a-number: "&cNumero non valido"
 coins-type-error: "&cIl tipo di moneta non esiste"
-coins-change: "&aTi sono stati cambiati i %type% di %amount%"
+coins-change: "&aTi sono stati %action% %amount% %type%"
+
+coins-change-action-add: "aggiunti"
+coins-change-action-remove: "rimossi"
 
 shop-not-ready: "&cIl negozio richiesto non e' pronto. Segnala il problema allo staff"
 

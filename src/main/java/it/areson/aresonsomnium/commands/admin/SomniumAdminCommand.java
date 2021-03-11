@@ -288,15 +288,15 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     switch (type) {
                         case OBOLI:
                             somniumPlayer.getWallet().changeObols(amount.toBigInteger());
-                            messageManager.sendPlainMessage(player, "coins-change", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()));
+                            messageManager.sendPlainMessage(player, "coins-change", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()), Pair.of("%action%", removing ? "rimossi" : "aggiunti"));
                             break;
                         case GEMME:
                             somniumPlayer.getWallet().changeGems(amount.toBigInteger());
-                            messageManager.sendPlainMessage(player, "coins-change", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()));
+                            messageManager.sendPlainMessage(player, "coins-change", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()), Pair.of("%action%", removing ? "rimossi" : "aggiunti"));
                             break;
                         case MONETE:
                             Wallet.addCoins(player, amount);
-                            messageManager.sendPlainMessage(player, "coins-change", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()));
+                            messageManager.sendPlainMessage(player, "coins-change", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()), Pair.of("%action%", removing ? "rimossi" : "aggiunti"));
                             break;
                         default:
                             messageManager.sendPlainMessage(player, "coins-type-error");
