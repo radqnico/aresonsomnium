@@ -248,7 +248,6 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player, Collection<Node> permissions, long eventNumber) {
-        System.out.println("AAAAAAAAAAAAAAAAAAAAA " + eventNumber);
         getLogger().info("Forcing the update of multiplier for player " + player.getName());
         CompletableFuture<Multiplier> multiplierFuture = extractPlayerMaxMultiplierTupleFromPermissions(permissions);
 
@@ -258,16 +257,9 @@ public class AresonSomnium extends JavaPlugin {
             synchronized (playerMultipliers) {
                 Multiplier actualMultiplier = playerMultipliers.get(playerName);
 
-                System.out.println(eventNumber == jollyEventNumber);
-                System.out.println(actualMultiplier == null);
-                if (actualMultiplier != null) {
-                    System.out.println(actualMultiplier.getEventNumber() <= eventNumber);
-                }
-
+                System.out.println("Event number: " + eventNumber);
                 if (eventNumber == jollyEventNumber || actualMultiplier == null || actualMultiplier.getEventNumber() <= eventNumber) {
-
-                    System.out.println("Real event number: " + eventNumber);
-
+                    System.out.println("Evaluated");
                     maybeNewMultiplier.setEventNumber(eventNumber);
                     playerMultipliers.put(player.getName(), maybeNewMultiplier);
                     return maybeNewMultiplier;
