@@ -25,7 +25,7 @@ public class LuckPermsListener {
             if (playerName != null) {
                 Player player = aresonSomnium.getServer().getPlayer(playerName);
                 if (player != null) {
-                    aresonSomnium.forceMultiplierRefresh(player, event.getDataAfter());
+                    aresonSomnium.forceMultiplierRefresh(player, event.getDataAfter()).join();
                 }
             }
         }
