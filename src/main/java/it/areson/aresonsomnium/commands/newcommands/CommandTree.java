@@ -66,6 +66,7 @@ public class CommandTree implements CommandExecutor, TabCompleter {
                 if (selected.isLeaf()) {
                     break;
                 }
+                i += selected.getNumberOfParams();
             }
             if (selected.shouldSuggestNames()) {
                 return null;
