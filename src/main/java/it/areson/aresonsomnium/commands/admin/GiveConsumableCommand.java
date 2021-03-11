@@ -120,7 +120,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
                                 // Getting Duration
                                 String duration = "10m";
                                 if (arguments.length > 4) {
-                                    duration = arguments[4];
+                                    duration = arguments[4].toLowerCase();
                                     aresonSomnium.stringToDuration(duration);
                                 }
 

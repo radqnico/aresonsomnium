@@ -315,11 +315,13 @@ public class AresonSomnium extends JavaPlugin {
             int dLocation = duration.indexOf("d");
             if (dLocation < duration.length() - 1) {
                 duration = new StringBuilder(duration).insert(dLocation + 1, "T").toString();
+                System.out.println("If");
             }
         } else {
+            System.out.println("Else");
             duration = "T" + duration;
         }
-        System.out.println(duration);
+        System.out.println("Output: " + duration);
         return Duration.parse("P" + duration);
     }
 

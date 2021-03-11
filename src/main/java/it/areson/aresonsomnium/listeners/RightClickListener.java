@@ -97,7 +97,7 @@ public class RightClickListener extends GeneralEventListener {
 
                 String stringDuration = lore.get(1);
                 stringDuration = stringDuration.replaceAll(COLOR_CHAR + ".", "");
-                stringDuration = stringDuration.substring(stringDuration.indexOf(" ") + 1).toUpperCase();
+                stringDuration = stringDuration.substring(stringDuration.indexOf(" ") + 1);
                 Duration duration = aresonSomnium.stringToDuration(stringDuration);
 
                 return Optional.of(Pair.of(multiplier, duration));
