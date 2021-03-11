@@ -5,15 +5,15 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-public class HelloWorldCommand extends CommandTreeNode {
+public class HelloNicoCommand extends CommandTreeNode {
 
-    public HelloWorldCommand() {
-        super("helloworld", false, 0);
+    public HelloNicoCommand() {
+        super("hellonico", true, 1);
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String alias, @NotNull String[] arguments) {
-        Bukkit.broadcastMessage("Hello world");
+        Bukkit.broadcastMessage("Hello nico");
         return true;
     }
 }

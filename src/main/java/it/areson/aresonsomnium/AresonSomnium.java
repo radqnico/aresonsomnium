@@ -3,9 +3,7 @@ package it.areson.aresonsomnium;
 import elements.Multiplier;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.admin.*;
-import it.areson.aresonsomnium.commands.newcommands.CommandTree;
-import it.areson.aresonsomnium.commands.newcommands.HelloWorldCommand;
-import it.areson.aresonsomnium.commands.newcommands.TestTreeCommand;
+import it.areson.aresonsomnium.commands.newcommands.*;
 import it.areson.aresonsomnium.commands.player.CheckCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
@@ -155,7 +153,12 @@ public class AresonSomnium extends JavaPlugin {
     private void registerCommands() {
 
         CommandTree testTreeCommand = new CommandTree(this, new TestTreeCommand());
-        testTreeCommand.getRoot().addChild(new HelloWorldCommand());
+        HelloWorldCommand helloWorldCommand = new HelloWorldCommand();
+        HelloNicoCommand helloNicoCommand = new HelloNicoCommand();
+        helloNicoCommand.addChild(new SecondLevelCommand2("second"));
+        helloWorldCommand.addChild(new SecondLevelCommand1("second"));
+        testTreeCommand.getRoot().addChild(helloWorldCommand);
+        testTreeCommand.getRoot().addChild(helloNicoCommand);
 
 
         new SomniumAdminCommand(this);

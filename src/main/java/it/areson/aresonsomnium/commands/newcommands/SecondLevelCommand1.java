@@ -5,15 +5,16 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-public class HelloWorldCommand extends CommandTreeNode {
+public class SecondLevelCommand1 extends CommandTreeNode {
 
-    public HelloWorldCommand() {
-        super("helloworld", false, 0);
+    public SecondLevelCommand1(String command) {
+        super(command, false, 0);
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String alias, @NotNull String[] arguments) {
-        Bukkit.broadcastMessage("Hello world");
+        Bukkit.broadcastMessage("Second level 1");
         return true;
     }
+
 }

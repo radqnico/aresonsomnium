@@ -13,8 +13,10 @@ import java.util.stream.Collectors;
 public class CommandTree implements CommandExecutor, TabCompleter {
 
     private @NotNull CommandTreeNode root;
+    private JavaPlugin plugin;
 
     public CommandTree(JavaPlugin plugin, CommandTreeNode root) {
+        this.plugin = plugin;
         this.root = root;
         PluginCommand command = plugin.getCommand(root.getCommand());
         if (command != null) {
@@ -33,8 +35,8 @@ public class CommandTree implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String alias, @NotNull String[] arguments) {
         if (arguments.length >= 1) {
             CommandTreeNode selected = root;
-            for (String argument : arguments) {
-                selected = selected.getChild(argument);
+            for (int i = 0; i < arguments.length; i++) {
+                selected = selected.getChild(arguments[i]);
                 if (selected == null) {
                     commandSender.sendMessage("Comando sconosciuto");
                     return false;
@@ -42,6 +44,7 @@ public class CommandTree implements CommandExecutor, TabCompleter {
                 if (selected.isLeaf()) {
                     break;
                 }
+                i += selected.getNumberOfParams();
             }
             selected.onCommand(commandSender, command, alias, arguments);
         } else {
@@ -55,15 +58,18 @@ public class CommandTree implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String alias, @NotNull String[] arguments) {
         if (arguments.length >= 1) {
             CommandTreeNode selected = root;
-            for (String argument : arguments) {
-                selected = selected.getChild(argument);
+            for (int i = 0; i < arguments.length - 1; i++) {
+                selected = selected.getChild(arguments[i]);
                 if (selected == null) {
-                    commandSender.sendMessage("Comando sconosciuto");
                     return new ArrayList<>(Collections.singletonList("Comando sconosciuto"));
                 }
                 if (selected.isLeaf()) {
                     break;
                 }
+                i += selected.getNumberOfParams();
+            }
+            if (selected.shouldSuggestNames()) {
+                return null;
             }
             return selected.getChildren().stream().map(CommandTreeNode::getCommand).collect(Collectors.toList());
         } else {
