@@ -65,14 +65,14 @@ public class CommandTree implements CommandExecutor, TabCompleter {
                     return new ArrayList<>(Collections.singletonList("Comando sconosciuto"));
                 }
                 lastValidIndex = i;
+                i += selected.getNumberOfParams();
                 if (selected.isLeaf()) {
                     break;
                 }
-                i += selected.getNumberOfParams();
             }
             // Still writing params
             if (selected.hasParams() && i > lastValidIndex) {
-                int writingParamIndex = i - lastValidIndex;
+                int writingParamIndex = i - lastValidIndex - 1;
                 return Collections.singletonList(selected.getParams().get(writingParamIndex));
             }
             // No params or already written them all
