@@ -257,6 +257,13 @@ public class AresonSomnium extends JavaPlugin {
             String playerName = player.getName();
 
             Multiplier actualMultiplier = playerMultipliers.get(playerName);
+
+            System.out.println(eventNumber == jollyEventNumber);
+            System.out.println(actualMultiplier == null);
+            if(actualMultiplier != null) {
+                System.out.println(actualMultiplier.getEventNumber() < eventNumber);
+            }
+
             if (eventNumber == jollyEventNumber || actualMultiplier == null || actualMultiplier.getEventNumber() < eventNumber) {
                 long realEventNumber = eventNumber;
 
