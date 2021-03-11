@@ -32,7 +32,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops", "setDebugLevel", "deleteLastLoreLine", "addCoins"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops", "setDebugLevel", "deleteLastLoreLine", "addCoins", "removeCoins"};
 
     public SomniumAdminCommand(AresonSomnium plugin) {
         aresonSomnium = plugin;
@@ -117,7 +117,10 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         handleSetCoins(commandSender, args[1], args[2], args[3]);
                         break;
                     case "addcoins":
-                        handleAddCoins(commandSender, args[1], args[2], args[3]);
+                        handleAddRemoveCoins(commandSender, args[1], args[2], args[3], true);
+                        break;
+                    case "removecoins":
+                        handleAddRemoveCoins(commandSender, args[1], args[2], args[3], false);
                         break;
                     case "stats":
                     case "listplayers":
@@ -272,13 +275,14 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void handleAddCoins(CommandSender commandSender, String playerName, String coinType, String amountString) {
+    private void handleAddRemoveCoins(CommandSender commandSender, String playerName, String coinType, String amountString, boolean removing) {
         Player player = aresonSomnium.getServer().getPlayer(playerName);
         if (Objects.nonNull(player)) {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (Objects.nonNull(somniumPlayer)) {
                 try {
                     BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(amountString));
+                    amount = removing ? amount.negate() : amount;
                     CoinType type = CoinType.valueOf(coinType.toUpperCase());
                     switch (type) {
                         case OBOLI:
