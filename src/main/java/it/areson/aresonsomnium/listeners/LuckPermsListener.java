@@ -32,31 +32,29 @@ public class LuckPermsListener {
             if (playerName != null) {
                 Player player = aresonSomnium.getServer().getPlayer(playerName);
                 if (player != null) {
-                    System.out.println("Event number before: " + getEventNumber(playerName));
-                    aresonSomnium.forceMultiplierRefresh(player, event.getDataAfter(), getEventNumber(playerName));
-                    upgradeEventNumber(playerName);
-                    System.out.println("Event number after: " + getEventNumber(playerName));
+                    synchronized (playerEventNumbers) {
+                        System.out.println("Event number before: " + getEventNumber(playerName));
+                        aresonSomnium.forceMultiplierRefresh(player, event.getDataAfter(), getEventNumber(playerName));
+                        upgradeEventNumber(playerName);
+                        System.out.println("Event number after: " + getEventNumber(playerName));
+                    }
+
                 }
             }
         }
     }
 
     private long getEventNumber(String playerName) {
-        synchronized (playerEventNumbers) {
-            Long actualEventNumber = playerEventNumbers.get(playerName);
-            if (actualEventNumber == null) {
-                playerEventNumbers.put(playerName, 0L);
-                return 0L;
-            }
-            return actualEventNumber;
+        Long actualEventNumber = playerEventNumbers.get(playerName);
+        if (actualEventNumber == null) {
+            playerEventNumbers.put(playerName, 0L);
+            return 0L;
         }
-
+        return actualEventNumber;
     }
 
     private synchronized void upgradeEventNumber(String playerName) {
-        synchronized (playerEventNumbers) {
-            playerEventNumbers.put(playerName, playerEventNumbers.get(playerName) + 1);
-        }
+        playerEventNumbers.put(playerName, playerEventNumbers.get(playerName) + 1);
     }
 
 }
