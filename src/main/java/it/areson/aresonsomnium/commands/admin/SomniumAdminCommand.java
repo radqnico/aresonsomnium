@@ -288,18 +288,26 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     switch (type) {
                         case OBOLI:
                             somniumPlayer.getWallet().changeObols(amount.toBigInteger());
-                            messageManager.sendPlainMessage(player, "coins-change", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()), Pair.of("%action%", removing ? "rimossi" : "aggiunti"));
                             break;
                         case GEMME:
                             somniumPlayer.getWallet().changeGems(amount.toBigInteger());
-                            messageManager.sendPlainMessage(player, "coins-change", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()), Pair.of("%action%", removing ? "rimossi" : "aggiunti"));
                             break;
                         case MONETE:
                             Wallet.addCoins(player, amount);
-                            messageManager.sendPlainMessage(player, "coins-change", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()), Pair.of("%action%", removing ? "rimossi" : "aggiunti"));
                             break;
                         default:
                             messageManager.sendPlainMessage(player, "coins-type-error");
+                    }
+                    switch (type){
+                        case MONETE:
+                        case GEMME:
+                        case OBOLI:
+                            if(removing){
+                                messageManager.sendPlainMessage(player, "coins-remove", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.negate().toString()));
+                            }else{
+                                messageManager.sendPlainMessage(player, "coins-add", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()));
+                            }
+                            break;
                     }
                 } catch (NumberFormatException exception) {
                     messageManager.sendPlainMessage(player, "not-a-number");

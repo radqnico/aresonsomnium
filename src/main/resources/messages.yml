@@ -13,9 +13,8 @@ coins-set: "&aValore dei coins impostato"
 not-a-number: "&cNumero non valido"
 coins-type-error: "&cIl tipo di moneta non esiste"
 coins-change: "&aTi sono stati %action% %amount% %type%"
-
-coins-change-action-add: "aggiunti"
-coins-change-action-remove: "rimossi"
+coins-add: "&aTi sono stati aggiunti %amount% %type%"
+coins-remove: "&aTi sono stati rimossi %amount% %type%"
 
 shop-not-ready: "&cIl negozio richiesto non e' pronto. Segnala il problema allo staff"
 
