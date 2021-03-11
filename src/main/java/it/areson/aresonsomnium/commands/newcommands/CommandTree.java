@@ -70,7 +70,7 @@ public class CommandTree implements CommandExecutor, TabCompleter {
                     break;
                 }
             }
-            int writingParamIndex = (arguments.length - 1 - lastValidIndex);
+            int writingParamIndex = (arguments.length - lastValidIndex) - 2;
             commandSender.sendMessage("I: " + i + "lv: " + lastValidIndex + "witing: " + writingParamIndex);
             if (writingParamIndex < selected.getNumberOfParams()) {
                 commandSender.sendMessage("Param");
