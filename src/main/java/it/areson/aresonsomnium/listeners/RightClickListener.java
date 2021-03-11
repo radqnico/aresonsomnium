@@ -33,7 +33,7 @@ import static net.md_5.bungee.api.ChatColor.COLOR_CHAR;
 public class RightClickListener extends GeneralEventListener {
 
     private final HashMap<String, Instant> playerDelays;
-    private final int delaySeconds = 0;
+    private final int delaySeconds = 2;
 
     public RightClickListener(AresonSomnium aresonSomnium) {
         super(aresonSomnium);
