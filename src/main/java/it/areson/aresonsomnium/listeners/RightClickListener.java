@@ -1,9 +1,9 @@
 package it.areson.aresonsomnium.listeners;
 
+import elements.Pair;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
-import it.areson.aresonsomnium.utils.Pair;
 import net.luckperms.api.node.Node;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -123,7 +123,7 @@ public class RightClickListener extends GeneralEventListener {
                 if (optionalProperties.isPresent()) {
                     Pair<Double, Duration> properties = optionalProperties.get();
 
-                    if (properties.left() >= aresonSomnium.getCachedMultiplier(player).left()) {
+                    if (properties.left() >= aresonSomnium.getCachedMultiplier(player).getValue()) {
                         String permission = PERMISSION_MULTIPLIER + "." + (int) (properties.left() * 100);
 
                         aresonSomnium.luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user -> {

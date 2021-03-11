@@ -8,7 +8,7 @@ import it.areson.aresonsomnium.economy.shops.guis.*;
 import it.areson.aresonsomnium.economy.shops.items.Price;
 import it.areson.aresonsomnium.economy.shops.items.ShopItem;
 import it.areson.aresonsomnium.utils.MessageUtils;
-import it.areson.aresonsomnium.utils.Pair;
+import elements.Pair;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;

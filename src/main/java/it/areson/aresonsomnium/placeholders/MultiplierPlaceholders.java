@@ -37,9 +37,9 @@ public class MultiplierPlaceholders extends PlaceholderExpansion {
             Player player = (Player) offlinePlayer;
 
             if (params.equalsIgnoreCase("multipliervalue")) {
-                value = aresonSomnium.getCachedMultiplier(player).left() + "x";
+                value = aresonSomnium.getCachedMultiplier(player).getValue() + "x";
             } else if (params.equalsIgnoreCase("multipliertime")) {
-                value = aresonSomnium.getCachedMultiplier(player).right();
+                value = aresonSomnium.getCachedMultiplier(player).getExpiry();
             }
         }
 
