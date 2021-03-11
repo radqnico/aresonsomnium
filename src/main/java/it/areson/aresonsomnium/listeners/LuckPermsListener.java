@@ -10,9 +10,11 @@ import org.bukkit.entity.Player;
 public class LuckPermsListener {
 
     private final AresonSomnium aresonSomnium;
+    private long eventNumber; //TODO
 
     public LuckPermsListener(AresonSomnium aresonSomnium, LuckPerms luckPerms) {
         this.aresonSomnium = aresonSomnium;
+        eventNumber = 0;
 
         EventBus eventBus = luckPerms.getEventBus();
 

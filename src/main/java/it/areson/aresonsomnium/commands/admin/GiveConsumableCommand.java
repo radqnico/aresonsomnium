@@ -1,7 +1,6 @@
 package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.*;
 import org.bukkit.enchantments.Enchantment;
@@ -11,7 +10,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.time.Duration;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -122,8 +120,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
                                 // Getting Duration
                                 String duration = "10m";
                                 if (arguments.length > 4) {
-                                    duration = arguments[4];
-                                    Duration.parse("PT" + duration);
+                                    duration = aresonSomnium.stringToDuration(arguments[4].toLowerCase()).toString().substring(1).toLowerCase();
                                 }
 
                                 reward = alignMultiplierItemStack(reward, multiplier, duration);
