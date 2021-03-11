@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class CommandTreeNode implements CommandExecutor {
@@ -13,19 +14,25 @@ public abstract class CommandTreeNode implements CommandExecutor {
     private final String command;
     private final List<CommandTreeNode> children;
     private CommandTreeNode parent;
-    private boolean shouldSuggestNames;
-    private int numberOfParams;
+    private List<String> parameters;
 
-    public CommandTreeNode(String command, CommandTreeNode parent, List<CommandTreeNode> children, boolean shouldSuggestNames, int numberOfParams) {
+    public CommandTreeNode(String command, CommandTreeNode parent, List<CommandTreeNode> children, String... parameters) {
         this.command = command;
         this.parent = parent;
         this.children = children;
-        this.shouldSuggestNames = shouldSuggestNames;
-        this.numberOfParams = numberOfParams;
+        this.parameters = new ArrayList<>(Arrays.asList(parameters));
     }
 
-    public CommandTreeNode(String command, boolean shouldSuggestNames, int numberOfParams) {
-        this(command, null, new ArrayList<>(), shouldSuggestNames, numberOfParams);
+    public CommandTreeNode(String command, CommandTreeNode parent, List<CommandTreeNode> children) {
+        this(command, parent, children, new String[]{});
+    }
+
+    public CommandTreeNode(String command, String... parameters) {
+        this(command, null, new ArrayList<>(), parameters);
+    }
+
+    public CommandTreeNode(String command) {
+        this(command, null, new ArrayList<>());
     }
 
     public String getCommand() {
@@ -62,15 +69,18 @@ public abstract class CommandTreeNode implements CommandExecutor {
         return children.isEmpty();
     }
 
-    public boolean shouldSuggestNameBeforeChildren() {
-        return shouldSuggestNames;
+    public int getNumberOfParams() {
+        return parameters.size();
     }
 
-    public int getNumberOfParams() {
-        return numberOfParams;
+    public boolean hasParams(){
+        return !parameters.isEmpty();
     }
 
     @Override
     public abstract boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String alias, @NotNull String[] arguments);
 
+    public List<String> getParams() {
+        return parameters;
+    }
 }

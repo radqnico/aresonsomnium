@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public class HelloNicoCommand extends CommandTreeNode {
 
     public HelloNicoCommand() {
-        super("hellonico", true, 1);
+        super("hellonico", "<nick>");
     }
 
     @Override

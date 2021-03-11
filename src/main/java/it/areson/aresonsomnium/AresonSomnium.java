@@ -155,8 +155,8 @@ public class AresonSomnium extends JavaPlugin {
         CommandTree testTreeCommand = new CommandTree(this, new TestTreeCommand());
         HelloWorldCommand helloWorldCommand = new HelloWorldCommand();
         HelloNicoCommand helloNicoCommand = new HelloNicoCommand();
-        helloNicoCommand.addChild(new SecondLevelCommand2("second"));
-        helloWorldCommand.addChild(new SecondLevelCommand1("second"));
+        helloNicoCommand.addChild(new SecondLevelCommand2());
+        helloWorldCommand.addChild(new SecondLevelCommand1());
         testTreeCommand.getRoot().addChild(helloWorldCommand);
         testTreeCommand.getRoot().addChild(helloNicoCommand);
 

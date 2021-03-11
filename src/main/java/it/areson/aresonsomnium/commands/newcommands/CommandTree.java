@@ -69,9 +69,6 @@ public class CommandTree implements CommandExecutor, TabCompleter {
                 }
                 i += selected.getNumberOfParams();
             }
-            if (selected.shouldSuggestNameBeforeChildren() && selected.getCommand().equals(arguments[i - 1])) {
-                return null;
-            }
             return selected.getChildren().stream().map(CommandTreeNode::getCommand).collect(Collectors.toList());
         } else {
             return root.getChildren().stream().map(CommandTreeNode::getCommand).collect(Collectors.toList());
