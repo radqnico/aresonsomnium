@@ -1,5 +1,6 @@
 package it.areson.aresonsomnium;
 
+import elements.Multiplier;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.admin.*;
 import it.areson.aresonsomnium.commands.newcommands.CommandTree;
@@ -25,7 +26,6 @@ import it.areson.aresonsomnium.placeholders.MultiplierPlaceholders;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.Debugger;
-import it.areson.aresonsomnium.utils.Pair;
 import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import net.luckperms.api.LuckPerms;
@@ -35,12 +35,9 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -59,7 +56,8 @@ import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class AresonSomnium extends JavaPlugin {
 
-    private final Pair<Double, String> defaultMultiplier = Pair.of(1.0, "Permanente");
+    private final Multiplier defaultMultiplier = new Multiplier();
+    private final long jollyEventNumber = -1;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private final HashMap<Material, String> blocksPermission = new HashMap<Material, String>() {{
         put(Material.COBBLESTONE, Constants.PERMISSION_SELVA);
@@ -79,7 +77,7 @@ public class AresonSomnium extends JavaPlugin {
         put(Material.CHISELED_QUARTZ_BLOCK, Constants.PERMISSION_SETTIMO_CIELO);
     }};
     public Optional<LuckPerms> luckPerms;
-    public HashMap<String, Pair<Double, String>> playerMultipliers;
+    public HashMap<String, Multiplier> playerMultipliers;
     private SomniumPlayerManager somniumPlayerManager;
     private ShopManager shopManager;
     private ShopEditor shopEditor;
@@ -88,17 +86,6 @@ public class AresonSomnium extends JavaPlugin {
     private GommaObjectsFileReader gommaObjectsFileReader;
     private MessageManager messages;
     private Debugger debugger;
-
-
-    // Required for testing
-    public AresonSomnium() {
-        super();
-    }
-
-    // Required for testing
-    protected AresonSomnium(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
-        super(loader, description, dataFolder, file);
-    }
 
     @Override
     public void onDisable() {
@@ -228,12 +215,12 @@ public class AresonSomnium extends JavaPlugin {
         commandSender.sendMessage(ChatColor.BLUE + "[Somnium] " + ChatColor.GREEN + success);
     }
 
-    private Pair<Double, String> getMaxMultiplier(Pair<Double, String> newValue, Pair<Double, String> oldValue) {
-        return newValue.left() > oldValue.left() ? newValue : oldValue;
+    private Multiplier getMaxMultiplier(Multiplier newValue, Multiplier oldValue) {
+        return newValue.getValue() > oldValue.getValue() ? newValue : oldValue;
     }
 
-    public CompletableFuture<Pair<Double, String>> extractPlayerMaxMultiplierTupleFromPermissions(Collection<Node> permissions) {
-        return CompletableFuture.supplyAsync(() -> permissions.parallelStream().reduce(defaultMultiplier, (optionalValue, node) -> {
+    public CompletableFuture<Multiplier> extractPlayerMaxMultiplierTupleFromPermissions(Collection<Node> permissions) {
+        return CompletableFuture.supplyAsync(() -> permissions.parallelStream().reduce(defaultMultiplier, (previousValue, node) -> {
             String permission = node.getKey();
 
             if (permission.startsWith(PERMISSION_MULTIPLIER)) {
@@ -244,42 +231,61 @@ public class AresonSomnium extends JavaPlugin {
                     double newValue = Double.parseDouble(stringMultiplier) / 100;
 
                     Instant expiry = node.getExpiry();
-                    String expiryString = defaultMultiplier.right();
+                    String expiryString = defaultMultiplier.getExpiry();
                     if (expiry != null) {
                         expiryString = dateTimeFormatter.format(LocalDateTime.ofInstant(expiry, ZoneId.systemDefault()));
                     }
 
-                    return Pair.of(newValue, expiryString);
+                    return new Multiplier(newValue, expiryString);
                 } catch (NumberFormatException event) {
                     getLogger().severe("Error while parsing string multiplier to double: " + stringMultiplier);
                 }
             }
 
-            return optionalValue;
+            return previousValue;
         }, this::getMaxMultiplier));
     }
 
-    public CompletableFuture<Pair<Double, String>> forceMultiplierRefresh(Player player, Collection<Node> permissions) {
+    public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player, Collection<Node> permissions, long eventNumber) {
         getLogger().info("Forcing the update of multiplier for player " + player.getName());
-        CompletableFuture<Pair<Double, String>> multiplierFuture = extractPlayerMaxMultiplierTupleFromPermissions(permissions);
+        CompletableFuture<Multiplier> multiplierFuture = extractPlayerMaxMultiplierTupleFromPermissions(permissions);
 
-        multiplierFuture.thenAcceptAsync((multiplierPair) -> playerMultipliers.put(player.getName(), multiplierPair));
+        return multiplierFuture.thenApplyAsync((maybeNewMultiplier) -> {
+            String playerName = player.getName();
 
-        return multiplierFuture;
+            Multiplier actualMultiplier = playerMultipliers.get(playerName);
+            if (eventNumber == jollyEventNumber || actualMultiplier == null || actualMultiplier.getEventNumber() < eventNumber) {
+                long realEventNumber = eventNumber;
+
+                if (realEventNumber == jollyEventNumber) {
+                    realEventNumber = 0;
+                }
+
+                maybeNewMultiplier.setEventNumber(realEventNumber);
+                playerMultipliers.put(player.getName(), maybeNewMultiplier);
+                return maybeNewMultiplier;
+            }
+
+            return actualMultiplier;
+        });
     }
 
-    public CompletableFuture<Pair<Double, String>> forceMultiplierRefresh(Player player) {
+    public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player, long eventNumber) {
         if (luckPerms.isPresent()) {
             return luckPerms.get().getUserManager().loadUser(player.getUniqueId()).thenCompose(
-                    (user) -> forceMultiplierRefresh(player, user.getNodes())
+                    (user) -> forceMultiplierRefresh(player, user.getNodes(), eventNumber)
             );
         } else {
             return CompletableFuture.completedFuture(defaultMultiplier);
         }
     }
 
-    public Pair<Double, String> getCachedMultiplier(Player player) {
-        Pair<Double, String> cachedMultiplier = playerMultipliers.get(player.getName());
+    public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player) {
+        return forceMultiplierRefresh(player, jollyEventNumber);
+    }
+
+    public Multiplier getCachedMultiplier(Player player) {
+        Multiplier cachedMultiplier = playerMultipliers.get(player.getName());
 
         if (cachedMultiplier == null) {
             cachedMultiplier = forceMultiplierRefresh(player).join();
@@ -289,7 +295,7 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public BigDecimal sellItems(Player player, ItemStack[] itemStacks) {
-        Pair<Double, String> cachedMultiplier = getCachedMultiplier(player);
+        Multiplier cachedMultiplier = getCachedMultiplier(player);
         //Getting amount
         BigDecimal coinsToGive = Arrays.stream(itemStacks).parallel().reduce(BigDecimal.ZERO, (total, itemStack) -> {
             try {
@@ -308,7 +314,7 @@ public class AresonSomnium extends JavaPlugin {
             return total;
         }, BigDecimal::add);
 
-        coinsToGive = coinsToGive.multiply(BigDecimal.valueOf(cachedMultiplier.left()));
+        coinsToGive = coinsToGive.multiply(BigDecimal.valueOf(cachedMultiplier.getValue()));
         Wallet.addCoins(player, coinsToGive);
         return coinsToGive;
     }

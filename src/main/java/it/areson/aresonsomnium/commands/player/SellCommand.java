@@ -2,7 +2,7 @@ package it.areson.aresonsomnium.commands.player;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.Constants;
-import it.areson.aresonsomnium.utils.Pair;
+import elements.Pair;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
