@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.time.Period;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -122,7 +121,9 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
                                 String duration = "10m";
                                 if (arguments.length > 4) {
                                     duration = arguments[4];
-                                    Period.parse("P" + duration);
+                                    System.out.println(duration);
+                                    aresonSomnium.validateStringToDuration(duration);
+                                    System.out.println(duration);
                                 }
 
                                 reward = alignMultiplierItemStack(reward, multiplier, duration);

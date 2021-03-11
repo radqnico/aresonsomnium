@@ -39,10 +39,12 @@ import org.bukkit.plugin.java.JavaPluginLoader;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -305,6 +307,14 @@ public class AresonSomnium extends JavaPlugin {
         coinsToGive = coinsToGive.multiply(BigDecimal.valueOf(cachedMultiplier.left()));
         Wallet.addCoins(player, coinsToGive);
         return coinsToGive;
+    }
+
+    public void validateStringToDuration(String duration) throws DateTimeParseException {
+        if (duration.contains("d")) {
+            duration = new StringBuilder(duration).insert(duration.indexOf("d"), "T").toString();
+        }
+        System.out.println(duration);
+        Duration.parse("P" + duration);
     }
 
 }
