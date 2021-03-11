@@ -4,6 +4,8 @@ main: ${project.groupId}.aresonsomnium.${project.artifactId}
 api-version: "1.16"
 author: Areson
 commands:
+  testtree:
+    permission: aresonsomnium.admin
   somniumadmin:
     description: "AresonSomnium admin command"
     permission: aresonsomnium.admin

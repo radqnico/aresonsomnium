@@ -2,6 +2,9 @@ package it.areson.aresonsomnium;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.admin.*;
+import it.areson.aresonsomnium.commands.newcommands.CommandTree;
+import it.areson.aresonsomnium.commands.newcommands.HelloWorldCommand;
+import it.areson.aresonsomnium.commands.newcommands.TestTreeCommand;
 import it.areson.aresonsomnium.commands.player.CheckCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
@@ -56,18 +59,6 @@ import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class AresonSomnium extends JavaPlugin {
 
-    public Optional<LuckPerms> luckPerms;
-    public HashMap<String, Pair<Double, String>> playerMultipliers;
-
-    private SomniumPlayerManager somniumPlayerManager;
-    private ShopManager shopManager;
-    private ShopEditor shopEditor;
-    private GatewayListener playerDBEvents;
-    private SetPriceInChatListener setPriceInChatListener;
-    private GommaObjectsFileReader gommaObjectsFileReader;
-    private MessageManager messages;
-    private Debugger debugger;
-
     private final Pair<Double, String> defaultMultiplier = Pair.of(1.0, "Permanente");
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private final HashMap<Material, String> blocksPermission = new HashMap<Material, String>() {{
@@ -87,6 +78,16 @@ public class AresonSomnium extends JavaPlugin {
         put(Material.QUARTZ_BLOCK, Constants.PERMISSION_QUINTO_CIELO);
         put(Material.CHISELED_QUARTZ_BLOCK, Constants.PERMISSION_SETTIMO_CIELO);
     }};
+    public Optional<LuckPerms> luckPerms;
+    public HashMap<String, Pair<Double, String>> playerMultipliers;
+    private SomniumPlayerManager somniumPlayerManager;
+    private ShopManager shopManager;
+    private ShopEditor shopEditor;
+    private GatewayListener playerDBEvents;
+    private SetPriceInChatListener setPriceInChatListener;
+    private GommaObjectsFileReader gommaObjectsFileReader;
+    private MessageManager messages;
+    private Debugger debugger;
 
 
     // Required for testing
@@ -165,6 +166,11 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     private void registerCommands() {
+
+        CommandTree testTreeCommand = new CommandTree(this, new TestTreeCommand());
+        testTreeCommand.getRoot().addChild(new HelloWorldCommand());
+
+
         new SomniumAdminCommand(this);
         new SomniumTestCommand(this);
         new OpenGuiCommand(this);

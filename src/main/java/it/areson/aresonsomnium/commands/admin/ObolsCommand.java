@@ -1,6 +1,7 @@
 package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
+import it.areson.aresonsomnium.Constants;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.MessageUtils;
@@ -83,8 +84,8 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
                 if (Material.GOLD_NUGGET.equals(itemInMainHand.getType())) {
                     ItemMeta itemMeta = itemInMainHand.getItemMeta();
                     if (itemMeta != null && itemMeta.hasCustomModelData() && itemMeta.getCustomModelData() == OBOL_MODEL_DATA) {
-                        if (itemInMainHand.getAmount() >= 10) {
-                            itemInMainHand.setAmount(itemInMainHand.getAmount() - 10);
+                        if (itemInMainHand.getAmount() >= Constants.OBOLS_CHANGE_AMOUNT) {
+                            itemInMainHand.setAmount(itemInMainHand.getAmount() - Constants.OBOLS_CHANGE_AMOUNT);
                             somniumPlayer.getWallet().changeObols(BigInteger.ONE);
                             player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("obols-give"));
                         } else {

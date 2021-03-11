@@ -32,7 +32,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops", "setDebugLevel", "deleteLastLoreLine", "addCoins"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops", "setDebugLevel", "deleteLastLoreLine", "addCoins", "removeCoins"};
 
     public SomniumAdminCommand(AresonSomnium plugin) {
         aresonSomnium = plugin;
@@ -117,7 +117,10 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         handleSetCoins(commandSender, args[1], args[2], args[3]);
                         break;
                     case "addcoins":
-                        handleAddCoins(commandSender, args[1], args[2], args[3]);
+                        handleAddRemoveCoins(commandSender, args[1], args[2], args[3], false);
+                        break;
+                    case "removecoins":
+                        handleAddRemoveCoins(commandSender, args[1], args[2], args[3], true);
                         break;
                     case "stats":
                     case "listplayers":
@@ -142,6 +145,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 case "stats":
                 case "setcoins":
                 case "addcoins":
+                case "removecoins":
                     StringUtil.copyPartialMatches(
                             strings[1],
                             aresonSomnium.getServer().getOnlinePlayers().stream()
@@ -167,7 +171,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             }
         }
         if (strings.length == 3) {
-            if ("setcoins".equalsIgnoreCase(strings[0]) || "addcoins".equalsIgnoreCase(strings[0])) {
+            if ("setcoins".equalsIgnoreCase(strings[0]) || "addcoins".equalsIgnoreCase(strings[0]) || "removecoins".equalsIgnoreCase(strings[0])) {
                 StringUtil.copyPartialMatches(
                         strings[2],
                         Arrays.stream(CoinType.values()).map(value -> value.name().toLowerCase()).collect(Collectors.toList()),
@@ -272,29 +276,38 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void handleAddCoins(CommandSender commandSender, String playerName, String coinType, String amountString) {
+    private void handleAddRemoveCoins(CommandSender commandSender, String playerName, String coinType, String amountString, boolean removing) {
         Player player = aresonSomnium.getServer().getPlayer(playerName);
         if (Objects.nonNull(player)) {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (Objects.nonNull(somniumPlayer)) {
                 try {
                     BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(amountString));
+                    amount = removing ? amount.negate() : amount;
                     CoinType type = CoinType.valueOf(coinType.toUpperCase());
                     switch (type) {
                         case OBOLI:
                             somniumPlayer.getWallet().changeObols(amount.toBigInteger());
-                            messageManager.sendPlainMessage(player, "coins-change", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()));
                             break;
                         case GEMME:
                             somniumPlayer.getWallet().changeGems(amount.toBigInteger());
-                            messageManager.sendPlainMessage(player, "coins-change", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()));
                             break;
                         case MONETE:
                             Wallet.addCoins(player, amount);
-                            messageManager.sendPlainMessage(player, "coins-change", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()));
                             break;
                         default:
                             messageManager.sendPlainMessage(player, "coins-type-error");
+                    }
+                    switch (type){
+                        case MONETE:
+                        case GEMME:
+                        case OBOLI:
+                            if(removing){
+                                messageManager.sendPlainMessage(player, "coins-remove", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.negate().toString()));
+                            }else{
+                                messageManager.sendPlainMessage(player, "coins-add", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()));
+                            }
+                            break;
                     }
                 } catch (NumberFormatException exception) {
                     messageManager.sendPlainMessage(player, "not-a-number");
