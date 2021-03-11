@@ -14,6 +14,9 @@ public class LuckPermsListener {
     private final AresonSomnium aresonSomnium;
     private final HashMap<String, Long> playerEventNumbers;
 
+    //TODO synchronized
+    //TODO reset on left
+
     public LuckPermsListener(AresonSomnium aresonSomnium, LuckPerms luckPerms) {
         this.aresonSomnium = aresonSomnium;
         playerEventNumbers = new HashMap<>();
@@ -38,17 +41,22 @@ public class LuckPermsListener {
         }
     }
 
-    private synchronized long getEventNumber(String playerName) {
-        Long actualEventNumber = playerEventNumbers.get(playerName);
-        if (actualEventNumber == null) {
-            playerEventNumbers.put(playerName, 0L);
-            return 0L;
+    private long getEventNumber(String playerName) {
+        synchronized (playerEventNumbers) {
+            Long actualEventNumber = playerEventNumbers.get(playerName);
+            if (actualEventNumber == null) {
+                playerEventNumbers.put(playerName, 0L);
+                return 0L;
+            }
+            return actualEventNumber;
         }
-        return actualEventNumber;
+
     }
 
     private synchronized void upgradeEventNumber(String playerName) {
-        playerEventNumbers.put(playerName, playerEventNumbers.get(playerName) + 1);
+        synchronized (playerEventNumbers) {
+            playerEventNumbers.put(playerName, playerEventNumbers.get(playerName) + 1);
+        }
     }
 
 }
