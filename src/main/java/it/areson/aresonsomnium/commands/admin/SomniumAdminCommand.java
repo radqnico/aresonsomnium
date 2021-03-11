@@ -117,10 +117,10 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         handleSetCoins(commandSender, args[1], args[2], args[3]);
                         break;
                     case "addcoins":
-                        handleAddRemoveCoins(commandSender, args[1], args[2], args[3], true);
+                        handleAddRemoveCoins(commandSender, args[1], args[2], args[3], false);
                         break;
                     case "removecoins":
-                        handleAddRemoveCoins(commandSender, args[1], args[2], args[3], false);
+                        handleAddRemoveCoins(commandSender, args[1], args[2], args[3], true);
                         break;
                     case "stats":
                     case "listplayers":
@@ -171,7 +171,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             }
         }
         if (strings.length == 3) {
-            if ("setcoins".equalsIgnoreCase(strings[0]) || "addcoins".equalsIgnoreCase(strings[0])) {
+            if ("setcoins".equalsIgnoreCase(strings[0]) || "addcoins".equalsIgnoreCase(strings[0]) || "removecoins".equalsIgnoreCase(strings[0])) {
                 StringUtil.copyPartialMatches(
                         strings[2],
                         Arrays.stream(CoinType.values()).map(value -> value.name().toLowerCase()).collect(Collectors.toList()),
