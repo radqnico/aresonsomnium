@@ -173,7 +173,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
             List<String> values = Arrays.asList("100", "150", "200", "275");
             suggestions.addAll(values);
         } else if (arguments.length == 5 && arguments[1].equals(multiplierIndexName)) {
-            List<String> values = Arrays.asList("1d", "1d12h30m", "3h20m", "30m");
+            List<String> values = Arrays.asList("1d", "12h30m40s", "3h20m", "30m");
             suggestions.addAll(values);
         }
 
