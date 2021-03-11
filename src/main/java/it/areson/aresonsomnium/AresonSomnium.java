@@ -310,6 +310,7 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public Duration stringToDuration(String duration) throws DateTimeParseException {
+        System.out.println("Input: " + duration);
         if (duration.toLowerCase().contains("d")) {
             int dLocation = duration.indexOf("d");
             if (dLocation < duration.length() - 1) {
