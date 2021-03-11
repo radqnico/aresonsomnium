@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.time.Duration;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -120,7 +121,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
                                 // Getting Duration
                                 String duration = "10m";
                                 if (arguments.length > 4) {
-                                    duration = aresonSomnium.stringToDuration(arguments[4].toLowerCase()).toString().substring(1).toLowerCase();
+                                    duration = Duration.parse("PT" + arguments[4]).toString().substring(2).toLowerCase();
                                 }
 
                                 reward = alignMultiplierItemStack(reward, multiplier, duration);
@@ -172,7 +173,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
             List<String> values = Arrays.asList("100", "150", "200", "275");
             suggestions.addAll(values);
         } else if (arguments.length == 5 && arguments[1].equals(multiplierIndexName)) {
-            List<String> values = Arrays.asList("1d", "1d12h30m", "3h20m", "30m");
+            List<String> values = Arrays.asList("1d", "12h30m40s", "3h20m", "30m");
             suggestions.addAll(values);
         }
 
