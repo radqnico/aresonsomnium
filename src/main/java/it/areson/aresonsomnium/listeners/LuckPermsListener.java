@@ -48,7 +48,7 @@ public class LuckPermsListener {
     }
 
     private synchronized void upgradeEventNumber(String playerName) {
-        playerEventNumbers.put(playerName, playerEventNumbers.get(playerName));
+        playerEventNumbers.put(playerName, playerEventNumbers.get(playerName) + 1);
     }
 
 }
