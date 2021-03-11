@@ -4,6 +4,7 @@ import elements.Pair;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
+import net.luckperms.api.model.data.TemporaryNodeMergeStrategy;
 import net.luckperms.api.node.Node;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -126,21 +127,9 @@ public class RightClickListener extends GeneralEventListener {
                     if (properties.left() >= aresonSomnium.getCachedMultiplier(player).getValue()) {
                         String permission = PERMISSION_MULTIPLIER + "." + (int) (properties.left() * 100);
 
-                        aresonSomnium.luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user -> {
-                            Duration finalDuration = properties.right();
-                            Optional<Node> sameActiveMultiplier = user.getNodes().parallelStream().filter(node -> node.getKey().equals(permission)).findFirst();
-
-                            if (sameActiveMultiplier.isPresent()) {
-                                Duration expiryDuration = sameActiveMultiplier.get().getExpiryDuration();
-                                if (expiryDuration != null) {
-                                    finalDuration = finalDuration.plus(expiryDuration);
-                                    user.data().remove(sameActiveMultiplier.get());
-                                }
-                            }
-
-                            user.data().add(Node.builder(permission).expiry(finalDuration).build());
-                        });
-
+                        aresonSomnium.luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user ->
+                                user.data().add(Node.builder(permission).expiry(properties.right()).build(), TemporaryNodeMergeStrategy.ADD_NEW_DURATION_TO_EXISTING)
+                        );
 
                         itemStack.setAmount(itemStack.getAmount() - 1);
                         player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_SHOOT, 1f, 1f);
