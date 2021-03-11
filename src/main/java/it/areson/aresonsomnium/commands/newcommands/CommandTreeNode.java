@@ -62,7 +62,7 @@ public abstract class CommandTreeNode implements CommandExecutor {
         return children.isEmpty();
     }
 
-    public boolean shouldSuggestNames() {
+    public boolean shouldSuggestNameBeforeChildren() {
         return shouldSuggestNames;
     }
 
