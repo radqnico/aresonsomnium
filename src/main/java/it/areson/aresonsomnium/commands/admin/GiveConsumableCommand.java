@@ -120,8 +120,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
                                 // Getting Duration
                                 String duration = "10m";
                                 if (arguments.length > 4) {
-                                    duration = arguments[4].toLowerCase();
-                                    aresonSomnium.stringToDuration(duration);
+                                    duration = aresonSomnium.stringToDuration(arguments[4].toLowerCase()).toString().substring(1).toLowerCase();
                                 }
 
                                 reward = alignMultiplierItemStack(reward, multiplier, duration);
