@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public class SecondLevelCommand1 extends CommandTreeNode {
 
     public SecondLevelCommand1(String command) {
-        super(command);
+        super(command, false, 0);
     }
 
     @Override

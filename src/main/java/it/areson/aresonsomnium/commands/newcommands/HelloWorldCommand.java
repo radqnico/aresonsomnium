@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public class HelloWorldCommand extends CommandTreeNode {
 
     public HelloWorldCommand() {
-        super("helloworld");
+        super("helloworld", false, 0);
     }
 
     @Override

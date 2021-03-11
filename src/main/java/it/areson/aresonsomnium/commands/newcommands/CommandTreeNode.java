@@ -13,19 +13,19 @@ public abstract class CommandTreeNode implements CommandExecutor {
     private final String command;
     private final List<CommandTreeNode> children;
     private CommandTreeNode parent;
+    private boolean shouldSuggestNames;
+    private int numberOfParams;
 
-    public CommandTreeNode(String command, CommandTreeNode parent, List<CommandTreeNode> children) {
+    public CommandTreeNode(String command, CommandTreeNode parent, List<CommandTreeNode> children, boolean shouldSuggestNames, int numberOfParams) {
         this.command = command;
         this.parent = parent;
         this.children = children;
+        this.shouldSuggestNames = shouldSuggestNames;
+        this.numberOfParams = numberOfParams;
     }
 
-    public CommandTreeNode(String command, CommandTreeNode parent) {
-        this(command, parent, new ArrayList<>());
-    }
-
-    public CommandTreeNode(String command) {
-        this(command, null, new ArrayList<>());
+    public CommandTreeNode(String command, boolean shouldSuggestNames, int numberOfParams) {
+        this(command, null, new ArrayList<>(), shouldSuggestNames, numberOfParams);
     }
 
     public String getCommand() {
@@ -60,6 +60,14 @@ public abstract class CommandTreeNode implements CommandExecutor {
 
     public boolean isLeaf() {
         return children.isEmpty();
+    }
+
+    public boolean shouldSuggestNames() {
+        return shouldSuggestNames;
+    }
+
+    public int getNumberOfParams() {
+        return numberOfParams;
     }
 
     @Override

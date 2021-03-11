@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public class TestTreeCommand extends CommandTreeNode {
 
     public TestTreeCommand() {
-        super("testtree");
+        super("testtree", false, 0);
     }
 
     @Override
