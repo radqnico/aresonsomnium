@@ -38,7 +38,6 @@ public class LuckPermsListener {
                         upgradeEventNumber(playerName);
                         System.out.println("Event number after: " + getEventNumber(playerName));
                     }
-
                 }
             }
         }

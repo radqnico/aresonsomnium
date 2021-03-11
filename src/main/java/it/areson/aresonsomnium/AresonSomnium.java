@@ -75,7 +75,7 @@ public class AresonSomnium extends JavaPlugin {
         put(Material.CHISELED_QUARTZ_BLOCK, Constants.PERMISSION_SETTIMO_CIELO);
     }};
     public Optional<LuckPerms> luckPerms;
-    public HashMap<String, Multiplier> playerMultipliers;
+    private final HashMap<String, Multiplier> playerMultipliers = new HashMap<>();
     private SomniumPlayerManager somniumPlayerManager;
     private ShopManager shopManager;
     private ShopEditor shopEditor;
@@ -93,8 +93,6 @@ public class AresonSomnium extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        playerMultipliers = new HashMap<>();
-
         // Files
         registerFiles();
 
@@ -257,29 +255,30 @@ public class AresonSomnium extends JavaPlugin {
         return multiplierFuture.thenApplyAsync((maybeNewMultiplier) -> {
             String playerName = player.getName();
 
-            Multiplier actualMultiplier = playerMultipliers.get(playerName);
+            synchronized (playerMultipliers) {
+                Multiplier actualMultiplier = playerMultipliers.get(playerName);
 
-            System.out.println(eventNumber == jollyEventNumber);
-            System.out.println(actualMultiplier == null);
-            if(actualMultiplier != null) {
-                System.out.println(actualMultiplier.getEventNumber() <= eventNumber);
-            }
-
-            if (eventNumber == jollyEventNumber || actualMultiplier == null || actualMultiplier.getEventNumber() <= eventNumber) {
-                long realEventNumber = eventNumber;
-
-                if (realEventNumber == jollyEventNumber) {
-                    realEventNumber = 0;
+                System.out.println(eventNumber == jollyEventNumber);
+                System.out.println(actualMultiplier == null);
+                if (actualMultiplier != null) {
+                    System.out.println(actualMultiplier.getEventNumber() <= eventNumber);
                 }
 
-                System.out.println("Real event number: " + realEventNumber);
+                if (eventNumber == jollyEventNumber || actualMultiplier == null || actualMultiplier.getEventNumber() <= eventNumber) {
+                    long realEventNumber = eventNumber;
 
-                maybeNewMultiplier.setEventNumber(realEventNumber);
-                playerMultipliers.put(player.getName(), maybeNewMultiplier);
-                return maybeNewMultiplier;
+                    if (realEventNumber == jollyEventNumber) {
+                        realEventNumber = 0;
+                    }
+
+                    System.out.println("Real event number: " + realEventNumber);
+
+                    maybeNewMultiplier.setEventNumber(realEventNumber);
+                    playerMultipliers.put(player.getName(), maybeNewMultiplier);
+                    return maybeNewMultiplier;
+                }
+                return actualMultiplier;
             }
-
-            return actualMultiplier;
         });
     }
 
@@ -330,6 +329,10 @@ public class AresonSomnium extends JavaPlugin {
         coinsToGive = coinsToGive.multiply(BigDecimal.valueOf(cachedMultiplier.getValue()));
         Wallet.addCoins(player, coinsToGive);
         return coinsToGive;
+    }
+
+    public void removePlayer(String playerName) {
+        playerMultipliers.remove(playerName);
     }
 
 }
