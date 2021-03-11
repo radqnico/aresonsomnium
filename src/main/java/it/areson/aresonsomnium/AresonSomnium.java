@@ -247,28 +247,26 @@ public class AresonSomnium extends JavaPlugin {
         }, this::getMaxMultiplier));
     }
 
-    public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player, Collection<Node> permissions, long eventNumber) {
+    public synchronized CompletableFuture<Multiplier> forceMultiplierRefresh(Player player, Collection<Node> permissions, long eventNumber) {
         getLogger().info("Forcing the update of multiplier for player " + player.getName());
 
         System.out.println("Event number: " + eventNumber);
         String playerName = player.getName();
-        synchronized (playerMultipliers) {
-            Multiplier actualMultiplier = playerMultipliers.get(playerName);
+        Multiplier actualMultiplier = playerMultipliers.get(playerName);
 
-            if (eventNumber == jollyEventNumber || actualMultiplier == null || actualMultiplier.getEventNumber() <= eventNumber) {
-                System.out.println("Evaluated");
-                return extractPlayerMaxMultiplierTupleFromPermissions(permissions)
-                        .thenApplyAsync((newMultiplier) -> {
-                            newMultiplier.setEventNumber(eventNumber);
-                            playerMultipliers.put(player.getName(), newMultiplier);
-                            return newMultiplier;
-                        });
-            } else {
-                System.out.println("Skipping event " + eventNumber + " because found " + actualMultiplier.getEventNumber());
-            }
-
-            return CompletableFuture.completedFuture(actualMultiplier);
+        if (eventNumber == jollyEventNumber || actualMultiplier == null || actualMultiplier.getEventNumber() <= eventNumber) {
+            System.out.println("Evaluated");
+            return extractPlayerMaxMultiplierTupleFromPermissions(permissions)
+                    .thenApplyAsync((newMultiplier) -> {
+                        newMultiplier.setEventNumber(eventNumber);
+                        playerMultipliers.put(player.getName(), newMultiplier);
+                        return newMultiplier;
+                    });
+        } else {
+            System.out.println("Skipping event " + eventNumber + " because found " + actualMultiplier.getEventNumber());
         }
+
+        return CompletableFuture.completedFuture(actualMultiplier);
     }
 
     public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player, long eventNumber) {
