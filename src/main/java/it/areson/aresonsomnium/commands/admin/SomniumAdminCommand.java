@@ -145,6 +145,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 case "stats":
                 case "setcoins":
                 case "addcoins":
+                case "removecoins":
                     StringUtil.copyPartialMatches(
                             strings[1],
                             aresonSomnium.getServer().getOnlinePlayers().stream()
