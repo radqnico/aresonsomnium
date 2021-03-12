@@ -57,6 +57,7 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
                         break;
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
+                        break;
                 }
                 break;
             case 3:
