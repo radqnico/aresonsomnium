@@ -55,7 +55,6 @@ import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 public class AresonSomnium extends JavaPlugin {
 
     private final Multiplier defaultMultiplier = new Multiplier();
-    private final long jollyEventNumber = -1;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private final HashMap<Material, String> blocksPermission = new HashMap<Material, String>() {{
         put(Material.COBBLESTONE, Constants.PERMISSION_SELVA);
@@ -75,7 +74,7 @@ public class AresonSomnium extends JavaPlugin {
         put(Material.CHISELED_QUARTZ_BLOCK, Constants.PERMISSION_SETTIMO_CIELO);
     }};
     public Optional<LuckPerms> luckPerms;
-    public HashMap<String, Multiplier> playerMultipliers;
+    private final HashMap<String, Multiplier> playerMultipliers = new HashMap<>();
     private SomniumPlayerManager somniumPlayerManager;
     private ShopManager shopManager;
     private ShopEditor shopEditor;
@@ -93,8 +92,6 @@ public class AresonSomnium extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        playerMultipliers = new HashMap<>();
-
         // Files
         registerFiles();
 
@@ -249,52 +246,24 @@ public class AresonSomnium extends JavaPlugin {
         }, this::getMaxMultiplier));
     }
 
-    public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player, Collection<Node> permissions, long eventNumber) {
-        System.out.println("AAAAAAAAAAAAAAAAAAAAA " + eventNumber);
+    public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player, Collection<Node> permissions) {
+
         getLogger().info("Forcing the update of multiplier for player " + player.getName());
-        CompletableFuture<Multiplier> multiplierFuture = extractPlayerMaxMultiplierTupleFromPermissions(permissions);
 
-        return multiplierFuture.thenApplyAsync((maybeNewMultiplier) -> {
-            String playerName = player.getName();
-
-            Multiplier actualMultiplier = playerMultipliers.get(playerName);
-
-            System.out.println(eventNumber == jollyEventNumber);
-            System.out.println(actualMultiplier == null);
-            if(actualMultiplier != null) {
-                System.out.println(actualMultiplier.getEventNumber() <= eventNumber);
-            }
-
-            if (eventNumber == jollyEventNumber || actualMultiplier == null || actualMultiplier.getEventNumber() <= eventNumber) {
-                long realEventNumber = eventNumber;
-
-                if (realEventNumber == jollyEventNumber) {
-                    realEventNumber = 0;
-                }
-
-                System.out.println("Real event number: " + realEventNumber);
-
-                maybeNewMultiplier.setEventNumber(realEventNumber);
-                playerMultipliers.put(player.getName(), maybeNewMultiplier);
-                return maybeNewMultiplier;
-            }
-
-            return actualMultiplier;
+        return extractPlayerMaxMultiplierTupleFromPermissions(permissions).thenApplyAsync((latestMultiplier) -> {
+            playerMultipliers.put(player.getName(), latestMultiplier);
+            return latestMultiplier;
         });
     }
 
-    public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player, long eventNumber) {
+    public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player) {
         if (luckPerms.isPresent()) {
             return luckPerms.get().getUserManager().loadUser(player.getUniqueId()).thenCompose(
-                    (user) -> forceMultiplierRefresh(player, user.getNodes(), eventNumber)
+                    (user) -> forceMultiplierRefresh(player, user.getNodes())
             );
         } else {
             return CompletableFuture.completedFuture(defaultMultiplier);
         }
-    }
-
-    public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player) {
-        return forceMultiplierRefresh(player, jollyEventNumber);
     }
 
     public Multiplier getCachedMultiplier(Player player) {
@@ -330,6 +299,10 @@ public class AresonSomnium extends JavaPlugin {
         coinsToGive = coinsToGive.multiply(BigDecimal.valueOf(cachedMultiplier.getValue()));
         Wallet.addCoins(player, coinsToGive);
         return coinsToGive;
+    }
+
+    public void removePlayer(String playerName) {
+        playerMultipliers.remove(playerName);
     }
 
 }
