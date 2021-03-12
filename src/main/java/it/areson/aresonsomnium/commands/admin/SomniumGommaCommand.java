@@ -42,9 +42,10 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
         switch (args.length) {
             case 0:
+            case 1:
                 MessageUtils.notEnoughArguments(commandSender, command);
                 break;
-            case 1:
+            case 2:
                 switch (args[0].toLowerCase()) {
                     case "setblock":
                         handleSetBlock(commandSender);
@@ -56,7 +57,12 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
                         handleTestGive(commandSender);
                         break;
                     case "givegomma":
-                        handleGiveGomma(commandSender);
+                        try {
+                            int amount = Integer.parseInt(args[1]);
+                            handleGiveGomma(commandSender, amount);
+                        }catch (NumberFormatException e){
+                            commandSender.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("not-a-number"));
+                        }
                         break;
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
@@ -66,7 +72,7 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    private void handleGiveGomma(CommandSender commandSender) {
+    private void handleGiveGomma(CommandSender commandSender, int amount) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             ItemStack gommaItem = new ItemStack(Material.valueOf(aresonSomnium.getMessageManager().getPlainMessageNoPrefix("gomma-material")));
@@ -85,7 +91,7 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
                 itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
             gommaItem.setItemMeta(itemMeta);
-
+            gommaItem.setAmount(amount);
 
             if (player.getInventory().addItem(gommaItem).isEmpty()) {
                 player.sendMessage(MessageUtils.successMessage("Ti e' stata data una gomma"));
