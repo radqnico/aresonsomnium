@@ -1,6 +1,7 @@
 package it.areson.aresonsomnium.commands.admin;
 
 import com.destroystokyo.paper.block.TargetBlockInfo;
+import elements.Pair;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.Location;
@@ -99,7 +100,7 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
             gommaItem.setAmount(amount);
 
             if (player.getInventory().addItem(gommaItem).isEmpty()) {
-                player.sendMessage(MessageUtils.successMessage("Ti e' stata data una gomma"));
+                player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("gomma-give", Pair.of("%amount%", "" + amount)));
             } else {
                 player.sendMessage(MessageUtils.errorMessage("Non hai abbastanza spazio"));
             }
