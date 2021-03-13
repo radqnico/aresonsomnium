@@ -56,6 +56,7 @@ public class AresonSomnium extends JavaPlugin {
 
     private final Multiplier defaultMultiplier = new Multiplier();
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+    private final String messagePrefix = "[Somnium]";
     private final HashMap<Material, String> blocksPermission = new HashMap<Material, String>() {{
         put(Material.COBBLESTONE, Constants.PERMISSION_SELVA);
         put(Material.NETHERRACK, Constants.PERMISSION_ANTINFERNO);
@@ -204,15 +205,15 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public void sendErrorMessage(CommandSender commandSender, String error) {
-        commandSender.sendMessage(ChatColor.BLUE + "[Somnium] " + ChatColor.RED + error);
+        commandSender.sendMessage(ChatColor.BLUE + messagePrefix + " " + ChatColor.RED + error);
     }
 
     public void sendInfoMessage(CommandSender commandSender, String info) {
-        commandSender.sendMessage(ChatColor.BLUE + "[Somnium] " + ChatColor.GOLD + info);
+        commandSender.sendMessage(ChatColor.BLUE + messagePrefix + " " + ChatColor.GOLD + info);
     }
 
     public void sendSuccessMessage(CommandSender commandSender, String success) {
-        commandSender.sendMessage(ChatColor.BLUE + "[Somnium] " + ChatColor.GREEN + success);
+        commandSender.sendMessage(ChatColor.BLUE + messagePrefix + " " + ChatColor.GREEN + success);
     }
 
     private Multiplier getMaxMultiplier(Multiplier newValue, Multiplier oldValue) {
