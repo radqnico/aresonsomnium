@@ -64,16 +64,18 @@ public class CustomShop extends MySQLObject {
                     lore.add("");
                 }
                 if (shopItem.getShoppingPrice().isPriceReady()) {
-                    lore.add(ChatColor.translateAlternateColorCodes('&', "Prezzo di &lacquisto:"));
+                    lore.add(ChatColor.translateAlternateColorCodes('&', "&7Prezzo di &lacquisto:"));
                     lore.addAll(shopItem.getShoppingPrice().toLore());
                 } else {
-                    lore.add(ChatColor.translateAlternateColorCodes('&', "&cNon vendibile"));
+                    lore.add(ChatColor.translateAlternateColorCodes('&', "&cNon acquistabile"));
+                    lore.add("");
                 }
                 if (shopItem.getSellingPrice().isPriceReady()) {
-                    lore.add(ChatColor.translateAlternateColorCodes('&', "Prezzo di &lvendita:"));
+                    lore.add(ChatColor.translateAlternateColorCodes('&', "&7Prezzo di &lvendita:"));
                     lore.addAll(shopItem.getSellingPrice().toLore());
                 } else {
-                    lore.add(ChatColor.translateAlternateColorCodes('&', "&cNon acquistabile"));
+                    lore.add(ChatColor.translateAlternateColorCodes('&', "&cNon vendibile"));
+                    lore.add("");
                 }
                 itemMeta.setLore(lore);
                 itemStack.setItemMeta(itemMeta);
