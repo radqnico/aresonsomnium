@@ -29,6 +29,7 @@ item-sell-not-enough: "&cNon ne hai abbastanza per poter vendere"
 item-sell-error: "&cRiscontrato un problema con i tuoi dati. Segnala il problema  allo staff.!"
 item-sell-not-sellable: "&cQuesto oggetto non e' vendibile"
 
+gomma-give: "&aHai ottenuto %amount% gomme"
 gomma-item-give: "&aHai ottenuto un oggetto dal Gomma Gomma"
 gomma-error-give: "&cFai spazio nell'inventario"
 

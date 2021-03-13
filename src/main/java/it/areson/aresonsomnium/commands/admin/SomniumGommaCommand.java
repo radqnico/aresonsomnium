@@ -1,6 +1,7 @@
 package it.areson.aresonsomnium.commands.admin;
 
 import com.destroystokyo.paper.block.TargetBlockInfo;
+import elements.Pair;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.Location;
@@ -55,20 +56,31 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
                     case "testgive":
                         handleTestGive(commandSender);
                         break;
-                    case "givegomma":
-                        handleGiveGomma(commandSender);
-                        break;
                     default:
                         commandSender.sendMessage(errorMessage("Funzione non trovata"));
+                        break;
+                }
+                break;
+            case 3:
+                if ("givegomma".equals(args[0].toLowerCase())) {
+                    try {
+                        int amount = Integer.parseInt(args[2]);
+                        String nick = args[1];
+                        handleGiveGomma(nick, amount);
+                    } catch (NumberFormatException e) {
+                        commandSender.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("not-a-number"));
+                    }
+                } else {
+                    commandSender.sendMessage(errorMessage("Funzione non trovata"));
                 }
                 break;
         }
         return true;
     }
 
-    private void handleGiveGomma(CommandSender commandSender) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
+    private void handleGiveGomma(String nick, int amount) {
+        Player player = aresonSomnium.getServer().getPlayer(nick);
+        if (player != null) {
             ItemStack gommaItem = new ItemStack(Material.valueOf(aresonSomnium.getMessageManager().getPlainMessageNoPrefix("gomma-material")));
 
             ItemMeta itemMeta = gommaItem.getItemMeta();
@@ -85,15 +97,15 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
                 itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
             gommaItem.setItemMeta(itemMeta);
-
+            gommaItem.setAmount(amount);
 
             if (player.getInventory().addItem(gommaItem).isEmpty()) {
-                player.sendMessage(MessageUtils.successMessage("Ti e' stata data una gomma"));
+                player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("gomma-give", Pair.of("%amount%", "" + amount)));
             } else {
                 player.sendMessage(MessageUtils.errorMessage("Non hai abbastanza spazio"));
             }
         } else {
-            commandSender.sendMessage(errorMessage("Comando disponibile solo da Player"));
+            aresonSomnium.getLogger().severe("Player non trovato");
         }
     }
 
