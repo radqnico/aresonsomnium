@@ -175,7 +175,7 @@ public class CustomShop extends MySQLObject {
     }
 
     public boolean isShopReady() {
-        return items.values().stream().allMatch(value -> value.getShoppingPrice().isPriceReady());
+        return items.values().stream().allMatch(value -> value.getShoppingPrice().isPriceReady() || value.getSellingPrice().isPriceReady());
     }
 
     @Override

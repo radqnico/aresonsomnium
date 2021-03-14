@@ -73,7 +73,7 @@ public class ShopManager {
         return customShop;
     }
 
-    public void openGuiToPlayer(Player player, String guiName) {
+    public void openShopToPlayer(Player player, String guiName) {
         CustomShop customShop = guis.get(guiName);
         if (Objects.nonNull(customShop)) {
             if (customShop.isShopReady()) {
