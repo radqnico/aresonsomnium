@@ -47,18 +47,19 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
             case 1:
                 MessageUtils.notEnoughArguments(commandSender, command);
                 break;
+            case 2:
+                if ("convertshards".equals(args[0].toLowerCase())) {
+                    handleConvertShards(args[1]);
+                }
+                break;
             case 3:
-                switch (args[0].toLowerCase()) {
-                    case "generateobolshard":
-                        handleGenerateObolShard(args[1], Integer.parseInt(args[2]));
-                        break;
-                    case "convertshards":
-                        handleConvertObols(args[1]);
-                        break;
+                if ("generateobolshard".equals(args[0].toLowerCase())) {
+                    handleGenerateObolShard(args[1], Integer.parseInt(args[2]));
                 }
                 break;
             default:
                 MessageUtils.tooManyArguments(commandSender, command);
+                break;
         }
         return true;
     }
@@ -75,7 +76,7 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void handleConvertObols(String playerName) {
+    private void handleConvertShards(String playerName) {
         Player player = aresonSomnium.getServer().getPlayer(playerName);
         if (player != null) {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
