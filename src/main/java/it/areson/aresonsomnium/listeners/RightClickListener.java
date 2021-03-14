@@ -66,16 +66,18 @@ public class RightClickListener extends GeneralEventListener {
                 Player player = event.getPlayer();
 
                 if (canUseAnotherConsumable(player)) {
-                    playerDelays.put(player.getName(), Instant.now());
 
                     switch (Objects.requireNonNull(Objects.requireNonNull(itemStack).getItemMeta()).getCustomModelData()) {
                         case GOMMA_MODEL_DATA:
+                            playerDelays.put(player.getName(), Instant.now());
                             collectGommaReward(event);
                             break;
                         case CHECK_MODEL_DATA:
+                            playerDelays.put(player.getName(), Instant.now());
                             redeemCheck(event);
                             break;
                         case MULTIPLIER_MODEL_DATA:
+                            playerDelays.put(player.getName(), Instant.now());
                             activateMultiplier(event);
                             break;
                     }
