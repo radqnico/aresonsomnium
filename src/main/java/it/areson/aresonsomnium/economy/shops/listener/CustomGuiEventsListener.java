@@ -1,14 +1,14 @@
 package it.areson.aresonsomnium.economy.shops.listener;
 
+import elements.Pair;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
-import it.areson.aresonsomnium.listeners.GeneralEventListener;
-import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.economy.shops.guis.*;
 import it.areson.aresonsomnium.economy.shops.items.Price;
 import it.areson.aresonsomnium.economy.shops.items.ShopItem;
+import it.areson.aresonsomnium.listeners.GeneralEventListener;
+import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.MessageUtils;
-import elements.Pair;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -206,7 +206,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             if (event.isLeftClick()) {
                 CustomShop shop = shopManager.getViewingCustomShop(player);
                 ShopItem shopItem = shop.getItems().get(event.getSlot());
-                if (Objects.nonNull(shopItem)) {
+                if (Objects.nonNull(shopItem) && shopItem.getShoppingPrice().isPriceReady()) {
                     buyItem(player, shopItem);
                 }
             }
@@ -219,7 +219,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
             if (event.isRightClick()) {
                 CustomShop shop = shopManager.getViewingCustomShop(player);
                 ShopItem shopItem = shop.getItems().get(event.getSlot());
-                if (Objects.nonNull(shopItem)) {
+                if (Objects.nonNull(shopItem) && shopItem.getSellingPrice().isPriceReady()) {
                     sellItem(player, shopItem);
                 }
             }
