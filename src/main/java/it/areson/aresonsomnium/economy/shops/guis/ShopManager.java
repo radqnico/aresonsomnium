@@ -3,6 +3,7 @@ package it.areson.aresonsomnium.economy.shops.guis;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.utils.PlayerComparator;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -78,7 +79,7 @@ public class ShopManager {
         if (Objects.nonNull(customShop)) {
             if (customShop.isShopReady()) {
                 player.openInventory(customShop.createInventory(true));
-                openedGuis.put(player, guiName);
+                Bukkit.getScheduler().runTaskLater(aresonSomnium, () -> openedGuis.put(player, guiName), 5);
             } else {
                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("shop-not-ready"));
             }
