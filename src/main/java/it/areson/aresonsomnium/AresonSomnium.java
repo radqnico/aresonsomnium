@@ -3,7 +3,6 @@ package it.areson.aresonsomnium;
 import elements.Multiplier;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.admin.*;
-import it.areson.aresonsomnium.commands.newcommands.*;
 import it.areson.aresonsomnium.commands.player.CheckCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
@@ -74,8 +73,8 @@ public class AresonSomnium extends JavaPlugin {
         put(Material.QUARTZ_BLOCK, Constants.PERMISSION_QUINTO_CIELO);
         put(Material.CHISELED_QUARTZ_BLOCK, Constants.PERMISSION_SETTIMO_CIELO);
     }};
-    public Optional<LuckPerms> luckPerms;
     private final HashMap<String, Multiplier> playerMultipliers = new HashMap<>();
+    public Optional<LuckPerms> luckPerms;
     private SomniumPlayerManager somniumPlayerManager;
     private ShopManager shopManager;
     private ShopEditor shopEditor;
@@ -149,15 +148,6 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     private void registerCommands() {
-
-        CommandTree testTreeCommand = new CommandTree(this, new TestTreeCommand());
-        HelloWorldCommand helloWorldCommand = new HelloWorldCommand();
-        HelloNicoCommand helloNicoCommand = new HelloNicoCommand();
-        helloNicoCommand.addChild(new SecondLevelCommand2());
-        helloWorldCommand.addChild(new SecondLevelCommand1());
-        testTreeCommand.getRoot().addChild(helloWorldCommand);
-        testTreeCommand.getRoot().addChild(helloNicoCommand);
-
 
         new SomniumAdminCommand(this);
         new SomniumTestCommand(this);
