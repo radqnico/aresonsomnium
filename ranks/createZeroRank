@@ -10,6 +10,7 @@ lp group default permission set essentials.warp.list true
 lp group default permission set essentials.sethome true
 lp group default permission set essentials.home true
 lp group default permission set essentials.kit true
+lp group default permission set essentials.kits.cibo true
 lp group default permission set essentials.kits.inferno true
 lp group default permission set acidisland.* false
 lp group default permission set essentials.warps.selva true
