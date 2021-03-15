@@ -54,7 +54,7 @@ public class OpenGuiCommand implements CommandExecutor, TabCompleter {
             if (somniumPlayer != null) {
                 ShopManager shopManager = aresonSomnium.getShopManager();
                 if (shopManager.isPermanent(guiName)) {
-                    shopManager.openGuiToPlayer(player, guiName);
+                    shopManager.openShopToPlayer(player, guiName);
                 } else {
                     player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("gui-not-found"));
                 }

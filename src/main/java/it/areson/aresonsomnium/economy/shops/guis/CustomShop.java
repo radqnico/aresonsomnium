@@ -86,7 +86,7 @@ public class CustomShop extends MySQLObject {
             ItemStack itemStack = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
             ItemMeta itemMeta = itemStack.getItemMeta();
             if (itemMeta != null) {
-                itemMeta.setDisplayName("");
+                itemMeta.setDisplayName(" ");
             }
             itemStack.setItemMeta(itemMeta);
             for (int i = 0; i < inventory.getSize(); i++) {
@@ -175,7 +175,7 @@ public class CustomShop extends MySQLObject {
     }
 
     public boolean isShopReady() {
-        return items.values().stream().allMatch(value -> value.getShoppingPrice().isPriceReady());
+        return items.values().stream().allMatch(value -> value.getShoppingPrice().isPriceReady() || value.getSellingPrice().isPriceReady());
     }
 
     @Override
