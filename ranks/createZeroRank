@@ -9,6 +9,8 @@ lp group default permission set essentials.warp true
 lp group default permission set essentials.warp.list true
 lp group default permission set essentials.sethome true
 lp group default permission set essentials.home true
+lp group default permission set essentials.kit true
+lp group default permission set essentials.kits.inferno true
 lp group default permission set acidisland.* false
 lp group default permission set essentials.warps.selva true
 lp group default permission set ezranks.rank.default true
@@ -171,6 +173,8 @@ lp creategroup zero_secondacornice
 lp group zero_secondacornice parent set zero_primacornice
 lp group zero_secondacornice permission set essentials.warps.secondacornice true
 lp group zero_secondacornice permission set ezranks.rank.zero_secondacornice true
+lp group zero_secondacornice permission set essentials.kits.inferno false
+lp group zero_secondacornice permission set essentials.kits.purgatorio true
 lp group zero_secondacornice permission set portal.secondacornice true
 lp group zero_secondacornice permission set jetsprisonmines.blockbreak.secondacornice true
 lp group zero_secondacornice permission set aresonsomnium.secondacornice true
@@ -249,6 +253,8 @@ lp creategroup zero_primocielo
 lp group zero_primocielo parent set zero_settimacornice
 lp group zero_primocielo permission set essentials.warps.primocielo true
 lp group zero_primocielo permission set ezranks.rank.zero_primocielo true
+lp group zero_secondacornice permission set essentials.kits.purgatorio false
+lp group zero_secondacornice permission set essentials.kits.paradiso true
 lp group zero_primocielo permission set portal.primocielo true
 lp group zero_primocielo permission set jetsprisonmines.blockbreak.primocielo true
 lp group zero_primocielo permission set aresonsomnium.primocielo true
