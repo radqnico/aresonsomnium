@@ -18,6 +18,9 @@ public class BlockBreakListener extends GeneralEventListener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockBreak(BlockBreakEvent e) {
+        if (e.getBlock().getType().equals(Material.SPONGE)) {
+            return;
+        }
         if (!e.isCancelled()) {
             Collection<ItemStack> drops = e.getBlock().getDrops();
             boolean shouldDestroy = false;
