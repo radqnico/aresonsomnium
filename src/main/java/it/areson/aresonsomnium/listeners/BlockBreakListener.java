@@ -33,7 +33,7 @@ public class BlockBreakListener extends GeneralEventListener {
                 }
             }
             if (shouldDestroy) {
-                e.getBlock().setType(Material.AIR);
+                e.setDropItems(false);
             }
         }
     }
