@@ -16,7 +16,7 @@ public class BlockBreakListener extends GeneralEventListener {
         super(aresonSomnium);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent e) {
         if (e.getBlock().getType().equals(Material.SPONGE)) {
             return;
