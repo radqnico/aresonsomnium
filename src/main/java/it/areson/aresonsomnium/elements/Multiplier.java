@@ -1,4 +1,4 @@
-package elements;
+package it.areson.aresonsomnium.elements;
 
 public class Multiplier {
 

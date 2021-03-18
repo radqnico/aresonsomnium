@@ -1,6 +1,6 @@
 package it.areson.aresonsomnium.listeners;
 
-import elements.Pair;
+import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
