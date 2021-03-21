@@ -1,6 +1,6 @@
 package it.areson.aresonsomnium;
 
-import elements.Multiplier;
+import it.areson.aresonsomnium.elements.Multiplier;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.admin.*;
 import it.areson.aresonsomnium.commands.player.CheckCommand;

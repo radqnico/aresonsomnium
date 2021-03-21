@@ -9,7 +9,7 @@ import it.areson.aresonsomnium.economy.shops.guis.ShopManager;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.Debugger;
 import it.areson.aresonsomnium.utils.MessageUtils;
-import elements.Pair;
+import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import org.bukkit.command.*;
 import org.bukkit.entity.HumanEntity;

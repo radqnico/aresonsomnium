@@ -1,7 +1,7 @@
 package it.areson.aresonsomnium.commands.admin;
 
 import com.destroystokyo.paper.block.TargetBlockInfo;
-import elements.Pair;
+import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.Location;

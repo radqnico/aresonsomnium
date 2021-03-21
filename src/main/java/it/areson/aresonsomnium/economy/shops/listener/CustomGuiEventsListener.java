@@ -1,6 +1,6 @@
 package it.areson.aresonsomnium.economy.shops.listener;
 
-import elements.Pair;
+import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.shops.guis.*;
