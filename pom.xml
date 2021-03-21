@@ -6,7 +6,6 @@
 
     <groupId>it.areson</groupId>
     <artifactId>AresonSomnium</artifactId>
-    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
