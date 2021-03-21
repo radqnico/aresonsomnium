@@ -41,14 +41,14 @@ public class Wallet {
 
 
     // TODO Salvare un oggetto "stampo" e modificare il dato che serve all'occasione
-    public static ItemStack generateCheck(double amount, CoinType coinType) {
+    public static ItemStack generateCheck(BigDecimal amount, CoinType coinType) {
         ItemStack itemStack = new ItemStack(Material.PAPER);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
             itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Assegno in &e&l" + coinType.getCoinName()));
             List<String> lore = new ArrayList<>();
             lore.add(ChatColor.translateAlternateColorCodes('&', "&7Valore:"));
-            lore.add(ChatColor.translateAlternateColorCodes('&', "&a" + amount + " " + coinType.getCoinName()));
+            lore.add(ChatColor.translateAlternateColorCodes('&', "&a" + amount.toString() + " " + coinType.getCoinName()));
             itemMeta.setLore(lore);
             itemMeta.setCustomModelData(CHECK_MODEL_DATA);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -86,7 +86,7 @@ public class Wallet {
                 if (lore != null && lore.size() == 2) {
                     String secondLine = lore.get(1);
                     String clean = secondLine.replaceAll("&.", "").replaceAll("§.", "");
-                    Pattern patternAmount = Pattern.compile("[0-9.EMB]+");
+                    Pattern patternAmount = Pattern.compile("[0-9.]+([E][0-9]+)?");
                     Pattern patternCoinType = Pattern.compile("[a-zA-Z]+");
                     Matcher matcherCoinType = patternCoinType.matcher(clean);
                     Matcher matcherAmount = patternAmount.matcher(clean);

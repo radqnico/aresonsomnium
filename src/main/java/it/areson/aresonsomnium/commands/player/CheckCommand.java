@@ -65,7 +65,7 @@ public class CheckCommand implements CommandExecutor, TabCompleter {
         switch (type) {
             case OBOLI:
                 if (somniumPlayer.canAfford(new Price(BigDecimal.ZERO, amount.toBigInteger(), BigInteger.ZERO))) {
-                    ItemStack itemStack = Wallet.generateCheck(amount.doubleValue(), type);
+                    ItemStack itemStack = Wallet.generateCheck(amount, type);
                     if (!somniumPlayer.getPlayer().getInventory().addItem(itemStack).isEmpty()) {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
                     } else {
@@ -78,7 +78,7 @@ public class CheckCommand implements CommandExecutor, TabCompleter {
                 break;
             case GEMME:
                 if (somniumPlayer.canAfford(new Price(BigDecimal.ZERO, BigInteger.ZERO, amount.toBigInteger()))) {
-                    ItemStack itemStack = Wallet.generateCheck(amount.doubleValue(), type);
+                    ItemStack itemStack = Wallet.generateCheck(amount, type);
                     if (!somniumPlayer.getPlayer().getInventory().addItem(itemStack).isEmpty()) {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
                     } else {
@@ -91,7 +91,7 @@ public class CheckCommand implements CommandExecutor, TabCompleter {
                 break;
             case MONETE:
                 if (somniumPlayer.canAfford(new Price(amount, BigInteger.ZERO, BigInteger.ZERO))) {
-                    ItemStack itemStack = Wallet.generateCheck(amount.doubleValue(), type);
+                    ItemStack itemStack = Wallet.generateCheck(amount, type);
                     if (!somniumPlayer.getPlayer().getInventory().addItem(itemStack).isEmpty()) {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
                     } else {
