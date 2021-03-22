@@ -40,10 +40,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static it.areson.aresonsomnium.Constants.PERMISSION_MULTIPLIER;
@@ -294,6 +291,17 @@ public class AresonSomnium extends JavaPlugin {
 
     public void removePlayer(String playerName) {
         playerMultipliers.remove(playerName);
+    }
+
+    public boolean isALockedEnchantFromEnchants(ItemStack itemStack) {
+        boolean isLocked = false;
+        List<String> clickedLore = itemStack.getLore();
+
+        if (clickedLore != null && !clickedLore.isEmpty()) {
+            isLocked = clickedLore.parallelStream().reduce(false, (status, loreLine) -> loreLine.contains("Immodificabile"), Boolean::logicalOr);
+        }
+
+        return isLocked;
     }
 
 }

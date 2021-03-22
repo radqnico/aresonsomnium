@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unused")
@@ -36,17 +35,10 @@ public class InventoryListener extends GeneralEventListener {
     }
 
     private void handleEnchantedBook(ItemStack handItemStack, ItemStack clickedItemStack) {
-        boolean isLocked = false;
-        List<String> clickedLore = clickedItemStack.getLore();
-        if(clickedLore != null && !clickedLore.isEmpty()) {
-            isLocked = clickedLore.parallelStream().reduce(false, (status, loreLine) -> loreLine.contains("Immodificabile"), Boolean::logicalOr);
-        }
-
-
         EnchantmentStorageMeta enchantmentMeta = (EnchantmentStorageMeta) handItemStack.getItemMeta();
         ItemMeta clickedItemMeta = clickedItemStack.getItemMeta();
 
-        if (!isLocked && enchantmentMeta != null && clickedItemMeta != null) {
+        if (!aresonSomnium.isALockedEnchantFromEnchants(clickedItemStack) && enchantmentMeta != null && clickedItemMeta != null) {
             Map<Enchantment, Integer> storedEnchants = enchantmentMeta.getStoredEnchants();
 
             boolean hasValidEnchants = storedEnchants.entrySet().parallelStream().reduce(true, (valid, entry) -> {
