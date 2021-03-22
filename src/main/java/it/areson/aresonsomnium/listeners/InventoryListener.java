@@ -54,7 +54,7 @@ public class InventoryListener extends GeneralEventListener {
                 }, Boolean::logicalAnd);
 
                 if (hasValidEnchants) {
-                    handItemStack.setAmount(0);
+                    handItemStack.setAmount(handItemStack.getAmount() - 1);
                     for (Map.Entry<Enchantment, Integer> entry : storedEnchants.entrySet()) {
                         clickedItemStack.addUnsafeEnchantment(entry.getKey(), entry.getValue());
                     }
