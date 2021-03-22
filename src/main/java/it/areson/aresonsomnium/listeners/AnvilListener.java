@@ -25,6 +25,7 @@ public class AnvilListener extends GeneralEventListener {
             if (aresonSomnium.isALockedEnchantFromEnchants(firstItem)) {
                 event.setResult(airStack);
                 InventoryView view = event.getView();
+                view.close();
                 aresonSomnium.sendErrorMessage(view.getPlayer(), "Questo oggetto è immodificabile");
             }
         }
