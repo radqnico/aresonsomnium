@@ -50,7 +50,7 @@ public class InventoryListener extends GeneralEventListener {
 
                     return enchantment.canEnchantItem(clickedItemStack)
                             && !clonedItemMeta.hasConflictingEnchant(enchantment)
-                            && (currentEnchantmentLevel == null || currentEnchantmentLevel < entry.getValue());
+                            && (currentEnchantmentLevel == null || currentEnchantmentLevel + 1 == entry.getValue());
                 }, Boolean::logicalAnd);
 
                 if (hasValidEnchants) {
