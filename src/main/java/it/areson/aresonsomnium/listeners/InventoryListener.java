@@ -34,7 +34,7 @@ public class InventoryListener extends GeneralEventListener {
     }
 
     private void handleEnchantedBook(HumanEntity humanEntity, ItemStack handItemStack, ItemStack clickedItemStack) {
-        if(!aresonSomnium.isALockedEnchantFromEnchants(clickedItemStack)) {
+        if (!aresonSomnium.isALockedEnchantFromEnchants(clickedItemStack)) {
             EnchantmentStorageMeta enchantmentMeta = (EnchantmentStorageMeta) handItemStack.getItemMeta();
             ItemMeta clickedItemMeta = clickedItemStack.getItemMeta();
 
@@ -55,9 +55,7 @@ public class InventoryListener extends GeneralEventListener {
 
                 if (hasValidEnchants) {
                     handItemStack.setAmount(handItemStack.getAmount() - 1);
-                    for (Map.Entry<Enchantment, Integer> entry : storedEnchants.entrySet()) {
-                        clickedItemStack.addUnsafeEnchantment(entry.getKey(), entry.getValue());
-                    }
+                    storedEnchants.entrySet().parallelStream().forEach((entry) -> clickedItemStack.addUnsafeEnchantment(entry.getKey(), entry.getValue()));
                 }
             }
         } else {
