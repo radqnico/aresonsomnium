@@ -4,6 +4,7 @@ import it.areson.aresonsomnium.AresonSomnium;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 public class AnvilListener extends GeneralEventListener {
@@ -23,7 +24,8 @@ public class AnvilListener extends GeneralEventListener {
         if (firstItem != null && secondItem != null && secondItem.getType().equals(Material.ENCHANTED_BOOK)) {
             if (aresonSomnium.isALockedEnchantFromEnchants(firstItem)) {
                 event.setResult(airStack);
-                aresonSomnium.sendErrorMessage(event.getView().getPlayer(), "Questo oggetto è immodificabile");
+                InventoryView view = event.getView();
+                aresonSomnium.sendErrorMessage(view.getPlayer(), "Questo oggetto è immodificabile");
             }
         }
     }
