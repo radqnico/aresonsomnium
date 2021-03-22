@@ -27,8 +27,10 @@ import net.luckperms.api.node.Node;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -301,6 +303,30 @@ public class AresonSomnium extends JavaPlugin {
         }
 
         return isLocked;
+    }
+
+    public boolean hasCompatibleEnchants(ItemStack itemStack, Map<Enchantment, Integer> storedEnchants) {
+        if (itemStack != null) {
+            ItemMeta itemMeta = itemStack.getItemMeta();
+
+            if (itemMeta != null) {
+                return storedEnchants.entrySet().parallelStream().reduce(true, (valid, entry) -> {
+                    Enchantment enchantment = entry.getKey();
+                    Integer currentEnchantmentLevel = itemStack.getEnchantments().get(enchantment);
+
+                    ItemMeta clonedItemMeta = itemMeta.clone();
+                    clonedItemMeta.removeEnchant(enchantment);
+
+                    return enchantment.canEnchantItem(itemStack)
+                            && !clonedItemMeta.hasConflictingEnchant(enchantment)
+                            && (currentEnchantmentLevel == null || currentEnchantmentLevel + 1 == entry.getValue());
+                }, Boolean::logicalAnd);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
 }

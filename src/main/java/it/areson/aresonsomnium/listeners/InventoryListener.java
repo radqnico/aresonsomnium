@@ -41,19 +41,7 @@ public class InventoryListener extends GeneralEventListener {
             if (enchantmentMeta != null && clickedItemMeta != null) {
                 Map<Enchantment, Integer> storedEnchants = enchantmentMeta.getStoredEnchants();
 
-                boolean hasValidEnchants = storedEnchants.entrySet().parallelStream().reduce(true, (valid, entry) -> {
-                    Enchantment enchantment = entry.getKey();
-                    Integer currentEnchantmentLevel = clickedItemStack.getEnchantments().get(enchantment);
-
-                    ItemMeta clonedItemMeta = clickedItemMeta.clone();
-                    clonedItemMeta.removeEnchant(enchantment);
-
-                    return enchantment.canEnchantItem(clickedItemStack)
-                            && !clonedItemMeta.hasConflictingEnchant(enchantment)
-                            && (currentEnchantmentLevel == null || currentEnchantmentLevel + 1 == entry.getValue());
-                }, Boolean::logicalAnd);
-
-                if (hasValidEnchants) {
+                if (aresonSomnium.hasCompatibleEnchants(clickedItemStack, storedEnchants)) {
                     handItemStack.setAmount(handItemStack.getAmount() - 1);
                     storedEnchants.entrySet().parallelStream().forEach((entry) -> clickedItemStack.addUnsafeEnchantment(entry.getKey(), entry.getValue()));
                 }
