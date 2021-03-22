@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unused")
@@ -29,30 +30,41 @@ public class InventoryListener extends GeneralEventListener {
             ItemStack clickedItemStack = event.getCurrentItem();
 
             if (handItemStack != null && handItemStack.getType().equals(Material.ENCHANTED_BOOK) && clickedItemStack != null) {
-                EnchantmentStorageMeta enchantmentMeta = (EnchantmentStorageMeta) handItemStack.getItemMeta();
-                ItemMeta clickedItemMeta = clickedItemStack.getItemMeta();
+                handleEnchantedBook(handItemStack, clickedItemStack);
+            }
+        }
+    }
 
-                if (enchantmentMeta != null && clickedItemMeta != null) {
-                    Map<Enchantment, Integer> storedEnchants = enchantmentMeta.getStoredEnchants();
+    private void handleEnchantedBook(ItemStack handItemStack, ItemStack clickedItemStack) {
+        boolean isLocked = false;
+        List<String> clickedLore = clickedItemStack.getLore();
+        if(clickedLore != null && !clickedLore.isEmpty()) {
+            isLocked = clickedLore.parallelStream().reduce(false, (status, loreLine) -> loreLine.contains("Immodificabile"), Boolean::logicalOr);
+        }
 
-                    boolean hasValidEnchants = storedEnchants.entrySet().parallelStream().reduce(true, (valid, entry) -> {
-                        Enchantment enchantment = entry.getKey();
-                        Integer currentEnchantmentLevel = clickedItemStack.getEnchantments().get(enchantment);
 
-                        ItemMeta clonedItemMeta = clickedItemMeta.clone();
-                        clonedItemMeta.removeEnchant(enchantment);
+        EnchantmentStorageMeta enchantmentMeta = (EnchantmentStorageMeta) handItemStack.getItemMeta();
+        ItemMeta clickedItemMeta = clickedItemStack.getItemMeta();
 
-                        return enchantment.canEnchantItem(clickedItemStack)
-                                && !clonedItemMeta.hasConflictingEnchant(enchantment)
-                                && (currentEnchantmentLevel == null || currentEnchantmentLevel < entry.getValue());
-                    }, Boolean::logicalAnd);
+        if (!isLocked && enchantmentMeta != null && clickedItemMeta != null) {
+            Map<Enchantment, Integer> storedEnchants = enchantmentMeta.getStoredEnchants();
 
-                    if (hasValidEnchants) {
-                        handItemStack.setAmount(0);
-                        for (Map.Entry<Enchantment, Integer> entry : storedEnchants.entrySet()) {
-                            clickedItemStack.addUnsafeEnchantment(entry.getKey(), entry.getValue());
-                        }
-                    }
+            boolean hasValidEnchants = storedEnchants.entrySet().parallelStream().reduce(true, (valid, entry) -> {
+                Enchantment enchantment = entry.getKey();
+                Integer currentEnchantmentLevel = clickedItemStack.getEnchantments().get(enchantment);
+
+                ItemMeta clonedItemMeta = clickedItemMeta.clone();
+                clonedItemMeta.removeEnchant(enchantment);
+
+                return enchantment.canEnchantItem(clickedItemStack)
+                        && !clonedItemMeta.hasConflictingEnchant(enchantment)
+                        && (currentEnchantmentLevel == null || currentEnchantmentLevel < entry.getValue());
+            }, Boolean::logicalAnd);
+
+            if (hasValidEnchants) {
+                handItemStack.setAmount(0);
+                for (Map.Entry<Enchantment, Integer> entry : storedEnchants.entrySet()) {
+                    clickedItemStack.addUnsafeEnchantment(entry.getKey(), entry.getValue());
                 }
             }
         }
