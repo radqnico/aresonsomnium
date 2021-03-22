@@ -14,10 +14,7 @@ import it.areson.aresonsomnium.economy.shops.items.BlockPrice;
 import it.areson.aresonsomnium.economy.shops.listener.CustomGuiEventsListener;
 import it.areson.aresonsomnium.economy.shops.listener.SetPriceInChatListener;
 import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
-import it.areson.aresonsomnium.listeners.GatewayListener;
-import it.areson.aresonsomnium.listeners.InventoryListener;
-import it.areson.aresonsomnium.listeners.LuckPermsListener;
-import it.areson.aresonsomnium.listeners.RightClickListener;
+import it.areson.aresonsomnium.listeners.*;
 import it.areson.aresonsomnium.placeholders.CoinsPlaceholders;
 import it.areson.aresonsomnium.placeholders.MultiplierPlaceholders;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
@@ -101,7 +98,7 @@ public class AresonSomnium extends JavaPlugin {
         // Files
         registerFiles();
         // Events
-        initAllEvents();
+        initListeners();
         // Commands
         registerCommands();
         // Placeholders
@@ -158,17 +155,19 @@ public class AresonSomnium extends JavaPlugin {
         new GiveConsumableCommand(this);
     }
 
-    private void initAllEvents() {
+    private void initListeners() {
         playerDBEvents = new GatewayListener(this);
         CustomGuiEventsListener customGuiEventsListener = new CustomGuiEventsListener(this);
         setPriceInChatListener = new SetPriceInChatListener(this);
         InventoryListener inventoryListener = new InventoryListener(this);
         RightClickListener rightClickListener = new RightClickListener(this);
+        AnvilListener anvilListener = new AnvilListener(this);
 
         playerDBEvents.registerEvents();
         customGuiEventsListener.registerEvents();
         inventoryListener.registerEvents();
         rightClickListener.registerEvents();
+        anvilListener.registerEvents();
     }
 
     public SomniumPlayerManager getSomniumPlayerManager() {
