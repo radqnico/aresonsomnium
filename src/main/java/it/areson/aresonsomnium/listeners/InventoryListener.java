@@ -14,7 +14,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Map;
 
-@SuppressWarnings("unused")
 public class InventoryListener extends GeneralEventListener {
 
     public InventoryListener(AresonSomnium aresonSomnium) {
@@ -29,36 +28,40 @@ public class InventoryListener extends GeneralEventListener {
             ItemStack clickedItemStack = event.getCurrentItem();
 
             if (handItemStack != null && handItemStack.getType().equals(Material.ENCHANTED_BOOK) && clickedItemStack != null) {
-                handleEnchantedBook(handItemStack, clickedItemStack);
+                handleEnchantedBook(whoClicked, handItemStack, clickedItemStack);
             }
         }
     }
 
-    private void handleEnchantedBook(ItemStack handItemStack, ItemStack clickedItemStack) {
-        EnchantmentStorageMeta enchantmentMeta = (EnchantmentStorageMeta) handItemStack.getItemMeta();
-        ItemMeta clickedItemMeta = clickedItemStack.getItemMeta();
+    private void handleEnchantedBook(HumanEntity humanEntity, ItemStack handItemStack, ItemStack clickedItemStack) {
+        if(!aresonSomnium.isALockedEnchantFromEnchants(clickedItemStack)) {
+            EnchantmentStorageMeta enchantmentMeta = (EnchantmentStorageMeta) handItemStack.getItemMeta();
+            ItemMeta clickedItemMeta = clickedItemStack.getItemMeta();
 
-        if (!aresonSomnium.isALockedEnchantFromEnchants(clickedItemStack) && enchantmentMeta != null && clickedItemMeta != null) {
-            Map<Enchantment, Integer> storedEnchants = enchantmentMeta.getStoredEnchants();
+            if (enchantmentMeta != null && clickedItemMeta != null) {
+                Map<Enchantment, Integer> storedEnchants = enchantmentMeta.getStoredEnchants();
 
-            boolean hasValidEnchants = storedEnchants.entrySet().parallelStream().reduce(true, (valid, entry) -> {
-                Enchantment enchantment = entry.getKey();
-                Integer currentEnchantmentLevel = clickedItemStack.getEnchantments().get(enchantment);
+                boolean hasValidEnchants = storedEnchants.entrySet().parallelStream().reduce(true, (valid, entry) -> {
+                    Enchantment enchantment = entry.getKey();
+                    Integer currentEnchantmentLevel = clickedItemStack.getEnchantments().get(enchantment);
 
-                ItemMeta clonedItemMeta = clickedItemMeta.clone();
-                clonedItemMeta.removeEnchant(enchantment);
+                    ItemMeta clonedItemMeta = clickedItemMeta.clone();
+                    clonedItemMeta.removeEnchant(enchantment);
 
-                return enchantment.canEnchantItem(clickedItemStack)
-                        && !clonedItemMeta.hasConflictingEnchant(enchantment)
-                        && (currentEnchantmentLevel == null || currentEnchantmentLevel < entry.getValue());
-            }, Boolean::logicalAnd);
+                    return enchantment.canEnchantItem(clickedItemStack)
+                            && !clonedItemMeta.hasConflictingEnchant(enchantment)
+                            && (currentEnchantmentLevel == null || currentEnchantmentLevel < entry.getValue());
+                }, Boolean::logicalAnd);
 
-            if (hasValidEnchants) {
-                handItemStack.setAmount(0);
-                for (Map.Entry<Enchantment, Integer> entry : storedEnchants.entrySet()) {
-                    clickedItemStack.addUnsafeEnchantment(entry.getKey(), entry.getValue());
+                if (hasValidEnchants) {
+                    handItemStack.setAmount(0);
+                    for (Map.Entry<Enchantment, Integer> entry : storedEnchants.entrySet()) {
+                        clickedItemStack.addUnsafeEnchantment(entry.getKey(), entry.getValue());
+                    }
                 }
             }
+        } else {
+            aresonSomnium.sendErrorMessage(humanEntity, "Questo oggetto è immodificabile");
         }
     }
 

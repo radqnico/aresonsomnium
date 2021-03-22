@@ -1,37 +1,31 @@
 package it.areson.aresonsomnium.listeners;
 
 import it.areson.aresonsomnium.AresonSomnium;
+import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class AnvilListener extends GeneralEventListener {
 
+    private final ItemStack airStack;
+
     public AnvilListener(AresonSomnium aresonSomnium) {
         super(aresonSomnium);
+        airStack = new ItemStack(Material.AIR);
     }
 
     @EventHandler
     public void onAnvilUpdate(PrepareAnvilEvent event) {
+        ItemStack firstItem = event.getInventory().getFirstItem();
+        ItemStack secondItem = event.getInventory().getSecondItem();
 
-        System.out.println(event.getInventory().toString());
-
-//        ItemStack itemRenamed = event.getResult();
-//        if (itemRenamed != null) {
-//            Material material = itemRenamed.getType();
-//            if (material != Material.PAPER && material != Material.TRIPWIRE_HOOK) {
-//                ItemMeta itemMeta = itemRenamed.getItemMeta();
-//                if (itemMeta != null) {
-//                    itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', itemMeta.getDisplayName()));
-//                    itemRenamed.setItemMeta(itemMeta);
-//                }
-//                event.setResult(itemRenamed);
-//            } else {
-//                InventoryView view = event.getView();
-//                view.close();
-//                view.getPlayer().sendMessage(net.md_5.bungee.api.ChatColor.BLUE + "[Areson] " + ChatColor.RED + "Non è possibile rinominare quest'oggetto");
-//                event.setResult(airStack);
-//            }
-//        }
+        if (firstItem != null && secondItem != null && secondItem.getType().equals(Material.ENCHANTED_BOOK)) {
+            if (aresonSomnium.isALockedEnchantFromEnchants(firstItem)) {
+                event.setResult(airStack);
+                aresonSomnium.sendErrorMessage(event.getView().getPlayer(), "Questo oggetto è immodificabile");
+            }
+        }
     }
 
 }
