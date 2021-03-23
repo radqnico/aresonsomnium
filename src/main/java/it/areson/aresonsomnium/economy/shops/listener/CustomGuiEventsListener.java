@@ -74,6 +74,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     public void onInventoryClickEvent(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         Inventory clickedInventory = event.getClickedInventory();
+        System.out.println("Event: " + event.getAction().name());
         if (clickedInventory != null) {
             if (shopEditor.isEditingCustomGui(player)) {
                 // Editing

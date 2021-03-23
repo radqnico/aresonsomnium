@@ -86,7 +86,7 @@ public class Wallet {
                 if (lore != null && lore.size() == 2) {
                     String secondLine = lore.get(1);
                     String clean = secondLine.replaceAll("&.", "").replaceAll("§.", "");
-                    Pattern patternAmount = Pattern.compile("[0-9.]+([E][0-9]+)?");
+                    Pattern patternAmount = Pattern.compile("[0-9.]+(E[+-]?[0-9]+)?");
                     Pattern patternCoinType = Pattern.compile("(Monete|Gemme|Oboli)");
                     Matcher matcherCoinType = patternCoinType.matcher(clean);
                     Matcher matcherAmount = patternAmount.matcher(clean);

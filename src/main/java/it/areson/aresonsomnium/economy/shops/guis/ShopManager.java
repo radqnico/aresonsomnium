@@ -79,7 +79,7 @@ public class ShopManager {
         if (Objects.nonNull(customShop)) {
             if (customShop.isShopReady()) {
                 player.openInventory(customShop.createInventory(true));
-                Bukkit.getScheduler().runTaskLater(aresonSomnium, () -> openedGuis.put(player, guiName), 5);
+                openedGuis.put(player, guiName);
             } else {
                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("shop-not-ready"));
             }
