@@ -2,7 +2,6 @@ package it.areson.aresonsomnium.economy.shops.guis;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -77,6 +76,9 @@ public class ShopManager {
         if (Objects.nonNull(customShop)) {
             if (customShop.isShopReady()) {
                 openedGuis.put(player, guiName);
+
+                openedGuis.forEach((a, b) -> System.out.println(a + " " + b));
+
                 player.openInventory(customShop.createInventory(true));
             } else {
                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("shop-not-ready"));
