@@ -54,7 +54,7 @@ pipeline {
                                 )
                         ]
                 )
-                /*sshPublisher(
+                sshPublisher(
                         failOnError: false,
                         publishers: [
                                 sshPublisherDesc(
@@ -64,7 +64,7 @@ pipeline {
                                         ]
                                 )
                         ]
-                )*/
+                )
             }
         }
     }

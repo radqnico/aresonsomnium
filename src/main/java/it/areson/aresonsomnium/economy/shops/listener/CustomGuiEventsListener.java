@@ -39,6 +39,8 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     @EventHandler
     public void onInventoryCloseEvent(InventoryCloseEvent event) {
         Player player = (Player) event.getView().getPlayer();
+        String playerName = player.getName();
+
         if (!shopEditor.isEditingPrice(player)) {
             if (shopEditor.isEditingCustomGui(player)) {
                 CustomShop customShop = shopEditor.getEditingCustomShop(player);
@@ -47,8 +49,8 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 } else {
                     aresonSomnium.getLogger().info(MessageUtils.warningMessage("GUI modificata da '" + player.getName() + "' NON salvata DB"));
                 }
-            } else if (aresonSomnium.shopManager.isViewingCustomGui(player)) {
-                aresonSomnium.shopManager.playerCloseGui(player);
+            } else if (aresonSomnium.shopManager.isViewingCustomGui(playerName)) {
+                aresonSomnium.shopManager.playerCloseGui(playerName);
             }
         }
     }
@@ -56,7 +58,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     @EventHandler
     public void onInventoryDragEvent(InventoryDragEvent event) {
         Player player = (Player) event.getWhoClicked();
-        if (shopEditor.isEditingCustomGui(player) || aresonSomnium.shopManager.isViewingCustomGui(player)) {
+        if (shopEditor.isEditingCustomGui(player) || aresonSomnium.shopManager.isViewingCustomGui(player.getName())) {
             event.setCancelled(true);
         }
     }
@@ -85,7 +87,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     switchEditingAction(player, editingCustomShop, event);
                     aresonSomnium.getDebugger().debugInfo("Edit Action");
                 }
-            } else if (aresonSomnium.shopManager.isViewingCustomGui(player)) {
+            } else if (aresonSomnium.shopManager.isViewingCustomGui(player.getName())) {
                 System.out.println("isViewingCustomGui");
                 // Shopping
                 switchUserAction(player, event);
@@ -206,7 +208,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     private void prepareBuyItem(Player player, InventoryClickEvent event) {
         if (event.getClickedInventory().getType().equals(InventoryType.CHEST)) {
             if (event.isLeftClick()) {
-                CustomShop shop = aresonSomnium.shopManager.getViewingCustomShop(player);
+                CustomShop shop = aresonSomnium.shopManager.getViewingCustomShop(player.getName());
                 ShopItem shopItem = shop.getItems().get(event.getSlot());
                 if (Objects.nonNull(shopItem) && shopItem.getShoppingPrice().isPriceReady()) {
                     buyItem(player, shopItem);
@@ -219,7 +221,7 @@ public class CustomGuiEventsListener extends GeneralEventListener {
     private void prepareSellItem(Player player, InventoryClickEvent event) {
         if (event.getClickedInventory().getType().equals(InventoryType.CHEST)) {
             if (event.isRightClick()) {
-                CustomShop shop = aresonSomnium.shopManager.getViewingCustomShop(player);
+                CustomShop shop = aresonSomnium.shopManager.getViewingCustomShop(player.getName());
                 ShopItem shopItem = shop.getItems().get(event.getSlot());
                 if (Objects.nonNull(shopItem) && shopItem.getSellingPrice().isPriceReady()) {
                     sellItem(player, shopItem);

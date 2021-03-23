@@ -14,7 +14,7 @@ public class ShopManager {
 
     private final AresonSomnium aresonSomnium;
     private final HashMap<String, CustomShop> guis;
-    private final HashMap<Player, String> openedGuis;
+    private final HashMap<String, String> openedGuis;
     private final MySqlDBConnection mySqlDBConnection;
     private final String tableName;
 
@@ -75,10 +75,7 @@ public class ShopManager {
         CustomShop customShop = guis.get(guiName);
         if (Objects.nonNull(customShop)) {
             if (customShop.isShopReady()) {
-                openedGuis.put(player, guiName);
-
-                openedGuis.forEach((a, b) -> System.out.println(a + " " + b));
-
+                openedGuis.put(player.getName(), guiName);
                 player.openInventory(customShop.createInventory(true));
             } else {
                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("shop-not-ready"));
@@ -88,17 +85,17 @@ public class ShopManager {
         }
     }
 
-    public void playerCloseGui(Player player) {
-        openedGuis.remove(player);
+    public void playerCloseGui(String playerName) {
+        openedGuis.remove(playerName);
     }
 
-    public boolean isViewingCustomGui(Player player) {
-        return openedGuis.containsKey(player);
+    public boolean isViewingCustomGui(String playerName) {
+        return openedGuis.containsKey(playerName);
     }
 
-    public CustomShop getViewingCustomShop(Player player) {
-        if (isViewingCustomGui(player)) {
-            return guis.get(openedGuis.get(player));
+    public CustomShop getViewingCustomShop(String playerName) {
+        if (isViewingCustomGui(playerName)) {
+            return guis.get(openedGuis.get(playerName));
         }
         return null;
     }
