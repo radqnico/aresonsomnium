@@ -78,7 +78,7 @@ public class ShopManager {
         CustomShop customShop = guis.get(guiName);
         if (Objects.nonNull(customShop)) {
             if (customShop.isShopReady()) {
-                player.openInventory(customShop.createInventory(true));
+                Bukkit.getScheduler().runTaskLater(aresonSomnium, () -> player.openInventory(customShop.createInventory(true)), 5);
                 openedGuis.put(player, guiName);
             } else {
                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("shop-not-ready"));
