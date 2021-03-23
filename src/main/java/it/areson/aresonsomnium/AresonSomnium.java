@@ -14,10 +14,7 @@ import it.areson.aresonsomnium.economy.shops.items.BlockPrice;
 import it.areson.aresonsomnium.economy.shops.listener.CustomGuiEventsListener;
 import it.areson.aresonsomnium.economy.shops.listener.SetPriceInChatListener;
 import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
-import it.areson.aresonsomnium.listeners.GatewayListener;
-import it.areson.aresonsomnium.listeners.InventoryListener;
-import it.areson.aresonsomnium.listeners.LuckPermsListener;
-import it.areson.aresonsomnium.listeners.RightClickListener;
+import it.areson.aresonsomnium.listeners.*;
 import it.areson.aresonsomnium.placeholders.CoinsPlaceholders;
 import it.areson.aresonsomnium.placeholders.MultiplierPlaceholders;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
@@ -30,8 +27,10 @@ import net.luckperms.api.node.Node;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -40,10 +39,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static it.areson.aresonsomnium.Constants.PERMISSION_MULTIPLIER;
@@ -104,7 +100,7 @@ public class AresonSomnium extends JavaPlugin {
         // Files
         registerFiles();
         // Events
-        initAllEvents();
+        initListeners();
         // Commands
         registerCommands();
         // Placeholders
@@ -161,17 +157,19 @@ public class AresonSomnium extends JavaPlugin {
         new GiveConsumableCommand(this);
     }
 
-    private void initAllEvents() {
+    private void initListeners() {
         playerDBEvents = new GatewayListener(this);
         CustomGuiEventsListener customGuiEventsListener = new CustomGuiEventsListener(this);
         setPriceInChatListener = new SetPriceInChatListener(this);
         InventoryListener inventoryListener = new InventoryListener(this);
         RightClickListener rightClickListener = new RightClickListener(this);
+        AnvilListener anvilListener = new AnvilListener(this);
 
         playerDBEvents.registerEvents();
         customGuiEventsListener.registerEvents();
         inventoryListener.registerEvents();
         rightClickListener.registerEvents();
+        anvilListener.registerEvents();
     }
 
     public SomniumPlayerManager getSomniumPlayerManager() {
@@ -294,6 +292,41 @@ public class AresonSomnium extends JavaPlugin {
 
     public void removePlayer(String playerName) {
         playerMultipliers.remove(playerName);
+    }
+
+    public boolean isALockedEnchantFromEnchants(ItemStack itemStack) {
+        boolean isLocked = false;
+        List<String> clickedLore = itemStack.getLore();
+
+        if (clickedLore != null && !clickedLore.isEmpty()) {
+            isLocked = clickedLore.parallelStream().reduce(false, (status, loreLine) -> loreLine.contains("Immodificabile"), Boolean::logicalOr);
+        }
+
+        return isLocked;
+    }
+
+    public boolean hasCompatibleEnchants(ItemStack itemStack, Map<Enchantment, Integer> storedEnchants) {
+        if (itemStack != null) {
+            ItemMeta itemMeta = itemStack.getItemMeta();
+
+            if (itemMeta != null) {
+                return storedEnchants.entrySet().parallelStream().reduce(true, (valid, entry) -> {
+                    Enchantment enchantment = entry.getKey();
+                    Integer currentEnchantmentLevel = itemStack.getEnchantments().get(enchantment);
+
+                    ItemMeta clonedItemMeta = itemMeta.clone();
+                    clonedItemMeta.removeEnchant(enchantment);
+
+                    return enchantment.canEnchantItem(itemStack)
+                            && !clonedItemMeta.hasConflictingEnchant(enchantment)
+                            && (currentEnchantmentLevel == null || currentEnchantmentLevel + 1 == entry.getValue());
+                }, Boolean::logicalAnd);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
 }

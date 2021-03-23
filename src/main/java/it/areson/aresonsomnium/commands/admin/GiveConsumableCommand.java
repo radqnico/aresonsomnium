@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static it.areson.aresonsomnium.Constants.BOMB3_MODEL_DATA;
 import static it.areson.aresonsomnium.Constants.MULTIPLIER_MODEL_DATA;
 import static net.md_5.bungee.api.ChatColor.*;
 
@@ -25,6 +26,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
     private final AresonSomnium aresonSomnium;
     public HashMap<String, ItemStack> itemStacks;
     public final String multiplierIndexName = "multiplier";
+    public final String bomb3IndexName = "bomb3";
 
     public GiveConsumableCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
@@ -41,9 +43,9 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
         itemStacks = new HashMap<>();
 
         itemStacks.put(multiplierIndexName, createConsumableItemStack(Material.CLOCK, "Moltiplicatore", new ArrayList<>(), MULTIPLIER_MODEL_DATA));
+        itemStacks.put(bomb3IndexName, createConsumableItemStack(Material.TNT, "Bomb3", new ArrayList<>(), BOMB3_MODEL_DATA));
     }
 
-    @SuppressWarnings("SameParameterValue")
     private ItemStack createConsumableItemStack(Material material, String displayName, ArrayList<String> lore, int modelValue) {
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
