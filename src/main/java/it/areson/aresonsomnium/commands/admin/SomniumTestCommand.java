@@ -2,7 +2,6 @@ package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.shops.guis.CustomShop;
-import it.areson.aresonsomnium.economy.shops.guis.ShopManager;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -75,9 +74,8 @@ public class SomniumTestCommand implements CommandExecutor, TabCompleter {
     private void openPermanentGuiHandler(CommandSender commandSender, String guiName) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            ShopManager shopManager = aresonSomnium.getShopManager();
-            if (shopManager.isPermanent(guiName)) {
-                CustomShop permanentGui = shopManager.getPermanentGui(guiName);
+            if (aresonSomnium.shopManager.isASavedGUI(guiName)) {
+                CustomShop permanentGui = aresonSomnium.shopManager.getPermanentGui(guiName);
                 player.openInventory(permanentGui.createInventory(true));
             } else {
                 player.sendMessage("La GUI richiesta non è una GUI salvata");

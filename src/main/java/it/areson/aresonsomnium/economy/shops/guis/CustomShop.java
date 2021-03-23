@@ -48,6 +48,7 @@ public class CustomShop extends MySQLObject {
         return items;
     }
 
+    //TODO Store local state and force refresh when needed
     public Inventory createInventory(boolean isShopping) {
         Inventory inventory = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', title));
         for (Map.Entry<Integer, ShopItem> entry : items.entrySet()) {

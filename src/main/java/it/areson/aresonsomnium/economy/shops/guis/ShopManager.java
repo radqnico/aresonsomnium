@@ -2,35 +2,33 @@ package it.areson.aresonsomnium.economy.shops.guis;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
-import it.areson.aresonsomnium.utils.PlayerComparator;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Objects;
-import java.util.TreeMap;
 
 public class ShopManager {
 
     private final AresonSomnium aresonSomnium;
-    private final TreeMap<String, CustomShop> guis;
-    private final TreeMap<Player, String> openedGuis;
+    private final HashMap<String, CustomShop> guis;
+    private final HashMap<Player, String> openedGuis;
     private final MySqlDBConnection mySqlDBConnection;
     private final String tableName;
 
     public ShopManager(AresonSomnium aresonSomnium, MySqlDBConnection connection, String tableName) {
         this.aresonSomnium = aresonSomnium;
-        this.guis = new TreeMap<>();
-        PlayerComparator playerComparator = new PlayerComparator();
-        this.openedGuis = new TreeMap<>(playerComparator);
+        this.guis = new HashMap<>();
+        this.openedGuis = new HashMap<>();
         this.mySqlDBConnection = connection;
         this.tableName = tableName;
         fetchAllFromDB();
     }
 
-    public TreeMap<String, CustomShop> getGuis() {
+    public HashMap<String, CustomShop> getGuis() {
         return guis;
     }
 
@@ -57,7 +55,7 @@ public class ShopManager {
         guis.put(guiName, CustomShop.getFromDB(mySqlDBConnection, guiName));
     }
 
-    public boolean isPermanent(String guiName) {
+    public boolean isASavedGUI(String guiName) {
         return guis.containsKey(guiName);
     }
 
@@ -78,8 +76,8 @@ public class ShopManager {
         CustomShop customShop = guis.get(guiName);
         if (Objects.nonNull(customShop)) {
             if (customShop.isShopReady()) {
-                Bukkit.getScheduler().runTaskLater(aresonSomnium, () -> player.openInventory(customShop.createInventory(true)), 5);
                 openedGuis.put(player, guiName);
+                player.openInventory(customShop.createInventory(true));
             } else {
                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("shop-not-ready"));
             }

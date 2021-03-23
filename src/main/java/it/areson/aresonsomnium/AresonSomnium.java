@@ -70,15 +70,16 @@ public class AresonSomnium extends JavaPlugin {
         put(Material.CHISELED_QUARTZ_BLOCK, Constants.PERMISSION_SETTIMO_CIELO);
     }};
     private final HashMap<String, Multiplier> playerMultipliers = new HashMap<>();
-    public Optional<LuckPerms> luckPerms;
     private SomniumPlayerManager somniumPlayerManager;
-    private ShopManager shopManager;
     private ShopEditor shopEditor;
     private GatewayListener playerDBEvents;
     private SetPriceInChatListener setPriceInChatListener;
     private GommaObjectsFileReader gommaObjectsFileReader;
     private MessageManager messages;
     private Debugger debugger;
+
+    public Optional<LuckPerms> luckPerms;
+    public ShopManager shopManager;
 
     @Override
     public void onDisable() {
@@ -174,10 +175,6 @@ public class AresonSomnium extends JavaPlugin {
 
     public SomniumPlayerManager getSomniumPlayerManager() {
         return somniumPlayerManager;
-    }
-
-    public ShopManager getShopManager() {
-        return shopManager;
     }
 
     public Debugger getDebugger() {

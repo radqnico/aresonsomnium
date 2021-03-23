@@ -68,7 +68,7 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         List<String> suggestions = new ArrayList<>();
         if (strings.length == 1) {
-            StringUtil.copyPartialMatches(strings[0], aresonSomnium.getShopManager().getGuis().keySet(), suggestions);
+            StringUtil.copyPartialMatches(strings[0], aresonSomnium.shopManager.getGuis().keySet(), suggestions);
         }
         return suggestions;
     }

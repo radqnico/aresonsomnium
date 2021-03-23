@@ -84,7 +84,7 @@ public class ShopEditor {
 
     public CustomShop getEditingCustomShop(Player player) {
         if (isEditingCustomGui(player)) {
-            return aresonSomnium.getShopManager().getGuis().get(editingGuis.get(player));
+            return aresonSomnium.shopManager.getGuis().get(editingGuis.get(player));
         }
         return null;
     }

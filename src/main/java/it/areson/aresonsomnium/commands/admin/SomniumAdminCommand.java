@@ -5,7 +5,6 @@ import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.economy.shops.guis.CustomShop;
 import it.areson.aresonsomnium.economy.shops.guis.ShopEditor;
-import it.areson.aresonsomnium.economy.shops.guis.ShopManager;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.Debugger;
 import it.areson.aresonsomnium.utils.MessageUtils;
@@ -157,7 +156,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 case "editshop":
                     StringUtil.copyPartialMatches(
                             strings[1],
-                            aresonSomnium.getShopManager().getGuis().keySet(),
+                            aresonSomnium.shopManager.getGuis().keySet(),
                             suggestions
                     );
                     break;
@@ -214,17 +213,17 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleReloadShops(CommandSender commandSender) {
-        aresonSomnium.getShopManager().fetchAllFromDB();
+        aresonSomnium.shopManager.fetchAllFromDB();
         messageManager.sendPlainMessage(commandSender, "guis-reloaded");
     }
 
     private void handleEditShop(CommandSender commandSender, String guiName) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            ShopManager shopManager = aresonSomnium.getShopManager();
             ShopEditor shopEditor = aresonSomnium.getShopEditor();
-            if (shopManager.isPermanent(guiName)) {
-                CustomShop permanentGui = shopManager.getPermanentGui(guiName);
+
+            if (aresonSomnium.shopManager.isASavedGUI(guiName)) {
+                CustomShop permanentGui = aresonSomnium.shopManager.getPermanentGui(guiName);
                 player.openInventory(permanentGui.createInventory(false));
                 if (shopEditor.isEditingCustomGui(player) || shopEditor.isEditingPrice(player)) {
                     shopEditor.endEditGui(player);
@@ -240,9 +239,8 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleCreateShop(CommandSender commandSender, String guiName, String guiTitle) {
-        ShopManager shopManager = aresonSomnium.getShopManager();
         ShopEditor shopEditor = aresonSomnium.getShopEditor();
-        CustomShop newGui = shopManager.createNewGui(guiName, guiTitle);
+        CustomShop newGui = aresonSomnium.shopManager.createNewGui(guiName, guiTitle);
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             player.openInventory(newGui.createInventory(false));
