@@ -31,7 +31,10 @@ public class ItemListView {
         for (int i = 0; i < neededInventories; i++) {
             Inventory inventory = Bukkit.createInventory(null, 54, Component.text("Lista oggetti shop | PAGINA " + i).decorate(TextDecoration.BOLD));
             for (int j = 0; j < 54; j++) {
-                inventory.addItem(items.get((54 * i) + j).getItemStack());
+                int index = (54 * i) + j;
+                if (items.size() > index) {
+                    inventory.addItem(items.get(index).getItemStack());
+                }
             }
             inventories.add(inventory);
         }
