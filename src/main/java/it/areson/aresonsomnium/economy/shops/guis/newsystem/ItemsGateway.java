@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.zip.ZipException;
 
 public class ItemsGateway {
 
@@ -31,9 +32,12 @@ public class ItemsGateway {
                 cache.clear();
             }
             while (resultSet.next()) {
-                ShopItem shopItem = readShopItemFromRecord(resultSet);
-                shopItems.add(shopItem);
-                cache.putIfAbsent(shopItem.getId(), shopItem);
+                try {
+                    ShopItem shopItem = readShopItemFromRecord(resultSet);
+                    shopItems.add(shopItem);
+                    cache.putIfAbsent(shopItem.getId(), shopItem);
+                } catch (ZipException ignored) {
+                }
             }
             connection.close();
         } catch (SQLException exception) {
@@ -54,9 +58,12 @@ public class ItemsGateway {
             Connection connection = mySqlDBConnection.connect();
             ResultSet resultSet = mySqlDBConnection.select(connection, query);
             while (resultSet.next()) {
-                ShopItem shopItem = readShopItemFromRecord(resultSet);
-                optionalShopItem = Optional.of(shopItem);
-                cache.putIfAbsent(shopItem.getId(), shopItem);
+                try {
+                    ShopItem shopItem = readShopItemFromRecord(resultSet);
+                    optionalShopItem = Optional.of(shopItem);
+                    cache.putIfAbsent(shopItem.getId(), shopItem);
+                } catch (ZipException ignored) {
+                }
             }
             connection.close();
         } catch (SQLException exception) {
@@ -109,7 +116,7 @@ public class ItemsGateway {
         return false;
     }
 
-    private ShopItem readShopItemFromRecord(ResultSet resultSet) throws SQLException {
+    private ShopItem readShopItemFromRecord(ResultSet resultSet) throws SQLException, ZipException {
         int id = resultSet.getInt("id");
         int amount = resultSet.getInt("amount");
         String itemStack64 = resultSet.getString("itemStack");
