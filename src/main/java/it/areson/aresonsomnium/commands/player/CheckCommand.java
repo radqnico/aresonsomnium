@@ -4,7 +4,7 @@ import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
-import it.areson.aresonsomnium.economy.shops.items.Price;
+import it.areson.aresonsomnium.economy.shops.items.OldPrice;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -64,7 +64,7 @@ public class CheckCommand implements CommandExecutor, TabCompleter {
     private void createNewCheck(SomniumPlayer somniumPlayer, BigDecimal amount, CoinType type) {
         switch (type) {
             case OBOLI:
-                if (somniumPlayer.canAfford(new Price(BigDecimal.ZERO, amount.toBigInteger(), BigInteger.ZERO))) {
+                if (somniumPlayer.canAfford(new OldPrice(BigDecimal.ZERO, amount.toBigInteger(), BigInteger.ZERO))) {
                     ItemStack itemStack = Wallet.generateCheck(amount, type);
                     if (!somniumPlayer.getPlayer().getInventory().addItem(itemStack).isEmpty()) {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
@@ -77,7 +77,7 @@ public class CheckCommand implements CommandExecutor, TabCompleter {
                 }
                 break;
             case GEMME:
-                if (somniumPlayer.canAfford(new Price(BigDecimal.ZERO, BigInteger.ZERO, amount.toBigInteger()))) {
+                if (somniumPlayer.canAfford(new OldPrice(BigDecimal.ZERO, BigInteger.ZERO, amount.toBigInteger()))) {
                     ItemStack itemStack = Wallet.generateCheck(amount, type);
                     if (!somniumPlayer.getPlayer().getInventory().addItem(itemStack).isEmpty()) {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
@@ -90,7 +90,7 @@ public class CheckCommand implements CommandExecutor, TabCompleter {
                 }
                 break;
             case MONETE:
-                if (somniumPlayer.canAfford(new Price(amount, BigInteger.ZERO, BigInteger.ZERO))) {
+                if (somniumPlayer.canAfford(new OldPrice(amount, BigInteger.ZERO, BigInteger.ZERO))) {
                     ItemStack itemStack = Wallet.generateCheck(amount, type);
                     if (!somniumPlayer.getPlayer().getInventory().addItem(itemStack).isEmpty()) {
                         somniumPlayer.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));

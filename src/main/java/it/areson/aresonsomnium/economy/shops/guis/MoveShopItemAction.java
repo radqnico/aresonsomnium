@@ -1,6 +1,6 @@
 package it.areson.aresonsomnium.economy.shops.guis;
 
-import it.areson.aresonsomnium.economy.shops.items.ShopItem;
+import it.areson.aresonsomnium.economy.shops.items.OldShopItem;
 import it.areson.aresonsomnium.elements.Pair;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -56,11 +56,11 @@ public class MoveShopItemAction {
                 break;
             case ADD_NEW_TO_SHOP:
                 if (Objects.nonNull(itemStack)) {
-                    customShop.getItems().put(destination.right(), new ShopItem(itemStack));
+                    customShop.getItems().put(destination.right(), new OldShopItem(itemStack));
                 }
                 break;
             case MOVE_IN_SHOP:
-                ShopItem moved = customShop.getItems().remove(source.right());
+                OldShopItem moved = customShop.getItems().remove(source.right());
                 customShop.getItems().put(destination.right(), moved);
                 break;
             case INVALID:

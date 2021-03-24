@@ -4,8 +4,8 @@ import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.shops.guis.*;
-import it.areson.aresonsomnium.economy.shops.items.Price;
-import it.areson.aresonsomnium.economy.shops.items.ShopItem;
+import it.areson.aresonsomnium.economy.shops.items.OldPrice;
+import it.areson.aresonsomnium.economy.shops.items.OldShopItem;
 import it.areson.aresonsomnium.listeners.GeneralEventListener;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.MessageUtils;
@@ -18,7 +18,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
@@ -82,10 +81,8 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 CustomShop editingCustomShop = shopEditor.getEditingCustomShop(player);
                 if (shopEditor.isEditingPrice(player)) {
                     switchPriceAction(player, event);
-                    aresonSomnium.getDebugger().debugInfo("Price Action");
                 } else {
                     switchEditingAction(player, editingCustomShop, event);
-                    aresonSomnium.getDebugger().debugInfo("Edit Action");
                 }
             } else if (aresonSomnium.shopManager.isViewingCustomGui(player.getName())) {
                 System.out.println("isViewingCustomGui");
@@ -183,7 +180,6 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                 }
                 aresonSomnium.getSetPriceInChatListener().registerEvents();
             } else {
-                aresonSomnium.getDebugger().debugError("Errore: EditPriceConfig non trovato");
             }
         }
     }
@@ -209,9 +205,9 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         if (event.getClickedInventory().getType().equals(InventoryType.CHEST)) {
             if (event.isLeftClick()) {
                 CustomShop shop = aresonSomnium.shopManager.getViewingCustomShop(player.getName());
-                ShopItem shopItem = shop.getItems().get(event.getSlot());
-                if (Objects.nonNull(shopItem) && shopItem.getShoppingPrice().isPriceReady()) {
-                    buyItem(player, shopItem);
+                OldShopItem oldShopItem = shop.getItems().get(event.getSlot());
+                if (Objects.nonNull(oldShopItem) && oldShopItem.getShoppingPrice().isPriceReady()) {
+                    buyItem(player, oldShopItem);
                 }
             }
         }
@@ -222,9 +218,9 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         if (event.getClickedInventory().getType().equals(InventoryType.CHEST)) {
             if (event.isRightClick()) {
                 CustomShop shop = aresonSomnium.shopManager.getViewingCustomShop(player.getName());
-                ShopItem shopItem = shop.getItems().get(event.getSlot());
-                if (Objects.nonNull(shopItem) && shopItem.getSellingPrice().isPriceReady()) {
-                    sellItem(player, shopItem);
+                OldShopItem oldShopItem = shop.getItems().get(event.getSlot());
+                if (Objects.nonNull(oldShopItem) && oldShopItem.getSellingPrice().isPriceReady()) {
+                    sellItem(player, oldShopItem);
                 }
             }
         }
@@ -260,13 +256,13 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         }
     }
 
-    private void sellItem(Player player, ShopItem shopItem) {
+    private void sellItem(Player player, OldShopItem oldShopItem) {
         SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
         if (Objects.nonNull(somniumPlayer)) {
-            Price price = shopItem.getSellingPrice();
-            ItemStack shopItemStack = shopItem.getItemStack();
-            Material sellItemType = shopItem.getItemStack().getType();
-            if (shopItem.isSellable()) {
+            OldPrice oldPrice = oldShopItem.getSellingPrice();
+            ItemStack shopItemStack = oldShopItem.getItemStack();
+            Material sellItemType = oldShopItem.getItemStack().getType();
+            if (oldShopItem.isSellable()) {
                 if (player.getInventory().contains(shopItemStack.getType())) {
 
                     long totalAmountOfItem = Arrays.stream(player.getInventory().getContents()).parallel()
@@ -286,12 +282,12 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                                     .findFirst();
                             if (first.isPresent()) {
                                 ItemStack itemStack = first.get();
-                                price.addTo(somniumPlayer);
+                                oldPrice.addTo(somniumPlayer);
                                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage(
                                         "item-sell-success",
-                                        Pair.of("%coins%", price.getCoins().toString()),
-                                        Pair.of("%obols%", price.getObols().toString()),
-                                        Pair.of("%gems%", price.getGems().toString())
+                                        Pair.of("%coins%", oldPrice.getCoins().toString()),
+                                        Pair.of("%obols%", oldPrice.getObols().toString()),
+                                        Pair.of("%gems%", oldPrice.getGems().toString())
                                 ));
                                 if (toRemove > itemStack.getAmount()) {
                                     toRemove -= itemStack.getAmount();
@@ -318,18 +314,18 @@ public class CustomGuiEventsListener extends GeneralEventListener {
         }
     }
 
-    private void buyItem(Player player, ShopItem shopItem) {
+    private void buyItem(Player player, OldShopItem oldShopItem) {
         SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
         if (Objects.nonNull(somniumPlayer)) {
-            Price price = shopItem.getShoppingPrice();
-            if (somniumPlayer.canAfford(price)) {
-                if (player.getInventory().addItem(new ItemStack(shopItem.getItemStack())).isEmpty()) {
-                    price.removeFrom(somniumPlayer);
+            OldPrice oldPrice = oldShopItem.getShoppingPrice();
+            if (somniumPlayer.canAfford(oldPrice)) {
+                if (player.getInventory().addItem(new ItemStack(oldShopItem.getItemStack())).isEmpty()) {
+                    oldPrice.removeFrom(somniumPlayer);
                     player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage(
                             "item-buy-success",
-                            Pair.of("%coins%", price.getCoins().toString()),
-                            Pair.of("%obols%", price.getObols().toString()),
-                            Pair.of("%gems%", price.getGems().toString())
+                            Pair.of("%coins%", oldPrice.getCoins().toString()),
+                            Pair.of("%obols%", oldPrice.getObols().toString()),
+                            Pair.of("%gems%", oldPrice.getGems().toString())
                     ));
                 } else {
                     player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("item-buy-not-enough-space"));

@@ -2,7 +2,7 @@ package it.areson.aresonsomnium.economy.shops.guis;
 
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.exceptions.PriceConfigNotReadyException;
-import it.areson.aresonsomnium.economy.shops.items.ShopItem;
+import it.areson.aresonsomnium.economy.shops.items.OldShopItem;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -42,29 +42,29 @@ public class EditPriceConfig {
         } else if (Objects.isNull(price)) {
             throw new PriceConfigNotReadyException("Manca il prezzo");
         } else {
-            ShopItem shopItem = customShop.getItems().get(slot);
+            OldShopItem oldShopItem = customShop.getItems().get(slot);
             if (!isSelling) {
                 switch (coinType) {
                     case OBOLI:
-                        shopItem.getShoppingPrice().setObols(price.toBigInteger());
+                        oldShopItem.getShoppingPrice().setObols(price.toBigInteger());
                         break;
                     case GEMME:
-                        shopItem.getShoppingPrice().setGems(price.toBigInteger());
+                        oldShopItem.getShoppingPrice().setGems(price.toBigInteger());
                         break;
                     case MONETE:
-                        shopItem.getShoppingPrice().setCoins(price);
+                        oldShopItem.getShoppingPrice().setCoins(price);
                         break;
                 }
             } else {
                 switch (coinType) {
                     case OBOLI:
-                        shopItem.getSellingPrice().setObols(price.toBigInteger());
+                        oldShopItem.getSellingPrice().setObols(price.toBigInteger());
                         break;
                     case GEMME:
-                        shopItem.getSellingPrice().setGems(price.toBigInteger());
+                        oldShopItem.getSellingPrice().setGems(price.toBigInteger());
                         break;
                     case MONETE:
-                        shopItem.getSellingPrice().setCoins(price);
+                        oldShopItem.getSellingPrice().setCoins(price);
                         break;
                 }
             }

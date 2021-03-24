@@ -3,7 +3,7 @@ package it.areson.aresonsomnium.players;
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.Wallet;
-import it.areson.aresonsomnium.economy.shops.items.Price;
+import it.areson.aresonsomnium.economy.shops.items.OldPrice;
 import org.bukkit.entity.Player;
 
 import java.math.BigInteger;
@@ -67,14 +67,8 @@ public class SomniumPlayer extends MySQLObject {
         try {
             Connection connection = mySqlDBConnection.connect();
             int update = mySqlDBConnection.update(connection, query);
-            if (update >= 0) {
-                mySqlDBConnection.getDebugger().debugSuccess("Aggiornato giocatore '" + getPlayerName() + "' sul DB.");
-            } else {
-                mySqlDBConnection.getDebugger().debugWarning("Giocatore '" + getPlayerName() + "' non aggiornato.");
-            }
             connection.close();
         } catch (SQLException exception) {
-            mySqlDBConnection.getDebugger().debugError("Impossibile connettersi per aggiornare il giocatore '" + getPlayerName() + "'");
             mySqlDBConnection.printSqlExceptionDetails(exception);
         }
     }
@@ -90,15 +84,10 @@ public class SomniumPlayer extends MySQLObject {
             if (resultSet.next()) {
                 // Presente
                 setFromResultSet(resultSet);
-                mySqlDBConnection.getDebugger().debugSuccess("Dati del giocatore '" + getPlayerName() + "' recuperati dal DB");
                 return true;
-            } else {
-                // Non presente
-                mySqlDBConnection.getDebugger().debugWarning("Giocatore '" + getPlayerName() + "' non presente sul DB");
             }
             connection.close();
         } catch (SQLException exception) {
-            mySqlDBConnection.getDebugger().debugError("Impossibile connettersi per recuperare il giocatore '" + getPlayerName() + "'");
             mySqlDBConnection.printSqlExceptionDetails(exception);
         }
         return false;
@@ -119,7 +108,7 @@ public class SomniumPlayer extends MySQLObject {
         this.wallet.changeGems(BigInteger.valueOf(resultSet.getLong("gems")));
     }
 
-    public boolean canAfford(Price price) {
-        return price.canAffordThis(this);
+    public boolean canAfford(OldPrice oldPrice) {
+        return oldPrice.canAffordThis(this);
     }
 }

@@ -10,4 +10,6 @@ public class MySqlConfig {
     public static String PLAYER_TABLE_NAME = "somniumPlayer";
     public static String GUIS_TABLE_NAME = "somniumGuis";
 
+    public static String ITEMS_TABLE_NAME = "items";
+
 }

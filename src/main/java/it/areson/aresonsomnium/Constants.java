@@ -30,6 +30,7 @@ public class Constants {
     public static final int GOMMA_MODEL_DATA = 997;
     public static final int MULTIPLIER_MODEL_DATA = 996;
     public static final int BOMB3_MODEL_DATA = 995;
+    public static final int SHOP_ITEM_OFFSET_DATA = 100000;
 
     public static final int OBOLS_CHANGE_AMOUNT = 20;
 

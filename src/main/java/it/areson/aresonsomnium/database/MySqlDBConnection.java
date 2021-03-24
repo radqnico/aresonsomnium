@@ -1,23 +1,16 @@
 package it.areson.aresonsomnium.database;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.utils.Debugger;
 
 import java.sql.*;
 
 public class MySqlDBConnection {
 
     private final AresonSomnium aresonSomnium;
-    private final Debugger debugger;
 
-    public MySqlDBConnection(AresonSomnium aresonSomnium, Debugger debugger) {
+    public MySqlDBConnection(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
-        this.debugger = debugger;
         testConnection();
-    }
-
-    public Debugger getDebugger() {
-        return debugger;
     }
 
     public void testConnection() {
@@ -25,7 +18,6 @@ public class MySqlDBConnection {
             Connection connection = connect();
             connection.close();
         } catch (SQLException e) {
-            debugger.debugError(aresonSomnium.getMessageManager().getPlainMessage("sql-connect-error"));
             printSqlExceptionDetails(e);
         }
     }
@@ -38,7 +30,6 @@ public class MySqlDBConnection {
             String pass = MySqlConfig.PASS;
             return DriverManager.getConnection("jdbc:mysql://" + host + "/" + database + "?user=" + user + "&password=" + pass + "&serverTimezone=CET");
         } catch (SQLException e) {
-            debugger.debugError(aresonSomnium.getMessageManager().getPlainMessage("sql-connect-error"));
             printSqlExceptionDetails(e);
         }
         return null;
@@ -55,8 +46,7 @@ public class MySqlDBConnection {
     }
 
     public void printSqlExceptionDetails(SQLException exception) {
-        debugger.debugError("SQL State: " + exception.getSQLState());
-        debugger.debugError("SQL Error: " + exception.getErrorCode());
+        aresonSomnium.getLogger().severe("Errore SQL");
         exception.printStackTrace();
     }
 }

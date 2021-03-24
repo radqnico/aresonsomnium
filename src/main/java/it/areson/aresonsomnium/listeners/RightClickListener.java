@@ -183,7 +183,7 @@ public class RightClickListener extends GeneralEventListener {
                     event.setCancelled(true);
                 }
             } else {
-                aresonSomnium.getDebugger().debugError(aresonSomnium.getMessageManager().getPlainMessage("somniumplayer-not-found"));
+                //aresonSomnium.getDebugger().debugError(aresonSomnium.getMessageManager().getPlainMessage("somniumplayer-not-found"));
             }
         }
     }

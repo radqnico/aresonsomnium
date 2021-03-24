@@ -39,7 +39,7 @@ public class GommaObjectsFileReader extends FileManager {
                         maxKey = i;
                     }
                 } catch (NumberFormatException exception) {
-                    aresonSomnium.getDebugger().debugError("GOMMA GOMMA: chiave " + key + " non valida. Usa solo numeri interi positivi.");
+                    aresonSomnium.getLogger().severe("GOMMA GOMMA: chiave " + key + " non valida. Usa solo numeri interi positivi.");
                 }
             }
             maxKey++;
@@ -63,7 +63,7 @@ public class GommaObjectsFileReader extends FileManager {
                     ItemStack itemStack = ItemStack.deserializeBytes(decode);
                     itemStacks.add(itemStack);
                 } catch (NumberFormatException exception) {
-                    aresonSomnium.getDebugger().debugError("GOMMA GOMMA: chiave " + key + " non valida. Usa solo numeri interi positivi.");
+                    aresonSomnium.getLogger().severe("GOMMA GOMMA: chiave " + key + " non valida. Usa solo numeri interi positivi.");
                 }
             }
         }

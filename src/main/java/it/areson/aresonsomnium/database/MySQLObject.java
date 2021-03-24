@@ -17,12 +17,8 @@ public abstract class MySQLObject {
         try {
             Connection connection = mySqlDBConnection.connect();
             int update = mySqlDBConnection.update(connection, query);
-            if (update < 0) {
-                mySqlDBConnection.getDebugger().debugWarning("Creazione tabella '" + tableName + "' non riuscita.");
-            }
             connection.close();
         } catch (SQLException exception) {
-            mySqlDBConnection.getDebugger().debugError("Impossibile connettersi per creare '" + tableName + "'");
             mySqlDBConnection.printSqlExceptionDetails(exception);
         }
     }

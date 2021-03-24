@@ -47,7 +47,6 @@ public class SetPriceInChatListener extends GeneralEventListener {
             } catch (NumberFormatException e) {
                 player.sendMessage("Inserisci un numero decimale.");
             } catch (PriceConfigNotReadyException exception) {
-                aresonSomnium.getDebugger().debugError("Ricomincia la procedura. E' successo un errore: " + exception.getMessage());
                 exception.printStackTrace();
             }
             event.setCancelled(true);

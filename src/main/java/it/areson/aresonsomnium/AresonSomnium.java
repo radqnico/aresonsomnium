@@ -1,5 +1,8 @@
 package it.areson.aresonsomnium;
 
+import it.areson.aresonsomnium.commands.newcommands.CommandParser;
+import it.areson.aresonsomnium.commands.newcommands.EditItemsCommand;
+import it.areson.aresonsomnium.economy.shops.guis.newsystem.ShopItemsManager;
 import it.areson.aresonsomnium.elements.Multiplier;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.admin.*;
@@ -19,7 +22,6 @@ import it.areson.aresonsomnium.placeholders.CoinsPlaceholders;
 import it.areson.aresonsomnium.placeholders.MultiplierPlaceholders;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
-import it.areson.aresonsomnium.utils.Debugger;
 import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import net.luckperms.api.LuckPerms;
@@ -27,6 +29,7 @@ import net.luckperms.api.node.Node;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -41,6 +44,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 
 import static it.areson.aresonsomnium.Constants.PERMISSION_MULTIPLIER;
 import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
@@ -76,7 +80,8 @@ public class AresonSomnium extends JavaPlugin {
     private SetPriceInChatListener setPriceInChatListener;
     private GommaObjectsFileReader gommaObjectsFileReader;
     private MessageManager messages;
-    private Debugger debugger;
+
+    public ShopItemsManager shopItemsManager;
 
     public Optional<LuckPerms> luckPerms;
     public ShopManager shopManager;
@@ -92,11 +97,12 @@ public class AresonSomnium extends JavaPlugin {
         // Files
         registerFiles();
 
-        debugger = new Debugger(this, Debugger.DebugLevel.LOW);
-        MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(this, debugger);
+        MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(this);
         somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection, PLAYER_TABLE_NAME);
         shopManager = new ShopManager(this, mySqlDBConnection, GUIS_TABLE_NAME);
         shopEditor = new ShopEditor(this);
+
+        shopItemsManager = new ShopItemsManager(this, mySqlDBConnection);
 
         // Files
         registerFiles();
@@ -146,6 +152,19 @@ public class AresonSomnium extends JavaPlugin {
 
     private void registerCommands() {
 
+        CommandParser parser = new CommandParser(this);
+        PluginCommand command = this.getCommand("shopadmin");
+        if (command == null) {
+            this.getLogger().log(Level.SEVERE, "Cannot register interdimension commands");
+            return;
+        }
+
+        try {
+            parser.addAresonCommand(new EditItemsCommand());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
         new SomniumAdminCommand(this);
         new SomniumTestCommand(this);
         new OpenGuiCommand(this);
@@ -175,10 +194,6 @@ public class AresonSomnium extends JavaPlugin {
 
     public SomniumPlayerManager getSomniumPlayerManager() {
         return somniumPlayerManager;
-    }
-
-    public Debugger getDebugger() {
-        return debugger;
     }
 
     public ShopEditor getShopEditor() {

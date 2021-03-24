@@ -5,7 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.shops.items.SerializedShopItem;
-import it.areson.aresonsomnium.economy.shops.items.ShopItem;
+import it.areson.aresonsomnium.economy.shops.items.OldShopItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -25,7 +25,7 @@ import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
 public class CustomShop extends MySQLObject {
 
     private final String name;
-    private final TreeMap<Integer, ShopItem> items;
+    private final TreeMap<Integer, OldShopItem> items;
     private String title;
 
     public CustomShop(String name, String title, MySqlDBConnection mySqlDBConnection) {
@@ -44,17 +44,17 @@ public class CustomShop extends MySQLObject {
         }
     }
 
-    public TreeMap<Integer, ShopItem> getItems() {
+    public TreeMap<Integer, OldShopItem> getItems() {
         return items;
     }
 
     //TODO Store local state and force refresh when needed
     public Inventory createInventory(boolean isShopping) {
         Inventory inventory = Bukkit.createInventory(null, 54, ChatColor.translateAlternateColorCodes('&', title));
-        for (Map.Entry<Integer, ShopItem> entry : items.entrySet()) {
+        for (Map.Entry<Integer, OldShopItem> entry : items.entrySet()) {
             Integer key = entry.getKey();
-            ShopItem shopItem = entry.getValue();
-            ItemStack itemStack = new ItemStack(shopItem.getItemStack()).clone();
+            OldShopItem oldShopItem = entry.getValue();
+            ItemStack itemStack = new ItemStack(oldShopItem.getItemStack()).clone();
             ItemMeta itemMeta = itemStack.getItemMeta();
             if (Objects.nonNull(itemMeta)) {
                 List<String> lore = itemMeta.getLore();
@@ -64,16 +64,16 @@ public class CustomShop extends MySQLObject {
                     lore = new ArrayList<>();
                     lore.add("");
                 }
-                if (shopItem.getShoppingPrice().isPriceReady()) {
+                if (oldShopItem.getShoppingPrice().isPriceReady()) {
                     lore.add(ChatColor.translateAlternateColorCodes('&', "&7Prezzo di &lacquisto:"));
-                    lore.addAll(shopItem.getShoppingPrice().toLore());
+                    lore.addAll(oldShopItem.getShoppingPrice().toLore());
                 } else {
                     lore.add(ChatColor.translateAlternateColorCodes('&', "&cNon acquistabile"));
                     lore.add("");
                 }
-                if (shopItem.getSellingPrice().isPriceReady()) {
+                if (oldShopItem.getSellingPrice().isPriceReady()) {
                     lore.add(ChatColor.translateAlternateColorCodes('&', "&7Prezzo di &lvendita:"));
-                    lore.addAll(shopItem.getSellingPrice().toLore());
+                    lore.addAll(oldShopItem.getSellingPrice().toLore());
                 } else {
                     lore.add(ChatColor.translateAlternateColorCodes('&', "&cNon vendibile"));
                     lore.add("");
@@ -109,13 +109,13 @@ public class CustomShop extends MySQLObject {
             Connection connection = mySqlDBConnection.connect();
             int update = mySqlDBConnection.update(connection, saveQuery);
             if (update >= 0) {
-                mySqlDBConnection.getDebugger().debugSuccess("Aggiornata GUI '" + name + "' sul DB.");
+                //mySqlDBConnection.getDebugger().debugSuccess("Aggiornata GUI '" + name + "' sul DB.");
             } else {
-                mySqlDBConnection.getDebugger().debugWarning("GUI '\" + name + \"' NON aggiornata sul DB.");
+                //mySqlDBConnection.getDebugger().debugWarning("GUI '\" + name + \"' NON aggiornata sul DB.");
             }
             connection.close();
         } catch (SQLException exception) {
-            mySqlDBConnection.getDebugger().debugError("Impossibile connettersi per aggiornare la GUI '" + name + "'");
+            //mySqlDBConnection.getDebugger().debugError("Impossibile connettersi per aggiornare la GUI '" + name + "'");
             mySqlDBConnection.printSqlExceptionDetails(exception);
         }
     }
@@ -148,15 +148,15 @@ public class CustomShop extends MySQLObject {
             if (resultSet.next()) {
                 // Presente
                 setFromResultSet(resultSet);
-                mySqlDBConnection.getDebugger().debugSuccess("Dati GUI '" + name + "' recuperati dal DB");
+                //mySqlDBConnection.getDebugger().debugSuccess("Dati GUI '" + name + "' recuperati dal DB");
                 return true;
             } else {
                 // Non presente
-                mySqlDBConnection.getDebugger().debugWarning("GUI '" + name + "' non presente sul DB");
+                //mySqlDBConnection.getDebugger().debugWarning("GUI '" + name + "' non presente sul DB");
             }
             connection.close();
         } catch (SQLException exception) {
-            mySqlDBConnection.getDebugger().debugError("Impossibile connettersi per recuperare la GUI '" + name + "'");
+            //mySqlDBConnection.getDebugger().debugError("Impossibile connettersi per recuperare la GUI '" + name + "'");
             mySqlDBConnection.printSqlExceptionDetails(exception);
         }
         return false;

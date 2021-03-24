@@ -35,11 +35,11 @@ public class SerializedShopItem {
         return new Gson().toJson(this);
     }
 
-    public ShopItem toShopItem() {
-        return new ShopItem(
+    public OldShopItem toShopItem() {
+        return new OldShopItem(
                 ItemStack.deserializeBytes(Base64.getDecoder().decode(serializedItemStack)),
-                new Price(shopCoins, shopObols, shopGems),
-                new Price(sellCoins, sellObols, sellGems)
+                new OldPrice(shopCoins, shopObols, shopGems),
+                new OldPrice(sellCoins, sellObols, sellGems)
         );
     }
 }

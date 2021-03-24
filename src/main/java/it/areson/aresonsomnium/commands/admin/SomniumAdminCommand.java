@@ -5,10 +5,9 @@ import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.economy.shops.guis.CustomShop;
 import it.areson.aresonsomnium.economy.shops.guis.ShopEditor;
-import it.areson.aresonsomnium.players.SomniumPlayer;
-import it.areson.aresonsomnium.utils.Debugger;
-import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.elements.Pair;
+import it.areson.aresonsomnium.players.SomniumPlayer;
+import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import org.bukkit.command.*;
 import org.bukkit.entity.HumanEntity;
@@ -31,7 +30,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops", "setDebugLevel", "deleteLastLoreLine", "addCoins", "removeCoins"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops", "deleteLastLoreLine", "addCoins", "removeCoins"};
 
     public SomniumAdminCommand(AresonSomnium plugin) {
         aresonSomnium = plugin;
@@ -83,9 +82,6 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "listplayers":
                         MessageUtils.tooManyArguments(commandSender, command);
                         break;
-                    case "setdebuglevel":
-                        handleSetDebugLevel(commandSender, args[1]);
-                        break;
                     case "setcoins":
                     case "addcoins":
                     case "createshop":
@@ -102,7 +98,6 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "createshop":
                         handleCreateShop(commandSender, args[1], args[2].replaceAll("_", " "));
                         break;
-                    case "setdebuglevel":
                     case "stats":
                     case "listplayers":
                     case "editshop":
@@ -160,13 +155,6 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                             suggestions
                     );
                     break;
-                case "setdebuglevel":
-                    StringUtil.copyPartialMatches(
-                            strings[1],
-                            Arrays.stream(Debugger.DebugLevel.values()).map(Enum::name).collect(Collectors.toList()),
-                            suggestions
-                    );
-                    break;
             }
         }
         if (strings.length == 3) {
@@ -196,19 +184,6 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             itemInMainHand.setItemMeta(itemMeta);
         } else {
             messageManager.sendPlainMessage(commandSender, "player-only-command");
-        }
-    }
-
-    private void handleSetDebugLevel(CommandSender commandSender, String level) {
-        Debugger.DebugLevel debugLevel = Debugger.DebugLevel.valueOf(level);
-        switch (debugLevel) {
-            case LOW:
-            case HIGH:
-                aresonSomnium.getDebugger().setDebugLevel(debugLevel);
-                break;
-            default:
-                messageManager.sendPlainMessage(commandSender, "invalid-debug-level");
-                break;
         }
     }
 
@@ -296,13 +271,13 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         default:
                             messageManager.sendPlainMessage(player, "coins-type-error");
                     }
-                    switch (type){
+                    switch (type) {
                         case MONETE:
                         case GEMME:
                         case OBOLI:
-                            if(removing){
+                            if (removing) {
                                 messageManager.sendPlainMessage(player, "coins-remove", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.negate().toString()));
-                            }else{
+                            } else {
                                 messageManager.sendPlainMessage(player, "coins-add", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()));
                             }
                             break;
