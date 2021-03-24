@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@AresonCommand("shopadmin editShopItems")
+@AresonCommand("shopadmin editshopitems")
 public class EditItemsCommand extends CommandParserCommand {
 
     @Override
