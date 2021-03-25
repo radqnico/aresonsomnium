@@ -164,6 +164,9 @@ public class AresonSomnium extends JavaPlugin {
             exception.printStackTrace();
         }
 
+        command.setExecutor(parser);
+        command.setTabCompleter(parser);
+
         new SomniumAdminCommand(this);
         new SomniumTestCommand(this);
         new OpenGuiCommand(this);
