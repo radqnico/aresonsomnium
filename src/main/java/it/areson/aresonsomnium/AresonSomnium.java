@@ -10,13 +10,9 @@ import it.areson.aresonsomnium.commands.player.CheckCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
+import it.areson.aresonsomnium.economy.BlockPrice;
 import it.areson.aresonsomnium.economy.Wallet;
-import it.areson.aresonsomnium.economy.shops.guis.ShopEditor;
-import it.areson.aresonsomnium.economy.shops.guis.ShopManager;
-import it.areson.aresonsomnium.economy.shops.items.BlockPrice;
-import it.areson.aresonsomnium.economy.shops.listener.CustomGuiEventsListener;
-import it.areson.aresonsomnium.economy.shops.listener.SetPriceInChatListener;
-import it.areson.aresonsomnium.economy.shops.newsystem.ShopItemsManager;
+import it.areson.aresonsomnium.economy.items.ShopItemsManager;
 import it.areson.aresonsomnium.elements.Multiplier;
 import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import it.areson.aresonsomnium.listeners.*;
@@ -49,7 +45,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 import static it.areson.aresonsomnium.Constants.PERMISSION_MULTIPLIER;
-import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
 import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -78,11 +73,8 @@ public class AresonSomnium extends JavaPlugin {
     private final HashMap<String, Multiplier> playerMultipliers = new HashMap<>();
     public ShopItemsManager shopItemsManager;
     public Optional<LuckPerms> luckPerms;
-    public ShopManager shopManager;
     private SomniumPlayerManager somniumPlayerManager;
-    private ShopEditor shopEditor;
     private GatewayListener playerDBEvents;
-    private SetPriceInChatListener setPriceInChatListener;
     private GommaObjectsFileReader gommaObjectsFileReader;
     private MessageManager messages;
 
@@ -101,8 +93,6 @@ public class AresonSomnium extends JavaPlugin {
 
         MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(this);
         somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection, PLAYER_TABLE_NAME);
-        shopManager = new ShopManager(this, mySqlDBConnection, GUIS_TABLE_NAME);
-        shopEditor = new ShopEditor(this);
 
         shopItemsManager = new ShopItemsManager(this, mySqlDBConnection);
 
@@ -185,14 +175,11 @@ public class AresonSomnium extends JavaPlugin {
 
     private void initListeners() {
         playerDBEvents = new GatewayListener(this);
-        CustomGuiEventsListener customGuiEventsListener = new CustomGuiEventsListener(this);
-        setPriceInChatListener = new SetPriceInChatListener(this);
         InventoryListener inventoryListener = new InventoryListener(this);
         RightClickListener rightClickListener = new RightClickListener(this);
         AnvilListener anvilListener = new AnvilListener(this);
 
         playerDBEvents.registerEvents();
-        customGuiEventsListener.registerEvents();
         inventoryListener.registerEvents();
         rightClickListener.registerEvents();
         anvilListener.registerEvents();
@@ -200,14 +187,6 @@ public class AresonSomnium extends JavaPlugin {
 
     public SomniumPlayerManager getSomniumPlayerManager() {
         return somniumPlayerManager;
-    }
-
-    public ShopEditor getShopEditor() {
-        return shopEditor;
-    }
-
-    public SetPriceInChatListener getSetPriceInChatListener() {
-        return setPriceInChatListener;
     }
 
     public void sendErrorMessage(CommandSender commandSender, String error) {
@@ -312,6 +291,7 @@ public class AresonSomnium extends JavaPlugin {
         playerMultipliers.remove(playerName);
     }
 
+    // TODO getLore deprecato
     public boolean isALockedEnchantFromEnchants(ItemStack itemStack) {
         boolean isLocked = false;
         List<String> clickedLore = itemStack.getLore();

@@ -3,7 +3,7 @@ package it.areson.aresonsomnium.players;
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.Wallet;
-import it.areson.aresonsomnium.economy.shops.items.OldPrice;
+import it.areson.aresonsomnium.economy.Price;
 import org.bukkit.entity.Player;
 
 import java.math.BigInteger;
@@ -108,7 +108,7 @@ public class SomniumPlayer extends MySQLObject {
         this.wallet.changeGems(BigInteger.valueOf(resultSet.getLong("gems")));
     }
 
-    public boolean canAfford(OldPrice oldPrice) {
-        return oldPrice.canAffordThis(this);
+    public boolean canAfford(Price price) {
+        return price.canAffordThis(this);
     }
 }

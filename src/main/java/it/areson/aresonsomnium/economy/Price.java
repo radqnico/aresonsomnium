@@ -1,7 +1,5 @@
-package it.areson.aresonsomnium.economy.shops.newsystem;
+package it.areson.aresonsomnium.economy;
 
-import it.areson.aresonsomnium.economy.CoinType;
-import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;

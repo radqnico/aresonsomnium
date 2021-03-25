@@ -1,8 +1,11 @@
-package it.areson.aresonsomnium.economy.shops.newsystem;
+package it.areson.aresonsomnium.economy.items;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.database.MySqlConfig;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
+import it.areson.aresonsomnium.economy.Price;
+import it.areson.aresonsomnium.economy.guis.ItemListView;
+import it.areson.aresonsomnium.economy.guis.ItemListViewEventsListener;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;

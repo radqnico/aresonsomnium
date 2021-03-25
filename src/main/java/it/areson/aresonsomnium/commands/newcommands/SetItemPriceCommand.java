@@ -2,8 +2,8 @@ package it.areson.aresonsomnium.commands.newcommands;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.economy.CoinType;
-import it.areson.aresonsomnium.economy.shops.newsystem.ShopItem;
-import it.areson.aresonsomnium.economy.shops.newsystem.ShopItemsManager;
+import it.areson.aresonsomnium.economy.items.ShopItem;
+import it.areson.aresonsomnium.economy.items.ShopItemsManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;

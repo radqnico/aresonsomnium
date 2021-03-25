@@ -1,6 +1,7 @@
-package it.areson.aresonsomnium.economy.shops.newsystem;
+package it.areson.aresonsomnium.economy.items;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
+import it.areson.aresonsomnium.economy.Price;
 import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;

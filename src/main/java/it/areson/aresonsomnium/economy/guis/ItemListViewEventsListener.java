@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.economy.shops.newsystem;
+package it.areson.aresonsomnium.economy.guis;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.listeners.GeneralEventListener;

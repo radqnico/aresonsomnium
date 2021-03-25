@@ -1,6 +1,7 @@
-package it.areson.aresonsomnium.economy.shops.newsystem;
+package it.areson.aresonsomnium.economy.items;
 
 import it.areson.aresonsomnium.database.MySqlDBConnection;
+import it.areson.aresonsomnium.economy.Price;
 import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
