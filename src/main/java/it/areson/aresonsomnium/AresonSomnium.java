@@ -93,6 +93,8 @@ public class AresonSomnium extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
+        AresonSomniumAPI.instance = this;
         // Files
         registerFiles();
 
@@ -132,8 +134,6 @@ public class AresonSomnium extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new CoinsPlaceholders(this).register();
         }
-
-        AresonSomniumAPI.instance = this;
     }
 
     public MessageManager getMessageManager() {
