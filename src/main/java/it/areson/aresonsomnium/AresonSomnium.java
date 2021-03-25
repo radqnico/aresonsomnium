@@ -2,15 +2,17 @@ package it.areson.aresonsomnium;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.admin.*;
+import it.areson.aresonsomnium.commands.newcommands.CommandParser;
+import it.areson.aresonsomnium.commands.newcommands.EditItemsCommand;
+import it.areson.aresonsomnium.commands.newcommands.ReloadItemsCommand;
+import it.areson.aresonsomnium.commands.newcommands.SetItemPriceCommand;
 import it.areson.aresonsomnium.commands.player.CheckCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
+import it.areson.aresonsomnium.economy.BlockPrice;
 import it.areson.aresonsomnium.economy.Wallet;
-import it.areson.aresonsomnium.economy.shops.guis.ShopManager;
-import it.areson.aresonsomnium.economy.shops.items.BlockPrice;
-import it.areson.aresonsomnium.economy.shops.listener.CustomGuiEventsListener;
-import it.areson.aresonsomnium.economy.shops.listener.SetPriceInChatListener;
+import it.areson.aresonsomnium.economy.items.ShopItemsManager;
 import it.areson.aresonsomnium.elements.Multiplier;
 import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import it.areson.aresonsomnium.listeners.*;
@@ -25,6 +27,7 @@ import net.luckperms.api.node.Node;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -39,9 +42,9 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 
 import static it.areson.aresonsomnium.Constants.PERMISSION_MULTIPLIER;
-import static it.areson.aresonsomnium.database.MySqlConfig.GUIS_TABLE_NAME;
 import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -68,14 +71,12 @@ public class AresonSomnium extends JavaPlugin {
         put(Material.CHISELED_QUARTZ_BLOCK, Constants.PERMISSION_SETTIMO_CIELO);
     }};
     private final HashMap<String, Multiplier> playerMultipliers = new HashMap<>();
+    public ShopItemsManager shopItemsManager;
+    public Optional<LuckPerms> luckPerms;
     private SomniumPlayerManager somniumPlayerManager;
     private GatewayListener playerDBEvents;
-    private SetPriceInChatListener setPriceInChatListener;
     private GommaObjectsFileReader gommaObjectsFileReader;
     private MessageManager messages;
-
-    public Optional<LuckPerms> luckPerms;
-    public ShopManager shopManager;
 
     @Override
     public void onDisable() {
@@ -85,12 +86,15 @@ public class AresonSomnium extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
+        AresonSomniumAPI.instance = this;
         // Files
         registerFiles();
 
         MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(this);
         somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection, PLAYER_TABLE_NAME);
-        shopManager = new ShopManager(this, mySqlDBConnection, GUIS_TABLE_NAME);
+
+        shopItemsManager = new ShopItemsManager(this, mySqlDBConnection);
 
         // Files
         registerFiles();
@@ -121,8 +125,6 @@ public class AresonSomnium extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new CoinsPlaceholders(this).register();
         }
-
-        AresonSomniumAPI.instance = this;
     }
 
     public MessageManager getMessageManager() {
@@ -140,6 +142,25 @@ public class AresonSomnium extends JavaPlugin {
 
     private void registerCommands() {
 
+        CommandParser parser = new CommandParser(this);
+        PluginCommand command = this.getCommand("shopadmin");
+        if (command == null) {
+            this.getLogger().log(Level.SEVERE, "Cannot register interdimension commands");
+            return;
+        }
+
+        try {
+            parser.addAresonCommand(new EditItemsCommand());
+            parser.addAresonCommand(new ReloadItemsCommand());
+            parser.addAresonCommand(new SetItemPriceCommand());
+            parser.registerCommands();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+
+        command.setExecutor(parser);
+        command.setTabCompleter(parser);
+
         new SomniumAdminCommand(this);
         new SomniumTestCommand(this);
         new OpenGuiCommand(this);
@@ -154,14 +175,11 @@ public class AresonSomnium extends JavaPlugin {
 
     private void initListeners() {
         playerDBEvents = new GatewayListener(this);
-        CustomGuiEventsListener customGuiEventsListener = new CustomGuiEventsListener(this);
-        setPriceInChatListener = new SetPriceInChatListener(this);
         InventoryListener inventoryListener = new InventoryListener(this);
         RightClickListener rightClickListener = new RightClickListener(this);
         AnvilListener anvilListener = new AnvilListener(this);
 
         playerDBEvents.registerEvents();
-        customGuiEventsListener.registerEvents();
         inventoryListener.registerEvents();
         rightClickListener.registerEvents();
         anvilListener.registerEvents();
@@ -169,10 +187,6 @@ public class AresonSomnium extends JavaPlugin {
 
     public SomniumPlayerManager getSomniumPlayerManager() {
         return somniumPlayerManager;
-    }
-
-    public SetPriceInChatListener getSetPriceInChatListener() {
-        return setPriceInChatListener;
     }
 
     public void sendErrorMessage(CommandSender commandSender, String error) {
@@ -277,6 +291,7 @@ public class AresonSomnium extends JavaPlugin {
         playerMultipliers.remove(playerName);
     }
 
+    // TODO getLore deprecato
     public boolean isALockedEnchantFromEnchants(ItemStack itemStack) {
         boolean isLocked = false;
         List<String> clickedLore = itemStack.getLore();
