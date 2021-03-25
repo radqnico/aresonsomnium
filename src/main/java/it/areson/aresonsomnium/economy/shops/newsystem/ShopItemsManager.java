@@ -4,12 +4,10 @@ import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.database.MySqlConfig;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 public class ShopItemsManager {
@@ -57,7 +55,6 @@ public class ShopItemsManager {
     }
 
     public void itemPutIntoEditor(ItemStack itemStack) {
-        aresonSomnium.getLogger().info("New item: " + itemStack.getType().name());
         ShopItem shopItem = new ShopItem(-1, itemStack, itemStack.getAmount(), Price.zero(), Price.zero());
         itemsDBGateway.insertItem(shopItem);
         reloadItems();
@@ -76,7 +73,8 @@ public class ShopItemsManager {
         int page = playerWithEditorOpened.get(player.getName());
         Optional<ShopItem> shopItemOptional = itemListView.getShopItem(page, slot);
         shopItemOptional.ifPresent(shopItem -> {
-            aresonSomnium.getLogger().info("ID: " + shopItem.getId());
+            ItemStack clone = shopItem.getItemStack(true).clone();
+            player.getInventory().addItem(clone);
         });
     }
 

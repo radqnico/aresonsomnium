@@ -97,10 +97,10 @@ public class ItemsDBGateway {
         String formatted = String.format(query,
                 Base64.getEncoder().encodeToString(shopItem.getItemStack(false).serializeAsBytes()),
                 shopItem.getAmount(),
-                shopItem.getShoppingPrice().getCoins().toEngineeringString(),
+                shopItem.getShoppingPrice().getCoins().toPlainString(),
                 shopItem.getShoppingPrice().getObols().toString(),
                 shopItem.getShoppingPrice().getGems().toString(),
-                shopItem.getSellingPrice().getCoins().toEngineeringString(),
+                shopItem.getSellingPrice().getCoins().toPlainString(),
                 shopItem.getSellingPrice().getObols().toString(),
                 shopItem.getSellingPrice().getGems().toString()
         );
