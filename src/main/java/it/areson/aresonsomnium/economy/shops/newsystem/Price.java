@@ -13,6 +13,7 @@ import java.util.List;
 
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 import static net.kyori.adventure.text.format.TextDecoration.BOLD;
+import static net.kyori.adventure.text.format.TextDecoration.ITALIC;
 
 public class Price {
 
@@ -90,28 +91,28 @@ public class Price {
     public List<Component> toLore(boolean isShopping) {
         List<Component> lore = new ArrayList<>();
         if (isPriceReady()) {
-            TextComponent start = Component.text().content("Prezzo di").color(GRAY).build();
+            TextComponent start = Component.text().content("Prezzo di ").decoration(ITALIC, false).color(GRAY).build();
             if (isShopping) {
-                start = start.append(Component.text().content("acquisto:").color(GRAY).decoration(BOLD, true).build());
+                start = start.append(Component.text().content("acquisto:").color(GRAY).decoration(BOLD, true).decoration(ITALIC, false).build());
             } else {
-                start = start.append(Component.text().content("vendita:").color(GRAY).decoration(BOLD, true).build());
+                start = start.append(Component.text().content("vendita:").color(GRAY).decoration(BOLD, true).decoration(ITALIC, false).build());
             }
             lore.add(start);
             if (coins.compareTo(BigDecimal.valueOf(0)) > 0) {
-                lore.add(Component.text().content(coins.toString() + " ⛃").color(YELLOW).build());
+                lore.add(Component.text().content(coins.toString() + " ⛃").color(YELLOW).decoration(ITALIC, false).build());
             }
             if (obols.compareTo(BigInteger.valueOf(0)) > 0) {
-                lore.add(Component.text().content(obols.toString() + " ❂").color(GOLD).build());
+                lore.add(Component.text().content(obols.toString() + " ❂").color(GOLD).decoration(ITALIC, false).build());
             }
             if (gems.compareTo(BigInteger.valueOf(0)) > 0) {
-                lore.add(Component.text().content(obols.toString() + " ♦").color(GREEN).build());
+                lore.add(Component.text().content(obols.toString() + " ♦").color(GREEN).decoration(ITALIC, false).build());
             }
         } else {
-            TextComponent start = Component.text().content("Oggetto non ").color(RED).build();
+            TextComponent start = Component.text().content("Oggetto non ").color(RED).decoration(ITALIC, false).build();
             if (isShopping) {
-                start = start.append(Component.text().content("acquisto:").color(RED).decoration(BOLD, true).build());
+                start = start.append(Component.text().content("acquisto:").color(RED).decoration(BOLD, true).decoration(ITALIC, false).build());
             } else {
-                start = start.append(Component.text().content("vendita:").color(RED).decoration(BOLD, true).build());
+                start = start.append(Component.text().content("vendita:").color(RED).decoration(BOLD, true).decoration(ITALIC, false).build());
             }
             lore.add(start);
         }

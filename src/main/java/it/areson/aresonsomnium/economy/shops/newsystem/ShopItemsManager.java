@@ -4,10 +4,12 @@ import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.database.MySqlConfig;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class ShopItemsManager {
@@ -35,7 +37,7 @@ public class ShopItemsManager {
             }
             playerWithEditorOpened.put(player.getName(), page);
         } else {
-            player.sendMessage("La Pagina " + page + " non esiste.");
+            player.sendMessage("La Pagina " + (page + 1) + " non esiste.");
         }
     }
 
@@ -55,18 +57,27 @@ public class ShopItemsManager {
     }
 
     public void itemPutIntoEditor(ItemStack itemStack) {
-        aresonSomnium.getLogger().info("New item");
-
+        aresonSomnium.getLogger().info("New item: " + itemStack.getType().name());
     }
 
     public void itemClickedInEditor(Player player, int slot) {
-        System.out.println(aresonSomnium);
-        System.out.println(playerWithEditorOpened.get(player.getName()));
         int page = playerWithEditorOpened.get(player.getName());
         Optional<ShopItem> shopItemOptional = itemListView.getShopItem(page, slot);
         shopItemOptional.ifPresent(shopItem -> {
             aresonSomnium.getLogger().info("ID: " + shopItem.getId());
         });
+    }
+
+    public void reloadItems() {
+        itemListView.refreshInventories();
+        for (Map.Entry<String, Integer> entry : playerWithEditorOpened.entrySet()) {
+            Player player = aresonSomnium.getServer().getPlayer(entry.getKey());
+            if (player != null) {
+                player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
+            }
+        }
+        playerWithEditorOpened.clear();
+        itemListViewEventsListener.unregisterEvents();
     }
 
     public ItemsGateway getItemsGateway() {
