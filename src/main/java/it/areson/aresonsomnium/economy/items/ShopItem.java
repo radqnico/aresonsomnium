@@ -71,7 +71,6 @@ public class ShopItem {
             if (setLorePrices) {
                 lore.addAll(shoppingPrice.toLore(true));
                 lore.addAll(sellingPrice.toLore(false));
-                lore.add(Component.empty());
             }
             lore.add(Component.text("ID: " + id).color(TextColor.color(HSVLike.fromRGB(0, 0, 0))));
             itemMeta.lore(lore);
