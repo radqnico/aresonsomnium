@@ -92,8 +92,8 @@ public class ItemsGateway {
 
     public boolean insertItem(ShopItem shopItem) {
         String query = "INSERT INTO " +
-                "aresonSomnium.items(id, itemStack, amount, shoppingCoins, shoppingObols, shoppingGems, sellingCoins, sellingObols, sellingGems)" +
-                "VALUES (generated, '%s', %s, %s, %s, %s, %s, %s, %s)";
+                "aresonSomnium.items(itemStack, amount, shoppingCoins, shoppingObols, shoppingGems, sellingCoins, sellingObols, sellingGems)" +
+                "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')";
         String formatted = String.format(query,
                 Base64.getEncoder().encodeToString(shopItem.getItemStack().serializeAsBytes()),
                 shopItem.getAmount(),
