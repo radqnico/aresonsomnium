@@ -44,13 +44,14 @@ public class ShopItem {
         if (Objects.nonNull(itemMeta)) {
             itemMeta.setCustomModelData(id + Constants.SHOP_ITEM_OFFSET_DATA);
             List<Component> lore = itemMeta.lore();
-            if(lore==null){
+            if (lore == null) {
                 lore = new ArrayList<>();
             }
             lore.add(Component.empty());
             lore.addAll(shoppingPrice.toLore(true));
             lore.addAll(sellingPrice.toLore(false));
             itemMeta.lore(lore);
+            clone.setItemMeta(itemMeta);
         }
         return clone;
     }

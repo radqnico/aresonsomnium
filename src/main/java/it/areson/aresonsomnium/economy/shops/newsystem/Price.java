@@ -89,21 +89,31 @@ public class Price {
 
     public List<Component> toLore(boolean isShopping) {
         List<Component> lore = new ArrayList<>();
-        TextComponent start = Component.text().content("Prezzo di").color(GRAY).build();
-        if (isShopping) {
-            start = start.append(Component.text().content("acquisto:").color(GRAY).decoration(BOLD, true).build());
+        if (isPriceReady()) {
+            TextComponent start = Component.text().content("Prezzo di").color(GRAY).build();
+            if (isShopping) {
+                start = start.append(Component.text().content("acquisto:").color(GRAY).decoration(BOLD, true).build());
+            } else {
+                start = start.append(Component.text().content("vendita:").color(GRAY).decoration(BOLD, true).build());
+            }
+            lore.add(start);
+            if (coins.compareTo(BigDecimal.valueOf(0)) > 0) {
+                lore.add(Component.text().content(coins.toString() + " ⛃").color(YELLOW).build());
+            }
+            if (obols.compareTo(BigInteger.valueOf(0)) > 0) {
+                lore.add(Component.text().content(obols.toString() + " ❂").color(GOLD).build());
+            }
+            if (gems.compareTo(BigInteger.valueOf(0)) > 0) {
+                lore.add(Component.text().content(obols.toString() + " ♦").color(GREEN).build());
+            }
         } else {
-            start = start.append(Component.text().content("vendita:").color(GRAY).decoration(BOLD, true).build());
-        }
-        lore.add(start);
-        if (coins.compareTo(BigDecimal.valueOf(0)) > 0) {
-            lore.add(Component.text().content(coins.toString() + " ⛃").color(YELLOW).build());
-        }
-        if (obols.compareTo(BigInteger.valueOf(0)) > 0) {
-            lore.add(Component.text().content(obols.toString() + " ❂").color(GOLD).build());
-        }
-        if (gems.compareTo(BigInteger.valueOf(0)) > 0) {
-            lore.add(Component.text().content(obols.toString() + " ♦").color(GREEN).build());
+            TextComponent start = Component.text().content("Oggetto non ").color(RED).build();
+            if (isShopping) {
+                start = start.append(Component.text().content("acquisto:").color(RED).decoration(BOLD, true).build());
+            } else {
+                start = start.append(Component.text().content("vendita:").color(RED).decoration(BOLD, true).build());
+            }
+            lore.add(start);
         }
         lore.add(Component.empty());
         return lore;

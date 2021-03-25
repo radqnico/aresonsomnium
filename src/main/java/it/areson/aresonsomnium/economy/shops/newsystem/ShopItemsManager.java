@@ -12,11 +12,11 @@ import java.util.Optional;
 
 public class ShopItemsManager {
 
-    private AresonSomnium aresonSomnium;
-    private ItemsGateway itemsGateway;
-    private ItemListView itemListView;
-    private ItemListViewEventsListener itemListViewEventsListener;
-    private HashMap<String, Integer> playerWithEditorOpened;
+    private final AresonSomnium aresonSomnium;
+    private final ItemsGateway itemsGateway;
+    private final ItemListView itemListView;
+    private final ItemListViewEventsListener itemListViewEventsListener;
+    private final HashMap<String, Integer> playerWithEditorOpened;
 
     public ShopItemsManager(AresonSomnium aresonSomnium, MySqlDBConnection mySqlDBConnection) {
         this.aresonSomnium = aresonSomnium;
