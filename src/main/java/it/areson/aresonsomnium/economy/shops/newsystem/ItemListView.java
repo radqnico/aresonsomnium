@@ -26,19 +26,31 @@ public class ItemListView {
 
     public void refreshInventories() {
         items.clear();
-        inventories.clear();
         List<ShopItem> allItems = itemsDBGateway.getAllItems(true);
         items.addAll(allItems);
         int neededInventories = (items.size() / 54) + 1;
+        if (neededInventories < inventories.size()) {
+            ArrayList<Inventory> clone = new ArrayList<>(this.inventories.subList(0, neededInventories));
+            inventories.clear();
+            inventories.addAll(clone);
+        }
         for (int i = 0; i < neededInventories; i++) {
-            Inventory inventory = Bukkit.createInventory(null, 54, Component.text("Lista oggetti | PAG " + (i + 1)).color(RED));
+            Inventory inventory;
+            if (inventories.size() > i) {
+                inventory = inventories.get(i);
+                inventory.clear();
+            } else {
+                inventory = Bukkit.createInventory(null, 54, Component.text("Lista oggetti | PAG " + (i + 1)).color(RED));
+            }
             for (int j = 0; j < 54; j++) {
                 int index = (54 * i) + j;
                 if (items.size() > index) {
                     inventory.addItem(items.get(index).getItemStack(true));
                 }
             }
-            inventories.add(inventory);
+            if (inventories.size() <= i) {
+                inventories.add(inventory);
+            }
         }
     }
 

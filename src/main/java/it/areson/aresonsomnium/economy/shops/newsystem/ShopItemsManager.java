@@ -3,7 +3,6 @@ package it.areson.aresonsomnium.economy.shops.newsystem;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.database.MySqlConfig;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
@@ -82,21 +81,7 @@ public class ShopItemsManager {
     }
 
     public void reloadItems() {
-        for (Map.Entry<String, Integer> entry : playerWithEditorOpened.entrySet()) {
-            Player player = aresonSomnium.getServer().getPlayer(entry.getKey());
-            if (player != null) {
-                player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
-            }
-        }
         itemListView.refreshInventories();
-        Bukkit.getScheduler().runTaskLater(aresonSomnium, () -> {
-            for (Map.Entry<String, Integer> entry : playerWithEditorOpened.entrySet()) {
-                Player player = aresonSomnium.getServer().getPlayer(entry.getKey());
-                if (player != null) {
-                    openEditGuiToPlayer(player, entry.getValue());
-                }
-            }
-        }, 10);
     }
 
     public ItemsDBGateway getItemsGateway() {
