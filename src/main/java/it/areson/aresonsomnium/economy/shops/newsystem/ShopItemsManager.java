@@ -59,7 +59,8 @@ public class ShopItemsManager {
     }
 
     public void itemClickedInEditor(Player player, int slot) {
-        aresonSomnium.getLogger().info("Clicked item in slot");
+        System.out.println(aresonSomnium);
+        System.out.println(playerWithEditorOpened.get(player.getName()));
         int page = playerWithEditorOpened.get(player.getName());
         Optional<ShopItem> shopItemOptional = itemListView.getShopItem(page, slot);
         shopItemOptional.ifPresent(shopItem -> {
