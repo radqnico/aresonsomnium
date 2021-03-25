@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.commands.newcommands;
+package it.areson.aresonsomnium.commands.shopadmin;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.commands.newcommands;
+package it.areson.aresonsomnium.commands.shopadmin;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.economy.Wallet;

@@ -2,10 +2,10 @@ package it.areson.aresonsomnium;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.admin.*;
-import it.areson.aresonsomnium.commands.newcommands.CommandParser;
-import it.areson.aresonsomnium.commands.newcommands.EditItemsCommand;
-import it.areson.aresonsomnium.commands.newcommands.ReloadItemsCommand;
-import it.areson.aresonsomnium.commands.newcommands.SetItemPriceCommand;
+import it.areson.aresonsomnium.commands.shopadmin.CommandParser;
+import it.areson.aresonsomnium.commands.shopadmin.EditItemsCommand;
+import it.areson.aresonsomnium.commands.shopadmin.ReloadItemsCommand;
+import it.areson.aresonsomnium.commands.shopadmin.SetItemPriceCommand;
 import it.areson.aresonsomnium.commands.player.CheckCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
@@ -162,8 +162,6 @@ public class AresonSomnium extends JavaPlugin {
         command.setTabCompleter(parser);
 
         new SomniumAdminCommand(this);
-        new SomniumTestCommand(this);
-        new OpenGuiCommand(this);
         new StatsCommand(this);
         new SomniumGommaCommand(this);
         new SellCommand(this, Constants.SELL_HAND_COMMAND);

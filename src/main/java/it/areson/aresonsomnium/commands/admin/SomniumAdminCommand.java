@@ -3,8 +3,6 @@ package it.areson.aresonsomnium.commands.admin;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
-import it.areson.aresonsomnium.economy.shops.guis.CustomShop;
-import it.areson.aresonsomnium.economy.shops.guis.ShopEditor;
 import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.MessageUtils;
@@ -30,7 +28,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "createShop", "editShop", "reloadShops", "deleteLastLoreLine", "addCoins", "removeCoins"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "deleteLastLoreLine", "addCoins", "removeCoins"};
 
     public SomniumAdminCommand(AresonSomnium plugin) {
         aresonSomnium = plugin;
@@ -55,16 +53,11 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "stats":
                     case "setcoins":
                     case "addcoins":
-                    case "createshop":
-                    case "editshop":
                     case "setdebuglevel":
                         MessageUtils.notEnoughArguments(commandSender, command);
                         break;
                     case "listplayers":
                         handleListPlayers(commandSender);
-                        break;
-                    case "reloadshops":
-                        handleReloadShops(commandSender);
                         break;
                     case "deletelastloreline":
                         handleDeleteLastLoreLine(commandSender);
@@ -76,15 +69,11 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "stats":
                         handleStatsCommand(commandSender, args[1]);
                         break;
-                    case "editshop":
-                        handleEditShop(commandSender, args[1]);
-                        break;
                     case "listplayers":
                         MessageUtils.tooManyArguments(commandSender, command);
                         break;
                     case "setcoins":
                     case "addcoins":
-                    case "createshop":
                         MessageUtils.notEnoughArguments(commandSender, command);
                         break;
                 }
@@ -95,12 +84,8 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "setcoins":
                         MessageUtils.notEnoughArguments(commandSender, command);
                         break;
-                    case "createshop":
-                        handleCreateShop(commandSender, args[1], args[2].replaceAll("_", " "));
-                        break;
                     case "stats":
                     case "listplayers":
-                    case "editshop":
                         MessageUtils.tooManyArguments(commandSender, command);
                         break;
                 }
@@ -118,8 +103,6 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         break;
                     case "stats":
                     case "listplayers":
-                    case "createshop":
-                    case "editshop":
                         MessageUtils.tooManyArguments(commandSender, command);
                         break;
                 }
@@ -145,13 +128,6 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                             aresonSomnium.getServer().getOnlinePlayers().stream()
                                     .map(HumanEntity::getName)
                                     .collect(Collectors.toList()),
-                            suggestions
-                    );
-                    break;
-                case "editshop":
-                    StringUtil.copyPartialMatches(
-                            strings[1],
-                            aresonSomnium.shopManager.getGuis().keySet(),
                             suggestions
                     );
                     break;
@@ -184,46 +160,6 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             itemInMainHand.setItemMeta(itemMeta);
         } else {
             messageManager.sendPlainMessage(commandSender, "player-only-command");
-        }
-    }
-
-    private void handleReloadShops(CommandSender commandSender) {
-        aresonSomnium.shopManager.fetchAllFromDB();
-        messageManager.sendPlainMessage(commandSender, "guis-reloaded");
-    }
-
-    private void handleEditShop(CommandSender commandSender, String guiName) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
-            ShopEditor shopEditor = aresonSomnium.getShopEditor();
-
-            if (aresonSomnium.shopManager.isASavedGUI(guiName)) {
-                CustomShop permanentGui = aresonSomnium.shopManager.getPermanentGui(guiName);
-                player.openInventory(permanentGui.createInventory(false));
-                if (shopEditor.isEditingCustomGui(player) || shopEditor.isEditingPrice(player)) {
-                    shopEditor.endEditGui(player);
-                    shopEditor.endEditPrice(player);
-                }
-                shopEditor.beginEditGui(player, guiName);
-            } else {
-                messageManager.sendPlainMessage(player, "guis-reloaded");
-            }
-        } else {
-            messageManager.sendPlainMessage(commandSender, "player-only-command");
-        }
-    }
-
-    private void handleCreateShop(CommandSender commandSender, String guiName, String guiTitle) {
-        ShopEditor shopEditor = aresonSomnium.getShopEditor();
-        CustomShop newGui = aresonSomnium.shopManager.createNewGui(guiName, guiTitle);
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
-            player.openInventory(newGui.createInventory(false));
-            if (shopEditor.isEditingCustomGui(player) || shopEditor.isEditingPrice(player)) {
-                shopEditor.endEditGui(player);
-                shopEditor.endEditPrice(player);
-            }
-            shopEditor.beginEditGui(player, guiName);
         }
     }
 
