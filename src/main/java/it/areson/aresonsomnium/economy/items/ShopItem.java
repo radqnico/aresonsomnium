@@ -40,6 +40,7 @@ public class ShopItem {
             return -1;
         }
         PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
+        persistentDataContainer.getKeys().stream().map(namespacedKey -> namespacedKey.toString() + "->" + persistentDataContainer.get(namespacedKey, INTEGER)).forEach(System.out::println);
         return persistentDataContainer.getOrDefault(new NamespacedKey(AresonSomniumAPI.instance, "id"), INTEGER, -1);
     }
 

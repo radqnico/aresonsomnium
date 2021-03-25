@@ -34,6 +34,7 @@ public class ClickToShopEventsListener extends GeneralEventListener {
                     System.out.println("item != null  " + item.getType());
                     // Cerco ID del mio plugin
                     int idFromItemData = ShopItem.getIdFromItem(item);
+                    System.out.println("id  " + idFromItemData);
                     if (idFromItemData != -1) {
                         System.out.println("idFromItemData != -1");
                         // Se c'è ID su oggetto, vedo se lo conosco
