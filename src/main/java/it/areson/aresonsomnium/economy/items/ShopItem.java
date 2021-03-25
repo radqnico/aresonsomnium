@@ -3,8 +3,8 @@ package it.areson.aresonsomnium.economy.items;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.economy.Price;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.util.HSVLike;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -72,7 +72,8 @@ public class ShopItem {
                 lore.addAll(shoppingPrice.toLore(true));
                 lore.addAll(sellingPrice.toLore(false));
             }
-            lore.add(Component.text("ID: " + id).color(TextColor.color(HSVLike.fromRGB(0, 0, 0))));
+            lore.add(Component.empty());
+            lore.add(Component.text("SomniumID: " + id).color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
             itemMeta.lore(lore);
             clone.setItemMeta(itemMeta);
         }
