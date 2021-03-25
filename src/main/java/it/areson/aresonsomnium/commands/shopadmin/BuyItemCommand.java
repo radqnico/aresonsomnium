@@ -24,7 +24,7 @@ public class BuyItemCommand extends CommandParserCommand {
                 if (itemById.isPresent()) {
                     ShopItem shopItem = itemById.get();
                     if (somniumPlayer.canAfford(shopItem.getShoppingPrice())) {
-                        if (!player.getInventory().addItem(shopItem.getItemStack(false)).isEmpty()) {
+                        if (player.getInventory().addItem(shopItem.getItemStack(false)).isEmpty()) {
                             player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-buy-success"));
                             Wallet.addCoins(player, shopItem.getShoppingPrice().getCoins().negate());
                             somniumPlayer.getWallet().changeObols(shopItem.getShoppingPrice().getObols().negate());

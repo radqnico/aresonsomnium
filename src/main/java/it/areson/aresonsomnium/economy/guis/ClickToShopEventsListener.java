@@ -29,18 +29,24 @@ public class ClickToShopEventsListener extends GeneralEventListener {
         Inventory topInventory = event.getView().getTopInventory();
         Player player = (Player) event.getWhoClicked();
         if (Objects.equals(clickedInventory, topInventory)) {
+            System.out.println("Objects.equals(clickedInventory, topInventory)");
             // CLick su inventario in alto
             if (isLeftClicking(event)) {
+                System.out.println("isLeftClicking(event)");
                 // Click sinistro pulito
                 ItemStack item = clickedInventory.getItem(event.getSlot());
                 if (item != null) {
+                    System.out.println("item != null");
                     // Cerco ID del mio plugin
                     int idFromItemData = ShopItem.getIdFromItem(item);
                     if (idFromItemData != -1) {
+                        System.out.println("idFromItemData != -1");
                         // Se c'è ID su oggetto, vedo se lo conosco
                         if (AresonSomniumAPI.instance.commandPanelsAPI.isPanelOpen(player)) {
+                            System.out.println("AresonSomniumAPI.instance.commandPanelsAPI.isPanelOpen(player)");
                             Optional<ShopItem> itemById = AresonSomniumAPI.instance.shopItemsManager.getItemsGateway().getItemById(idFromItemData);
                             if (itemById.isPresent()) {
+                                System.out.println("itemById.isPresent()");
                                 // Se l'ID esiste, provo a farglielo acquistare
                                 BuyItemCommand.buyItem(idFromItemData, player, AresonSomniumAPI.instance.getServer().getConsoleSender());
                             } else {
