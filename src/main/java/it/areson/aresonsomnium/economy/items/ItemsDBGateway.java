@@ -50,12 +50,16 @@ public class ItemsDBGateway {
     }
 
     public Optional<ShopItem> getItemById(int itemId) {
+        if (itemId == -1) {
+            return Optional.empty();
+        }
+
         ShopItem cached = cache.get(itemId);
         if (Objects.nonNull(cached)) {
             return Optional.of(cached);
         }
 
-        String query = "SELECT * FROM " + itemsTableName + "WHERE id=" + itemId;
+        String query = "SELECT * FROM " + itemsTableName + " WHERE id=" + itemId;
         Optional<ShopItem> optionalShopItem = Optional.empty();
         try {
             Connection connection = mySqlDBConnection.connect();

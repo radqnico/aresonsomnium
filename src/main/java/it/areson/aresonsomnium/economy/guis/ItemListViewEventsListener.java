@@ -61,20 +61,4 @@ public class ItemListViewEventsListener extends GeneralEventListener {
         }
     }
 
-    private boolean isNotValidItemStack(ItemStack itemStack) {
-        return Objects.isNull(itemStack) || Objects.equals(itemStack.getType(), Material.AIR) || Objects.equals(itemStack.getType(), Material.CAVE_AIR);
-    }
-
-    private boolean isLeftClicking(InventoryClickEvent event) {
-        return event.isLeftClick() && !event.isShiftClick() && isNotValidItemStack(event.getCursor());
-    }
-
-    private boolean isShiftClicking(InventoryClickEvent event) {
-        return event.isShiftClick() && isNotValidItemStack(event.getCursor());
-    }
-
-    private boolean isPuttingNewItem(InventoryClickEvent event) {
-        return event.isLeftClick() && !isNotValidItemStack(event.getCursor());
-    }
-
 }

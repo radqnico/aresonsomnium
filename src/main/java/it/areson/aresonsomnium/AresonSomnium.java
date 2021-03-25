@@ -19,6 +19,8 @@ import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
+import me.rockyhawk.commandpanels.CommandPanels;
+import me.rockyhawk.commandpanels.api.CommandPanelsAPI;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.node.Node;
 import org.bukkit.ChatColor;
@@ -68,12 +70,14 @@ public class AresonSomnium extends JavaPlugin {
         put(Material.CHISELED_QUARTZ_BLOCK, Constants.PERMISSION_SETTIMO_CIELO);
     }};
     private final HashMap<String, Multiplier> playerMultipliers = new HashMap<>();
-    public ShopItemsManager shopItemsManager;
-    public Optional<LuckPerms> luckPerms;
     private SomniumPlayerManager somniumPlayerManager;
     private GatewayListener playerDBEvents;
     private GommaObjectsFileReader gommaObjectsFileReader;
     private MessageManager messages;
+
+    public CommandPanelsAPI commandPanelsAPI = CommandPanels.getAPI();
+    public ShopItemsManager shopItemsManager;
+    public Optional<LuckPerms> luckPerms;
 
     @Override
     public void onDisable() {

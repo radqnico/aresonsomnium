@@ -34,7 +34,7 @@ public class ShopItem {
         this(id, itemStack, 1, new Price(), new Price());
     }
 
-    public static int getIdFromItemData(ItemStack itemStack) {
+    public static int getIdFromItem(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (Objects.isNull(itemMeta)) {
             return -1;

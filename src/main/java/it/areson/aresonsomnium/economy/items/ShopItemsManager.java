@@ -4,6 +4,7 @@ import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.database.MySqlConfig;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.Price;
+import it.areson.aresonsomnium.economy.guis.ClickToShopEventsListener;
 import it.areson.aresonsomnium.economy.guis.ItemListView;
 import it.areson.aresonsomnium.economy.guis.ItemListViewEventsListener;
 import org.bukkit.entity.Player;
@@ -18,8 +19,10 @@ public class ShopItemsManager {
     private final AresonSomnium aresonSomnium;
     private final ItemsDBGateway itemsDBGateway;
     private final ItemListView itemListView;
-    private final ItemListViewEventsListener itemListViewEventsListener;
     private final HashMap<String, Integer> playerWithEditorOpened;
+    // Listeners
+    private final ItemListViewEventsListener itemListViewEventsListener;
+    private final ClickToShopEventsListener clickToShopEventsListener;
 
     public ShopItemsManager(AresonSomnium aresonSomnium, MySqlDBConnection mySqlDBConnection) {
         this.aresonSomnium = aresonSomnium;
@@ -27,6 +30,9 @@ public class ShopItemsManager {
         itemListView = new ItemListView(itemsDBGateway);
         playerWithEditorOpened = new HashMap<>();
         itemListViewEventsListener = new ItemListViewEventsListener(aresonSomnium);
+
+        clickToShopEventsListener = new ClickToShopEventsListener(aresonSomnium);
+        clickToShopEventsListener.registerEvents();
     }
 
     public void openEditGuiToPlayer(Player player, int page) {
@@ -77,7 +83,7 @@ public class ShopItemsManager {
         Optional<ShopItem> shopItemOptional = itemListView.getShopItem(page, slot);
         shopItemOptional.ifPresent(shopItem -> {
             ItemStack clone = shopItem.getItemStack(true).clone();
-            System.out.println("ID FROM ITEM: " + ShopItem.getIdFromItemData(clone));
+            System.out.println("ID FROM ITEM: " + ShopItem.getIdFromItem(clone));
             player.getInventory().addItem(clone);
         });
     }
