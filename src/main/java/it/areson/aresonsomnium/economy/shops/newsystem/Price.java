@@ -20,6 +20,7 @@ public class Price {
     private BigDecimal coins;
     private BigInteger obols;
     private BigInteger gems;
+
     public Price(BigDecimal coins, BigInteger obols, BigInteger gems) {
         this.coins = coins;
         this.obols = obols;
@@ -108,7 +109,7 @@ public class Price {
                 lore.add(Component.text().content(obols.toString() + " ❂").color(GOLD).decoration(ITALIC, false).build());
             }
             if (gems.compareTo(BigInteger.valueOf(0)) > 0) {
-                lore.add(Component.text().content(obols.toString() + " ♦").color(GREEN).decoration(ITALIC, false).build());
+                lore.add(Component.text().content(gems.toString() + " ♦").color(GREEN).decoration(ITALIC, false).build());
             }
         } else {
             TextComponent start = Component.text().content("Oggetto non ").color(RED).decoration(ITALIC, false).build();
