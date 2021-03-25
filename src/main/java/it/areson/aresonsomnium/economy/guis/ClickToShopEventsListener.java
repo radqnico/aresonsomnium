@@ -28,6 +28,7 @@ public class ClickToShopEventsListener extends GeneralEventListener {
         Inventory clickedInventory = event.getClickedInventory();
         Inventory topInventory = event.getView().getTopInventory();
         Player player = (Player) event.getWhoClicked();
+        System.out.println(AresonSomniumAPI.instance.commandPanelsAPI.isPanelOpen(player));
         if (Objects.equals(clickedInventory, topInventory)) {
             System.out.println("Objects.equals(clickedInventory, topInventory)");
             // CLick su inventario in alto
