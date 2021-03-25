@@ -3,6 +3,8 @@ package it.areson.aresonsomnium.economy.items;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.economy.Price;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.util.HSVLike;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -60,16 +62,19 @@ public class ShopItem {
         if (Objects.nonNull(itemMeta)) {
             PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
             persistentDataContainer.set(new NamespacedKey(AresonSomniumAPI.instance, "id"), INTEGER, id);
+
+            List<Component> lore = itemMeta.lore();
+            if (lore == null) {
+                lore = new ArrayList<>();
+            }
+            lore.add(Component.empty());
             if (setLorePrices) {
-                List<Component> lore = itemMeta.lore();
-                if (lore == null) {
-                    lore = new ArrayList<>();
-                }
-                lore.add(Component.empty());
                 lore.addAll(shoppingPrice.toLore(true));
                 lore.addAll(sellingPrice.toLore(false));
                 itemMeta.lore(lore);
+                lore.add(Component.empty());
             }
+            lore.add(Component.text("ID: " + id).color(TextColor.color(HSVLike.fromRGB(0, 0, 0))));
             clone.setItemMeta(itemMeta);
         }
         return clone;

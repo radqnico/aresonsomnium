@@ -19,30 +19,30 @@ public class OpClickShopItemWithPanelOpenedEventsListener extends GeneralEventLi
         super(aresonSomnium);
     }
 
-    @EventHandler
-    public void onInventoryClickEvent(InventoryClickEvent event) {
-        Inventory clickedInventory = event.getClickedInventory();
-        Player player = (Player) event.getWhoClicked();
-        if (player.hasPermission("aresonsomnium.admin") && AresonSomniumAPI.instance.commandPanelsAPI.isPanelOpen(player)) {
-            // CLick su inventario in alto
-            if (isLeftClicking(event) && clickedInventory != null) {
-                // Click sinistro pulito
-                ItemStack item = clickedInventory.getItem(event.getSlot());
-                if (item != null) {
-                    // Cerco ID del mio plugin
-                    int idFromItemData = ShopItem.getIdFromItem(item);
-                    if (idFromItemData != -1) {
-                        // Se c'è ID su oggetto, vedo se lo conosco
-                        Optional<ShopItem> itemById = AresonSomniumAPI.instance.shopItemsManager.getItemsGateway().getItemById(idFromItemData);
-                        if (itemById.isPresent()) {
-                            player.sendMessage("ID ShopItem: " + idFromItemData);
-                        } else {
-                            player.sendMessage(ChatColor.RED + "ATTENZIONE: ID ShopItem " + idFromItemData + " NON TROVATO sul DataBase. Prova con un reload degli items.");
-                        }
-                    }
-                }
-            }
-        }
-    }
+//    @EventHandler
+//    public void onInventoryClickEvent(InventoryClickEvent event) {
+//        Inventory clickedInventory = event.getClickedInventory();
+//        Player player = (Player) event.getWhoClicked();
+//        if (player.hasPermission("aresonsomnium.admin") && AresonSomniumAPI.instance.commandPanelsAPI.isPanelOpen(player)) {
+//            // CLick su inventario in alto
+//            if (isLeftClicking(event) && clickedInventory != null) {
+//                // Click sinistro pulito
+//                ItemStack item = clickedInventory.getItem(event.getSlot());
+//                if (item != null) {
+//                    // Cerco ID del mio plugin
+//                    int idFromItemData = ShopItem.getIdFromItem(item);
+//                    if (idFromItemData != -1) {
+//                        // Se c'è ID su oggetto, vedo se lo conosco
+//                        Optional<ShopItem> itemById = AresonSomniumAPI.instance.shopItemsManager.getItemsGateway().getItemById(idFromItemData);
+//                        if (itemById.isPresent()) {
+//                            player.sendMessage("ID ShopItem: " + idFromItemData);
+//                        } else {
+//                            player.sendMessage(ChatColor.RED + "ATTENZIONE: ID ShopItem " + idFromItemData + " NON TROVATO sul DataBase. Prova con un reload degli items.");
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
 }
