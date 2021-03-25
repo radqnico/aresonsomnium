@@ -3,6 +3,8 @@ package it.areson.aresonsomnium.economy.shops.newsystem;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import org.bukkit.inventory.ItemStack;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -91,16 +93,16 @@ public class ItemsGateway {
     public boolean insertItem(ShopItem shopItem) {
         String query = "INSERT INTO " +
                 "aresonSomnium.items(id, itemStack, amount, shoppingCoins, shoppingObols, shoppingGems, sellingCoins, sellingObols, sellingGems)" +
-                "VALUES (generated, %s, %d, %d, %d, %d, %d, %d, %d)";
+                "VALUES (generated, '%s', %s, %s, %s, %s, %s, %s, %s)";
         String formatted = String.format(query,
                 Base64.getEncoder().encodeToString(shopItem.getItemStack().serializeAsBytes()),
                 shopItem.getAmount(),
-                shopItem.getShoppingPrice().getCoins(),
-                shopItem.getShoppingPrice().getObols(),
-                shopItem.getShoppingPrice().getGems(),
-                shopItem.getSellingPrice().getCoins(),
-                shopItem.getSellingPrice().getObols(),
-                shopItem.getSellingPrice().getGems()
+                shopItem.getShoppingPrice().getCoins().toEngineeringString(),
+                shopItem.getShoppingPrice().getObols().toString(),
+                shopItem.getShoppingPrice().getGems().toString(),
+                shopItem.getSellingPrice().getCoins().toEngineeringString(),
+                shopItem.getSellingPrice().getObols().toString(),
+                shopItem.getSellingPrice().getGems().toString()
         );
         try {
             Connection connection = mySqlDBConnection.connect();
@@ -121,12 +123,12 @@ public class ItemsGateway {
         int amount = resultSet.getInt("amount");
         String itemStack64 = resultSet.getString("itemStack");
         byte[] itemStackBytes = Base64.getDecoder().decode(itemStack64);
-        long shoppingCoins = resultSet.getLong("shoppingCoins");
-        long shoppingObols = resultSet.getLong("shoppingObols");
-        long shoppingGems = resultSet.getLong("shoppingGems");
-        long sellingCoins = resultSet.getLong("sellingCoins");
-        long sellingObols = resultSet.getLong("sellingObols");
-        long sellingGems = resultSet.getLong("sellingGems");
+        BigDecimal shoppingCoins = new BigDecimal(resultSet.getString("shoppingCoins"));
+        BigInteger shoppingObols = new BigInteger(resultSet.getString("shoppingObols"));
+        BigInteger shoppingGems = new BigInteger(resultSet.getString("shoppingGems"));
+        BigDecimal sellingCoins = new BigDecimal(resultSet.getString("sellingCoins"));
+        BigInteger sellingObols = new BigInteger(resultSet.getString("sellingObols"));
+        BigInteger sellingGems = new BigInteger(resultSet.getString("sellingGems"));
         Price shoppingPrice = new Price(shoppingCoins, shoppingObols, shoppingGems);
         Price sellingPrice = new Price(sellingCoins, sellingObols, sellingGems);
         return new ShopItem(id, ItemStack.deserializeBytes(itemStackBytes), amount, shoppingPrice, sellingPrice);
