@@ -38,7 +38,8 @@ public class ShopItem {
         if (Objects.isNull(itemMeta)) {
             return -1;
         }
-        return itemMeta.getPersistentDataContainer().get(new NamespacedKey(AresonSomniumAPI.instance, "id"), INTEGER);
+        PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
+        return persistentDataContainer.getOrDefault(new NamespacedKey(AresonSomniumAPI.instance, "id"), INTEGER, -1);
     }
 
     public int getAmount() {
