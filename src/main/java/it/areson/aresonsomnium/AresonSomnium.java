@@ -159,6 +159,7 @@ public class AresonSomnium extends JavaPlugin {
 
         try {
             parser.addAresonCommand(new EditItemsCommand());
+            parser.registerCommands();
         } catch (Exception exception) {
             exception.printStackTrace();
         }
