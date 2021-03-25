@@ -34,6 +34,7 @@ public class ClickToShopEventsListener extends GeneralEventListener {
             // CLick su inventario in alto
             if (isLeftClicking(event)) {
                 System.out.println("isLeftClicking(event)");
+                System.out.println(AresonSomniumAPI.instance.commandPanelsAPI.isPanelOpen(player));
                 // Click sinistro pulito
                 ItemStack item = clickedInventory.getItem(event.getSlot());
                 if (item != null) {
@@ -42,6 +43,7 @@ public class ClickToShopEventsListener extends GeneralEventListener {
                     int idFromItemData = ShopItem.getIdFromItem(item);
                     if (idFromItemData != -1) {
                         System.out.println("idFromItemData != -1");
+                        System.out.println(AresonSomniumAPI.instance.commandPanelsAPI.isPanelOpen(player));
                         // Se c'è ID su oggetto, vedo se lo conosco
                         if (AresonSomniumAPI.instance.commandPanelsAPI.isPanelOpen(player)) {
                             System.out.println("AresonSomniumAPI.instance.commandPanelsAPI.isPanelOpen(player)");
