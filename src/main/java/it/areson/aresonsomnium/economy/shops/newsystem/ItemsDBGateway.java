@@ -11,14 +11,14 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.zip.ZipException;
 
-public class ItemsGateway {
+public class ItemsDBGateway {
 
     private MySqlDBConnection mySqlDBConnection;
     private String itemsTableName;
     // id -> item
     private HashMap<Integer, ShopItem> cache;
 
-    public ItemsGateway(MySqlDBConnection mySqlDBConnection, String itemsTableName) {
+    public ItemsDBGateway(MySqlDBConnection mySqlDBConnection, String itemsTableName) {
         this.mySqlDBConnection = mySqlDBConnection;
         this.itemsTableName = itemsTableName;
         cache = new HashMap<>();
@@ -95,7 +95,7 @@ public class ItemsGateway {
                 "aresonSomnium.items(itemStack, amount, shoppingCoins, shoppingObols, shoppingGems, sellingCoins, sellingObols, sellingGems)" +
                 "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')";
         String formatted = String.format(query,
-                Base64.getEncoder().encodeToString(shopItem.getItemStack().serializeAsBytes()),
+                Base64.getEncoder().encodeToString(shopItem.getItemStack(false).serializeAsBytes()),
                 shopItem.getAmount(),
                 shopItem.getShoppingPrice().getCoins().toEngineeringString(),
                 shopItem.getShoppingPrice().getObols().toString(),

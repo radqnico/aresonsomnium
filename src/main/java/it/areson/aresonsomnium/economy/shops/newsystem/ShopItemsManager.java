@@ -15,15 +15,15 @@ import java.util.Optional;
 public class ShopItemsManager {
 
     private final AresonSomnium aresonSomnium;
-    private final ItemsGateway itemsGateway;
+    private final ItemsDBGateway itemsDBGateway;
     private final ItemListView itemListView;
     private final ItemListViewEventsListener itemListViewEventsListener;
     private final HashMap<String, Integer> playerWithEditorOpened;
 
     public ShopItemsManager(AresonSomnium aresonSomnium, MySqlDBConnection mySqlDBConnection) {
         this.aresonSomnium = aresonSomnium;
-        itemsGateway = new ItemsGateway(mySqlDBConnection, MySqlConfig.ITEMS_TABLE_NAME);
-        itemListView = new ItemListView(itemsGateway);
+        itemsDBGateway = new ItemsDBGateway(mySqlDBConnection, MySqlConfig.ITEMS_TABLE_NAME);
+        itemListView = new ItemListView(itemsDBGateway);
         playerWithEditorOpened = new HashMap<>();
         itemListViewEventsListener = new ItemListViewEventsListener(aresonSomnium);
     }
@@ -59,7 +59,7 @@ public class ShopItemsManager {
     public void itemPutIntoEditor(ItemStack itemStack) {
         aresonSomnium.getLogger().info("New item: " + itemStack.getType().name());
         ShopItem shopItem = new ShopItem(-1, itemStack, itemStack.getAmount(), Price.zero(), Price.zero());
-        itemsGateway.insertItem(shopItem);
+        itemsDBGateway.insertItem(shopItem);
         reloadItems();
     }
 
@@ -67,7 +67,7 @@ public class ShopItemsManager {
         int page = playerWithEditorOpened.get(player.getName());
         Optional<ShopItem> shopItemOptional = itemListView.getShopItem(page, slot);
         shopItemOptional.ifPresent(shopItem -> {
-            itemsGateway.removeItem(shopItem.getId());
+            itemsDBGateway.removeItem(shopItem.getId());
             reloadItems();
         });
     }
@@ -96,8 +96,8 @@ public class ShopItemsManager {
         }
     }
 
-    public ItemsGateway getItemsGateway() {
-        return itemsGateway;
+    public ItemsDBGateway getItemsGateway() {
+        return itemsDBGateway;
     }
 
     public ItemListView getItemListView() {

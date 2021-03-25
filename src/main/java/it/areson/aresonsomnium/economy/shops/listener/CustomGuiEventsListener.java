@@ -71,12 +71,10 @@ public class CustomGuiEventsListener extends GeneralEventListener {
 
     @EventHandler
     public void onInventoryClickEvent(InventoryClickEvent event) {
-        System.out.println("onInventoryClickEvent");
         Player player = (Player) event.getWhoClicked();
 
         if (event.getClickedInventory() != null) {
             if (shopEditor.isEditingCustomGui(player)) {
-                System.out.println("isEditingCustomGui");
                 // Editing
                 CustomShop editingCustomShop = shopEditor.getEditingCustomShop(player);
                 if (shopEditor.isEditingPrice(player)) {
@@ -85,12 +83,10 @@ public class CustomGuiEventsListener extends GeneralEventListener {
                     switchEditingAction(player, editingCustomShop, event);
                 }
             } else if (aresonSomnium.shopManager.isViewingCustomGui(player.getName())) {
-                System.out.println("isViewingCustomGui");
                 // Shopping
                 switchUserAction(player, event);
                 event.setCancelled(true);
             }
-            System.out.println("nada");
         }
     }
 

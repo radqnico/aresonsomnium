@@ -36,20 +36,22 @@ public class ShopItem {
         return id;
     }
 
-    public ItemStack getItemStack() {
+    public ItemStack getItemStack(boolean setLorePrices) {
         ItemStack clone = itemStack.clone();
         clone.setAmount(amount);
         ItemMeta itemMeta = clone.getItemMeta();
         if (Objects.nonNull(itemMeta)) {
             itemMeta.setCustomModelData(id);
-            List<Component> lore = itemMeta.lore();
-            if (lore == null) {
-                lore = new ArrayList<>();
+            if (setLorePrices) {
+                List<Component> lore = itemMeta.lore();
+                if (lore == null) {
+                    lore = new ArrayList<>();
+                }
+                lore.add(Component.empty());
+                lore.addAll(shoppingPrice.toLore(true));
+                lore.addAll(sellingPrice.toLore(false));
+                itemMeta.lore(lore);
             }
-            lore.add(Component.empty());
-            lore.addAll(shoppingPrice.toLore(true));
-            lore.addAll(sellingPrice.toLore(false));
-            itemMeta.lore(lore);
             clone.setItemMeta(itemMeta);
         }
         return clone;
