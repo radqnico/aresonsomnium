@@ -16,7 +16,9 @@ public class EditItemsCommand extends CommandParserCommand {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            if (strings.length == 2) {
+            if (strings.length == 1) {
+                AresonSomniumAPI.instance.shopItemsManager.openEditGuiToPlayer(player, 0);
+            } else if (strings.length == 2) {
                 try {
                     int page = Integer.parseInt(strings[1]) - 1;
                     AresonSomniumAPI.instance.shopItemsManager.openEditGuiToPlayer(player, page);

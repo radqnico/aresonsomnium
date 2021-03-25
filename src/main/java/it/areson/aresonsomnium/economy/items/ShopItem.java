@@ -73,7 +73,7 @@ public class ShopItem {
                 lore.addAll(sellingPrice.toLore(false));
             }
             lore.add(Component.empty());
-            lore.add(Component.text("SomniumID: " + id).color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false));
+            lore.add(Component.text("SomniumID: " + id).color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, false));
             itemMeta.lore(lore);
             clone.setItemMeta(itemMeta);
         }
