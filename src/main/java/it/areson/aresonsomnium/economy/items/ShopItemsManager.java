@@ -4,7 +4,7 @@ import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.database.MySqlConfig;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.Price;
-import it.areson.aresonsomnium.economy.guis.ClickToShopEventsListener;
+import it.areson.aresonsomnium.economy.guis.OpClickShopItemWithPanelOpenedEventsListener;
 import it.areson.aresonsomnium.economy.guis.ItemListView;
 import it.areson.aresonsomnium.economy.guis.ItemListViewEventsListener;
 import org.bukkit.entity.Player;
@@ -22,7 +22,7 @@ public class ShopItemsManager {
     private final HashMap<String, Integer> playerWithEditorOpened;
     // Listeners
     private final ItemListViewEventsListener itemListViewEventsListener;
-    private final ClickToShopEventsListener clickToShopEventsListener;
+    private final OpClickShopItemWithPanelOpenedEventsListener opClickShopItemWithPanelOpenedEventsListener;
 
     public ShopItemsManager(AresonSomnium aresonSomnium, MySqlDBConnection mySqlDBConnection) {
         this.aresonSomnium = aresonSomnium;
@@ -31,8 +31,8 @@ public class ShopItemsManager {
         playerWithEditorOpened = new HashMap<>();
         itemListViewEventsListener = new ItemListViewEventsListener(aresonSomnium);
 
-        clickToShopEventsListener = new ClickToShopEventsListener(aresonSomnium);
-        clickToShopEventsListener.registerEvents();
+        opClickShopItemWithPanelOpenedEventsListener = new OpClickShopItemWithPanelOpenedEventsListener(aresonSomnium);
+        opClickShopItemWithPanelOpenedEventsListener.registerEvents();
     }
 
     public void openEditGuiToPlayer(Player player, int page) {
@@ -82,7 +82,7 @@ public class ShopItemsManager {
         int page = playerWithEditorOpened.get(player.getName());
         Optional<ShopItem> shopItemOptional = itemListView.getShopItem(page, slot);
         shopItemOptional.ifPresent(shopItem -> {
-            ItemStack clone = shopItem.getItemStack(true).clone();
+            ItemStack clone = shopItem.getItemStack(true);
             System.out.println("ID FROM ITEM: " + ShopItem.getIdFromItem(clone));
             player.getInventory().addItem(clone);
         });

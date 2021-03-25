@@ -36,6 +36,7 @@ public class ShopItem {
 
     public static int getIdFromItem(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
+        System.out.println(itemMeta);
         if (Objects.isNull(itemMeta)) {
             return -1;
         }
