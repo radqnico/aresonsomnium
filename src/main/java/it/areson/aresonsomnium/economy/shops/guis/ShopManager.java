@@ -90,7 +90,6 @@ public class ShopManager {
 
     public boolean isViewingCustomGui(String playerName) {
         openedGuis.forEach((a, b) -> System.out.println(a + " -> " + b));
-        System.out.println(playerName);
 
         return openedGuis.containsKey(playerName);
     }

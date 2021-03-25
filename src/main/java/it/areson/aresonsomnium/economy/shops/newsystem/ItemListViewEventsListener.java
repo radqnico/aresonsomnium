@@ -25,23 +25,18 @@ public class ItemListViewEventsListener extends GeneralEventListener {
         Inventory clickedInventory = event.getClickedInventory();
         Player player = (Player) event.getWhoClicked();
         if (aresonSomnium.shopItemsManager.checkIfIsItemsEditor(player, clickedInventory)) {
-
+            event.setCancelled(true);
             if (isLeftClicking(event)) {
                 aresonSomnium.shopItemsManager.itemClickedInEditor(player, event.getSlot());
             } else if (isPuttingNewItem(event)) {
                 ItemStack cursor = event.getCursor();
                 if (Objects.nonNull(cursor)) {
                     ItemStack clone = cursor.clone();
-                    player.setItemOnCursor(null);
                     aresonSomnium.shopItemsManager.itemPutIntoEditor(clone);
                 }
             } else if (isShiftClicking(event)) {
-                event.setCurrentItem(null);
-                player.setItemOnCursor(null);
                 aresonSomnium.shopItemsManager.deleteItemInEditor(player, event.getSlot());
             }
-
-            event.setCancelled(true);
         }
     }
 
