@@ -36,6 +36,8 @@ public class ItemListViewEventsListener extends GeneralEventListener {
                     aresonSomnium.shopItemsManager.itemPutIntoEditor(clone);
                 }
             } else if (isShiftClicking(event)) {
+                event.setCurrentItem(null);
+                player.setItemOnCursor(null);
                 aresonSomnium.shopItemsManager.deleteItemInEditor(player, event.getSlot());
             }
 
