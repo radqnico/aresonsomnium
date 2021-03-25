@@ -2,13 +2,14 @@ package it.areson.aresonsomnium.economy.shops.newsystem;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static net.kyori.adventure.text.format.NamedTextColor.GOLD;
 
 public class ItemListView {
 
@@ -29,7 +30,7 @@ public class ItemListView {
         items.addAll(allItems);
         int neededInventories = (items.size() / 54) + 1;
         for (int i = 0; i < neededInventories; i++) {
-            Inventory inventory = Bukkit.createInventory(null, 54, Component.text("Lista oggetti shop | PAGINA " + i).decorate(TextDecoration.BOLD));
+            Inventory inventory = Bukkit.createInventory(null, 54, Component.text("Lista oggetti | PAG " + i).color(GOLD));
             for (int j = 0; j < 54; j++) {
                 int index = (54 * i) + j;
                 if (items.size() > index) {

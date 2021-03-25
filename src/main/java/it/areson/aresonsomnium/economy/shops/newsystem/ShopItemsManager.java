@@ -19,6 +19,7 @@ public class ShopItemsManager {
     private HashMap<String, Integer> playerWithEditorOpened;
 
     public ShopItemsManager(AresonSomnium aresonSomnium, MySqlDBConnection mySqlDBConnection) {
+        this.aresonSomnium = aresonSomnium;
         itemsGateway = new ItemsGateway(mySqlDBConnection, MySqlConfig.ITEMS_TABLE_NAME);
         itemListView = new ItemListView(itemsGateway);
         playerWithEditorOpened = new HashMap<>();
