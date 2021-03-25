@@ -18,9 +18,9 @@ public class EditItemsCommand extends CommandParserCommand {
             Player player = (Player) commandSender;
             if (strings.length == 2) {
                 try {
-                    int page = Integer.parseInt(strings[1]);
+                    int page = Integer.parseInt(strings[1]) - 1;
                     AresonSomniumAPI.instance.shopItemsManager.openEditGuiToPlayer(player, page);
-                } catch (NumberFormatException exception) {
+                } catch (NumberFormatException | ArrayIndexOutOfBoundsException exception) {
                     player.sendMessage("La pagina non è un numero");
                 }
             }

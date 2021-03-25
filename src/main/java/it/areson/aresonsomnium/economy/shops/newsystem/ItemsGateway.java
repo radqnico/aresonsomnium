@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.economy.shops.guis.newsystem;
+package it.areson.aresonsomnium.economy.shops.newsystem;
 
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import org.bukkit.inventory.ItemStack;

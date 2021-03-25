@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.economy.shops.guis.newsystem;
+package it.areson.aresonsomnium.economy.shops.newsystem;
 
 import it.areson.aresonsomnium.Constants;
 import net.kyori.adventure.text.Component;

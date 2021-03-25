@@ -1,11 +1,9 @@
 package it.areson.aresonsomnium;
 
-import it.areson.aresonsomnium.commands.newcommands.CommandParser;
-import it.areson.aresonsomnium.commands.newcommands.EditItemsCommand;
-import it.areson.aresonsomnium.economy.shops.guis.newsystem.ShopItemsManager;
-import it.areson.aresonsomnium.elements.Multiplier;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.admin.*;
+import it.areson.aresonsomnium.commands.newcommands.CommandParser;
+import it.areson.aresonsomnium.commands.newcommands.EditItemsCommand;
 import it.areson.aresonsomnium.commands.player.CheckCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
@@ -16,6 +14,8 @@ import it.areson.aresonsomnium.economy.shops.guis.ShopManager;
 import it.areson.aresonsomnium.economy.shops.items.BlockPrice;
 import it.areson.aresonsomnium.economy.shops.listener.CustomGuiEventsListener;
 import it.areson.aresonsomnium.economy.shops.listener.SetPriceInChatListener;
+import it.areson.aresonsomnium.economy.shops.newsystem.ShopItemsManager;
+import it.areson.aresonsomnium.elements.Multiplier;
 import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import it.areson.aresonsomnium.listeners.*;
 import it.areson.aresonsomnium.placeholders.CoinsPlaceholders;
@@ -74,17 +74,15 @@ public class AresonSomnium extends JavaPlugin {
         put(Material.CHISELED_QUARTZ_BLOCK, Constants.PERMISSION_SETTIMO_CIELO);
     }};
     private final HashMap<String, Multiplier> playerMultipliers = new HashMap<>();
+    public ShopItemsManager shopItemsManager;
+    public Optional<LuckPerms> luckPerms;
+    public ShopManager shopManager;
     private SomniumPlayerManager somniumPlayerManager;
     private ShopEditor shopEditor;
     private GatewayListener playerDBEvents;
     private SetPriceInChatListener setPriceInChatListener;
     private GommaObjectsFileReader gommaObjectsFileReader;
     private MessageManager messages;
-
-    public ShopItemsManager shopItemsManager;
-
-    public Optional<LuckPerms> luckPerms;
-    public ShopManager shopManager;
 
     @Override
     public void onDisable() {

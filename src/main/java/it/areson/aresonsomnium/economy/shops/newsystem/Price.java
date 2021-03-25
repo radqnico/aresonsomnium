@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.economy.shops.guis.newsystem;
+package it.areson.aresonsomnium.economy.shops.newsystem;
 
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
