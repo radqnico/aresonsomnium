@@ -1,6 +1,5 @@
 package it.areson.aresonsomnium.economy.shops.newsystem;
 
-import it.areson.aresonsomnium.Constants;
 import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -42,7 +41,7 @@ public class ShopItem {
         clone.setAmount(amount);
         ItemMeta itemMeta = clone.getItemMeta();
         if (Objects.nonNull(itemMeta)) {
-            itemMeta.setCustomModelData(id + Constants.SHOP_ITEM_OFFSET_DATA);
+            itemMeta.setCustomModelData(id);
             List<Component> lore = itemMeta.lore();
             if (lore == null) {
                 lore = new ArrayList<>();

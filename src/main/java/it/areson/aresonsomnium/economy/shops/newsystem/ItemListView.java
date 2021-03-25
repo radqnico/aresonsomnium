@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static net.kyori.adventure.text.format.NamedTextColor.GOLD;
+import static net.kyori.adventure.text.format.NamedTextColor.RED;
 
 public class ItemListView {
 
@@ -26,11 +26,12 @@ public class ItemListView {
 
     public void refreshInventories() {
         items.clear();
+        inventories.clear();
         List<ShopItem> allItems = itemsGateway.getAllItems(true);
         items.addAll(allItems);
         int neededInventories = (items.size() / 54) + 1;
         for (int i = 0; i < neededInventories; i++) {
-            Inventory inventory = Bukkit.createInventory(null, 54, Component.text("Lista oggetti | PAG " + i).color(GOLD));
+            Inventory inventory = Bukkit.createInventory(null, 54, Component.text("Lista oggetti | PAG " + (i + 1)).color(RED));
             for (int j = 0; j < 54; j++) {
                 int index = (54 * i) + j;
                 if (items.size() > index) {

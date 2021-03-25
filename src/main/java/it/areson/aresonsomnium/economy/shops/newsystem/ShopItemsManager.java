@@ -58,6 +58,18 @@ public class ShopItemsManager {
 
     public void itemPutIntoEditor(ItemStack itemStack) {
         aresonSomnium.getLogger().info("New item: " + itemStack.getType().name());
+        ShopItem shopItem = new ShopItem(-1, itemStack, itemStack.getAmount(), Price.zero(), Price.zero());
+        itemsGateway.insertItem(shopItem);
+        reloadItems();
+    }
+
+    public void deleteItemInEditor(Player player, int slot) {
+        int page = playerWithEditorOpened.get(player.getName());
+        Optional<ShopItem> shopItemOptional = itemListView.getShopItem(page, slot);
+        shopItemOptional.ifPresent(shopItem -> {
+            itemsGateway.removeItem(shopItem.getId());
+            reloadItems();
+        });
     }
 
     public void itemClickedInEditor(Player player, int slot) {
@@ -69,15 +81,19 @@ public class ShopItemsManager {
     }
 
     public void reloadItems() {
-        itemListView.refreshInventories();
         for (Map.Entry<String, Integer> entry : playerWithEditorOpened.entrySet()) {
             Player player = aresonSomnium.getServer().getPlayer(entry.getKey());
             if (player != null) {
                 player.closeInventory(InventoryCloseEvent.Reason.PLUGIN);
             }
         }
-        playerWithEditorOpened.clear();
-        itemListViewEventsListener.unregisterEvents();
+        itemListView.refreshInventories();
+        for (Map.Entry<String, Integer> entry : playerWithEditorOpened.entrySet()) {
+            Player player = aresonSomnium.getServer().getPlayer(entry.getKey());
+            if (player != null) {
+                openEditGuiToPlayer(player, entry.getValue());
+            }
+        }
     }
 
     public ItemsGateway getItemsGateway() {

@@ -20,7 +20,6 @@ public class Price {
     private BigDecimal coins;
     private BigInteger obols;
     private BigInteger gems;
-
     public Price(BigDecimal coins, BigInteger obols, BigInteger gems) {
         this.coins = coins;
         this.obols = obols;
@@ -33,6 +32,10 @@ public class Price {
 
     public Price(long shoppingCoins, long shoppingObols, long shoppingGems) {
         this(BigDecimal.valueOf(shoppingCoins), BigInteger.valueOf(shoppingObols), BigInteger.valueOf(shoppingGems));
+    }
+
+    public static Price zero() {
+        return new Price(0, 0, 0);
     }
 
     public BigDecimal getCoins() {
@@ -110,9 +113,9 @@ public class Price {
         } else {
             TextComponent start = Component.text().content("Oggetto non ").color(RED).decoration(ITALIC, false).build();
             if (isShopping) {
-                start = start.append(Component.text().content("acquisto:").color(RED).decoration(BOLD, true).decoration(ITALIC, false).build());
+                start = start.append(Component.text().content("acquistabile").color(RED).decoration(BOLD, true).decoration(ITALIC, false).build());
             } else {
-                start = start.append(Component.text().content("vendita:").color(RED).decoration(BOLD, true).decoration(ITALIC, false).build());
+                start = start.append(Component.text().content("vendibile").color(RED).decoration(BOLD, true).decoration(ITALIC, false).build());
             }
             lore.add(start);
         }

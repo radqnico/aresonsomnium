@@ -25,17 +25,16 @@ public class ItemListViewEventsListener extends GeneralEventListener {
         Inventory clickedInventory = event.getClickedInventory();
         Player player = (Player) event.getWhoClicked();
         if (aresonSomnium.shopItemsManager.checkIfIsItemsEditor(player, clickedInventory)) {
-            player.sendMessage("Inventario nostro");
-            aresonSomnium.shopItemsManager.itemClickedInEditor(player, event.getSlot());
-
             if (isLeftClicking(event)) {
                 aresonSomnium.shopItemsManager.itemClickedInEditor(player, event.getSlot());
             } else if (isPuttingNewItem(event)) {
                 ItemStack cursor = event.getCursor();
                 if (Objects.nonNull(cursor)) {
                     aresonSomnium.shopItemsManager.itemPutIntoEditor(cursor);
-                    cursor.setType(Material.AIR);
+                    player.setItemOnCursor(new ItemStack(Material.AIR));
                 }
+            } else if (isShiftClicking(event)) {
+                aresonSomnium.shopItemsManager.deleteItemInEditor(player, event.getSlot());
             }
 
             event.setCancelled(true);
@@ -69,6 +68,10 @@ public class ItemListViewEventsListener extends GeneralEventListener {
 
     private boolean isLeftClicking(InventoryClickEvent event) {
         return event.isLeftClick() && isNotValidItemStack(event.getCursor());
+    }
+
+    private boolean isShiftClicking(InventoryClickEvent event) {
+        return event.isShiftClick() && isNotValidItemStack(event.getCursor());
     }
 
     private boolean isPuttingNewItem(InventoryClickEvent event) {
