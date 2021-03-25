@@ -74,6 +74,7 @@ public class ShopItemsManager {
         Optional<ShopItem> shopItemOptional = itemListView.getShopItem(page, slot);
         shopItemOptional.ifPresent(shopItem -> {
             ItemStack clone = shopItem.getItemStack(true).clone();
+            System.out.println("ID FROM ITEM: " + ShopItem.getIdFromItemData(clone));
             player.getInventory().addItem(clone);
         });
     }

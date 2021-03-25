@@ -1,12 +1,17 @@
 package it.areson.aresonsomnium.economy.shops.newsystem;
 
+import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import net.kyori.adventure.text.Component;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static org.bukkit.persistence.PersistentDataType.INTEGER;
 
 public class ShopItem {
 
@@ -28,6 +33,14 @@ public class ShopItem {
         this(id, itemStack, 1, new Price(), new Price());
     }
 
+    public static int getIdFromItemData(ItemStack itemStack) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (Objects.isNull(itemMeta)) {
+            return -1;
+        }
+        return itemMeta.getPersistentDataContainer().get(new NamespacedKey(AresonSomniumAPI.instance, "id"), INTEGER);
+    }
+
     public int getAmount() {
         return amount;
     }
@@ -41,7 +54,8 @@ public class ShopItem {
         clone.setAmount(amount);
         ItemMeta itemMeta = clone.getItemMeta();
         if (Objects.nonNull(itemMeta)) {
-            itemMeta.setCustomModelData(id);
+            PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
+            persistentDataContainer.set(new NamespacedKey(AresonSomniumAPI.instance, "id"), INTEGER, id);
             if (setLorePrices) {
                 List<Component> lore = itemMeta.lore();
                 if (lore == null) {
