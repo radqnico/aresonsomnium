@@ -5,8 +5,9 @@ import it.areson.aresonsomnium.database.MySqlConfig;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Optional;
 
 public class ShopItemsManager {
@@ -15,12 +16,12 @@ public class ShopItemsManager {
     private ItemsGateway itemsGateway;
     private ItemListView itemListView;
     private ItemListViewEventsListener itemListViewEventsListener;
-    private HashSet<String> playerWithEditorOpened;
+    private HashMap<String, Integer> playerWithEditorOpened;
 
     public ShopItemsManager(AresonSomnium aresonSomnium, MySqlDBConnection mySqlDBConnection) {
         itemsGateway = new ItemsGateway(mySqlDBConnection, MySqlConfig.ITEMS_TABLE_NAME);
         itemListView = new ItemListView(itemsGateway);
-        playerWithEditorOpened = new HashSet<>();
+        playerWithEditorOpened = new HashMap<>();
         itemListViewEventsListener = new ItemListViewEventsListener(aresonSomnium);
     }
 
@@ -31,7 +32,7 @@ public class ShopItemsManager {
             if (playerWithEditorOpened.isEmpty()) {
                 itemListViewEventsListener.registerEvents();
             }
-            playerWithEditorOpened.add(player.getName());
+            playerWithEditorOpened.put(player.getName(), page);
         } else {
             player.sendMessage("La Pagina " + page + " non esiste.");
         }
@@ -44,8 +45,26 @@ public class ShopItemsManager {
         }
     }
 
-    public boolean checkIfPlayerClickedInItemsEditor(Player player, Inventory inventory) {
-        return playerWithEditorOpened.contains(player.getName()) && itemListView.isInventoryOfView(inventory);
+    public boolean checkIfIsItemsEditor(Player player, Inventory inventory) {
+        return playerWithEditorOpened.containsKey(player.getName()) && itemListView.isInventoryOfView(inventory);
+    }
+
+    public boolean checkIfPlayerOpenedEditGui(Player player, Inventory inventory) {
+        return playerWithEditorOpened.containsKey(player.getName()) && itemListView.isInventoryOfView(inventory);
+    }
+
+    public void itemPutIntoEditor(ItemStack itemStack) {
+        aresonSomnium.getLogger().info("New item");
+
+    }
+
+    public void itemClickedInEditor(Player player, int slot) {
+        aresonSomnium.getLogger().info("Clicked item in slot");
+        int page = playerWithEditorOpened.get(player.getName());
+        Optional<ShopItem> shopItemOptional = itemListView.getShopItem(page, slot);
+        shopItemOptional.ifPresent(shopItem -> {
+            aresonSomnium.getLogger().info("ID: " + shopItem.getId());
+        });
     }
 
     public ItemsGateway getItemsGateway() {

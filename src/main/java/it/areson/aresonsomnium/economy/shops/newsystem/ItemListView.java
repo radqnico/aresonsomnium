@@ -50,7 +50,15 @@ public class ItemListView {
     }
 
     public boolean isInventoryOfView(Inventory inventory) {
-        return inventories.parallelStream().anyMatch(inventory1 -> inventory1.equals(inventory));
+        return inventory != null && inventories.parallelStream().anyMatch(inventory1 -> inventory1.equals(inventory));
+    }
+
+    public Optional<ShopItem> getShopItem(int page, int slot) {
+        int index = (54 * page) + slot;
+        if (items.size() > index) {
+            return Optional.of(items.get(index));
+        }
+        return Optional.empty();
     }
 
 }
