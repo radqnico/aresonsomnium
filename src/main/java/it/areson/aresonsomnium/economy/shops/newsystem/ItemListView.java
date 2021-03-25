@@ -13,21 +13,17 @@ import static net.kyori.adventure.text.format.NamedTextColor.RED;
 
 public class ItemListView {
 
-    private final List<ShopItem> items;
     private final ItemsDBGateway itemsDBGateway;
     private final List<Inventory> inventories;
 
     public ItemListView(ItemsDBGateway itemsDBGateway) {
         this.inventories = new ArrayList<>();
-        this.items = new ArrayList<>();
         this.itemsDBGateway = itemsDBGateway;
         refreshInventories();
     }
 
     public void refreshInventories() {
-        items.clear();
-        List<ShopItem> allItems = itemsDBGateway.getAllItems(true);
-        items.addAll(allItems);
+        List<ShopItem> items = itemsDBGateway.getAllItems(true);
         int neededInventories = (items.size() / 54) + 1;
         if (neededInventories < inventories.size()) {
             ArrayList<Inventory> clone = new ArrayList<>(this.inventories.subList(0, neededInventories));
@@ -68,6 +64,7 @@ public class ItemListView {
     }
 
     public Optional<ShopItem> getShopItem(int page, int slot) {
+        List<ShopItem> items = itemsDBGateway.getAllItems(false);
         int index = (54 * page) + slot;
         if (items.size() > index) {
             return Optional.of(items.get(index));

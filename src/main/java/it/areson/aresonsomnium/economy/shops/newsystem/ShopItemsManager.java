@@ -56,7 +56,7 @@ public class ShopItemsManager {
 
     public void itemPutIntoEditor(ItemStack itemStack) {
         ShopItem shopItem = new ShopItem(-1, itemStack, itemStack.getAmount(), Price.zero(), Price.zero());
-        itemsDBGateway.insertItem(shopItem);
+        itemsDBGateway.upsertShopItem(shopItem);
         reloadItems();
     }
 

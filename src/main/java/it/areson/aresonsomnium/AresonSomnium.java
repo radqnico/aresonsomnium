@@ -5,6 +5,7 @@ import it.areson.aresonsomnium.commands.admin.*;
 import it.areson.aresonsomnium.commands.newcommands.CommandParser;
 import it.areson.aresonsomnium.commands.newcommands.EditItemsCommand;
 import it.areson.aresonsomnium.commands.newcommands.ReloadItemsCommand;
+import it.areson.aresonsomnium.commands.newcommands.SetItemPriceCommand;
 import it.areson.aresonsomnium.commands.player.CheckCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
@@ -161,6 +162,7 @@ public class AresonSomnium extends JavaPlugin {
         try {
             parser.addAresonCommand(new EditItemsCommand());
             parser.addAresonCommand(new ReloadItemsCommand());
+            parser.addAresonCommand(new SetItemPriceCommand());
             parser.registerCommands();
         } catch (Exception exception) {
             exception.printStackTrace();

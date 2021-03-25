@@ -26,7 +26,7 @@ public class ItemEditor {
 
     public boolean save() {
         if (editingShopItem.isPresent()) {
-            return itemsDBGateway.insertItem(editingShopItem.get());
+            return itemsDBGateway.upsertShopItem(editingShopItem.get());
         } else {
             AresonSomniumAPI.instance.getLogger().warning("Tentato di salvare mentre non edita niente.");
         }

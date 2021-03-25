@@ -75,7 +75,7 @@ public class ItemsDBGateway {
     }
 
     public boolean removeItem(int id) {
-        String query = "DELETE FROM items WHERE id = " + id;
+        String query = "DELETE FROM " + itemsTableName + " WHERE id = " + id;
         try {
             Connection connection = mySqlDBConnection.connect();
             int affectedRows = mySqlDBConnection.update(connection, query);
@@ -90,20 +90,39 @@ public class ItemsDBGateway {
         return false;
     }
 
-    public boolean insertItem(ShopItem shopItem) {
-        String query = "INSERT INTO " +
-                "aresonSomnium.items(itemStack, amount, shoppingCoins, shoppingObols, shoppingGems, sellingCoins, sellingObols, sellingGems)" +
-                "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')";
-        String formatted = String.format(query,
-                Base64.getEncoder().encodeToString(shopItem.getItemStack(false).serializeAsBytes()),
-                shopItem.getAmount(),
-                shopItem.getShoppingPrice().getCoins().toPlainString(),
-                shopItem.getShoppingPrice().getObols().toString(),
-                shopItem.getShoppingPrice().getGems().toString(),
-                shopItem.getSellingPrice().getCoins().toPlainString(),
-                shopItem.getSellingPrice().getObols().toString(),
-                shopItem.getSellingPrice().getGems().toString()
-        );
+    public boolean upsertShopItem(ShopItem shopItem) {
+        String query;
+        String formatted;
+        if (shopItem.getId() == -1) {
+            query = "INSERT INTO " + itemsTableName +
+                    "(itemStack, amount, shoppingCoins, shoppingObols, shoppingGems, sellingCoins, sellingObols, sellingGems) " +
+                    "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')";
+            formatted = String.format(query,
+                    Base64.getEncoder().encodeToString(shopItem.getItemStack(false).serializeAsBytes()),
+                    shopItem.getAmount(),
+                    shopItem.getShoppingPrice().getCoins().toPlainString(),
+                    shopItem.getShoppingPrice().getObols().toString(),
+                    shopItem.getShoppingPrice().getGems().toString(),
+                    shopItem.getSellingPrice().getCoins().toPlainString(),
+                    shopItem.getSellingPrice().getObols().toString(),
+                    shopItem.getSellingPrice().getGems().toString()
+            );
+        } else {
+            query = "UPDATE " + itemsTableName + " " +
+                    "SET itemStack='%s', amount='%s', shoppingCoins='%s', shoppingObols='%s', shoppingGems='%s', sellingCoins='%s', sellingObols='%s', sellingGems='%s' " +
+                    "WHERE id=%d";
+            formatted = String.format(query,
+                    Base64.getEncoder().encodeToString(shopItem.getItemStack(false).serializeAsBytes()),
+                    shopItem.getAmount(),
+                    shopItem.getShoppingPrice().getCoins().toPlainString(),
+                    shopItem.getShoppingPrice().getObols().toString(),
+                    shopItem.getShoppingPrice().getGems().toString(),
+                    shopItem.getSellingPrice().getCoins().toPlainString(),
+                    shopItem.getSellingPrice().getObols().toString(),
+                    shopItem.getSellingPrice().getGems().toString(),
+                    shopItem.getId()
+            );
+        }
         try {
             Connection connection = mySqlDBConnection.connect();
             int affectedRows = mySqlDBConnection.update(connection, formatted);
