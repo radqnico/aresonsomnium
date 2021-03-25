@@ -1,6 +1,7 @@
 package it.areson.aresonsomnium.commands.newcommands;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
+import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import org.bukkit.command.Command;
@@ -29,9 +30,12 @@ public class BuyItemCommand extends CommandParserCommand {
                     if (itemById.isPresent()) {
                         ShopItem shopItem = itemById.get();
                         if (somniumPlayer.canAfford(shopItem.getShoppingPrice())) {
-                            if(!player.getInventory().addItem(shopItem.getItemStack(false)).isEmpty()){
+                            if (!player.getInventory().addItem(shopItem.getItemStack(false)).isEmpty()) {
                                 player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-buy-success"));
-                            }else{
+                                Wallet.addCoins(player, shopItem.getShoppingPrice().getCoins().negate());
+                                somniumPlayer.getWallet().changeObols(shopItem.getShoppingPrice().getObols().negate());
+                                somniumPlayer.getWallet().changeGems(shopItem.getShoppingPrice().getGems().negate());
+                            } else {
                                 player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
                             }
                         } else {
@@ -40,7 +44,7 @@ public class BuyItemCommand extends CommandParserCommand {
                     } else {
                         commandSender.sendMessage("ID '" + id + "' non trovato");
                     }
-                }else{
+                } else {
                     player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-buy-error"));
                 }
             } else {
