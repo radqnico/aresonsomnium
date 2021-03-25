@@ -71,10 +71,10 @@ public class ShopItem {
             if (setLorePrices) {
                 lore.addAll(shoppingPrice.toLore(true));
                 lore.addAll(sellingPrice.toLore(false));
-                itemMeta.lore(lore);
                 lore.add(Component.empty());
             }
             lore.add(Component.text("ID: " + id).color(TextColor.color(HSVLike.fromRGB(0, 0, 0))));
+            itemMeta.lore(lore);
             clone.setItemMeta(itemMeta);
         }
         return clone;
