@@ -4,35 +4,35 @@ import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.database.MySqlConfig;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.Price;
-import it.areson.aresonsomnium.economy.guis.OpClickShopItemWithPanelOpenedEventsListener;
 import it.areson.aresonsomnium.economy.guis.ItemListView;
 import it.areson.aresonsomnium.economy.guis.ItemListViewEventsListener;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.function.Consumer;
+
+import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class ShopItemsManager {
 
-    private final AresonSomnium aresonSomnium;
     private final ItemsDBGateway itemsDBGateway;
     private final ItemListView itemListView;
     private final HashMap<String, Integer> playerWithEditorOpened;
     // Listeners
     private final ItemListViewEventsListener itemListViewEventsListener;
-    private final OpClickShopItemWithPanelOpenedEventsListener opClickShopItemWithPanelOpenedEventsListener;
 
     public ShopItemsManager(AresonSomnium aresonSomnium, MySqlDBConnection mySqlDBConnection) {
-        this.aresonSomnium = aresonSomnium;
         itemsDBGateway = new ItemsDBGateway(mySqlDBConnection, MySqlConfig.ITEMS_TABLE_NAME);
         itemListView = new ItemListView(itemsDBGateway);
         playerWithEditorOpened = new HashMap<>();
         itemListViewEventsListener = new ItemListViewEventsListener(aresonSomnium);
-
-        opClickShopItemWithPanelOpenedEventsListener = new OpClickShopItemWithPanelOpenedEventsListener(aresonSomnium);
-        opClickShopItemWithPanelOpenedEventsListener.registerEvents();
     }
 
     public void openEditGuiToPlayer(Player player, int page) {
@@ -70,22 +70,47 @@ public class ShopItemsManager {
     }
 
     public void deleteItemInEditor(Player player, int slot) {
-        int page = playerWithEditorOpened.get(player.getName());
-        Optional<ShopItem> shopItemOptional = itemListView.getShopItem(page, slot);
-        shopItemOptional.ifPresent(shopItem -> {
+        runIfShopItemIsPresent(player, slot, shopItem -> {
             itemsDBGateway.removeItem(shopItem.getId());
             reloadItems();
         });
     }
 
     public void itemClickedInEditor(Player player, int slot) {
-        int page = playerWithEditorOpened.get(player.getName());
-        Optional<ShopItem> shopItemOptional = itemListView.getShopItem(page, slot);
-        shopItemOptional.ifPresent(shopItem -> {
+        runIfShopItemIsPresent(player, slot, shopItem -> {
             ItemStack clone = shopItem.getItemStack(true);
-            System.out.println("ID FROM ITEM: " + ShopItem.getIdFromItem(clone));
             player.getInventory().addItem(clone);
         });
+    }
+
+    public void sendPriceEditMessage(Player player, int slot, boolean isShoppingPrice) {
+        runIfShopItemIsPresent(player, slot, shopItem -> {
+            String initialCommand = "shopadmin setitemprice" + (isShoppingPrice ? " buy " : " sell ");
+            String buyOrSell = isShoppingPrice ? "ACQUISTO" : "VENDITA";
+            TextComponent start = Component.text("Imposta il prezzo di " + buyOrSell + " dell'oggetto con ID " + shopItem.getId() + " : ").color(BLUE).decoration(TextDecoration.BOLD, true);
+            TextComponent message = start
+                    .append(Component.newline())
+                    .append(Component.text("[MONETE]  ")
+                            .color(YELLOW)
+                            .decoration(TextDecoration.BOLD, true)
+                            .clickEvent(ClickEvent.suggestCommand(initialCommand + shopItem.getId() + " monete ")))
+                    .append(Component.text("[OBOLI]  ")
+                            .color(GOLD)
+                            .decoration(TextDecoration.BOLD, true)
+                            .clickEvent(ClickEvent.suggestCommand(initialCommand + shopItem.getId() + " oboli ")))
+                    .append(Component.text("[GEMME]")
+                            .color(GREEN)
+                            .decoration(TextDecoration.BOLD, true)
+                            .clickEvent(ClickEvent.suggestCommand(initialCommand + shopItem.getId() + " gemme ")))
+                    .append(Component.newline());
+            player.sendMessage(message);
+        });
+    }
+
+    private void runIfShopItemIsPresent(Player player, int slot, Consumer<? super ShopItem> consumer) {
+        int page = playerWithEditorOpened.get(player.getName());
+        Optional<ShopItem> shopItemOptional = itemListView.getShopItem(page, slot);
+        shopItemOptional.ifPresent(consumer);
     }
 
     public void reloadItems() {

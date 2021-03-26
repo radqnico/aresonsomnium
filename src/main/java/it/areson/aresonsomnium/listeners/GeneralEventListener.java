@@ -17,22 +17,16 @@ public abstract class GeneralEventListener implements Listener {
         this.aresonSomnium = aresonSomnium;
     }
 
-    public void registerEvents() {
-        aresonSomnium.getServer().getPluginManager().registerEvents(this, aresonSomnium);
-    }
-
-    public void unregisterEvents() {
-        HandlerList.unregisterAll(this);
-    }
-
-
-
     public static boolean isNotValidItemStack(ItemStack itemStack) {
         return Objects.isNull(itemStack) || Objects.equals(itemStack.getType(), Material.AIR) || Objects.equals(itemStack.getType(), Material.CAVE_AIR);
     }
 
     public static boolean isLeftClicking(InventoryClickEvent event) {
-        return event.isLeftClick() && !event.isShiftClick() && isNotValidItemStack(event.getCursor());
+        return event.isLeftClick() && isNotValidItemStack(event.getCursor());
+    }
+
+    public static boolean isRightClicking(InventoryClickEvent event) {
+        return event.isRightClick() && isNotValidItemStack(event.getCursor());
     }
 
     public static boolean isShiftClicking(InventoryClickEvent event) {
@@ -41,6 +35,14 @@ public abstract class GeneralEventListener implements Listener {
 
     public static boolean isPuttingNewItem(InventoryClickEvent event) {
         return event.isLeftClick() && !isNotValidItemStack(event.getCursor());
+    }
+
+    public void registerEvents() {
+        aresonSomnium.getServer().getPluginManager().registerEvents(this, aresonSomnium);
+    }
+
+    public void unregisterEvents() {
+        HandlerList.unregisterAll(this);
     }
 
 }

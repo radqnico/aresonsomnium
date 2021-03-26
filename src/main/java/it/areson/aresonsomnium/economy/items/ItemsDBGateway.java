@@ -14,10 +14,10 @@ import java.util.zip.ZipException;
 
 public class ItemsDBGateway {
 
-    private MySqlDBConnection mySqlDBConnection;
-    private String itemsTableName;
+    private final MySqlDBConnection mySqlDBConnection;
+    private final String itemsTableName;
     // id -> item
-    private HashMap<Integer, ShopItem> cache;
+    private final HashMap<Integer, ShopItem> cache;
 
     public ItemsDBGateway(MySqlDBConnection mySqlDBConnection, String itemsTableName) {
         this.mySqlDBConnection = mySqlDBConnection;
