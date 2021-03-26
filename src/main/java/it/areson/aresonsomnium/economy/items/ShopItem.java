@@ -67,13 +67,13 @@ public class ShopItem {
             if (lore == null) {
                 lore = new ArrayList<>();
             }
-            lore.add(Component.empty());
             if (setLorePrices) {
+                lore.add(Component.empty());
                 lore.addAll(shoppingPrice.toLore(true));
                 lore.addAll(sellingPrice.toLore(false));
             }
-            lore.add(Component.empty());
             if (putSomniumId) {
+                lore.add(Component.empty());
                 lore.add(Component.text("SomniumID: " + id).color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, false));
             }
             itemMeta.lore(lore);
