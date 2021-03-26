@@ -35,10 +35,12 @@ public class SetItemPriceCommand extends CommandParserCommand {
                         shopItem.getShoppingPrice().setPrice(coinType, amount);
                         shopItemsManager.getItemsGateway().upsertShopItem(shopItem);
                         shopItemsManager.reloadItems();
+                        commandSender.sendMessage("Prezzo impostato.");
                     } else if (strings[1].equalsIgnoreCase("sell")) {
                         shopItem.getSellingPrice().setPrice(coinType, amount);
                         shopItemsManager.getItemsGateway().upsertShopItem(shopItem);
                         shopItemsManager.reloadItems();
+                        commandSender.sendMessage("Prezzo impostato.");
                     } else {
                         commandSender.sendMessage("Comando: /shopadmin setitemprice buy|sell <id> <valuta> <qta>");
                     }

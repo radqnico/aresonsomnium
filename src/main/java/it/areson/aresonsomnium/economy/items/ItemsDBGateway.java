@@ -133,7 +133,6 @@ public class ItemsDBGateway {
             int affectedRows = mySqlDBConnection.update(connection, formatted);
             connection.close();
             if (affectedRows > 0) {
-                cache.putIfAbsent(shopItem.getId(), shopItem);
                 return true;
             }
         } catch (SQLException exception) {

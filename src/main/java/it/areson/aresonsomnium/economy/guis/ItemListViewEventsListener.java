@@ -61,11 +61,8 @@ public class ItemListViewEventsListener extends GeneralEventListener {
     public void onInventoryCloseEvent(InventoryCloseEvent event) {
         Inventory topInventory = event.getView().getTopInventory();
         Player player = (Player) event.getPlayer();
-        InventoryCloseEvent.Reason reason = event.getReason();
         if (aresonSomnium.shopItemsManager.checkIfIsItemsEditor(player, topInventory)) {
-            if (!reason.equals(InventoryCloseEvent.Reason.OPEN_NEW)) {
-                aresonSomnium.shopItemsManager.playerClosedEditGui(player);
-            }
+            aresonSomnium.shopItemsManager.playerClosedEditGui(player);
         }
     }
 

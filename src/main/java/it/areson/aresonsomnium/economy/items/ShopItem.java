@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -67,6 +68,7 @@ public class ShopItem {
             if (lore == null) {
                 lore = new ArrayList<>();
             }
+            System.out.println("ID: " + id + "  -->>  " + Arrays.toString(lore.toArray()));
             lore.add(Component.empty());
             if (setLorePrices) {
                 lore.addAll(shoppingPrice.toLore(true));

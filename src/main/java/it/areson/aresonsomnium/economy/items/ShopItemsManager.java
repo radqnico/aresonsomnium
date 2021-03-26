@@ -9,6 +9,7 @@ import it.areson.aresonsomnium.economy.guis.ItemListViewEventsListener;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -85,25 +86,29 @@ public class ShopItemsManager {
 
     public void sendPriceEditMessage(Player player, int slot, boolean isShoppingPrice) {
         runIfShopItemIsPresent(player, slot, shopItem -> {
-            String initialCommand = "shopadmin setitemprice" + (isShoppingPrice ? " buy " : " sell ");
+            String initialCommand = "/shopadmin setitemprice" + (isShoppingPrice ? " buy " : " sell ");
             String buyOrSell = isShoppingPrice ? "ACQUISTO" : "VENDITA";
-            TextComponent start = Component.text("Imposta il prezzo di " + buyOrSell + " dell'oggetto con ID " + shopItem.getId() + " : ").color(BLUE).decoration(TextDecoration.BOLD, true);
+            TextComponent start = Component.text("Imposta il prezzo di " + buyOrSell + " dell'oggetto con ID " + shopItem.getId()).color(BLUE).decoration(TextDecoration.BOLD, true);
             TextComponent message = start
                     .append(Component.newline())
                     .append(Component.text("[MONETE]  ")
                             .color(YELLOW)
                             .decoration(TextDecoration.BOLD, true)
-                            .clickEvent(ClickEvent.suggestCommand(initialCommand + shopItem.getId() + " monete ")))
+                            .clickEvent(ClickEvent.suggestCommand(initialCommand + shopItem.getId() + " monete "))
+                            .hoverEvent(HoverEvent.showText(Component.text("Imposta le monete"))))
                     .append(Component.text("[OBOLI]  ")
                             .color(GOLD)
                             .decoration(TextDecoration.BOLD, true)
-                            .clickEvent(ClickEvent.suggestCommand(initialCommand + shopItem.getId() + " oboli ")))
+                            .clickEvent(ClickEvent.suggestCommand(initialCommand + shopItem.getId() + " oboli "))
+                            .hoverEvent(HoverEvent.showText(Component.text("Imposta gli oboli"))))
                     .append(Component.text("[GEMME]")
                             .color(GREEN)
                             .decoration(TextDecoration.BOLD, true)
-                            .clickEvent(ClickEvent.suggestCommand(initialCommand + shopItem.getId() + " gemme ")))
+                            .clickEvent(ClickEvent.suggestCommand(initialCommand + shopItem.getId() + " gemme "))
+                            .hoverEvent(HoverEvent.showText(Component.text("Imposta le gemme"))))
                     .append(Component.newline());
             player.sendMessage(message);
+            player.closeInventory();
         });
     }
 
