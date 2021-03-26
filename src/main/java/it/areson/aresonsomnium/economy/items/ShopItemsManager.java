@@ -79,7 +79,7 @@ public class ShopItemsManager {
 
     public void itemClickedInEditor(Player player, int slot) {
         runIfShopItemIsPresent(player, slot, shopItem -> {
-            ItemStack clone = shopItem.getItemStack(true);
+            ItemStack clone = shopItem.getItemStack(true, true);
             player.getInventory().addItem(clone);
         });
     }

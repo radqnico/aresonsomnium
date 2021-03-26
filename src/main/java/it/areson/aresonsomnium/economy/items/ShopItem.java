@@ -11,7 +11,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -56,7 +55,7 @@ public class ShopItem {
         return id;
     }
 
-    public ItemStack getItemStack(boolean setLorePrices) {
+    public ItemStack getItemStack(boolean setLorePrices, boolean putSomniumId) {
         ItemStack clone = itemStack.clone();
         clone.setAmount(amount);
         ItemMeta itemMeta = clone.getItemMeta();
@@ -68,14 +67,15 @@ public class ShopItem {
             if (lore == null) {
                 lore = new ArrayList<>();
             }
-            System.out.println("ID: " + id + "  -->>  " + Arrays.toString(lore.toArray()));
             lore.add(Component.empty());
             if (setLorePrices) {
                 lore.addAll(shoppingPrice.toLore(true));
                 lore.addAll(sellingPrice.toLore(false));
             }
             lore.add(Component.empty());
-            lore.add(Component.text("SomniumID: " + id).color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, false));
+            if (putSomniumId) {
+                lore.add(Component.text("SomniumID: " + id).color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, false));
+            }
             itemMeta.lore(lore);
             clone.setItemMeta(itemMeta);
         }

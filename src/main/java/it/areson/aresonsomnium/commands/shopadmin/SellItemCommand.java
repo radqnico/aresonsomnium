@@ -25,8 +25,8 @@ public class SellItemCommand extends CommandParserCommand {
                 Optional<ShopItem> itemById = AresonSomniumAPI.instance.shopItemsManager.getItemsGateway().getItemById(id);
                 if (itemById.isPresent()) {
                     ShopItem shopItem = itemById.get();
-                    if(shopItem.getSellingPrice().isPriceReady()) {
-                        ItemStack itemStack = shopItem.getItemStack(false);
+                    if (shopItem.getSellingPrice().isPriceReady()) {
+                        ItemStack itemStack = shopItem.getItemStack(false, false);
                         PlayerInventory inventory = player.getInventory();
                         if (inventory.contains(itemStack)) {
                             while (inventory.contains(itemStack)) {
@@ -39,7 +39,7 @@ public class SellItemCommand extends CommandParserCommand {
                         } else {
                             player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-sell-not-present"));
                         }
-                    }else{
+                    } else {
                         player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-sell-not-sellable"));
                     }
                 } else {

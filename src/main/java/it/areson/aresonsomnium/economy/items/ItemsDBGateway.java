@@ -103,7 +103,7 @@ public class ItemsDBGateway {
                     "(itemStack, amount, shoppingCoins, shoppingObols, shoppingGems, sellingCoins, sellingObols, sellingGems) " +
                     "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')";
             formatted = String.format(query,
-                    Base64.getEncoder().encodeToString(shopItem.getItemStack(false).serializeAsBytes()),
+                    Base64.getEncoder().encodeToString(shopItem.getItemStack(false, false).serializeAsBytes()),
                     shopItem.getAmount(),
                     shopItem.getShoppingPrice().getCoins().toPlainString(),
                     shopItem.getShoppingPrice().getObols().toString(),
@@ -117,7 +117,7 @@ public class ItemsDBGateway {
                     "SET itemStack='%s', amount='%s', shoppingCoins='%s', shoppingObols='%s', shoppingGems='%s', sellingCoins='%s', sellingObols='%s', sellingGems='%s' " +
                     "WHERE id=%d";
             formatted = String.format(query,
-                    Base64.getEncoder().encodeToString(shopItem.getItemStack(false).serializeAsBytes()),
+                    Base64.getEncoder().encodeToString(shopItem.getItemStack(false, false).serializeAsBytes()),
                     shopItem.getAmount(),
                     shopItem.getShoppingPrice().getCoins().toPlainString(),
                     shopItem.getShoppingPrice().getObols().toString(),

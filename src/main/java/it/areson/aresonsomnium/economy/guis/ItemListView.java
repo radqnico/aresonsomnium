@@ -43,7 +43,7 @@ public class ItemListView {
             for (int j = 0; j < 54; j++) {
                 int index = (54 * i) + j;
                 if (items.size() > index) {
-                    inventory.addItem(items.get(index).getItemStack(true));
+                    inventory.addItem(items.get(index).getItemStack(true, true));
                 }
             }
             if (inventories.size() <= i) {
