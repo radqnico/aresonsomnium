@@ -1,6 +1,7 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
+import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import it.areson.aresonsomnium.elements.Pair;
@@ -60,15 +61,18 @@ public class SellItemCommand extends CommandParserCommand {
                         PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
                         Integer currentId = persistentDataContainer.getOrDefault(new NamespacedKey(AresonSomniumAPI.instance, "id"), PersistentDataType.INTEGER, -1);
                         if (currentId == id) {
+                            int amount = currentItem.getAmount();
                             inventory.clear(i);
-                            Wallet.addCoins(somniumPlayer.getPlayer(), shopItem.getSellingPrice().getCoins());
-                            somniumPlayer.getWallet().changeObols(shopItem.getSellingPrice().getObols());
-                            somniumPlayer.getWallet().changeGems(shopItem.getSellingPrice().getGems());
+                            Price sellingPrice = shopItem.getSellingPrice().clone();
+                            sellingPrice.multiply(amount);
+                            Wallet.addCoins(somniumPlayer.getPlayer(), sellingPrice.getCoins());
+                            somniumPlayer.getWallet().changeObols(sellingPrice.getObols());
+                            somniumPlayer.getWallet().changeGems(sellingPrice.getGems());
                             somniumPlayer.getPlayer().sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage(
                                     "item-sell-success",
-                                    Pair.of("%coins%", shopItem.getSellingPrice().getCoins().toString()),
-                                    Pair.of("%gems%", shopItem.getSellingPrice().getGems().toString()),
-                                    Pair.of("%obols%", shopItem.getSellingPrice().getObols().toString())
+                                    Pair.of("%coins%", sellingPrice.getCoins().toString()),
+                                    Pair.of("%gems%", sellingPrice.getGems().toString()),
+                                    Pair.of("%obols%", sellingPrice.getObols().toString())
                             ));
                         }
                     }
