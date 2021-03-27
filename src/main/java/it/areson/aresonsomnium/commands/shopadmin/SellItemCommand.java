@@ -3,6 +3,7 @@ package it.areson.aresonsomnium.commands.shopadmin;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.economy.items.ShopItem;
+import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,13 +30,16 @@ public class SellItemCommand extends CommandParserCommand {
                         ItemStack itemStack = shopItem.getItemStack(false, false);
                         PlayerInventory inventory = player.getInventory();
                         if (inventory.contains(itemStack)) {
-                            while (inventory.contains(itemStack)) {
-                                inventory.remove(itemStack);
-                                Wallet.addCoins(player, shopItem.getSellingPrice().getCoins());
-                                somniumPlayer.getWallet().changeObols(shopItem.getSellingPrice().getObols());
-                                somniumPlayer.getWallet().changeGems(shopItem.getSellingPrice().getGems());
-                                player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-sell-success"));
-                            }
+                            inventory.remove(itemStack);
+                            Wallet.addCoins(player, shopItem.getSellingPrice().getCoins());
+                            somniumPlayer.getWallet().changeObols(shopItem.getSellingPrice().getObols());
+                            somniumPlayer.getWallet().changeGems(shopItem.getSellingPrice().getGems());
+                            player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage(
+                                    "item-sell-success",
+                                    Pair.of("%coins%", shopItem.getSellingPrice().getCoins().toString()),
+                                    Pair.of("%gems%", shopItem.getSellingPrice().getGems().toString()),
+                                    Pair.of("%obols%", shopItem.getSellingPrice().getObols().toString())
+                            ));
                         } else {
                             player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-sell-not-present"));
                         }

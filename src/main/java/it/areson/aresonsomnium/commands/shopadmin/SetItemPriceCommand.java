@@ -35,7 +35,7 @@ public class SetItemPriceCommand extends CommandParserCommand {
                         shopItem.getShoppingPrice().setPrice(coinType, amount);
                         shopItemsManager.getItemsGateway().upsertShopItem(shopItem);
                         shopItemsManager.reloadItems();
-                        commandSender.sendMessage("Prezzo impostato.");
+                        commandSender.sendMessage("Prezzo impostato per l'oggetto ID " + shopItem.getId());
                     } else if (strings[1].equalsIgnoreCase("sell")) {
                         shopItem.getSellingPrice().setPrice(coinType, amount);
                         shopItemsManager.getItemsGateway().upsertShopItem(shopItem);
