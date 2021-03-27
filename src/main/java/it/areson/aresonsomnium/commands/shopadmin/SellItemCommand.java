@@ -76,7 +76,7 @@ public class SellItemCommand extends CommandParserCommand {
             }
 
         } else {
-            somniumPlayer.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-sell-not-present"));
+            somniumPlayer.getPlayer().sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-sell-not-present"));
         }
     }
 
