@@ -55,7 +55,7 @@ public class ShopItem {
         return id;
     }
 
-    public ItemStack getItemStack(boolean setLorePrices, boolean putSomniumId) {
+    public ItemStack getItemStack(boolean setLorePrices, boolean putSomniumIdInLore) {
         ItemStack clone = itemStack.clone();
         clone.setAmount(amount);
         ItemMeta itemMeta = clone.getItemMeta();
@@ -72,7 +72,7 @@ public class ShopItem {
                 lore.addAll(shoppingPrice.toLore(true));
                 lore.addAll(sellingPrice.toLore(false));
             }
-            if (putSomniumId) {
+            if (putSomniumIdInLore) {
                 lore.add(Component.empty());
                 lore.add(Component.text("SomniumID: " + id).color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, false));
             }

@@ -5,11 +5,17 @@ import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.players.SomniumPlayer;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,22 +33,8 @@ public class SellItemCommand extends CommandParserCommand {
                 if (itemById.isPresent()) {
                     ShopItem shopItem = itemById.get();
                     if (shopItem.getSellingPrice().isPriceReady()) {
-                        ItemStack itemStack = shopItem.getItemStack(false, false);
                         PlayerInventory inventory = player.getInventory();
-                        if (inventory.contains(itemStack)) {
-                            inventory.remove(itemStack);
-                            Wallet.addCoins(player, shopItem.getSellingPrice().getCoins());
-                            somniumPlayer.getWallet().changeObols(shopItem.getSellingPrice().getObols());
-                            somniumPlayer.getWallet().changeGems(shopItem.getSellingPrice().getGems());
-                            player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage(
-                                    "item-sell-success",
-                                    Pair.of("%coins%", shopItem.getSellingPrice().getCoins().toString()),
-                                    Pair.of("%gems%", shopItem.getSellingPrice().getGems().toString()),
-                                    Pair.of("%obols%", shopItem.getSellingPrice().getObols().toString())
-                            ));
-                        } else {
-                            player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-sell-not-present"));
-                        }
+                        sellIfContains(somniumPlayer, shopItem, id, inventory);
                     } else {
                         player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-sell-not-sellable"));
                     }
@@ -57,16 +49,47 @@ public class SellItemCommand extends CommandParserCommand {
         }
     }
 
+    public static void sellIfContains(SomniumPlayer somniumPlayer, ShopItem shopItem, int id, Inventory inventory) {
+        Material type = shopItem.getItemStack(false, false).getType();
+        if (inventory.contains(type)) {
+            for (int i = 0; i < inventory.getSize(); i++) {
+                ItemStack currentItem = inventory.getItem(i);
+                if (currentItem != null && currentItem.getType().equals(type)) {
+                    ItemMeta itemMeta = currentItem.getItemMeta();
+                    if (itemMeta != null) {
+                        PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
+                        Integer currentId = persistentDataContainer.getOrDefault(new NamespacedKey(AresonSomniumAPI.instance, "id"), PersistentDataType.INTEGER, -1);
+                        if (currentId == id) {
+                            inventory.clear(i);
+                            Wallet.addCoins(somniumPlayer.getPlayer(), shopItem.getSellingPrice().getCoins());
+                            somniumPlayer.getWallet().changeObols(shopItem.getSellingPrice().getObols());
+                            somniumPlayer.getWallet().changeGems(shopItem.getSellingPrice().getGems());
+                            somniumPlayer.getPlayer().sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage(
+                                    "item-sell-success",
+                                    Pair.of("%coins%", shopItem.getSellingPrice().getCoins().toString()),
+                                    Pair.of("%gems%", shopItem.getSellingPrice().getGems().toString()),
+                                    Pair.of("%obols%", shopItem.getSellingPrice().getObols().toString())
+                            ));
+                        }
+                    }
+                }
+            }
+
+        } else {
+            somniumPlayer.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-sell-not-present"));
+        }
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        // / /shopadmin buyitem <player> <id>
+        // / /shopadmin sellitem <player> <id>
         try {
             int id = Integer.parseInt(strings[2]);
             String playerName = strings[1];
             Player player = AresonSomniumAPI.instance.getServer().getPlayer(playerName);
             buyItem(id, player, commandSender);
         } catch (NumberFormatException numberFormatException) {
-            commandSender.sendMessage("L'ID o la quantità non è un numero");
+            commandSender.sendMessage("L'ID o non è un numero");
         }
         return true;
     }
