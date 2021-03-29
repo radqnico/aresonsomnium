@@ -21,12 +21,13 @@ shop-not-ready: "&cIl negozio richiesto non e' pronto. Segnala il problema allo 
 item-buy-success: "&aOggetto acquistato per %coins% coins, %obols% oboli e %gems% gemme !"
 item-buy-not-enough-space: "&cNon hai abbastanza spazio nell'inventario"
 item-buy-not-enough-money: "&cNon te lo puoi permettere!"
-item-buy-error: "&cRiscontrato un problema con i tuoi dati. Segnala il problema  allo staff.!"
+item-buy-not-buyable: "&Non puoi acquistare questo oggetto"
+item-buy-error: "&cRiscontrato un problema con i tuoi dati. Segnala il problema  allo staff !"
 
 item-sell-success: "&aOggetto venduto per %coins% coins, %obols% oboli e %gems% gemme !"
 item-sell-not-present: "&cNon hai questo oggetto nell'inventario"
 item-sell-not-enough: "&cNon ne hai abbastanza per poter vendere"
-item-sell-error: "&cRiscontrato un problema con i tuoi dati. Segnala il problema  allo staff.!"
+item-sell-error: "&cRiscontrato un problema con i tuoi dati. Segnala il problema  allo staff !"
 item-sell-not-sellable: "&cQuesto oggetto non e' vendibile"
 
 gomma-give: "&aHai ottenuto %amount% gomme"

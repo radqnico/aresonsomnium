@@ -2,10 +2,7 @@ package it.areson.aresonsomnium;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.admin.*;
-import it.areson.aresonsomnium.commands.newcommands.CommandParser;
-import it.areson.aresonsomnium.commands.newcommands.EditItemsCommand;
-import it.areson.aresonsomnium.commands.newcommands.ReloadItemsCommand;
-import it.areson.aresonsomnium.commands.newcommands.SetItemPriceCommand;
+import it.areson.aresonsomnium.commands.shopadmin.*;
 import it.areson.aresonsomnium.commands.player.CheckCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
@@ -22,6 +19,8 @@ import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
+import me.rockyhawk.commandpanels.CommandPanels;
+import me.rockyhawk.commandpanels.api.CommandPanelsAPI;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.node.Node;
 import org.bukkit.ChatColor;
@@ -71,12 +70,14 @@ public class AresonSomnium extends JavaPlugin {
         put(Material.CHISELED_QUARTZ_BLOCK, Constants.PERMISSION_SETTIMO_CIELO);
     }};
     private final HashMap<String, Multiplier> playerMultipliers = new HashMap<>();
-    public ShopItemsManager shopItemsManager;
-    public Optional<LuckPerms> luckPerms;
     private SomniumPlayerManager somniumPlayerManager;
     private GatewayListener playerDBEvents;
     private GommaObjectsFileReader gommaObjectsFileReader;
     private MessageManager messages;
+
+    public CommandPanelsAPI commandPanelsAPI = CommandPanels.getAPI();
+    public ShopItemsManager shopItemsManager;
+    public Optional<LuckPerms> luckPerms;
 
     @Override
     public void onDisable() {
@@ -153,6 +154,8 @@ public class AresonSomnium extends JavaPlugin {
             parser.addAresonCommand(new EditItemsCommand());
             parser.addAresonCommand(new ReloadItemsCommand());
             parser.addAresonCommand(new SetItemPriceCommand());
+            parser.addAresonCommand(new BuyItemCommand());
+            parser.addAresonCommand(new SellItemCommand());
             parser.registerCommands();
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -162,8 +165,6 @@ public class AresonSomnium extends JavaPlugin {
         command.setTabCompleter(parser);
 
         new SomniumAdminCommand(this);
-        new SomniumTestCommand(this);
-        new OpenGuiCommand(this);
         new StatsCommand(this);
         new SomniumGommaCommand(this);
         new SellCommand(this, Constants.SELL_HAND_COMMAND);

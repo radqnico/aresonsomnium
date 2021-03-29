@@ -2,8 +2,8 @@ package it.areson.aresonsomnium.players;
 
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
-import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.economy.Price;
+import it.areson.aresonsomnium.economy.Wallet;
 import org.bukkit.entity.Player;
 
 import java.math.BigInteger;
@@ -111,4 +111,22 @@ public class SomniumPlayer extends MySQLObject {
     public boolean canAfford(Price price) {
         return price.canAffordThis(this);
     }
+
+    public void givePriceAmount(Price price) {
+        Wallet.addCoins(getPlayer(), price.getCoins());
+        wallet.changeObols(price.getObols());
+        wallet.changeGems(price.getGems());
+    }
+
+    public boolean takePriceAmount(Price price) {
+        if (canAfford(price)) {
+            Price negated = price.negate();
+            Wallet.addCoins(getPlayer(), negated.getCoins());
+            wallet.changeObols(negated.getObols());
+            wallet.changeGems(negated.getGems());
+            return true;
+        }
+        return false;
+    }
+
 }

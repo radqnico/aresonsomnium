@@ -2,7 +2,6 @@ package it.areson.aresonsomnium.economy.guis;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.listeners.GeneralEventListener;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -26,16 +25,25 @@ public class ItemListViewEventsListener extends GeneralEventListener {
         Player player = (Player) event.getWhoClicked();
         if (aresonSomnium.shopItemsManager.checkIfIsItemsEditor(player, clickedInventory)) {
             event.setCancelled(true);
-            if (isLeftClicking(event)) {
+            if (isShiftClicking(event) && isLeftClicking(event)) {
+                // SHIFT + SINISTRO = cancella
+                aresonSomnium.shopItemsManager.deleteItemInEditor(player, event.getSlot());
+            } else if (!isShiftClicking(event) && isLeftClicking(event)) {
+                // NON SHIFT + SINISTRO = clona
                 aresonSomnium.shopItemsManager.itemClickedInEditor(player, event.getSlot());
+            } else if (!isShiftClicking(event) && isRightClicking(event)) {
+                // NON SHIFT + DESTRO = imposta prezzo acquisto
+                aresonSomnium.shopItemsManager.sendPriceEditMessage(player, event.getSlot(), true);
+            } else if (isShiftClicking(event) && isRightClicking(event)) {
+                // SHIFT + DESTRO = imposta prezzo vendita
+                aresonSomnium.shopItemsManager.sendPriceEditMessage(player, event.getSlot(), false);
             } else if (isPuttingNewItem(event)) {
+                // nuovo oggetto
                 ItemStack cursor = event.getCursor();
                 if (Objects.nonNull(cursor)) {
                     ItemStack clone = cursor.clone();
                     aresonSomnium.shopItemsManager.itemPutIntoEditor(clone);
                 }
-            } else if (isShiftClicking(event)) {
-                aresonSomnium.shopItemsManager.deleteItemInEditor(player, event.getSlot());
             }
         }
     }
@@ -53,28 +61,9 @@ public class ItemListViewEventsListener extends GeneralEventListener {
     public void onInventoryCloseEvent(InventoryCloseEvent event) {
         Inventory topInventory = event.getView().getTopInventory();
         Player player = (Player) event.getPlayer();
-        InventoryCloseEvent.Reason reason = event.getReason();
         if (aresonSomnium.shopItemsManager.checkIfIsItemsEditor(player, topInventory)) {
-            if (!reason.equals(InventoryCloseEvent.Reason.OPEN_NEW)) {
-                aresonSomnium.shopItemsManager.playerClosedEditGui(player);
-            }
+            aresonSomnium.shopItemsManager.playerClosedEditGui(player);
         }
-    }
-
-    private boolean isNotValidItemStack(ItemStack itemStack) {
-        return Objects.isNull(itemStack) || Objects.equals(itemStack.getType(), Material.AIR) || Objects.equals(itemStack.getType(), Material.CAVE_AIR);
-    }
-
-    private boolean isLeftClicking(InventoryClickEvent event) {
-        return event.isLeftClick() && !event.isShiftClick() && isNotValidItemStack(event.getCursor());
-    }
-
-    private boolean isShiftClicking(InventoryClickEvent event) {
-        return event.isShiftClick() && isNotValidItemStack(event.getCursor());
-    }
-
-    private boolean isPuttingNewItem(InventoryClickEvent event) {
-        return event.isLeftClick() && !isNotValidItemStack(event.getCursor());
     }
 
 }

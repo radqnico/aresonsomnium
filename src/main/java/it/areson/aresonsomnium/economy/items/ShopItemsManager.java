@@ -6,23 +6,30 @@ import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.guis.ItemListView;
 import it.areson.aresonsomnium.economy.guis.ItemListViewEventsListener;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.function.Consumer;
+
+import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class ShopItemsManager {
 
-    private final AresonSomnium aresonSomnium;
     private final ItemsDBGateway itemsDBGateway;
     private final ItemListView itemListView;
-    private final ItemListViewEventsListener itemListViewEventsListener;
     private final HashMap<String, Integer> playerWithEditorOpened;
+    // Listeners
+    private final ItemListViewEventsListener itemListViewEventsListener;
 
     public ShopItemsManager(AresonSomnium aresonSomnium, MySqlDBConnection mySqlDBConnection) {
-        this.aresonSomnium = aresonSomnium;
         itemsDBGateway = new ItemsDBGateway(mySqlDBConnection, MySqlConfig.ITEMS_TABLE_NAME);
         itemListView = new ItemListView(itemsDBGateway);
         playerWithEditorOpened = new HashMap<>();
@@ -64,22 +71,51 @@ public class ShopItemsManager {
     }
 
     public void deleteItemInEditor(Player player, int slot) {
-        int page = playerWithEditorOpened.get(player.getName());
-        Optional<ShopItem> shopItemOptional = itemListView.getShopItem(page, slot);
-        shopItemOptional.ifPresent(shopItem -> {
+        runIfShopItemIsPresent(player, slot, shopItem -> {
             itemsDBGateway.removeItem(shopItem.getId());
             reloadItems();
         });
     }
 
     public void itemClickedInEditor(Player player, int slot) {
-        int page = playerWithEditorOpened.get(player.getName());
-        Optional<ShopItem> shopItemOptional = itemListView.getShopItem(page, slot);
-        shopItemOptional.ifPresent(shopItem -> {
-            ItemStack clone = shopItem.getItemStack(true).clone();
-            System.out.println("ID FROM ITEM: " + ShopItem.getIdFromItemData(clone));
+        runIfShopItemIsPresent(player, slot, shopItem -> {
+            ItemStack clone = shopItem.getItemStack(true, true);
             player.getInventory().addItem(clone);
         });
+    }
+
+    public void sendPriceEditMessage(Player player, int slot, boolean isShoppingPrice) {
+        runIfShopItemIsPresent(player, slot, shopItem -> {
+            String initialCommand = "/shopadmin setitemprice" + (isShoppingPrice ? " buy " : " sell ");
+            String buyOrSell = isShoppingPrice ? "ACQUISTO" : "VENDITA";
+            TextComponent start = Component.text("Imposta il prezzo di " + buyOrSell + " dell'oggetto con ID " + shopItem.getId()).color(BLUE).decoration(TextDecoration.BOLD, true);
+            TextComponent message = start
+                    .append(Component.newline())
+                    .append(Component.text("[MONETE]  ")
+                            .color(YELLOW)
+                            .decoration(TextDecoration.BOLD, true)
+                            .clickEvent(ClickEvent.suggestCommand(initialCommand + shopItem.getId() + " monete "))
+                            .hoverEvent(HoverEvent.showText(Component.text("Imposta le monete"))))
+                    .append(Component.text("[OBOLI]  ")
+                            .color(GOLD)
+                            .decoration(TextDecoration.BOLD, true)
+                            .clickEvent(ClickEvent.suggestCommand(initialCommand + shopItem.getId() + " oboli "))
+                            .hoverEvent(HoverEvent.showText(Component.text("Imposta gli oboli"))))
+                    .append(Component.text("[GEMME]")
+                            .color(GREEN)
+                            .decoration(TextDecoration.BOLD, true)
+                            .clickEvent(ClickEvent.suggestCommand(initialCommand + shopItem.getId() + " gemme "))
+                            .hoverEvent(HoverEvent.showText(Component.text("Imposta le gemme"))))
+                    .append(Component.newline());
+            player.sendMessage(message);
+            player.closeInventory();
+        });
+    }
+
+    private void runIfShopItemIsPresent(Player player, int slot, Consumer<? super ShopItem> consumer) {
+        int page = playerWithEditorOpened.get(player.getName());
+        Optional<ShopItem> shopItemOptional = itemListView.getShopItem(page, slot);
+        shopItemOptional.ifPresent(consumer);
     }
 
     public void reloadItems() {

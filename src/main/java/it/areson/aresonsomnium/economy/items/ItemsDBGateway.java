@@ -14,10 +14,10 @@ import java.util.zip.ZipException;
 
 public class ItemsDBGateway {
 
-    private MySqlDBConnection mySqlDBConnection;
-    private String itemsTableName;
+    private final MySqlDBConnection mySqlDBConnection;
+    private final String itemsTableName;
     // id -> item
-    private HashMap<Integer, ShopItem> cache;
+    private final HashMap<Integer, ShopItem> cache;
 
     public ItemsDBGateway(MySqlDBConnection mySqlDBConnection, String itemsTableName) {
         this.mySqlDBConnection = mySqlDBConnection;
@@ -50,12 +50,16 @@ public class ItemsDBGateway {
     }
 
     public Optional<ShopItem> getItemById(int itemId) {
+        if (itemId == -1) {
+            return Optional.empty();
+        }
+
         ShopItem cached = cache.get(itemId);
         if (Objects.nonNull(cached)) {
             return Optional.of(cached);
         }
 
-        String query = "SELECT * FROM " + itemsTableName + "WHERE id=" + itemId;
+        String query = "SELECT * FROM " + itemsTableName + " WHERE id=" + itemId;
         Optional<ShopItem> optionalShopItem = Optional.empty();
         try {
             Connection connection = mySqlDBConnection.connect();
@@ -99,7 +103,7 @@ public class ItemsDBGateway {
                     "(itemStack, amount, shoppingCoins, shoppingObols, shoppingGems, sellingCoins, sellingObols, sellingGems) " +
                     "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')";
             formatted = String.format(query,
-                    Base64.getEncoder().encodeToString(shopItem.getItemStack(false).serializeAsBytes()),
+                    Base64.getEncoder().encodeToString(shopItem.getItemStack(false, false).serializeAsBytes()),
                     shopItem.getAmount(),
                     shopItem.getShoppingPrice().getCoins().toPlainString(),
                     shopItem.getShoppingPrice().getObols().toString(),
@@ -113,7 +117,7 @@ public class ItemsDBGateway {
                     "SET itemStack='%s', amount='%s', shoppingCoins='%s', shoppingObols='%s', shoppingGems='%s', sellingCoins='%s', sellingObols='%s', sellingGems='%s' " +
                     "WHERE id=%d";
             formatted = String.format(query,
-                    Base64.getEncoder().encodeToString(shopItem.getItemStack(false).serializeAsBytes()),
+                    Base64.getEncoder().encodeToString(shopItem.getItemStack(false, false).serializeAsBytes()),
                     shopItem.getAmount(),
                     shopItem.getShoppingPrice().getCoins().toPlainString(),
                     shopItem.getShoppingPrice().getObols().toString(),
@@ -129,7 +133,6 @@ public class ItemsDBGateway {
             int affectedRows = mySqlDBConnection.update(connection, formatted);
             connection.close();
             if (affectedRows > 0) {
-                cache.putIfAbsent(shopItem.getId(), shopItem);
                 return true;
             }
         } catch (SQLException exception) {

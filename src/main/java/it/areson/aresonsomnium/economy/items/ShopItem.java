@@ -3,6 +3,8 @@ package it.areson.aresonsomnium.economy.items;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.economy.Price;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -34,12 +36,14 @@ public class ShopItem {
         this(id, itemStack, 1, new Price(), new Price());
     }
 
-    public static int getIdFromItemData(ItemStack itemStack) {
+    public static int getIdFromItem(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
+        System.out.println(itemMeta);
         if (Objects.isNull(itemMeta)) {
             return -1;
         }
         PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
+        persistentDataContainer.getKeys().stream().map(namespacedKey -> namespacedKey.toString() + "->" + persistentDataContainer.get(namespacedKey, INTEGER)).forEach(System.out::println);
         return persistentDataContainer.getOrDefault(new NamespacedKey(AresonSomniumAPI.instance, "id"), INTEGER, -1);
     }
 
@@ -51,23 +55,28 @@ public class ShopItem {
         return id;
     }
 
-    public ItemStack getItemStack(boolean setLorePrices) {
+    public ItemStack getItemStack(boolean setLorePrices, boolean putSomniumIdInLore) {
         ItemStack clone = itemStack.clone();
         clone.setAmount(amount);
         ItemMeta itemMeta = clone.getItemMeta();
         if (Objects.nonNull(itemMeta)) {
             PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
             persistentDataContainer.set(new NamespacedKey(AresonSomniumAPI.instance, "id"), INTEGER, id);
+
+            List<Component> lore = itemMeta.lore();
+            if (lore == null) {
+                lore = new ArrayList<>();
+            }
             if (setLorePrices) {
-                List<Component> lore = itemMeta.lore();
-                if (lore == null) {
-                    lore = new ArrayList<>();
-                }
                 lore.add(Component.empty());
                 lore.addAll(shoppingPrice.toLore(true));
                 lore.addAll(sellingPrice.toLore(false));
-                itemMeta.lore(lore);
             }
+            if (putSomniumIdInLore) {
+                lore.add(Component.empty());
+                lore.add(Component.text("SomniumID: " + id).color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, false));
+            }
+            itemMeta.lore(lore);
             clone.setItemMeta(itemMeta);
         }
         return clone;
