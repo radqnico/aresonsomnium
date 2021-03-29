@@ -1,7 +1,7 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
-import it.areson.aresonsomnium.economy.Wallet;
+import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.players.SomniumPlayer;
@@ -27,14 +27,13 @@ public class BuyItemCommand extends CommandParserCommand {
                     if (shopItem.getShoppingPrice().isPriceReady()) {
                         if (somniumPlayer.canAfford(shopItem.getShoppingPrice())) {
                             if (player.getInventory().addItem(shopItem.getItemStack(false, false)).isEmpty()) {
-                                Wallet.addCoins(player, shopItem.getShoppingPrice().getCoins().negate());
-                                somniumPlayer.getWallet().changeObols(shopItem.getShoppingPrice().getObols().negate());
-                                somniumPlayer.getWallet().changeGems(shopItem.getShoppingPrice().getGems().negate());
+                                Price price = shopItem.getShoppingPrice();
+                                somniumPlayer.takePriceAmount(price);
                                 player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage(
                                         "item-buy-success",
-                                        Pair.of("%coins%", shopItem.getSellingPrice().getCoins().toString()),
-                                        Pair.of("%gems%", shopItem.getSellingPrice().getGems().toString()),
-                                        Pair.of("%obols%", shopItem.getSellingPrice().getObols().toString()))
+                                        Pair.of("%coins%", price.getCoins().toString()),
+                                        Pair.of("%gems%", price.getGems().toString()),
+                                        Pair.of("%obols%", price.getObols().toString()))
                                 );
                             } else {
                                 player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-buy-not-enough-space"));

@@ -1,6 +1,7 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
+import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.economy.items.ShopItem;
@@ -20,8 +21,11 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AresonCommand("sellitem")
 public class SellItemCommand extends CommandParserCommand {
@@ -65,9 +69,7 @@ public class SellItemCommand extends CommandParserCommand {
                             inventory.clear(i);
                             Price sellingPrice = shopItem.getSellingPrice().clone();
                             sellingPrice.multiply(amount);
-                            Wallet.addCoins(somniumPlayer.getPlayer(), sellingPrice.getCoins());
-                            somniumPlayer.getWallet().changeObols(sellingPrice.getObols());
-                            somniumPlayer.getWallet().changeGems(sellingPrice.getGems());
+                            somniumPlayer.givePriceAmount(sellingPrice);
                             somniumPlayer.getPlayer().sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage(
                                     "item-sell-success",
                                     Pair.of("%coins%", sellingPrice.getCoins().toString()),
@@ -100,6 +102,13 @@ public class SellItemCommand extends CommandParserCommand {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        return null;
+        List<String> suggestions = new ArrayList<>();
+        if (strings.length == 2) {
+            return null;
+        }
+        if (strings.length == 3) {
+            boolean b = suggestions.addAll(Arrays.stream(CoinType.values()).map(coinType -> coinType.name().toLowerCase()).collect(Collectors.toList()));
+        }
+        return suggestions;
     }
 }

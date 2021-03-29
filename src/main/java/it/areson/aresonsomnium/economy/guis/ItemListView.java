@@ -74,4 +74,8 @@ public class ItemListView {
         return Optional.empty();
     }
 
+    public int getNumberOfPages(){
+        return inventories.size();
+    }
+
 }

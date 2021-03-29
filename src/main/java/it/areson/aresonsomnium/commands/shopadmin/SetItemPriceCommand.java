@@ -64,8 +64,14 @@ public class SetItemPriceCommand extends CommandParserCommand {
             suggestions.add("buy");
             suggestions.add("sell");
         }
+        if (strings.length == 2) {
+            suggestions = AresonSomniumAPI.instance.shopItemsManager.getItemsGateway().getAllItems(false).stream().map(shopItem -> shopItem.getId() + "").collect(Collectors.toList());
+        }
         if (strings.length == 4) {
             boolean b = suggestions.addAll(Arrays.stream(CoinType.values()).map(coinType -> coinType.name().toLowerCase()).collect(Collectors.toList()));
+        }
+        if (strings.length == 5) {
+            suggestions.add("<prezzo>");
         }
         return suggestions;
     }

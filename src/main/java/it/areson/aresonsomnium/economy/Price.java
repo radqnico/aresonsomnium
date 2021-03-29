@@ -91,6 +91,10 @@ public class Price {
                 gems.compareTo(BigInteger.valueOf(0)) > 0;
     }
 
+    public Price negate() {
+        return new Price(coins.negate(), obols.negate(), gems.negate());
+    }
+
     @Override
     public String toString() {
         return "Price{coins=" + coins + ",obols=" + obols + ",gems=" + gems + "}";
@@ -142,7 +146,7 @@ public class Price {
         }
     }
 
-    public Price clone(){
+    public Price clone() {
         return new Price(coins, obols, gems);
     }
 }
