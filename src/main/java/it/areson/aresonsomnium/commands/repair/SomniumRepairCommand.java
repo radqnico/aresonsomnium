@@ -42,6 +42,7 @@ public class SomniumRepairCommand implements CommandExecutor {
                         Pair<Boolean, String> booleanStringPair = repairCountdown.canRepair(playerName);
                         if (booleanStringPair.left()) {
                             repairCountdown.setLastRepairTime(playerName);
+                            player.sendMessage("Riparato");
                         } else {
                             player.sendMessage(booleanStringPair.right());
                         }
