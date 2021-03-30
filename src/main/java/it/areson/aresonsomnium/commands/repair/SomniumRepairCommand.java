@@ -3,17 +3,16 @@ package it.areson.aresonsomnium.commands.repair;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.elements.Pair;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
+import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 
-public class SomniumRepairCommand implements CommandExecutor {
+public class SomniumRepairCommand implements CommandExecutor, TabCompleter {
 
     private final RepairCountdown repairCountdown;
     private final AresonSomnium aresonSomnium;
@@ -23,8 +22,8 @@ public class SomniumRepairCommand implements CommandExecutor {
         this.aresonSomnium = aresonSomnium;
         PluginCommand command = aresonSomnium.getCommand("somniumrepair");
         if (command != null) {
-            command.setExecutor(aresonSomnium);
-            command.setTabCompleter(aresonSomnium);
+            command.setExecutor(this);
+            command.setTabCompleter(this);
         } else {
             aresonSomnium.getLogger().warning("Comando 'somniumrepair' non dichiarato");
         }
@@ -59,4 +58,8 @@ public class SomniumRepairCommand implements CommandExecutor {
         return true;
     }
 
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        return null;
+    }
 }
