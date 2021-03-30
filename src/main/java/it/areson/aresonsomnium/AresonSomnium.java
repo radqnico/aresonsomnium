@@ -92,7 +92,7 @@ public class AresonSomnium extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        saveConfig();
+        saveDefaultConfig();
 
         AresonSomniumAPI.instance = this;
         // Files
