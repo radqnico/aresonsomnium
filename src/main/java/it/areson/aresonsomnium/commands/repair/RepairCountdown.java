@@ -2,6 +2,7 @@ package it.areson.aresonsomnium.commands.repair;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.elements.Pair;
+import org.bukkit.command.PluginCommand;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ public class RepairCountdown {
 
     public RepairCountdown() {
         this.lastRepairTimes = new HashMap<>();
+
     }
 
     public void setLastRepairTime(String playerName) {

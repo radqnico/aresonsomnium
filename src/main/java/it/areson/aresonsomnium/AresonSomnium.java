@@ -2,11 +2,15 @@ package it.areson.aresonsomnium;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.CommandParser;
-import it.areson.aresonsomnium.commands.admin.*;
-import it.areson.aresonsomnium.commands.shopadmin.*;
+import it.areson.aresonsomnium.commands.admin.GiveConsumableCommand;
+import it.areson.aresonsomnium.commands.admin.ObolsCommand;
+import it.areson.aresonsomnium.commands.admin.SomniumAdminCommand;
+import it.areson.aresonsomnium.commands.admin.SomniumGommaCommand;
 import it.areson.aresonsomnium.commands.player.CheckCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
+import it.areson.aresonsomnium.commands.repair.SomniumRepairCommand;
+import it.areson.aresonsomnium.commands.shopadmin.*;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.BlockPrice;
 import it.areson.aresonsomnium.economy.Wallet;
@@ -71,14 +75,13 @@ public class AresonSomnium extends JavaPlugin {
         put(Material.CHISELED_QUARTZ_BLOCK, Constants.PERMISSION_SETTIMO_CIELO);
     }};
     private final HashMap<String, Multiplier> playerMultipliers = new HashMap<>();
+    public CommandPanelsAPI commandPanelsAPI = CommandPanels.getAPI();
+    public ShopItemsManager shopItemsManager;
+    public Optional<LuckPerms> luckPerms;
     private SomniumPlayerManager somniumPlayerManager;
     private GatewayListener playerDBEvents;
     private GommaObjectsFileReader gommaObjectsFileReader;
     private MessageManager messages;
-
-    public CommandPanelsAPI commandPanelsAPI = CommandPanels.getAPI();
-    public ShopItemsManager shopItemsManager;
-    public Optional<LuckPerms> luckPerms;
 
     @Override
     public void onDisable() {
@@ -173,6 +176,7 @@ public class AresonSomnium extends JavaPlugin {
         new CheckCommand(this);
         new ObolsCommand(this);
         new GiveConsumableCommand(this);
+        new SomniumRepairCommand(this);
     }
 
     private void initListeners() {
