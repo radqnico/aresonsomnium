@@ -1,6 +1,8 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
+import it.areson.aresonsomnium.commands.AresonCommand;
+import it.areson.aresonsomnium.commands.CommandParserCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

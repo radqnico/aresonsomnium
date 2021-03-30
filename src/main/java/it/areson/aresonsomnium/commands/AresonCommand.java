@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.commands.shopadmin;
+package it.areson.aresonsomnium.commands;
 
 import java.lang.annotation.*;
 
