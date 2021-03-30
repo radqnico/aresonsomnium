@@ -53,10 +53,10 @@ public class SomniumRepairCommand implements CommandExecutor, TabCompleter {
                                 if (damageable.getDamage() != 0) {
                                     damageable.setDamage(0);
                                     itemInMainHand.setItemMeta((ItemMeta) damageable);
+                                    player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repaired-success"));
                                 }else{
                                     player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repaired-no-damage"));
                                 }
-                                player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repaired-success"));
                             } else {
                                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repaired-cant-repair"));
                             }
