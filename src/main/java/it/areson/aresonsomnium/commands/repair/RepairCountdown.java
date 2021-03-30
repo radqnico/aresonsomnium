@@ -29,7 +29,6 @@ public class RepairCountdown {
         }
         LocalDateTime lastRepairTime = lastRepairTimes.get(playerName);
         long timeToWait = AresonSomniumAPI.instance.getConfig().getLong("repair-time-seconds", 0);
-        System.out.println(timeToWait);
         if (Duration.between(lastRepairTime, LocalDateTime.now()).getSeconds() >= timeToWait) {
             return Pair.of(true, null);
         } else {

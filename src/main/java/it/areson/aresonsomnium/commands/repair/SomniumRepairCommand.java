@@ -34,16 +34,12 @@ public class SomniumRepairCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String alias, @NotNull String[] arguments) {
         if (commandSender.hasPermission("aresonsomnium.admin")) {
-            System.out.println("Permesso");
             if (arguments.length == 1) {
-                System.out.println("Length");
                 String playerName = arguments[0];
                 Player player = aresonSomnium.getServer().getPlayer(playerName);
                 if (player != null) {
-                    System.out.println("player");
                     ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
                     if (!Objects.equals(itemInMainHand.getType(), Material.AIR)) {
-                        System.out.println("item");
                         Pair<Boolean, String> booleanStringPair = repairCountdown.canRepair(playerName);
                         if (booleanStringPair.left()) {
                             ItemMeta itemMeta = itemInMainHand.getItemMeta();
