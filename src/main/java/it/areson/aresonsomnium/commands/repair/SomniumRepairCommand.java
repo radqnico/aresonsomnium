@@ -72,10 +72,10 @@ public class SomniumRepairCommand implements CommandExecutor, TabCompleter {
                                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-not-enough-coins"));
                             }
                         } else {
-                            player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repaired-no-damage"));
+                            player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-no-damage"));
                         }
                     } else {
-                        player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repaired-cant-repair"));
+                        player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-cant-repair"));
                     }
                 } else {
                     player.sendMessage(booleanStringPair.right());
