@@ -64,4 +64,5 @@ obolshard-item-lore: "&6Colleziona e consegna questi\n&6frammenti a &lCaronte &6
 
 cannot-repair-yet: "Non puoi ancora riparare: tempo rimanente %seconds% secondi"
 repaired-success: "Oggetto riparato"
-repaired-cant-repair: "Questo oggetto non può essere riaparato"
+repaired-cant-repair: "Questo oggetto non può essere danneggiato"
+repaired-no-damage: "Niente da riparare"
