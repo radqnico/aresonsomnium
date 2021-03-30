@@ -46,11 +46,11 @@ public class SomniumRepairCommand implements CommandExecutor, TabCompleter {
                         System.out.println("item");
                         Pair<Boolean, String> booleanStringPair = repairCountdown.canRepair(playerName);
                         if (booleanStringPair.left()) {
-                            repairCountdown.setLastRepairTime(playerName);
                             ItemMeta itemMeta = itemInMainHand.getItemMeta();
                             if (itemMeta instanceof Damageable) {
                                 Damageable damageable = (Damageable) itemMeta;
                                 if (damageable.getDamage() != 0) {
+                                    repairCountdown.setLastRepairTime(playerName);
                                     damageable.setDamage(0);
                                     itemInMainHand.setItemMeta((ItemMeta) damageable);
                                     player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repaired-success"));
