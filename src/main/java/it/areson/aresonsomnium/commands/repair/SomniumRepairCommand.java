@@ -6,6 +6,8 @@ import org.bukkit.Material;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,7 +47,14 @@ public class SomniumRepairCommand implements CommandExecutor, TabCompleter {
                         Pair<Boolean, String> booleanStringPair = repairCountdown.canRepair(playerName);
                         if (booleanStringPair.left()) {
                             repairCountdown.setLastRepairTime(playerName);
-                            player.sendMessage("Riparato");
+                            ItemMeta itemMeta = itemInMainHand.getItemMeta();
+                            if (itemMeta instanceof Damageable) {
+                                Damageable damageable = (Damageable) itemMeta;
+                                damageable.setDamage(0);
+                                player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repaired-success"));
+                            } else{
+                                player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repaired-cant-repair"));
+                            }
                         } else {
                             player.sendMessage(booleanStringPair.right());
                         }

@@ -63,3 +63,5 @@ obolshard-item-name: "&6Frammento di &lObolo"
 obolshard-item-lore: "&6Colleziona e consegna questi\n&6frammenti a &lCaronte &6per\n&6ottenere gli Oboli"
 
 cannot-repair-yet: "Non puoi ancora riparare: tempo rimanente %seconds% secondi"
+repaired-success: "Oggetto riparato"
+repaired-cant-repair: "Questo oggetto non può essere riaparato"
