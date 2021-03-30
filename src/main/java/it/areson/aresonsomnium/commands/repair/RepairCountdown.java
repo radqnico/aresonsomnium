@@ -34,7 +34,7 @@ public class RepairCountdown {
             return Pair.of(true, null);
         } else {
             long remaining = Duration.between(LocalDateTime.now(), lastRepairTime.plus(timeToWait, SECONDS)).getSeconds();
-            return Pair.of(false, AresonSomniumAPI.instance.getMessageManager().getPlainMessage("cannot-repair-yet", Pair.of("%seconds%", remaining + "")));
+            return Pair.of(false, AresonSomniumAPI.instance.getMessageManager().getPlainMessage("cannot-repair-yet", Pair.of("%seconds%", (remaining + 1) + "")));
         }
     }
 }
