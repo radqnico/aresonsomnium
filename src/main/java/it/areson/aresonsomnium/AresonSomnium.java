@@ -163,6 +163,13 @@ public class AresonSomnium extends JavaPlugin {
             parserShopAdmin.addAresonCommand(new BuyItemCommand());
             parserShopAdmin.addAresonCommand(new SellItemCommand());
             parserShopAdmin.registerCommands();
+            parserShopAdmin.addAresonCommand(new EditItemsCommand());
+            parserShopAdmin.addAresonCommand(new ReloadItemsCommand());
+            parserShopAdmin.addAresonCommand(new SetItemPriceCommand());
+            parserShopAdmin.addAresonCommand(new BuyItemCommand());
+            parserShopAdmin.addAresonCommand(new SellItemCommand());
+            parserShopAdmin.addAresonCommand(new SellLootableCommand());
+            parserShopAdmin.registerCommands();
         } catch (Exception exception) {
             exception.printStackTrace();
         }
