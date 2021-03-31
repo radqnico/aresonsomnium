@@ -65,6 +65,10 @@ public class SellLootableCommand extends CommandParserCommand {
         List<ItemStack> stacks = new ArrayList<>();
         for (ItemStack stack : inventory)
         {
+            if (stack == null)
+            {
+                continue;
+            }
             if (stack.getType().equals(material))
             {
                 stacks.add(stack);
