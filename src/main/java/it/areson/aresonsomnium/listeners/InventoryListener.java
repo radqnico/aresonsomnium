@@ -23,14 +23,16 @@ public class InventoryListener extends GeneralEventListener {
 
     @EventHandler
     public void onInventoryClickEvent(InventoryClickEvent event) {
-        HumanEntity whoClicked = event.getWhoClicked();
-        if (whoClicked instanceof Player && event.getAction().equals(InventoryAction.SWAP_WITH_CURSOR)) {
-            ItemStack handItemStack = event.getCursor();
-            ItemStack clickedItemStack = event.getCurrentItem();
+        if(!event.isCancelled()) {
+            HumanEntity whoClicked = event.getWhoClicked();
+            if (whoClicked instanceof Player && event.getAction().equals(InventoryAction.SWAP_WITH_CURSOR)) {
+                ItemStack handItemStack = event.getCursor();
+                ItemStack clickedItemStack = event.getCurrentItem();
 
-            isVanillaEnchantedBook(handItemStack);
-            if (handItemStack != null && handItemStack.getType().equals(Material.ENCHANTED_BOOK) && clickedItemStack != null) {
-                handleEnchantedBook(whoClicked, handItemStack, clickedItemStack);
+                isVanillaEnchantedBook(handItemStack);
+                if (handItemStack != null && handItemStack.getType().equals(Material.ENCHANTED_BOOK) && clickedItemStack != null) {
+                    handleEnchantedBook(whoClicked, handItemStack, clickedItemStack);
+                }
             }
         }
     }
@@ -39,7 +41,7 @@ public class InventoryListener extends GeneralEventListener {
         System.out.println("isVanillaEnchantedBook");
         ItemMeta itemMeta = itemStack.getItemMeta();
         PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
-        System.out.println(persistentDataContainer);
+        System.out.println(persistentDataContainer.getKeys().toString());
         persistentDataContainer.getKeys().parallelStream().anyMatch((namespacedKey -> {
             System.out.println(namespacedKey.getKey());
             return false;
