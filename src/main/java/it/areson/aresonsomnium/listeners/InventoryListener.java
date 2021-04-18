@@ -11,6 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.Map;
 
@@ -28,9 +29,20 @@ public class InventoryListener extends GeneralEventListener {
             ItemStack clickedItemStack = event.getCurrentItem();
 
             if (handItemStack != null && handItemStack.getType().equals(Material.ENCHANTED_BOOK) && clickedItemStack != null) {
+                isVanillaEnchantedBook(handItemStack);
                 handleEnchantedBook(whoClicked, handItemStack, clickedItemStack);
             }
         }
+    }
+
+    private boolean isVanillaEnchantedBook(ItemStack itemStack) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
+        persistentDataContainer.getKeys().parallelStream().anyMatch((namespacedKey -> {
+            System.out.println(namespacedKey.getKey());
+            return false;
+        }));
+        return false;
     }
 
     private void handleEnchantedBook(HumanEntity humanEntity, ItemStack handItemStack, ItemStack clickedItemStack) {
