@@ -29,24 +29,11 @@ public class InventoryListener extends GeneralEventListener {
                 ItemStack handItemStack = event.getCursor();
                 ItemStack clickedItemStack = event.getCurrentItem();
 
-                isVanillaEnchantedBook(handItemStack);
                 if (handItemStack != null && handItemStack.getType().equals(Material.ENCHANTED_BOOK) && clickedItemStack != null) {
                     handleEnchantedBook(whoClicked, handItemStack, clickedItemStack);
                 }
             }
         }
-    }
-
-    private boolean isVanillaEnchantedBook(ItemStack itemStack) {
-        System.out.println("isVanillaEnchantedBook");
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
-        System.out.println(persistentDataContainer.getKeys().toString());
-        persistentDataContainer.getKeys().parallelStream().anyMatch((namespacedKey -> {
-            System.out.println(namespacedKey.getKey());
-            return false;
-        }));
-        return false;
     }
 
     private void handleEnchantedBook(HumanEntity humanEntity, ItemStack handItemStack, ItemStack clickedItemStack) {
