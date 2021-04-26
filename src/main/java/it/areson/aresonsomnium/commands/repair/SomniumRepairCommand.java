@@ -38,12 +38,13 @@ public class SomniumRepairCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String alias, @NotNull String[] arguments) {
         if (commandSender.hasPermission("aresonsomnium.admin")) {
-            if (arguments.length == 1) {
+            if (arguments.length == 2) {
                 String playerName = arguments[0];
+                String coinType = arguments[1];
                 Player player = aresonSomnium.getServer().getPlayer(playerName);
                 if (player != null) {
                     ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
-                    repairSingleItem(player, itemInMainHand);
+                    repairSingleItemCoins(player, itemInMainHand);
                 }
             } else {
                 commandSender.sendMessage("Scrivi il nome del giocatore");
@@ -52,7 +53,7 @@ public class SomniumRepairCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
-    private void repairSingleItem(Player player, ItemStack itemStack) {
+    private void repairSingleItemCoins(Player player, ItemStack itemStack) {
         SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
         if (somniumPlayer != null) {
             if (!Objects.equals(itemStack.getType(), Material.AIR)) {
