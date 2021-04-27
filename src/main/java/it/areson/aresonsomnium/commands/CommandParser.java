@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.commands.shopadmin;
+package it.areson.aresonsomnium.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -10,6 +10,7 @@ import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.logging.Level;
 
+@SuppressWarnings("ALL")
 public class CommandParser extends CommandParserCommand {
     private final JavaPlugin plugin;
     private final HashMap<String, CommandParserCommand> commands = new HashMap<>();

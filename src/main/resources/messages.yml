@@ -61,3 +61,10 @@ obols-not-nugget: "&cDevi portarmi le mie pepite!"
 
 obolshard-item-name: "&6Frammento di &lObolo"
 obolshard-item-lore: "&6Colleziona e consegna questi\n&6frammenti a &lCaronte &6per\n&6ottenere gli Oboli"
+
+cannot-repair-yet: "Non puoi ancora riparare: tempo rimanente %seconds% secondi"
+
+repair-success: "Oggetto riparato"
+repair-cant-repair: "Questo oggetto non può essere danneggiato"
+repair-no-damage: "Niente da riparare"
+repair-not-enough-coins: "Non hai abbastanza denaro per riparare"

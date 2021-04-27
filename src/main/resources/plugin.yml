@@ -4,9 +4,11 @@ main: ${project.groupId}.${project.artifactId}
 api-version: "1.16"
 author: Areson
 
-depends: [CommandPanels]
+depends: [ CommandPanels ]
 
 commands:
+  somniumrepair:
+    permission: aresonsomnium.admin
   shopadmin:
     permission: aresonsomnium.admin
   somniumadmin:
@@ -25,7 +27,7 @@ commands:
     description: "Open a GUI"
     permission: aresonsomnium.admin
     usage: /opengui <guiName>
-    aliases: [shop]
+    aliases: [ shop ]
   obols:
     description: "Obols commands"
     permission: aresonsomnium.admin

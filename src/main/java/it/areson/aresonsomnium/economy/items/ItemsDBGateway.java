@@ -2,6 +2,7 @@ package it.areson.aresonsomnium.economy.items;
 
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.Price;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
@@ -139,6 +140,16 @@ public class ItemsDBGateway {
             mySqlDBConnection.printSqlExceptionDetails(exception);
         }
         return false;
+    }
+
+    public Optional<ShopItem> getShopItemByMaterialAmount(Material material, int amount) {
+        if (cache.isEmpty()) {
+            getAllItems(true);
+        }
+        return cache.values().parallelStream().filter(shopItem -> {
+            ItemStack itemStack = shopItem.getItemStack(false, false);
+            return itemStack.getAmount() == amount && itemStack.getType().equals(material);
+        }).findFirst();
     }
 
     private ShopItem readShopItemFromRecord(ResultSet resultSet) throws SQLException, ZipException {

@@ -4,7 +4,7 @@ def price(blocks, maxPrice):
 def getBlocks():
     a = 1.13
     r = []
-    for i in range(0,93):
+    for i in range(0, 93):
         r.append(1500 * (a**i)) # 1-10 in f di x
     return r
 

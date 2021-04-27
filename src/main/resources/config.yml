@@ -1,0 +1,6 @@
+repair:
+  delay-seconds: 10
+  cost:
+    coins: 10
+    obols: 5
+    gems: 1
