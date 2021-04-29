@@ -251,7 +251,7 @@ lp group zero_eden meta addprefix 0 "&3&l[&2&k&l0&b&lEden&2&k&l0&3&l]&f"
 
 lp deletegroup zero_primocielo
 lp creategroup zero_primocielo
-lp group zero_primocielo parent set zero_settimacornice
+lp group zero_primocielo parent set zero_eden
 lp group zero_primocielo permission set essentials.warps.primocielo true
 lp group zero_primocielo permission set ezranks.rank.zero_primocielo true
 lp group zero_secondacornice permission set essentials.kits.purgatorio false
