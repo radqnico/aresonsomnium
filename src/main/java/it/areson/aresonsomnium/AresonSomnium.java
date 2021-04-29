@@ -26,6 +26,7 @@ import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import me.rockyhawk.commandpanels.CommandPanels;
 import me.rockyhawk.commandpanels.api.CommandPanelsAPI;
+import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.node.Node;
 import org.bukkit.ChatColor;
@@ -306,13 +307,13 @@ public class AresonSomnium extends JavaPlugin {
         playerMultipliers.remove(playerName);
     }
 
-    // TODO getLore deprecato
+    // TODO getLore deprecated
     public boolean isALockedEnchantFromEnchants(ItemStack itemStack) {
         boolean isLocked = false;
-        List<String> clickedLore = itemStack.getLore();
+        List<Component> clickedLore = itemStack.lore();
 
         if (clickedLore != null && !clickedLore.isEmpty()) {
-            isLocked = clickedLore.parallelStream().reduce(false, (status, loreLine) -> loreLine.contains("Immodificabile"), Boolean::logicalOr);
+            isLocked = clickedLore.parallelStream().reduce(false, (status, loreLine) -> loreLine.toString().contains("Immodificabile"), Boolean::logicalOr);
         }
 
         return isLocked;
@@ -332,7 +333,7 @@ public class AresonSomnium extends JavaPlugin {
 
                     return enchantment.canEnchantItem(itemStack)
                             && !clonedItemMeta.hasConflictingEnchant(enchantment)
-                            && (currentEnchantmentLevel == null || currentEnchantmentLevel + 1 == entry.getValue());
+                            && ((currentEnchantmentLevel == null && entry.getValue() == 1) || (currentEnchantmentLevel != null && currentEnchantmentLevel + 1 == entry.getValue()));
                 }, Boolean::logicalAnd);
             } else {
                 return false;
