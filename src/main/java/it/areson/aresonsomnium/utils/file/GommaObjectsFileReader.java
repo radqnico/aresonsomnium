@@ -44,8 +44,8 @@ public class GommaObjectsFileReader extends FileManager {
             }
             maxKey++;
             itemsSection.set(maxKey + ".item", Base64.getEncoder().encodeToString(itemStack.serializeAsBytes()));
-            itemsSection.set(maxKey + ".material-just-to-know", itemStack.getType().name());
-            itemsSection.set(maxKey + ".amount-just-to-know", itemStack.getAmount() + "");
+            itemsSection.set(maxKey + ".amount", itemStack.getAmount());
+            itemsSection.set(maxKey + ".material-READONLY", itemStack.getType().name());
             save();
         }
     }
@@ -61,6 +61,7 @@ public class GommaObjectsFileReader extends FileManager {
                     String itemStackBase64String = itemsSection.getString(key + ".item");
                     byte[] decode = Base64.getDecoder().decode(itemStackBase64String);
                     ItemStack itemStack = ItemStack.deserializeBytes(decode);
+                    itemStack.setAmount(itemsSection.getInt(key + ".amount", 1));
                     itemStacks.add(itemStack);
                 } catch (NumberFormatException exception) {
                     aresonSomnium.getLogger().severe("GOMMA GOMMA: chiave " + key + " non valida. Usa solo numeri interi positivi.");

@@ -37,6 +37,10 @@ public class CheckCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+        commandSender.sendMessage("Funzione non ancora abilitata.");
+        return true;
+
+        /*
         if (commandSender instanceof Player) {
             if (strings.length == 2) {
                 Player player = (Player) commandSender;
@@ -59,6 +63,7 @@ public class CheckCommand implements CommandExecutor, TabCompleter {
             commandSender.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("player-only-command"));
         }
         return true;
+        */
     }
 
     private void createNewCheck(SomniumPlayer somniumPlayer, BigDecimal amount, CoinType type) {

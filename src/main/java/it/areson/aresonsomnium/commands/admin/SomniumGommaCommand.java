@@ -130,9 +130,8 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
             Player player = (Player) commandSender;
             ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
             if (!Material.AIR.equals(itemInMainHand.getType())) {
-                ItemStack itemStack = itemInMainHand.asOne();
-                aresonSomnium.getGommaObjectsFileReader().storeItem(itemStack);
-                commandSender.sendMessage(successMessage("Oggetto " + itemStack.getType().name() + " x" + itemStack.getAmount() + " aggiunto alla lista Gomma Gomma"));
+                aresonSomnium.getGommaObjectsFileReader().storeItem(itemInMainHand);
+                commandSender.sendMessage(successMessage("Oggetto " + itemInMainHand.getType().name() + " x" + itemInMainHand.getAmount() + " aggiunto alla lista Gomma Gomma"));
             } else {
                 commandSender.sendMessage(errorMessage("Non hai nulla in mano"));
             }
