@@ -85,13 +85,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>me.rockyhawk</groupId>
-            <artifactId>CommandPanels</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/Command.Panels.jar</systemPath>
-        </dependency>
     </dependencies>
 
 </project>
