@@ -44,7 +44,7 @@ public class Recaps {
                 pages[i] = Component.text(content.substring(i*256, i*256 + 256));
             }
 
-            bookMeta.pages(pages);
+            bookMeta.addPages(pages);
             book.setItemMeta(bookMeta);
             recaps.put(index, book.clone());
             index++;
