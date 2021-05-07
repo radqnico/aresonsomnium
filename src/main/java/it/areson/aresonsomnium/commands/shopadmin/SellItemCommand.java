@@ -8,6 +8,7 @@ import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.players.SomniumPlayer;
+import it.areson.aresonsomnium.utils.SoundManager;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
@@ -77,11 +78,11 @@ public class SellItemCommand extends CommandParserCommand {
                                     Pair.of("%gems%", sellingPrice.getGems().toString()),
                                     Pair.of("%obols%", sellingPrice.getObols().toString())
                             ));
+                            SoundManager.playCoinsSound(somniumPlayer.getPlayer());
                         }
                     }
                 }
             }
-
         } else {
             somniumPlayer.getPlayer().sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-sell-not-present"));
         }

@@ -6,6 +6,7 @@ import it.areson.aresonsomnium.commands.AresonCommand;
 import it.areson.aresonsomnium.commands.CommandParserCommand;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import it.areson.aresonsomnium.players.SomniumPlayer;
+import it.areson.aresonsomnium.utils.SoundManager;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -50,6 +51,7 @@ public class SellLootableCommand extends CommandParserCommand {
         }
         removeFromInventory(inventory, stacks, quantity);
         somniumPlayer.givePriceAmount(item.get().getSellingPrice());
+        SoundManager.playCoinsSound(player);
         commandSender.sendMessage("Vendita completata");
     }
 

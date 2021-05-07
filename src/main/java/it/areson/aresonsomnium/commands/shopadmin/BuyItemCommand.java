@@ -7,6 +7,7 @@ import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.players.SomniumPlayer;
+import it.areson.aresonsomnium.utils.SoundManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,6 +38,7 @@ public class BuyItemCommand extends CommandParserCommand {
                                         Pair.of("%gems%", price.getGems().toString()),
                                         Pair.of("%obols%", price.getObols().toString()))
                                 );
+                                SoundManager.playCoinsSound(player);
                             } else {
                                 player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
                             }
