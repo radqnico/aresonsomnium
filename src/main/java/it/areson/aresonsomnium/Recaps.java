@@ -19,6 +19,7 @@ public class Recaps {
     private static HashMap<Integer, ItemStack> recaps;
 
     public static void initRecaps(@NotNull FileManager recapFile){
+        recaps = new HashMap<>();
         FileConfiguration recapConfig = recapFile.getFileConfiguration();
         if(!recapConfig.isConfigurationSection("recaps")){
             AresonSomniumAPI.instance.getLogger().severe("Recaps not valid.");

@@ -22,6 +22,7 @@ import it.areson.aresonsomnium.placeholders.CoinsPlaceholders;
 import it.areson.aresonsomnium.placeholders.MultiplierPlaceholders;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
+import it.areson.aresonsomnium.utils.file.FileManager;
 import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import net.kyori.adventure.text.Component;
@@ -80,6 +81,7 @@ public class AresonSomnium extends JavaPlugin {
     private GatewayListener playerDBEvents;
     private GommaObjectsFileReader gommaObjectsFileReader;
     private MessageManager messages;
+    private FileManager recaps;
 
     @Override
     public void onDisable() {
@@ -130,6 +132,7 @@ public class AresonSomnium extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new CoinsPlaceholders(this).register();
         }
+        Recaps.initRecaps(recaps);
     }
 
     public MessageManager getMessageManager() {
@@ -139,6 +142,8 @@ public class AresonSomnium extends JavaPlugin {
     private void registerFiles() {
         messages = new MessageManager(this, "messages.yml");
         gommaObjectsFileReader = new GommaObjectsFileReader(this, "gommaItems.yml");
+
+        recaps = new FileManager(this, "recaps.yml");
     }
 
     public GommaObjectsFileReader getGommaObjectsFileReader() {
