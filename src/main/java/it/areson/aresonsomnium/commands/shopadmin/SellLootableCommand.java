@@ -1,5 +1,6 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
+import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.AresonCommand;
 import it.areson.aresonsomnium.commands.CommandParserCommand;
@@ -47,6 +48,8 @@ public class SellLootableCommand extends CommandParserCommand {
             commandSender.sendMessage("Quantità insufficiente");
             return;
         }
+        System.out.println("Quantity to sell: " + quantity);
+        System.out.println("Quantity in inventory: " + quantity);
         removeFromInventory(inventory, stacks, quantity);
         somniumPlayer.givePriceAmount(item.get().getSellingPrice());
         commandSender.sendMessage("Vendita completata");
