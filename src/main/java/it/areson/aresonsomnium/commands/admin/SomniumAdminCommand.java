@@ -1,6 +1,7 @@
 package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
+import it.areson.aresonsomnium.Recaps;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.elements.Pair;
@@ -28,7 +29,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "deleteLastLoreLine", "addCoins", "removeCoins", "addRandomCoins"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "deleteLastLoreLine", "addCoins", "removeCoins", "addRandomCoins", "openRecap"};
 
     public SomniumAdminCommand(AresonSomnium plugin) {
         aresonSomnium = plugin;
@@ -88,6 +89,9 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "listplayers":
                         MessageUtils.tooManyArguments(commandSender, command);
                         break;
+                    case "openrecap":
+                        handleOpenRecap(args[1], args[2]);
+                        break;
                 }
                 break;
             case 4:
@@ -109,6 +113,20 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 break;
         }
         return true;
+    }
+
+    private void handleOpenRecap(String playerName, String recap) {
+        Player player = aresonSomnium.getServer().getPlayer(playerName);
+        if (Objects.nonNull(player)) {
+            SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
+            if (Objects.nonNull(somniumPlayer)) {
+                Recaps.openRecapToPlayer(player, Integer.parseInt(recap));
+            } else {
+                messageManager.sendPlainMessage(player, "somniumplayer-not-found", Pair.of("%player%", playerName));
+            }
+        } else {
+            messageManager.sendPlainMessage(player, "player-not-found", Pair.of("%player%", playerName));
+        }
     }
 
     @Override
