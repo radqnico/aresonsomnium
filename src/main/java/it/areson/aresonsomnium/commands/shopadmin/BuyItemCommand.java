@@ -39,6 +39,7 @@ public class BuyItemCommand extends CommandParserCommand {
                                         Pair.of("%obols%", price.getObols().toString()))
                                 );
                                 SoundManager.playCoinsSound(player);
+                                return;
                             } else {
                                 player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
                             }
@@ -54,6 +55,7 @@ public class BuyItemCommand extends CommandParserCommand {
             } else {
                 player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-buy-error"));
             }
+            SoundManager.playDeniedSound(player);
         } else {
             commandSender.sendMessage("Giocatore non trovato");
         }

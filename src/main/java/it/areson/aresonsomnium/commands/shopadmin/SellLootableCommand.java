@@ -41,12 +41,14 @@ public class SellLootableCommand extends CommandParserCommand {
         if (stacks.size() <= 0)
         {
             commandSender.sendMessage("Non è presente il materiale nell'inventario");
+            SoundManager.playDeniedSound(somniumPlayer.getPlayer());
             return;
         }
         int totalAmount = getTotalAmount(stacks);
         if (totalAmount < quantity)
         {
             commandSender.sendMessage("Quantità insufficiente");
+            SoundManager.playDeniedSound(somniumPlayer.getPlayer());
             return;
         }
         removeFromInventory(inventory, stacks, quantity);

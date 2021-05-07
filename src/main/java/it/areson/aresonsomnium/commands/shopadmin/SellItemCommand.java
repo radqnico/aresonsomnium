@@ -79,6 +79,7 @@ public class SellItemCommand extends CommandParserCommand {
                                     Pair.of("%obols%", sellingPrice.getObols().toString())
                             ));
                             SoundManager.playCoinsSound(somniumPlayer.getPlayer());
+                            return;
                         }
                     }
                 }
@@ -86,6 +87,7 @@ public class SellItemCommand extends CommandParserCommand {
         } else {
             somniumPlayer.getPlayer().sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-sell-not-present"));
         }
+        SoundManager.playDeniedSound(somniumPlayer.getPlayer());
     }
 
     @Override

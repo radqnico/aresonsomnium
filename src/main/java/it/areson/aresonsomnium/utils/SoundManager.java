@@ -6,6 +6,10 @@ import org.bukkit.entity.Player;
 
 public class SoundManager {
     public static void playCoinsSound(Player player){
-        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.MASTER, 1f, 1.5f);
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.MASTER, .7f, 1.5f);
+    }
+
+    public static void playDeniedSound(Player player){
+        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, SoundCategory.MASTER, .7f, 1.5f);
     }
 }
