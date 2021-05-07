@@ -49,7 +49,7 @@ public class SellLootableCommand extends CommandParserCommand {
             return;
         }
         System.out.println("Quantity to sell: " + quantity);
-        System.out.println("Quantity in inventory: " + quantity);
+        System.out.println("Quantity in inventory: " + totalAmount);
         removeFromInventory(inventory, stacks, quantity);
         somniumPlayer.givePriceAmount(item.get().getSellingPrice());
         commandSender.sendMessage("Vendita completata");
