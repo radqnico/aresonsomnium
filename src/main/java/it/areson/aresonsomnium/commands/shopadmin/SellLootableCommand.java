@@ -47,7 +47,7 @@ public class SellLootableCommand extends CommandParserCommand {
             commandSender.sendMessage("Quantità insufficiente");
             return;
         }
-        removeFromInventory(inventory, stacks, totalAmount);
+        removeFromInventory(inventory, stacks, quantity);
         somniumPlayer.givePriceAmount(item.get().getSellingPrice());
         commandSender.sendMessage("Vendita completata");
     }
