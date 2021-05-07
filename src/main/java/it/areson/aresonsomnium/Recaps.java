@@ -34,8 +34,7 @@ public class Recaps {
             ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
             BookMeta bookMeta = (BookMeta) book.getItemMeta();
 
-            BookMeta.BookMetaBuilder bookMetaBuilder = bookMeta.toBuilder();
-            bookMetaBuilder
+            bookMeta = bookMeta
                     .author(Component.text("§6Areson"))
                     .title(Component.text(ChatColor.translateAlternateColorCodes('&', title)));
 
@@ -45,8 +44,8 @@ public class Recaps {
                 pages[i] = Component.text(content.substring(i*256, i*256 + 256));
             }
 
-            bookMetaBuilder.pages(pages);
-            book.setItemMeta(bookMetaBuilder.build());
+            bookMeta.pages(pages);
+            book.setItemMeta(bookMeta);
             recaps.put(index, book.clone());
             index++;
         }
