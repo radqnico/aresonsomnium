@@ -16,10 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.StringUtil;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -29,7 +26,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
 
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
-    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "deleteLastLoreLine", "addCoins", "removeCoins", "addRandomCoins", "openRecap"};
+    private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "deleteLastLoreLine", "addCoins", "removeCoins", "openRecap"};
 
     public SomniumAdminCommand(AresonSomnium plugin) {
         aresonSomnium = plugin;
@@ -187,7 +184,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (Objects.nonNull(somniumPlayer)) {
                 messageManager.sendPlainMessage(
-                        player,
+                        commandSender,
                         "stats-format",
                         Pair.of("%player%", playerName),
                         Pair.of("%secondsPlayed%", somniumPlayer.getSecondsPlayedTotal() + ""),
@@ -209,7 +206,15 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (Objects.nonNull(somniumPlayer)) {
                 try {
-                    BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(amountString));
+                    BigDecimal amount;
+                    if (amountString.contains("-")) {
+                        String[] split = amountString.split("-");
+                        int min = Integer.parseInt(split[0]);
+                        int max = Integer.parseInt(split[1]);
+                        amount = BigDecimal.valueOf(new Random().nextInt(max - min + 1) + min);
+                    } else {
+                        amount = new BigDecimal(amountString);
+                    }
                     amount = removing ? amount.negate() : amount;
                     CoinType type = CoinType.valueOf(coinType.toUpperCase());
                     switch (type) {
