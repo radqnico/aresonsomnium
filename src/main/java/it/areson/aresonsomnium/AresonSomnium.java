@@ -73,6 +73,7 @@ public class AresonSomnium extends JavaPlugin {
         put(Material.PRISMARINE_BRICKS, Constants.PERMISSION_TERZO_CIELO);
         put(Material.QUARTZ_BLOCK, Constants.PERMISSION_QUINTO_CIELO);
         put(Material.CHISELED_QUARTZ_BLOCK, Constants.PERMISSION_SETTIMO_CIELO);
+        put(Material.LIGHT_BLUE_CONCRETE, Constants.PERMISSION_OTTAVO_CIELO);
     }};
     private final HashMap<String, Multiplier> playerMultipliers = new HashMap<>();
     public ShopItemsManager shopItemsManager;

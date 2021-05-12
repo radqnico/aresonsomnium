@@ -17,6 +17,7 @@ public class Constants {
     public static final String PERMISSION_TERZO_CIELO = "aresonsomnium.terzocielo";
     public static final String PERMISSION_QUINTO_CIELO = "aresonsomnium.quintocielo";
     public static final String PERMISSION_SETTIMO_CIELO = "aresonsomnium.settimocielo";
+    public static final String PERMISSION_OTTAVO_CIELO = "aresonsomnium.ottavocielo";
 
     public static final String PERMISSION_MULTIPLIER = "aresonsomnium.multiplier";
 
