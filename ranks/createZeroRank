@@ -11,21 +11,50 @@ lp group acidisland permission set acidisland.island.sethome true
 lp group acidisland permission set acidisland.island true
 
 lp group default clear
+lp group default permission set acidisland.* false
+lp group default permission set bukkit.command.plugins false
 lp group default permission set essentials.spawn true
 lp group default permission set essentials.warp true
 lp group default permission set essentials.warp.list true
+lp group default permission set essentials.warps.selva true
+lp group default permission set essentials.warps.caronte true
+lp group default permission set essentials.warps.crates true
+lp group default permission set essentials.warps.enchant true
+lp group default permission set essentials.warps.help true
+lp group default permission set essentials.warps.mercato true
+lp group default permission set essentials.warps.oracolo true
 lp group default permission set essentials.sethome true
 lp group default permission set essentials.home true
+lp group default permission set essentials.afk true
+lp group default permission set essentials.pay true
+lp group default permission set essentials.balance true
+lp group default permission set essentials.balancetop true
+lp group default permission set essentials.disposal true
+lp group default permission set essentials.signs.use.disposal true
+lp group default permission set essentials.msg true
 lp group default permission set essentials.kit true
 lp group default permission set essentials.kits.cibo true
-lp group default permission set essentials.kits.inferno true
-lp group default permission set acidisland.* false
-lp group default permission set essentials.warps.selva true
+lp group default permission set essentials.kits.piccone true
 lp group default permission set ezranks.rank.default true
 lp group default permission set portal.selva true
 lp group default permission set portal.spawn true
 lp group default permission set jetsprisonmines.blockbreak.selva true
 lp group default permission set aresonsomnium.selva true
+lp group default permission set auctionmaster.limit.auctions.5 true
+lp group default permission set autopickup.pickup.mined true
+lp group default permission set autopickup.pickup.mined.autoenabled true
+lp group default permission set commandpanel.panel.minelist true
+lp group default permission set commandpanel.panel.riparazione true
+lp group default permission set commandpanel.panel.warplist true
+lp group default permission set inventoryfull.toggle true
+lp group default permission set jumppads.use true
+lp group default permission set simplealias.use.minelist true
+lp group default permission set simplealias.use.warplist true
+lp group default permission set tradesystem.trade true
+lp group default permission set tradesystem.trade.initiate true
+lp group default permission set commandpanel.panel.mercato true world=world
+lp group default permission set commandpanel.panel.shopincantesimi true world=world
+lp group default permission set commandpanel.panel.suggerimenti true world=world
 lp group default meta addprefix 0 "&2&l[&a&lSelva&2&l]&f"
 
 lp deletegroup zero_antinferno
