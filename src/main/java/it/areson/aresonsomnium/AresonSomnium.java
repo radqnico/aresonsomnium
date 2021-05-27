@@ -7,6 +7,7 @@ import it.areson.aresonsomnium.commands.admin.ObolsCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumAdminCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumGommaCommand;
 import it.areson.aresonsomnium.commands.player.CheckCommand;
+import it.areson.aresonsomnium.commands.player.OpenBookCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
 import it.areson.aresonsomnium.commands.repair.SomniumRepairCommand;
@@ -190,6 +191,7 @@ public class AresonSomnium extends JavaPlugin {
         new ObolsCommand(this);
         new GiveConsumableCommand(this);
         new SomniumRepairCommand(this);
+        new OpenBookCommand(this);
     }
 
     private void initListeners() {

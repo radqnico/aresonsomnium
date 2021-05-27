@@ -52,8 +52,10 @@ commands:
     usage: /sellhand
   giveConsumable:
     description: "Give a consumable object"
-    permission: aresonsomniun.admin
+    permission: aresonsomnium.admin
     usage: /giveConsumable
+  riassunto:
+    permission: aresonsomnium.player
 
 depend:
   - Essentials
