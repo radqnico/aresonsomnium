@@ -2,6 +2,7 @@ package it.areson.aresonsomnium.commands.player;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import net.kyori.adventure.text.Component;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -35,7 +36,8 @@ public class OpenBookCommand implements CommandExecutor {
             BookMeta bookMeta = (BookMeta) writtenBook.getItemMeta();
             bookMeta.setTitle("PROVA");
             bookMeta.setAuthor("VALERIO");
-            bookMeta.addPages(Component.text("Ciao mamma sono su un libro!"));
+            String output = ChatColor.translateAlternateColorCodes('&', "Ciao mamma sono su un libro &ccolorato");
+            bookMeta.addPages(Component.text(output));
             writtenBook.setItemMeta(bookMeta);
             player.openBook(writtenBook);
         });
