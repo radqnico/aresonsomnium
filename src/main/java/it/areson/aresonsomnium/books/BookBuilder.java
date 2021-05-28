@@ -21,9 +21,9 @@ public class BookBuilder {
     public void buildWrittenBook(String title, String author, List<String> pages) {
         this.bookMeta.setTitle(title);
         this.bookMeta.setAuthor(author);
-        for (int i = 1; i <= pages.size(); i++) {
+        for (int i = 0; i <= pages.size(); i++) {
             String colouredText = ChatColor.translateAlternateColorCodes('&', pages.get(i));
-            this.bookMeta.page(i, Component.text(colouredText));
+            this.bookMeta.page(i+1, Component.text(colouredText));
         }
         this.applyMeta();
     }
