@@ -23,7 +23,7 @@ public class BookBuilder {
         this.bookMeta.setAuthor(author);
         for (int i = 0; i <= pages.size(); i++) {
             String colouredText = ChatColor.translateAlternateColorCodes('&', pages.get(i));
-            this.bookMeta.page(i+1, Component.text(colouredText));
+            this.bookMeta.addPages(Component.text(colouredText));
         }
         this.applyMeta();
     }
