@@ -28,22 +28,27 @@ public class OpenBookCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length == 1) {
-            try {
-                int numeroRiassunto = Integer.parseInt(args[0]);
-                Optional<Player> optionalPlayer = this.getPlayer(commandSender);
-                optionalPlayer.ifPresent(player -> {
+            Optional<Player> optionalPlayer = this.getPlayer(commandSender);
+            optionalPlayer.ifPresent(player -> {
+                try {
+                    int numeroRiassunto = Integer.parseInt(args[0]);
                     BookBuilder builder = new BookBuilder();
                     FileConfiguration configuration = AresonSomniumAPI.instance.getRiassunti().getFileConfiguration();
-                    String path = String.format("riassunti.%d.", numeroRiassunto);
-                    String title = configuration.getString(path + "titolo");
-                    String author = "Areson";
-                    String content = configuration.getString(path + "testo");
-                    builder.buildWrittenBook(title, author, content);
-                    player.openBook(builder.getWrittenBook());
-                });
-            } catch (NumberFormatException exception) {
-                System.out.println("Errore. Devi inserire il numero di riassunto. '"+ args[1] +"' non è valido.");
-            }
+                    String path = String.format("riassunti.%d", numeroRiassunto);
+                    if (configuration.isConfigurationSection(path)) {
+                        String title = configuration.getString(path + ".titolo");
+                        String author = "Areson";
+                        String content = configuration.getString(path + ".testo");
+                        builder.buildWrittenBook(title, author, content);
+                        player.openBook(builder.getWrittenBook());
+                    } else {
+                        String message = String.format("Il riassunto numero %d non esiste. Inserisci un numero di riassunto valido.", numeroRiassunto);
+                        player.sendMessage(message);
+                    }
+                } catch (NumberFormatException exception) {
+                    player.sendMessage("Errore. Devi inserire il numero di riassunto. '"+ args[0] +"' non è un numero.");
+                }
+            });
         }
         return true;
     }
