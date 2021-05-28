@@ -14,6 +14,7 @@ import java.util.List;
 public class BookBuilder {
     private ItemStack writtenBook;
     private BookMeta bookMeta;
+    private final int charactersPerPage = 256;
 
     public BookBuilder() {
         this.writtenBook = new ItemStack(Material.WRITTEN_BOOK);
@@ -31,8 +32,19 @@ public class BookBuilder {
     }
 
     public void buildWrittenBook(String title, String author, String content) {
-        Iterable<String> pages = Splitter.fixedLength(256).split(content);
-        this.buildWrittenBook(title, author, pages);
+        LinkedList<String> sortedPages = new LinkedList<>();
+        String[] splitContent = content.split(" ");
+        int lastPage = 0;
+        String page = "";
+        for(String word: splitContent) {
+            if(page.length() + word.length() < this.charactersPerPage) {
+                page += word + " ";
+            } else {
+                sortedPages.add(page);
+                page = word + " ";
+            }
+        }
+        this.buildWrittenBook(title, author, sortedPages);
     }
 
     private void applyMeta() {
