@@ -84,6 +84,7 @@ public class AresonSomnium extends JavaPlugin {
     private GommaObjectsFileReader gommaObjectsFileReader;
     private MessageManager messages;
     private FileManager recaps;
+    private FileManager riassunti;
 
     @Override
     public void onDisable() {
@@ -144,8 +145,8 @@ public class AresonSomnium extends JavaPlugin {
     private void registerFiles() {
         messages = new MessageManager(this, "messages.yml");
         gommaObjectsFileReader = new GommaObjectsFileReader(this, "gommaItems.yml");
-
         recaps = new FileManager(this, "recaps.yml");
+        riassunti = new FileManager(this, "riassunti.yml");
     }
 
     public GommaObjectsFileReader getGommaObjectsFileReader() {
@@ -346,6 +347,10 @@ public class AresonSomnium extends JavaPlugin {
         } else {
             return false;
         }
+    }
+
+    public FileManager getRiassunti() {
+        return riassunti;
     }
 
 }

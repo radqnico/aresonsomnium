@@ -21,10 +21,18 @@ public class BookBuilder {
     public void buildWrittenBook(String title, String author, List<String> pages) {
         this.bookMeta.setTitle(title);
         this.bookMeta.setAuthor(author);
-        for (int i = 0; i < pages.size(); i++) {
-            String colouredText = ChatColor.translateAlternateColorCodes('&', pages.get(i));
+        for (String page: pages) {
+            String colouredText = ChatColor.translateAlternateColorCodes('&', page);
             this.bookMeta.addPages(Component.text(colouredText));
         }
+        this.applyMeta();
+    }
+
+    public void buildWrittenBook(String title, String author, String content) {
+        this.bookMeta.setTitle(title);
+        this.bookMeta.setAuthor(author);
+        String colouredText = ChatColor.translateAlternateColorCodes('&', content);
+        this.bookMeta.addPages(Component.text(colouredText));
         this.applyMeta();
     }
 
