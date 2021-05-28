@@ -27,7 +27,7 @@ public class OpenBookCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        if (args.length != 1) {
+        if (args.length == 1) {
             try {
                 int numeroRiassunto = Integer.parseInt(args[0]);
                 Optional<Player> optionalPlayer = this.getPlayer(commandSender);
