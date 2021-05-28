@@ -44,6 +44,7 @@ public class BookBuilder {
                 page = word + " ";
             }
         }
+        sortedPages.add(page);
         this.buildWrittenBook(title, author, sortedPages);
     }
 
