@@ -1,6 +1,7 @@
 package it.areson.aresonsomnium.commands.player;
 
 import it.areson.aresonsomnium.AresonSomnium;
+import it.areson.aresonsomnium.books.BookBuilder;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -32,14 +33,22 @@ public class OpenBookCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         Optional<Player> optionalPlayer = this.getPlayer(commandSender);
         optionalPlayer.ifPresent(player -> {
-            ItemStack writtenBook = new ItemStack(Material.WRITTEN_BOOK);
+            BookBuilder builder = new BookBuilder();
+            String title = "PROVA";
+            String author = "VAL BUCCI";
+            LinkedList<String> pages = new LinkedList<>();
+            pages.add("Ciao vecchio...\nThe future is &cgay");
+            pages.add("Sai anche girare pagina.\n&bBravoh");
+            pages.add("Io e i miei amici negri siamo venuti con la... Barca;\nSWAG BARCA");
+            builder.buildWrittenBook(title, author, pages);
+            /*ItemStack writtenBook = new ItemStack(Material.WRITTEN_BOOK);
             BookMeta bookMeta = (BookMeta) writtenBook.getItemMeta();
             bookMeta.setTitle("PROVA");
             bookMeta.setAuthor("VALERIO");
             String output = ChatColor.translateAlternateColorCodes('&', "Ciao mamma sono su un libro &ccolorato");
             bookMeta.addPages(Component.text(output));
-            writtenBook.setItemMeta(bookMeta);
-            player.openBook(writtenBook);
+            writtenBook.setItemMeta(bookMeta);*/
+            player.openBook(builder.getWrittenBook());
         });
         return true;
     }
