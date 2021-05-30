@@ -7,6 +7,7 @@ import it.areson.aresonsomnium.commands.admin.ObolsCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumAdminCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumGommaCommand;
 import it.areson.aresonsomnium.commands.player.CheckCommand;
+import it.areson.aresonsomnium.commands.player.OpenBookCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
 import it.areson.aresonsomnium.commands.repair.SomniumRepairCommand;
@@ -83,6 +84,7 @@ public class AresonSomnium extends JavaPlugin {
     private GommaObjectsFileReader gommaObjectsFileReader;
     private MessageManager messages;
     private FileManager recaps;
+    private FileManager riassunti;
 
     @Override
     public void onDisable() {
@@ -143,8 +145,8 @@ public class AresonSomnium extends JavaPlugin {
     private void registerFiles() {
         messages = new MessageManager(this, "messages.yml");
         gommaObjectsFileReader = new GommaObjectsFileReader(this, "gommaItems.yml");
-
         recaps = new FileManager(this, "recaps.yml");
+        riassunti = new FileManager(this, "riassunti.yml");
     }
 
     public GommaObjectsFileReader getGommaObjectsFileReader() {
@@ -190,6 +192,7 @@ public class AresonSomnium extends JavaPlugin {
         new ObolsCommand(this);
         new GiveConsumableCommand(this);
         new SomniumRepairCommand(this);
+        new OpenBookCommand(this);
     }
 
     private void initListeners() {
@@ -344,6 +347,10 @@ public class AresonSomnium extends JavaPlugin {
         } else {
             return false;
         }
+    }
+
+    public FileManager getRiassunti() {
+        return riassunti;
     }
 
 }
