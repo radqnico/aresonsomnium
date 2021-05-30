@@ -10,22 +10,22 @@ import java.util.Objects;
 public class BlockPrice {
 
     private static final HashMap<Material, BigDecimal> prices = new HashMap<Material, BigDecimal>() {{
-        put(Material.COBBLESTONE, BigDecimal.valueOf(1));
-        put(Material.NETHERRACK, BigDecimal.valueOf(2.5));
-        put(Material.COAL_BLOCK, BigDecimal.valueOf(6));
-        put(Material.RED_NETHER_BRICKS, BigDecimal.valueOf(11));
-        put(Material.MAGMA_BLOCK, BigDecimal.valueOf(25));
-        put(Material.RED_CONCRETE, BigDecimal.valueOf(55));
-        put(Material.ANDESITE, BigDecimal.valueOf(90));
-        put(Material.POLISHED_ANDESITE, BigDecimal.valueOf(170));
-        put(Material.DIORITE, BigDecimal.valueOf(290));
-        put(Material.POLISHED_DIORITE, BigDecimal.valueOf(480));
-        put(Material.LIME_CONCRETE, BigDecimal.valueOf(800));
-        put(Material.PRISMARINE, BigDecimal.valueOf(1400));
-        put(Material.PRISMARINE_BRICKS, BigDecimal.valueOf(2450));
-        put(Material.QUARTZ_BLOCK, BigDecimal.valueOf(3800));
-        put(Material.CHISELED_QUARTZ_BLOCK, BigDecimal.valueOf(8000));
-        put(Material.LIGHT_BLUE_CONCRETE, BigDecimal.valueOf(18000));
+        put(Material.NETHERRACK, BigDecimal.valueOf(1));
+        put(Material.GRANITE, BigDecimal.valueOf(2.5));
+        put(Material.BLACKSTONE, BigDecimal.valueOf(5));
+        put(Material.POLISHED_GRANITE, BigDecimal.valueOf(12));
+        put(Material.POLISHED_BLACKSTONE_BRICKS, BigDecimal.valueOf(21));
+        put(Material.RED_CONCRETE, BigDecimal.valueOf(32));
+        put(Material.ANDESITE, BigDecimal.valueOf(52));
+        put(Material.POLISHED_ANDESITE, BigDecimal.valueOf(74));
+        put(Material.DIORITE, BigDecimal.valueOf(98));
+        put(Material.POLISHED_DIORITE, BigDecimal.valueOf(114));
+        put(Material.LIME_CONCRETE, BigDecimal.valueOf(142));
+        put(Material.PRISMARINE, BigDecimal.valueOf(182));
+        put(Material.PRISMARINE_BRICKS, BigDecimal.valueOf(224));
+        put(Material.DARK_PRISMARINE, BigDecimal.valueOf(268));
+        put(Material.CYAN_CONCRETE, BigDecimal.valueOf(362));
+        put(Material.WHITE_CONCRETE, BigDecimal.valueOf(420));
     }};
 
     public static BigDecimal getPrice(Material material) throws MaterialNotSellableException {
