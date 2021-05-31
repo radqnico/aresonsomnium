@@ -44,6 +44,12 @@ pipeline {
                                                     flatten: true,
                                                     excludes: "**/*original*.jar"
                                             )
+                                            sshTransfer(
+                                                    sourceFiles: "**/*.jar",
+                                                    remoteDirectory: "/home/minecraft/somnium/plugins/",
+                                                    flatten: true,
+                                                    excludes: "**/*original*.jar"
+                                            )
                                         ]
                                 )
                         ]
