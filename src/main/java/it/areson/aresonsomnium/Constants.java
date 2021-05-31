@@ -9,7 +9,6 @@ public class Constants {
     public static final String PERMISSION_SESTO_GIRONE = "aresonsomnium.sestogirone";
     public static final String PERMISSION_OTTAVO_GIRONE = "aresonsomnium.ottavogirone";
     public static final String PERMISSION_LUCIFERO = "aresonsomnium.lucifero";
-    public static final String PERMISSION_ANTIPURGATORIO = "aresonsomnium.antipurgatorio";
     public static final String PERMISSION_PRIMA_CORNICE = "aresonsomnium.primacornice";
     public static final String PERMISSION_TERZA_CORNICE = "aresonsomnium.terzacornice";
     public static final String PERMISSION_QUINTA_CORNICE = "aresonsomnium.quintacornice";

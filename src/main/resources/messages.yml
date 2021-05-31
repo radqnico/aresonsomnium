@@ -56,6 +56,7 @@ item-not-sellable: "&cQuest'oggetto non è vendibile"
 items-not-sellable: "&cNon hai nessun oggetto vendibile nell'inventario"
 
 obols-give: "&aHai ottenuto un Obolo!"
+obols-give-shard: "&aHai ottenuto %amount% frammenti di Obolo!"
 obols-not-enough: "&cPortami almeno 10 pepite!"
 obols-not-nugget: "&cDevi portarmi le mie pepite!"
 

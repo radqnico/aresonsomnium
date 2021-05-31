@@ -3,6 +3,7 @@ package it.areson.aresonsomnium.commands.admin;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.Constants;
 import it.areson.aresonsomnium.economy.Wallet;
+import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.Material;
@@ -73,6 +74,7 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
                     player.getWorld().dropItem(player.getLocation(), remaining.get(integer));
                 }
             }
+            player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("obols-give-shard", Pair.of("%amount%", amount + "")));
         }
     }
 
