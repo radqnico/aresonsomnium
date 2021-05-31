@@ -24,7 +24,8 @@ public class BlockPrice {
         put(Material.PRISMARINE, BigDecimal.valueOf(182));
         put(Material.PRISMARINE_BRICKS, BigDecimal.valueOf(224));
         put(Material.DARK_PRISMARINE, BigDecimal.valueOf(268));
-        put(Material.CYAN_CONCRETE, BigDecimal.valueOf(362));
+        put(Material.CYAN_CONCRETE, BigDecimal.valueOf(314));
+        put(Material.LIGHT_BLUE_CONCRETE, BigDecimal.valueOf(362));
         put(Material.WHITE_CONCRETE, BigDecimal.valueOf(420));
     }};
 

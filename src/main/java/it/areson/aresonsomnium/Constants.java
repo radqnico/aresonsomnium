@@ -8,19 +8,20 @@ public class Constants {
     public static final String PERMISSION_QUARTO_GIRONE = "aresonsomnium.quartogirone";
     public static final String PERMISSION_SESTO_GIRONE = "aresonsomnium.sestogirone";
     public static final String PERMISSION_OTTAVO_GIRONE = "aresonsomnium.ottavogirone";
+    public static final String PERMISSION_LUCIFERO = "aresonsomnium.lucifero";
     public static final String PERMISSION_ANTIPURGATORIO = "aresonsomnium.antipurgatorio";
     public static final String PERMISSION_PRIMA_CORNICE = "aresonsomnium.primacornice";
     public static final String PERMISSION_TERZA_CORNICE = "aresonsomnium.terzacornice";
     public static final String PERMISSION_QUINTA_CORNICE = "aresonsomnium.quintacornice";
     public static final String PERMISSION_SESTA_CORNICE = "aresonsomnium.sestacornice";
-    public static final String PERMISSION_PRIMO_CIELO = "aresonsomnium.primocielo";
-    public static final String PERMISSION_TERZO_CIELO = "aresonsomnium.terzocielo";
-    public static final String PERMISSION_QUINTO_CIELO = "aresonsomnium.quintocielo";
+    public static final String PERMISSION_EDEN = "aresonsomnium.eden";
+    public static final String PERMISSION_SECONDO_CIELO = "aresonsomnium.secondocielo";
+    public static final String PERMISSION_QUARTO_CIELO = "aresonsomnium.quartocielo";
+    public static final String PERMISSION_SESTO_CIELO = "aresonsomnium.sestocielo";
     public static final String PERMISSION_SETTIMO_CIELO = "aresonsomnium.settimocielo";
-    public static final String PERMISSION_OTTAVO_CIELO = "aresonsomnium.ottavocielo";
+    public static final String PERMISSION_NONO_CIELO = "aresonsomnium.nonocielo";
 
     public static final String PERMISSION_MULTIPLIER = "aresonsomnium.multiplier";
-
 
     public static final String SELL_ALL_COMMAND = "sellall";
     public static final String SELL_HAND_COMMAND = "sellhand";
