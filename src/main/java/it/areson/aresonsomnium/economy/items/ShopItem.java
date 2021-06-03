@@ -64,19 +64,14 @@ public class ShopItem {
         ItemMeta itemMeta = clone.getItemMeta();
         if (Objects.nonNull(itemMeta)) {
             PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
+
             if (putTags) {
                 persistentDataContainer.set(new NamespacedKey(AresonSomniumAPI.instance, "id"), INTEGER, id);
-            }else{
+            } else {
                 persistentDataContainer.remove(new NamespacedKey(AresonSomniumAPI.instance, "id"));
             }
 
             List<Component> lore = itemMeta.lore();
-
-            if(lore == null && !setLorePrices && !putSomniumIdInLore){
-                clone.setItemMeta(itemMeta);
-                return clone;
-
-            }
 
             if (lore == null) {
                 lore = new ArrayList<>();
@@ -93,7 +88,12 @@ public class ShopItem {
                 lore.add(Component.text("SomniumID: " + id).color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, false));
             }
 
-            itemMeta.lore(lore);
+            if (putTags) {
+                itemMeta.lore(lore);
+            } else {
+                itemMeta.lore(null);
+            }
+
             clone.setItemMeta(itemMeta);
         }
         return clone;
