@@ -20,7 +20,7 @@ import java.util.Optional;
 @AresonCommand("buyitem")
 public class BuyItemCommand extends CommandParserCommand {
 
-    public static void buyItem(int id, Player player, CommandSender commandSender) {
+    public static void buyItem(int id, Player player, CommandSender commandSender, boolean putTags) {
         if (player != null) {
             SomniumPlayer somniumPlayer = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(player);
             if (somniumPlayer != null) {
@@ -29,7 +29,7 @@ public class BuyItemCommand extends CommandParserCommand {
                     ShopItem shopItem = itemById.get();
                     if (shopItem.getShoppingPrice().isPriceReady()) {
                         if (somniumPlayer.canAfford(shopItem.getShoppingPrice())) {
-                            if (player.getInventory().addItem(shopItem.getItemStack(false, false)).isEmpty()) {
+                            if (player.getInventory().addItem(shopItem.getItemStack(false, false, putTags)).isEmpty()) {
                                 Price price = shopItem.getShoppingPrice();
                                 somniumPlayer.takePriceAmount(price);
                                 player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage(
@@ -63,12 +63,16 @@ public class BuyItemCommand extends CommandParserCommand {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        // / /shopadmin buyitem <player> <id>
+        // / /shopadmin buyitem <player> <id> <true/false>
         try {
+            boolean putTags = true;
+            if(strings.length == 4) {
+                putTags = Boolean.parseBoolean(strings[3]);
+            }
             int id = Integer.parseInt(strings[2]);
             String playerName = strings[1];
             Player player = AresonSomniumAPI.instance.getServer().getPlayer(playerName);
-            buyItem(id, player, commandSender);
+            buyItem(id, player, commandSender, putTags);
         } catch (NumberFormatException numberFormatException) {
             commandSender.sendMessage("L'ID o la quantità non è un numero");
         }

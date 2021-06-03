@@ -55,12 +55,18 @@ public class ShopItem {
     }
 
     public ItemStack getItemStack(boolean setLorePrices, boolean putSomniumIdInLore) {
+        return getItemStack(setLorePrices, putSomniumIdInLore, true);
+    }
+
+    public ItemStack getItemStack(boolean setLorePrices, boolean putSomniumIdInLore, boolean putTags) {
         ItemStack clone = itemStack.clone();
         clone.setAmount(amount);
         ItemMeta itemMeta = clone.getItemMeta();
         if (Objects.nonNull(itemMeta)) {
             PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
-            persistentDataContainer.set(new NamespacedKey(AresonSomniumAPI.instance, "id"), INTEGER, id);
+            if (putTags) {
+                persistentDataContainer.set(new NamespacedKey(AresonSomniumAPI.instance, "id"), INTEGER, id);
+            }
 
             List<Component> lore = itemMeta.lore();
             if (lore == null) {
