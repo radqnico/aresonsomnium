@@ -71,18 +71,27 @@ public class ShopItem {
             }
 
             List<Component> lore = itemMeta.lore();
+
+            if(lore == null && !setLorePrices && !putSomniumIdInLore){
+                clone.setItemMeta(itemMeta);
+                return clone;
+            }
+
             if (lore == null) {
                 lore = new ArrayList<>();
             }
+
             if (setLorePrices) {
                 lore.add(Component.empty());
                 lore.addAll(shoppingPrice.toLore(true));
                 lore.addAll(sellingPrice.toLore(false));
             }
+
             if (putSomniumIdInLore) {
                 lore.add(Component.empty());
                 lore.add(Component.text("SomniumID: " + id).color(NamedTextColor.DARK_GRAY).decoration(TextDecoration.ITALIC, false));
             }
+
             itemMeta.lore(lore);
             clone.setItemMeta(itemMeta);
         }
