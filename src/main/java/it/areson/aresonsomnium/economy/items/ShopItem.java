@@ -75,6 +75,7 @@ public class ShopItem {
             if(lore == null && !setLorePrices && !putSomniumIdInLore){
                 clone.setItemMeta(itemMeta);
                 return clone;
+
             }
 
             if (lore == null) {
