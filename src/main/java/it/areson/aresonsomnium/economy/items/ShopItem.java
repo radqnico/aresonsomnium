@@ -66,6 +66,8 @@ public class ShopItem {
             PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
             if (putTags) {
                 persistentDataContainer.set(new NamespacedKey(AresonSomniumAPI.instance, "id"), INTEGER, id);
+            }else{
+                persistentDataContainer.remove(new NamespacedKey(AresonSomniumAPI.instance, "id"));
             }
 
             List<Component> lore = itemMeta.lore();
