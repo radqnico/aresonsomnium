@@ -39,7 +39,7 @@ public class OpenBookCommand implements CommandExecutor {
                         String chapterTitle = configuration.getString(path + ".titolo");   // titoli più lunghi di 32 caratteri danno errore
                         String title = chapterTitle.length() > 32 ? "Blank" : chapterTitle;
                         String author = "Areson";
-                        String content = configuration.getString(path + ".testo");
+                        String content = chapterTitle + '\n' + configuration.getString(path + ".testo");
                         builder.buildWrittenBook(title, author, content);
                         player.openBook(builder.getWrittenBook());
                     } else {
