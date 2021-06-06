@@ -36,7 +36,8 @@ public class OpenBookCommand implements CommandExecutor {
                     FileConfiguration configuration = AresonSomniumAPI.instance.getRiassunti().getFileConfiguration();
                     String path = String.format("riassunti.%d", numeroRiassunto);
                     if (configuration.isConfigurationSection(path)) {
-                        String title = configuration.getString(path + ".titolo");
+                        String chapterTitle = configuration.getString(path + ".titolo");   // titoli più lunghi di 32 caratteri danno errore
+                        String title = chapterTitle.length() > 32 ? "Blank" : chapterTitle;
                         String author = "Areson";
                         String content = configuration.getString(path + ".testo");
                         builder.buildWrittenBook(title, author, content);
