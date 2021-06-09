@@ -1,7 +1,12 @@
 lp deletegroup founder
 lp creategroup founder
 lp group founder permission set * true
-lp group founder meta addprefix 0 "&2[Founder]&f"
+lp group founder meta addprefix 0 "&2&lFOUNDER&f "
+
+lp deletegroup pluginner
+lp creategroup pluginner
+lp group pluginner permission set * true
+lp group pluginner meta addprefix 0 "&d&lPLUGINNER&f "
 
 lp deletegroup acidisland
 lp creategroup acidisland
@@ -55,7 +60,7 @@ lp group default permission set tradesystem.trade.initiate true
 lp group default permission set commandpanel.panel.mercato true world=world
 lp group default permission set commandpanel.panel.shopincantesimi true world=world
 lp group default permission set commandpanel.panel.suggerimenti true world=world
-lp group default meta addprefix 0 "&2&l[&a&lSelva&2&l]&f"
+lp group default meta addprefix 0 "&2&l[&a&lSelva&2&l]&f "
 
 lp deletegroup zero_antinferno
 lp creategroup zero_antinferno
@@ -65,7 +70,7 @@ lp group zero_antinferno permission set ezranks.rank.zero_antinferno true
 lp group zero_antinferno permission set portal.antinferno true
 lp group zero_antinferno permission set jetsprisonmines.blockbreak.antinferno true
 lp group zero_antinferno permission set aresonsomnium.antinferno true
-lp group zero_antinferno meta addprefix 0 "&4&l[&c&lAntinferno&4&l]&f"
+lp group zero_antinferno meta addprefix 0 "&4&l[&c&lAntinferno&4&l]&f "
 
 
 lp deletegroup zero_primogirone
@@ -77,7 +82,7 @@ lp group zero_primogirone permission set ezranks.rank.zero_primogirone true
 lp group zero_primogirone permission set portal.primogirone true
 lp group zero_primogirone permission set jetsprisonmines.blockbreak.primogirone true
 lp group zero_primogirone permission set aresonsomnium.primogirone true
-lp group zero_primogirone meta addprefix 0 "&4&l[&c&lI° Girone&4&l]&f"
+lp group zero_primogirone meta addprefix 0 "&4&l[&c&lI° Girone&4&l]&f "
 
 
 lp deletegroup zero_secondogirone
@@ -88,7 +93,7 @@ lp group zero_secondogirone permission set ezranks.rank.zero_secondogirone true
 lp group zero_secondogirone permission set portal.secondogirone true
 lp group zero_secondogirone permission set jetsprisonmines.blockbreak.secondogirone true
 lp group zero_secondogirone permission set aresonsomnium.secondogirone true
-lp group zero_secondogirone meta addprefix 0 "&4&l[&c&lII° Girone&4&l]&f"
+lp group zero_secondogirone meta addprefix 0 "&4&l[&c&lII° Girone&4&l]&f "
 
 
 lp deletegroup zero_terzogirone
@@ -99,7 +104,7 @@ lp group zero_terzogirone permission set ezranks.rank.zero_terzogirone true
 lp group zero_terzogirone permission set portal.terzogirone true
 lp group zero_terzogirone permission set jetsprisonmines.blockbreak.terzogirone true
 lp group zero_terzogirone permission set aresonsomnium.terzogirone true
-lp group zero_terzogirone meta addprefix 0 "&4&l[&c&lIII° Girone&4&l]&f"
+lp group zero_terzogirone meta addprefix 0 "&4&l[&c&lIII° Girone&4&l]&f "
 
 
 lp deletegroup zero_quartogirone
@@ -110,7 +115,7 @@ lp group zero_quartogirone permission set ezranks.rank.zero_quartogirone true
 lp group zero_quartogirone permission set portal.quartogirone true
 lp group zero_quartogirone permission set jetsprisonmines.blockbreak.quartogirone true
 lp group zero_quartogirone permission set aresonsomnium.quartogirone true
-lp group zero_quartogirone meta addprefix 0 "&4&l[&c&lIV° Girone&4&l]&f"
+lp group zero_quartogirone meta addprefix 0 "&4&l[&c&lIV° Girone&4&l]&f "
 
 
 lp deletegroup zero_quintogirone
@@ -121,7 +126,7 @@ lp group zero_quintogirone permission set ezranks.rank.zero_quintogirone true
 lp group zero_quintogirone permission set portal.quintogirone true
 lp group zero_quintogirone permission set jetsprisonmines.blockbreak.quintogirone true
 lp group zero_quintogirone permission set aresonsomnium.quintogirone true
-lp group zero_quintogirone meta addprefix 0 "&4&l[&c&lV° Girone&4&l]&f"
+lp group zero_quintogirone meta addprefix 0 "&4&l[&c&lV° Girone&4&l]&f "
 
 
 lp deletegroup zero_sestogirone
@@ -132,7 +137,7 @@ lp group zero_sestogirone permission set ezranks.rank.zero_sestogirone true
 lp group zero_sestogirone permission set portal.sestogirone true
 lp group zero_sestogirone permission set jetsprisonmines.blockbreak.sestogirone true
 lp group zero_sestogirone permission set aresonsomnium.sestogirone true
-lp group zero_sestogirone meta addprefix 0 "&4&l[&c&lVI° Girone&4&l]&f"
+lp group zero_sestogirone meta addprefix 0 "&4&l[&c&lVI° Girone&4&l]&f "
 
 
 lp deletegroup zero_settimogirone
@@ -143,7 +148,7 @@ lp group zero_settimogirone permission set ezranks.rank.zero_settimogirone true
 lp group zero_settimogirone permission set portal.settimogirone true
 lp group zero_settimogirone permission set jetsprisonmines.blockbreak.settimogirone true
 lp group zero_settimogirone permission set aresonsomnium.settimogirone true
-lp group zero_settimogirone meta addprefix 0 "&4&l[&c&lVII° Girone&4&l]&f"
+lp group zero_settimogirone meta addprefix 0 "&4&l[&c&lVII° Girone&4&l]&f "
 
 
 lp deletegroup zero_ottavogirone
@@ -154,7 +159,7 @@ lp group zero_ottavogirone permission set ezranks.rank.zero_ottavogirone true
 lp group zero_ottavogirone permission set portal.ottavogirone true
 lp group zero_ottavogirone permission set jetsprisonmines.blockbreak.ottavogirone true
 lp group zero_ottavogirone permission set aresonsomnium.ottavogirone true
-lp group zero_ottavogirone meta addprefix 0 "&4&l[&c&lVIII° Girone&4&l]&f"
+lp group zero_ottavogirone meta addprefix 0 "&4&l[&c&lVIII° Girone&4&l]&f "
 
 
 lp deletegroup zero_nonogirone
@@ -165,7 +170,7 @@ lp group zero_nonogirone permission set ezranks.rank.zero_nonogirone true
 lp group zero_nonogirone permission set portal.nonogirone true
 lp group zero_nonogirone permission set jetsprisonmines.blockbreak.nonogirone true
 lp group zero_nonogirone permission set aresonsomnium.nonogirone true
-lp group zero_nonogirone meta addprefix 0 "&4&l[&c&lIX° Girone&4&l]&f"
+lp group zero_nonogirone meta addprefix 0 "&4&l[&c&lIX° Girone&4&l]&f "
 
 
 lp deletegroup zero_lucifero
@@ -176,7 +181,7 @@ lp group zero_lucifero permission set ezranks.rank.zero_lucifero true
 lp group zero_lucifero permission set portal.lucifero true
 lp group zero_lucifero permission set jetsprisonmines.blockbreak.lucifero true
 lp group zero_lucifero permission set aresonsomnium.lucifero true
-lp group zero_lucifero meta addprefix 0 "&4&l[&0&k&l0&c&lLucifero&0&k&l0&4&l]&f"
+lp group zero_lucifero meta addprefix 0 "&4&l[&0&k&l0&c&lLucifero&0&k&l0&4&l]&f "
 
 
 
@@ -188,7 +193,7 @@ lp group zero_antipurgatorio permission set ezranks.rank.zero_antipurgatorio tru
 lp group zero_antipurgatorio permission set portal.antipurgatorio true
 lp group zero_antipurgatorio permission set jetsprisonmines.blockbreak.antipurgatorio true
 lp group zero_antipurgatorio permission set aresonsomnium.antipurgatorio true
-lp group zero_antipurgatorio meta addprefix 0 "&3&l[&b&lAntipurgatorio&3&l]&f"
+lp group zero_antipurgatorio meta addprefix 0 "&3&l[&b&lAntipurgatorio&3&l]&f "
 
 
 lp deletegroup zero_primacornice
@@ -199,7 +204,7 @@ lp group zero_primacornice permission set ezranks.rank.zero_primacornice true
 lp group zero_primacornice permission set portal.primacornice true
 lp group zero_primacornice permission set jetsprisonmines.blockbreak.primacornice true
 lp group zero_primacornice permission set aresonsomnium.primacornice true
-lp group zero_primacornice meta addprefix 0 "&3&l[&b&lI° Cornice&3&l]&f"
+lp group zero_primacornice meta addprefix 0 "&3&l[&b&lI° Cornice&3&l]&f "
 
 
 lp deletegroup zero_secondacornice
@@ -212,7 +217,7 @@ lp group zero_secondacornice permission set essentials.kits.purgatorio true
 lp group zero_secondacornice permission set portal.secondacornice true
 lp group zero_secondacornice permission set jetsprisonmines.blockbreak.secondacornice true
 lp group zero_secondacornice permission set aresonsomnium.secondacornice true
-lp group zero_secondacornice meta addprefix 0 "&3&l[&b&lII° Cornice&3&l]&f"
+lp group zero_secondacornice meta addprefix 0 "&3&l[&b&lII° Cornice&3&l]&f "
 
 
 lp deletegroup zero_terzacornice
@@ -223,7 +228,7 @@ lp group zero_terzacornice permission set ezranks.rank.zero_terzacornice true
 lp group zero_terzacornice permission set portal.terzacornice true
 lp group zero_terzacornice permission set jetsprisonmines.blockbreak.terzacornice true
 lp group zero_terzacornice permission set aresonsomnium.terzacornice true
-lp group zero_terzacornice meta addprefix 0 "&3&l[&b&lIII° Cornice&3&l]&f"
+lp group zero_terzacornice meta addprefix 0 "&3&l[&b&lIII° Cornice&3&l]&f "
 
 
 lp deletegroup zero_quartacornice
@@ -234,7 +239,7 @@ lp group zero_quartacornice permission set ezranks.rank.zero_quartacornice true
 lp group zero_quartacornice permission set portal.quartacornice true
 lp group zero_quartacornice permission set jetsprisonmines.blockbreak.quartacornice true
 lp group zero_quartacornice permission set aresonsomnium.quartacornice true
-lp group zero_quartacornice meta addprefix 0 "&3&l[&b&lIV° Cornice&3&l]&f"
+lp group zero_quartacornice meta addprefix 0 "&3&l[&b&lIV° Cornice&3&l]&f "
 
 
 lp deletegroup zero_quintacornice
@@ -245,7 +250,7 @@ lp group zero_quintacornice permission set ezranks.rank.zero_quintacornice true
 lp group zero_quintacornice permission set portal.quintacornice true
 lp group zero_quintacornice permission set jetsprisonmines.blockbreak.quintacornice true
 lp group zero_quintacornice permission set aresonsomnium.quintacornice true
-lp group zero_quintacornice meta addprefix 0 "&3&l[&b&lV° Cornice&3&l]&f"
+lp group zero_quintacornice meta addprefix 0 "&3&l[&b&lV° Cornice&3&l]&f "
 
 
 lp deletegroup zero_sestacornice
@@ -256,7 +261,7 @@ lp group zero_sestacornice permission set ezranks.rank.zero_sestacornice true
 lp group zero_sestacornice permission set portal.sestacornice true
 lp group zero_sestacornice permission set jetsprisonmines.blockbreak.sestacornice true
 lp group zero_sestacornice permission set aresonsomnium.sestacornice true
-lp group zero_sestacornice meta addprefix 0 "&3&l[&b&lVI° Cornice&3&l]&f"
+lp group zero_sestacornice meta addprefix 0 "&3&l[&b&lVI° Cornice&3&l]&f "
 
 
 lp deletegroup zero_settimacornice
@@ -267,7 +272,7 @@ lp group zero_settimacornice permission set ezranks.rank.zero_settimacornice tru
 lp group zero_settimacornice permission set portal.settimacornice true
 lp group zero_settimacornice permission set jetsprisonmines.blockbreak.settimacornice true
 lp group zero_settimacornice permission set aresonsomnium.settimacornice true
-lp group zero_settimacornice meta addprefix 0 "&3&l[&b&lVII° Cornice&3&l]&f"
+lp group zero_settimacornice meta addprefix 0 "&3&l[&b&lVII° Cornice&3&l]&f "
 
 
 lp deletegroup zero_eden
@@ -278,7 +283,7 @@ lp group zero_eden permission set ezranks.rank.zero_eden true
 lp group zero_eden permission set portal.eden true
 lp group zero_eden permission set jetsprisonmines.blockbreak.eden true
 lp group zero_eden permission set aresonsomnium.eden true
-lp group zero_eden meta addprefix 0 "&3&l[&2&k&l0&b&lEden&2&k&l0&3&l]&f"
+lp group zero_eden meta addprefix 0 "&3&l[&2&k&l0&b&lEden&2&k&l0&3&l]&f "
 
 
 
@@ -292,7 +297,7 @@ lp group zero_secondacornice permission set essentials.kits.paradiso true
 lp group zero_primocielo permission set portal.primocielo true
 lp group zero_primocielo permission set jetsprisonmines.blockbreak.primocielo true
 lp group zero_primocielo permission set aresonsomnium.primocielo true
-lp group zero_primocielo meta addprefix 0 "&b&l[&f&lI° Cielo&b&l]&f"
+lp group zero_primocielo meta addprefix 0 "&b&l[&f &lI° Cielo&b&l]&f "
 
 
 lp deletegroup zero_secondocielo
@@ -303,7 +308,7 @@ lp group zero_secondocielo permission set ezranks.rank.zero_secondocielo true
 lp group zero_secondocielo permission set portal.secondocielo true
 lp group zero_secondocielo permission set jetsprisonmines.blockbreak.secondocielo true
 lp group zero_secondocielo permission set aresonsomnium.secondocielo true
-lp group zero_secondocielo meta addprefix 0 "&b&l[&f&lII° Cielo&b&l]&f"
+lp group zero_secondocielo meta addprefix 0 "&b&l[&f &lII° Cielo&b&l]&f "
 
 
 lp deletegroup zero_terzocielo
@@ -314,7 +319,7 @@ lp group zero_terzocielo permission set ezranks.rank.zero_terzocielo true
 lp group zero_terzocielo permission set portal.terzocielo true
 lp group zero_terzocielo permission set jetsprisonmines.blockbreak.terzocielo true
 lp group zero_terzocielo permission set aresonsomnium.terzocielo true
-lp group zero_terzocielo meta addprefix 0 "&b&l[&f&lIII° Cielo&b&l]&f"
+lp group zero_terzocielo meta addprefix 0 "&b&l[&f &lIII° Cielo&b&l]&f "
 
 
 lp deletegroup zero_quartocielo
@@ -325,7 +330,7 @@ lp group zero_quartocielo permission set ezranks.rank.zero_quartocielo true
 lp group zero_quartocielo permission set portal.quartocielo true
 lp group zero_quartocielo permission set jetsprisonmines.blockbreak.quartocielo true
 lp group zero_quartocielo permission set aresonsomnium.quartocielo true
-lp group zero_quartocielo meta addprefix 0 "&b&l[&f&lIV° Cielo&b&l]&f"
+lp group zero_quartocielo meta addprefix 0 "&b&l[&f &lIV° Cielo&b&l]&f "
 
 
 lp deletegroup zero_quintocielo
@@ -336,7 +341,7 @@ lp group zero_quintocielo permission set ezranks.rank.zero_quintocielo true
 lp group zero_quintocielo permission set portal.quintocielo true
 lp group zero_quintocielo permission set jetsprisonmines.blockbreak.quintocielo true
 lp group zero_quintocielo permission set aresonsomnium.quintocielo true
-lp group zero_quintocielo meta addprefix 0 "&b&l[&f&lV° Cielo&b&l]&f"
+lp group zero_quintocielo meta addprefix 0 "&b&l[&f &lV° Cielo&b&l]&f "
 
 
 lp deletegroup zero_sestocielo
@@ -347,7 +352,7 @@ lp group zero_sestocielo permission set ezranks.rank.zero_sestocielo true
 lp group zero_sestocielo permission set portal.sestocielo true
 lp group zero_sestocielo permission set jetsprisonmines.blockbreak.sestocielo true
 lp group zero_sestocielo permission set aresonsomnium.sestocielo true
-lp group zero_sestocielo meta addprefix 0 "&b&l[&f&lVI° Cielo&b&l]&f"
+lp group zero_sestocielo meta addprefix 0 "&b&l[&f &lVI° Cielo&b&l]&f "
 
 
 lp deletegroup zero_settimocielo
@@ -358,7 +363,7 @@ lp group zero_settimocielo permission set ezranks.rank.zero_settimocielo true
 lp group zero_settimocielo permission set portal.settimocielo true
 lp group zero_settimocielo permission set jetsprisonmines.blockbreak.settimocielo true
 lp group zero_settimocielo permission set aresonsomnium.settimocielo true
-lp group zero_settimocielo meta addprefix 0 "&b&l[&f&lVII° Cielo&b&l]&f"
+lp group zero_settimocielo meta addprefix 0 "&b&l[&f &lVII° Cielo&b&l]&f "
 
 
 lp deletegroup zero_ottavocielo
@@ -369,7 +374,7 @@ lp group zero_ottavocielo permission set ezranks.rank.zero_ottavocielo true
 lp group zero_ottavocielo permission set portal.ottavocielo true
 lp group zero_ottavocielo permission set jetsprisonmines.blockbreak.ottavocielo true
 lp group zero_ottavocielo permission set aresonsomnium.ottavocielo true
-lp group zero_ottavocielo meta addprefix 0 "&b&l[&f&lVIII° Cielo&b&l]&f"
+lp group zero_ottavocielo meta addprefix 0 "&b&l[&f &lVIII° Cielo&b&l]&f "
 
 
 lp deletegroup zero_nonocielo
@@ -380,7 +385,7 @@ lp group zero_nonocielo permission set ezranks.rank.zero_nonocielo true
 lp group zero_nonocielo permission set portal.nonocielo true
 lp group zero_nonocielo permission set jetsprisonmines.blockbreak.nonocielo true
 lp group zero_nonocielo permission set aresonsomnium.nonocielo true
-lp group zero_nonocielo meta addprefix 0 "&b&l[&f&lIX° Cielo&b&l]&f"
+lp group zero_nonocielo meta addprefix 0 "&b&l[&f &lIX° Cielo&b&l]&f "
 
 
 lp deletegroup zero_dio
@@ -391,4 +396,4 @@ lp group zero_dio permission set ezranks.rank.zero_dio true
 lp group zero_dio permission set portal.dio true
 lp group zero_dio permission set jetsprisonmines.blockbreak.dio true
 lp group zero_dio permission set aresonsomnium.dio true
-lp group zero_dio meta addprefix 0 "&b&l[&e&k&l0&f&lDio&e&k&l0&b&l]&f"
+lp group zero_dio meta addprefix 0 "&b&l[&e&k&l0&f &lDio&e&k&l0&b&l]&f "
