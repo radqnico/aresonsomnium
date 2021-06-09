@@ -1,7 +1,6 @@
 package it.areson.aresonsomnium.utils.file;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.utils.file.FileManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -67,6 +66,7 @@ public class GommaObjectsFileReader extends FileManager {
                     aresonSomnium.getLogger().severe("GOMMA GOMMA: chiave " + key + " non valida. Usa solo numeri interi positivi.");
                 }
             }
+            System.out.println(itemStacks);
         }
         return itemStacks;
     }
@@ -107,7 +107,9 @@ public class GommaObjectsFileReader extends FileManager {
         List<ItemStack> itemList = getItemList();
         if (itemList.size() > 0) {
             Collections.shuffle(itemList);
-            return itemList.get(new Random().nextInt(itemList.size()));
+            int random = new Random().nextInt(itemList.size());
+            System.out.println(random);
+            return itemList.get(random);
         }
         return new ItemStack(Material.AIR);
     }
