@@ -22,6 +22,7 @@ import it.areson.aresonsomnium.listeners.*;
 import it.areson.aresonsomnium.placeholders.CoinsPlaceholders;
 import it.areson.aresonsomnium.placeholders.MultiplierPlaceholders;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
+import it.areson.aresonsomnium.pvp.LastHitPvP;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.file.FileManager;
 import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
@@ -87,6 +88,8 @@ public class AresonSomnium extends JavaPlugin {
     private FileManager recaps;
     private FileManager riassunti;
 
+    private LastHitPvP lastHitPvP;
+
     @Override
     public void onDisable() {
         somniumPlayerManager.saveAll();
@@ -137,6 +140,13 @@ public class AresonSomnium extends JavaPlugin {
             new CoinsPlaceholders(this).register();
         }
         Recaps.initRecaps(recaps);
+
+        new PlayerListener(this);
+        lastHitPvP = new LastHitPvP();
+    }
+
+    public LastHitPvP getLastHitPvP(){
+        return lastHitPvP;
     }
 
     public MessageManager getMessageManager() {
