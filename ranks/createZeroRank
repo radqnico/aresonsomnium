@@ -1,7 +1,12 @@
 lp deletegroup founder
 lp creategroup founder
 lp group founder permission set * true
-lp group founder meta addprefix 0 "&2[Founder]&f "
+lp group founder meta addprefix 0 "&2&lFOUNDER&f "
+
+lp deletegroup pluginner
+lp creategroup pluginner
+lp group pluginner permission set * true
+lp group pluginner meta addprefix 0 "&d&lPLUGINNER&f "
 
 lp deletegroup acidisland
 lp creategroup acidisland
