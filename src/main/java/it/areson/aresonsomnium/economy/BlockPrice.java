@@ -14,7 +14,7 @@ public class BlockPrice {
         put(Material.GRANITE, BigDecimal.valueOf(2.5));
         put(Material.BLACKSTONE, BigDecimal.valueOf(5));
         put(Material.POLISHED_GRANITE, BigDecimal.valueOf(12));
-        put(Material.POLISHED_BLACKSTONE_BRICKS, BigDecimal.valueOf(21));
+        put(Material.CRACKED_POLISHED_BLACKSTONE_BRICKS, BigDecimal.valueOf(21));
         put(Material.RED_CONCRETE, BigDecimal.valueOf(32));
         put(Material.ANDESITE, BigDecimal.valueOf(52));
         put(Material.POLISHED_ANDESITE, BigDecimal.valueOf(74));

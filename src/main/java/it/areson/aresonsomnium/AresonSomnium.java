@@ -64,7 +64,7 @@ public class AresonSomnium extends JavaPlugin {
         put(Material.GRANITE, Constants.PERMISSION_ANTINFERNO);
         put(Material.BLACKSTONE, Constants.PERMISSION_SECONDO_GIRONE);
         put(Material.POLISHED_GRANITE, Constants.PERMISSION_QUARTO_GIRONE);
-        put(Material.POLISHED_BLACKSTONE_BRICKS, Constants.PERMISSION_SESTO_GIRONE);
+        put(Material.CRACKED_POLISHED_BLACKSTONE_BRICKS, Constants.PERMISSION_SESTO_GIRONE);
         put(Material.RED_CONCRETE, Constants.PERMISSION_OTTAVO_GIRONE);
         put(Material.ANDESITE, Constants.PERMISSION_LUCIFERO);
         put(Material.POLISHED_ANDESITE, Constants.PERMISSION_PRIMA_CORNICE);
