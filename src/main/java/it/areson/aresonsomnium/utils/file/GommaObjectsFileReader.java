@@ -66,7 +66,6 @@ public class GommaObjectsFileReader extends FileManager {
                     aresonSomnium.getLogger().severe("GOMMA GOMMA: chiave " + key + " non valida. Usa solo numeri interi positivi.");
                 }
             }
-            System.out.println(itemStacks);
         }
         return itemStacks;
     }
@@ -108,7 +107,6 @@ public class GommaObjectsFileReader extends FileManager {
         if (itemList.size() > 0) {
             Collections.shuffle(itemList);
             int random = new Random().nextInt(itemList.size());
-            System.out.println(random);
             return itemList.get(random);
         }
         return new ItemStack(Material.AIR);
