@@ -8,12 +8,42 @@ lp creategroup pluginner
 lp group pluginner permission set * true
 lp group pluginner meta addprefix 0 "&d&lPLUGINNER&f "
 
+lp deletegroup helper
+lp creategroup helper
+lp group zero_antinferno parent add default
+lp group helper meta addprefix 0 "&e&lHELPER &f "
+lp group helper permission set essentials.fly true
+lp group helper permission set spyglass.command.self true
+lp group helper permission set essentials.socialspy true
+lp group helper permission set litebans.kick true
+lp group helper permission set litebans.notify.dupeip_join true
+lp group helper permission set litebans.tempban true
+lp group helper permission set litebans.tempmute true
+lp group helper permission set openinv.crossworld true
+lp group helper permission set openinv.openender true
+lp group helper permission set openinv.openenderall true
+lp group helper permission set openinv.openinv true
+lp group helper permission set essentials.tp true
+lp group helper permission set essentials.teleport.timer.bypass true
+lp group helper permission set essentials.gamemode.survival true
+lp group helper permission set essentials.gamemode.spectator true
+lp group helper permission set essentials.gamemode true
+lp group helper permission set coreprotect.inspect true
+lp group helper permission set chatcontrol.bypass.rules true
+lp group helper permission set mv.bypass.gamemode.* true
+
 lp deletegroup acidisland
 lp creategroup acidisland
 lp group acidisland permission set acidisland.island.create true
 lp group acidisland permission set acidisland.island.home true
 lp group acidisland permission set acidisland.island.sethome true
 lp group acidisland permission set acidisland.island true
+lp group acidisland permission set acidisland.island.team true
+lp group acidisland permission set acidisland.island.team.invite true
+lp group acidisland permission set acidisland.island.team.accept true
+lp group acidisland permission set acidisland.island.team.kick true
+lp group acidisland permission set acidisland.island.team.reject true
+lp group acidisland permission set acidisland.island.team.leave true
 
 lp group default clear
 lp group default permission set acidisland.* false
