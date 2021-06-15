@@ -1,14 +1,14 @@
 lp deletegroup primo_selva
 lp creategroup primo_selva
 lp group primo_selva parent add default
-lp group zero_primogirone parent add acidisland
+lp group primo_selva parent add acidisland-admin
 lp group primo_selva permission set ezranks.rank.primo_selva true
 lp group primo_selva meta addprefix 0 "&6&l[&e❇&6&l]&2&l[&a&lSelva&2&l]&f "
 
 lp deletegroup primo_antinferno
 lp creategroup primo_antinferno
 lp group primo_antinferno parent add zero_antinferno
-lp group zero_primogirone parent add acidisland
+lp group primo_antinferno parent add acidisland-admin
 lp group primo_antinferno permission set ezranks.rank.primo_antinferno true
 lp group primo_antinferno meta addprefix 0 "&6&l[&e❇&6&l]&4&l[&c&lAntinferno&4&l]&f "
 
@@ -16,6 +16,7 @@ lp group primo_antinferno meta addprefix 0 "&6&l[&e❇&6&l]&4&l[&c&lAntinferno&4
 lp deletegroup primo_primogirone
 lp creategroup primo_primogirone
 lp group primo_primogirone parent add zero_primogirone
+lp group zero_terzogirone parent add acidisland-admin
 lp group primo_primogirone permission set ezranks.rank.primo_primogirone true
 lp group primo_primogirone meta addprefix 0 "&6&l[&e❇&6&l]&4&l[&c&lI° Girone&4&l]&f "
 
@@ -23,6 +24,7 @@ lp group primo_primogirone meta addprefix 0 "&6&l[&e❇&6&l]&4&l[&c&lI° Girone&
 lp deletegroup primo_secondogirone
 lp creategroup primo_secondogirone
 lp group primo_secondogirone parent add zero_secondogirone
+lp group zero_terzogirone parent add acidisland-admin
 lp group primo_secondogirone permission set ezranks.rank.primo_secondogirone true
 lp group primo_secondogirone meta addprefix 0 "&6&l[&e❇&6&l]&4&l[&c&lII° Girone&4&l]&f "
 

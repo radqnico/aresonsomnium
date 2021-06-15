@@ -45,6 +45,11 @@ lp group acidisland permission set acidisland.island.team.kick true
 lp group acidisland permission set acidisland.island.team.reject true
 lp group acidisland permission set acidisland.island.team.leave true
 
+lp deletegroup acidisland-admin
+lp creategroup acidisland-admin
+lp group acidisland-admin permission set acidisland.island.settings true
+lp group acidisland-admin permission set acidisland.admin.setrank true
+
 lp group default clear
 lp group default permission set acidisland.* false
 lp group default permission set bukkit.command.plugins false
@@ -129,6 +134,7 @@ lp group zero_secondogirone meta addprefix 0 "&4&l[&c&lII° Girone&4&l]&f "
 lp deletegroup zero_terzogirone
 lp creategroup zero_terzogirone
 lp group zero_terzogirone parent add zero_secondogirone
+lp group zero_terzogirone parent add acidisland-admin
 lp group zero_terzogirone permission set essentials.warps.terzogirone true
 lp group zero_terzogirone permission set ezranks.rank.zero_terzogirone true
 lp group zero_terzogirone permission set portal.terzogirone true
