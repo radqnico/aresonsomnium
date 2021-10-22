@@ -37,23 +37,31 @@ public class SellCommand implements CommandExecutor {
             Player player = (Player) commandSender;
             String commandName = command.getName();
 
-            if (commandName.equalsIgnoreCase(Constants.SELL_HAND_COMMAND)) {
-                ItemStack[] itemArray = {player.getInventory().getItemInMainHand()};
-                BigDecimal sold = aresonSomnium.sellItems(player, itemArray);
-                if (sold.compareTo(BigDecimal.ZERO) > 0) {
-                    messageManager.sendPlainMessage(player, "item-sold", Pair.of("%money%", "" + sold));
-                } else {
-                    messageManager.sendPlainMessage(player, "item-not-sellable");
-                }
-            } else if (commandName.equalsIgnoreCase(Constants.SELL_ALL_COMMAND)) {
-                BigDecimal sold = aresonSomnium.sellItems(player, player.getInventory().getContents());
-                if (sold.compareTo(BigDecimal.ZERO) > 0) {
-                    messageManager.sendPlainMessage(player, "items-sold", Pair.of("%money%", "" + sold));
-                } else {
-                    messageManager.sendPlainMessage(player, "items-not-sellable");
-                }
-            } else {
-                aresonSomnium.getLogger().severe("Command not registered in SellCommand");
+            BigDecimal sold;
+            switch (commandName.toLowerCase()) {
+                case Constants.SELL_HAND_COMMAND:
+                    ItemStack[] itemArray = {player.getInventory().getItemInMainHand()};
+                    sold = aresonSomnium.sellItems(player, itemArray);
+                    if (sold.compareTo(BigDecimal.ZERO) > 0) {
+                        messageManager.sendPlainMessage(player, "item-sold", Pair.of("%money%", "" + sold));
+                    } else {
+                        messageManager.sendPlainMessage(player, "item-not-sellable");
+                    }
+                    break;
+                case Constants.SELL_ALL_COMMAND:
+                    sold = aresonSomnium.sellItems(player, player.getInventory().getContents());
+                    if (sold.compareTo(BigDecimal.ZERO) > 0) {
+                        messageManager.sendPlainMessage(player, "items-sold", Pair.of("%money%", "" + sold));
+                    } else {
+                        messageManager.sendPlainMessage(player, "items-not-sellable");
+                    }
+                    break;
+                case Constants.AUTO_SELL_COMMAND:
+
+                    break;
+                default:
+                    aresonSomnium.getLogger().severe("Command not registered in SellCommand");
+                    break;
             }
         } else {
             commandSender.sendMessage("Player only command");

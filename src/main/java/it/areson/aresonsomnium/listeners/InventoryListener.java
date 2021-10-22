@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -33,6 +34,11 @@ public class InventoryListener extends GeneralEventListener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onInventoryEvent(InventoryEvent event) {
+        System.out.println("AAAAAAAAAAAAAAAA");
     }
 
     private void handleEnchantedBook(HumanEntity humanEntity, ItemStack handItemStack, ItemStack clickedItemStack) {

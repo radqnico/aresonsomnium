@@ -24,6 +24,7 @@ public class Constants {
 
     public static final String SELL_ALL_COMMAND = "sellall";
     public static final String SELL_HAND_COMMAND = "sellhand";
+    public static final String AUTO_SELL_COMMAND = "autosell";
 
 
     public static final int CHECK_MODEL_DATA = 999;
