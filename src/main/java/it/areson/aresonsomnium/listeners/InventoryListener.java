@@ -24,7 +24,6 @@ public class InventoryListener extends GeneralEventListener {
 
     @EventHandler
     public void onInventoryClickEvent(InventoryClickEvent event) {
-        System.out.println("BBBBBBBBBBBB");
         if(!event.isCancelled()) {
             HumanEntity whoClicked = event.getWhoClicked();
             if (whoClicked instanceof Player && event.getAction().equals(InventoryAction.SWAP_WITH_CURSOR)) {
@@ -36,11 +35,6 @@ public class InventoryListener extends GeneralEventListener {
                 }
             }
         }
-    }
-
-    @EventHandler
-    public void onInventoryInteractEvent(InventoryClickEvent event) {
-        System.out.println("AAAAAAAAAAAAAAAA");
     }
 
     private void handleEnchantedBook(HumanEntity humanEntity, ItemStack handItemStack, ItemStack clickedItemStack) {
