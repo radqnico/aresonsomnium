@@ -33,13 +33,12 @@ public class MultiplierPlaceholders extends PlaceholderExpansion {
     public String onRequest(OfflinePlayer offlinePlayer, String params) {
         String value = "Nessun dato";
 
-        if (offlinePlayer instanceof Player) {
-            Player player = (Player) offlinePlayer;
+        if (offlinePlayer instanceof Player player) {
 
             if (params.equalsIgnoreCase("multipliervalue")) {
-                value = aresonSomnium.getCachedMultiplier(player).getValue() + "x";
+                value = aresonSomnium.getCachedMultiplier(player).value() + "x";
             } else if (params.equalsIgnoreCase("multipliertime")) {
-                value = aresonSomnium.getCachedMultiplier(player).getExpiry();
+                value = aresonSomnium.getCachedMultiplier(player).expiry();
             }
         }
 

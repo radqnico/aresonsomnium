@@ -11,7 +11,7 @@ import java.util.Optional;
 public class LastHitPvP {
 
     public static int SECONDS_LAST_HIT = 10;
-    private HashMap<Player, Pair<Player, LocalDateTime>> lastHit;
+    private final HashMap<Player, Pair<Player, LocalDateTime>> lastHit;
 
     public LastHitPvP() {
         lastHit = new HashMap<>();

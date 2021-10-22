@@ -59,7 +59,8 @@ public class AresonSomnium extends JavaPlugin {
     private final Multiplier defaultMultiplier = new Multiplier();
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private final String messagePrefix = "[Somnium]";
-    private final HashMap<Material, String> blocksPermission = new HashMap<Material, String>() {{
+    public HashSet<String> playersWithAutoSellActive;
+    private final HashMap<Material, String> blocksPermission = new HashMap<>() {{
         put(Material.NETHERRACK, Constants.PERMISSION_SELVA);
         put(Material.GRANITE, Constants.PERMISSION_ANTINFERNO);
         put(Material.BLACKSTONE, Constants.PERMISSION_SECONDO_GIRONE);
@@ -79,16 +80,16 @@ public class AresonSomnium extends JavaPlugin {
         put(Material.WHITE_CONCRETE, Constants.PERMISSION_NONO_CIELO);
     }};
     private final HashMap<String, Multiplier> playerMultipliers = new HashMap<>();
-    public ShopItemsManager shopItemsManager;
-    public Optional<LuckPerms> luckPerms;
     private SomniumPlayerManager somniumPlayerManager;
     private GatewayListener playerDBEvents;
     private GommaObjectsFileReader gommaObjectsFileReader;
     private MessageManager messages;
     private FileManager recaps;
-    private FileManager riassunti;
-
+    private FileManager briefing;
     private LastHitPvP lastHitPvP;
+
+    public ShopItemsManager shopItemsManager;
+    public Optional<LuckPerms> luckPerms;
 
     @Override
     public void onDisable() {
@@ -98,7 +99,6 @@ public class AresonSomnium extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
         saveDefaultConfig();
 
         AresonSomniumAPI.instance = this;
@@ -143,9 +143,19 @@ public class AresonSomnium extends JavaPlugin {
 
         new PlayerListener(this);
         lastHitPvP = new LastHitPvP();
+
+        // Autosell task
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> playersWithAutoSellActive.parallelStream().forEach(playerName -> {
+            Player player = getServer().getPlayerExact(playerName);
+            if (player != null) {
+                sellItems(player, player.getInventory().getContents());
+            } else {
+                playersWithAutoSellActive.remove(playerName);
+            }
+        }), 0, 100);
     }
 
-    public LastHitPvP getLastHitPvP(){
+    public LastHitPvP getLastHitPvP() {
         return lastHitPvP;
     }
 
@@ -157,7 +167,7 @@ public class AresonSomnium extends JavaPlugin {
         messages = new MessageManager(this, "messages.yml");
         gommaObjectsFileReader = new GommaObjectsFileReader(this, "gommaItems.yml");
         recaps = new FileManager(this, "recaps.yml");
-        riassunti = new FileManager(this, "riassunti.yml");
+        briefing = new FileManager(this, "briefing.yml");
     }
 
     public GommaObjectsFileReader getGommaObjectsFileReader() {
@@ -235,7 +245,7 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     private Multiplier getMaxMultiplier(Multiplier newValue, Multiplier oldValue) {
-        return newValue.getValue() > oldValue.getValue() ? newValue : oldValue;
+        return newValue.value() > oldValue.value() ? newValue : oldValue;
     }
 
     public CompletableFuture<Multiplier> extractPlayerMaxMultiplierTupleFromPermissions(Collection<Node> permissions) {
@@ -250,7 +260,7 @@ public class AresonSomnium extends JavaPlugin {
                     double newValue = Double.parseDouble(stringMultiplier) / 100;
 
                     Instant expiry = node.getExpiry();
-                    String expiryString = defaultMultiplier.getExpiry();
+                    String expiryString = defaultMultiplier.expiry();
                     if (expiry != null) {
                         expiryString = dateTimeFormatter.format(LocalDateTime.ofInstant(expiry, ZoneId.systemDefault()));
                     }
@@ -315,16 +325,16 @@ public class AresonSomnium extends JavaPlugin {
             return total;
         }, BigDecimal::add);
 
-        coinsToGive = coinsToGive.multiply(BigDecimal.valueOf(cachedMultiplier.getValue()));
+        coinsToGive = coinsToGive.multiply(BigDecimal.valueOf(cachedMultiplier.value()));
         Wallet.addCoins(player, coinsToGive);
         return coinsToGive;
     }
 
     public void removePlayer(String playerName) {
         playerMultipliers.remove(playerName);
+        playersWithAutoSellActive.remove(playerName);
     }
 
-    // TODO getLore deprecated
     public boolean isALockedEnchantFromEnchants(ItemStack itemStack) {
         boolean isLocked = false;
         List<Component> clickedLore = itemStack.lore();
@@ -360,8 +370,8 @@ public class AresonSomnium extends JavaPlugin {
         }
     }
 
-    public FileManager getRiassunti() {
-        return riassunti;
+    public FileManager getBriefing() {
+        return briefing;
     }
 
 }

@@ -12,13 +12,11 @@ public class AutoSaveManager {
 
     public static void startAutoSaveTask(AresonSomnium aresonSomnium, long interval) {
         stopAutoSaveTask();
-        bukkitTask = Bukkit.getScheduler().runTaskTimerAsynchronously(
+        bukkitTask = aresonSomnium.getServer().getScheduler().runTaskTimerAsynchronously(
                 aresonSomnium,
                 () -> Bukkit.getScheduler().runTask(
                         aresonSomnium,
-                        () -> {
-                            aresonSomnium.getSomniumPlayerManager().saveAll();
-                        }
+                        () -> aresonSomnium.getSomniumPlayerManager().saveAll()
                 ),
                 0L,
                 interval

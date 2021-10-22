@@ -31,7 +31,7 @@ public class GatewayListener extends GeneralEventListener {
         SomniumPlayerManager somniumPlayerManager = aresonSomnium.getSomniumPlayerManager();
         somniumPlayerManager.saveAndRemoveSomniumPlayer(player);
 
-        // Remove cached multiplier
+        // Remove cached data
         aresonSomnium.removePlayer(player.getName());
     }
 

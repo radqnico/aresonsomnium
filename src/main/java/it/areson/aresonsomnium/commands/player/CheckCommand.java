@@ -36,7 +36,7 @@ public class CheckCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] arguments) {
         commandSender.sendMessage("Funzione non ancora abilitata.");
         return true;
 

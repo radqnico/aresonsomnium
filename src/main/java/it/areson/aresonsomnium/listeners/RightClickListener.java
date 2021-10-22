@@ -68,18 +68,18 @@ public class RightClickListener extends GeneralEventListener {
                 if (canUseAnotherConsumable(player)) {
 
                     switch (Objects.requireNonNull(Objects.requireNonNull(itemStack).getItemMeta()).getCustomModelData()) {
-                        case GOMMA_MODEL_DATA:
+                        case GOMMA_MODEL_DATA -> {
                             playerDelays.put(player.getName(), Instant.now());
                             collectGommaReward(event);
-                            break;
-                        case CHECK_MODEL_DATA:
+                        }
+                        case CHECK_MODEL_DATA -> {
                             playerDelays.put(player.getName(), Instant.now());
                             redeemCheck(event);
-                            break;
-                        case MULTIPLIER_MODEL_DATA:
+                        }
+                        case MULTIPLIER_MODEL_DATA -> {
                             playerDelays.put(player.getName(), Instant.now());
                             activateMultiplier(event);
-                            break;
+                        }
                     }
                 } else {
                     aresonSomnium.sendInfoMessage(player, "Devi aspettare qualche secondo prima di poterlo riutilizzare");
@@ -127,7 +127,7 @@ public class RightClickListener extends GeneralEventListener {
                 if (optionalProperties.isPresent()) {
                     Pair<Double, Duration> properties = optionalProperties.get();
 
-                    if (properties.left() >= aresonSomnium.getCachedMultiplier(player).getValue()) {
+                    if (properties.left() >= aresonSomnium.getCachedMultiplier(player).value()) {
                         String permission = PERMISSION_MULTIPLIER + "." + (int) (properties.left() * 100);
 
                         aresonSomnium.luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user ->

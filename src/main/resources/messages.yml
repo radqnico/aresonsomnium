@@ -24,11 +24,14 @@ item-buy-not-enough-money: "&cNon te lo puoi permettere!"
 item-buy-not-buyable: "&Non puoi acquistare questo oggetto"
 item-buy-error: "&cRiscontrato un problema con i tuoi dati. Segnala il problema  allo staff !"
 
+# Sell
 item-sell-success: "&aOggetto venduto per %coins% coins, %obols% oboli e %gems% gemme !"
 item-sell-not-present: "&cNon hai questo oggetto nell'inventario"
 item-sell-not-enough: "&cNon ne hai abbastanza per poter vendere"
 item-sell-error: "&cRiscontrato un problema con i tuoi dati. Segnala il problema  allo staff !"
 item-sell-not-sellable: "&cQuesto oggetto non e' vendibile"
+autosell-activated: "&6Autosell attivato"
+autosell-deactivated: "&6Autosell disattivato"
 
 gomma-give: "&aHai ottenuto %amount% gomme"
 gomma-item-give: "&aHai ottenuto un oggetto dal Gomma Gomma"
