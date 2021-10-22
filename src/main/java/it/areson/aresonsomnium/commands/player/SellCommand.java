@@ -56,6 +56,7 @@ public class SellCommand implements CommandExecutor {
                     }
                 }
                 case Constants.AUTO_SELL_COMMAND -> {
+                    //TODO Permissions
                     String playerName = player.getName();
                     if (aresonSomnium.playersWithAutoSellActive.contains(playerName)) {
                         aresonSomnium.playersWithAutoSellActive.add(playerName);

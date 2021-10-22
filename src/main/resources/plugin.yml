@@ -43,13 +43,17 @@ commands:
     usage: /assegno <amount>
     aliases: [ buono ]
   sellall:
-    description: "Sell all items"
+    description: "Sell all items in inventory"
     permission: aresonsomnium.player
     usage: /sellall
   sellhand:
     description: "Sell the item in main hand"
     permission: aresonsomnium.player
     usage: /sellhand
+  autosell:
+    description: "Autosell items in inventory"
+    permission: aresonsomnium.player
+    usage: /autosell
   giveConsumable:
     description: "Give a consumable object"
     permission: aresonsomnium.admin

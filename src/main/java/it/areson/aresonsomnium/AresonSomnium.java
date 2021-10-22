@@ -211,6 +211,7 @@ public class AresonSomnium extends JavaPlugin {
         new SomniumGommaCommand(this);
         new SellCommand(this, Constants.SELL_HAND_COMMAND);
         new SellCommand(this, Constants.SELL_ALL_COMMAND);
+        new SellCommand(this, Constants.AUTO_SELL_COMMAND);
         new CheckCommand(this);
         new ObolsCommand(this);
         new GiveConsumableCommand(this);
