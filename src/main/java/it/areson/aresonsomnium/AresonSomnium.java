@@ -148,7 +148,6 @@ public class AresonSomnium extends JavaPlugin {
         // Autosell task
         playersWithAutoSellActive = new HashSet<>();
         getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> playersWithAutoSellActive.parallelStream().forEach(playerName -> {
-            System.out.println("Autosell for " + playerName);
             Player player = getServer().getPlayerExact(playerName);
             if (player != null) {
                 BigDecimal sold = sellItems(player, player.getInventory().getContents());
@@ -158,7 +157,7 @@ public class AresonSomnium extends JavaPlugin {
             } else {
                 playersWithAutoSellActive.remove(playerName);
             }
-        }), 0, 100);
+        }), 0, 300);
     }
 
     public LastHitPvP getLastHitPvP() {

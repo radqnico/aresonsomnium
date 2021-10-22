@@ -55,7 +55,7 @@ items-sold: "&6Hai venduto tutti gli oggetti vendibili nel tuo inventario per �
 item-not-sellable: "&cQuest'oggetto non è vendibile"
 items-not-sellable: "&cNon hai nessun oggetto vendibile nell'inventario"
 autosell-sold: "Hai venduto automaticamente tutti gli oggetti vendibili nel tuo inventario per ⛃ %money%"
-autosell-activated: "&6Autosell attivato"
+autosell-activated: "&6Autosell attivato. Gli oggetti nel tuo inventario verranno venduti in automatico periodicamente"
 autosell-deactivated: "&6Autosell disattivato"
 
 obols-give: "&aHai ottenuto un Obolo!"
