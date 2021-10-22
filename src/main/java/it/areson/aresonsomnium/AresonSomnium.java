@@ -17,6 +17,7 @@ import it.areson.aresonsomnium.economy.BlockPrice;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.economy.items.ShopItemsManager;
 import it.areson.aresonsomnium.elements.Multiplier;
+import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import it.areson.aresonsomnium.listeners.*;
 import it.areson.aresonsomnium.placeholders.CoinsPlaceholders;
@@ -83,7 +84,7 @@ public class AresonSomnium extends JavaPlugin {
     private SomniumPlayerManager somniumPlayerManager;
     private GatewayListener playerDBEvents;
     private GommaObjectsFileReader gommaObjectsFileReader;
-    private MessageManager messages;
+    private MessageManager messageManager;
     private FileManager recaps;
     private FileManager briefing;
     private LastHitPvP lastHitPvP;
@@ -150,7 +151,10 @@ public class AresonSomnium extends JavaPlugin {
             System.out.println("Autosell for " + playerName);
             Player player = getServer().getPlayerExact(playerName);
             if (player != null) {
-                sellItems(player, player.getInventory().getContents());
+                BigDecimal sold = sellItems(player, player.getInventory().getContents());
+                if (sold.compareTo(BigDecimal.ZERO) > 0) {
+                    messageManager.sendPlainMessage(player, "autosell-sold", Pair.of("%money%", "" + sold));
+                }
             } else {
                 playersWithAutoSellActive.remove(playerName);
             }
@@ -162,11 +166,11 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public MessageManager getMessageManager() {
-        return messages;
+        return messageManager;
     }
 
     private void registerFiles() {
-        messages = new MessageManager(this, "messages.yml");
+        messageManager = new MessageManager(this, "messages.yml");
         gommaObjectsFileReader = new GommaObjectsFileReader(this, "gommaItems.yml");
         recaps = new FileManager(this, "recaps.yml");
         briefing = new FileManager(this, "briefing.yml");
