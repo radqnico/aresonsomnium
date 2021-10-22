@@ -56,14 +56,17 @@ public class SellCommand implements CommandExecutor {
                     }
                 }
                 case Constants.AUTO_SELL_COMMAND -> {
-                    //TODO Permissions
-                    String playerName = player.getName();
-                    if (!aresonSomnium.playersWithAutoSellActive.contains(playerName)) {
-                        aresonSomnium.playersWithAutoSellActive.add(playerName);
-                        messageManager.sendPlainMessage(player, "autosell-activated");
+                    if (player.hasPermission("aresonSomnium.autosell")) {
+                        String playerName = player.getName();
+                        if (!aresonSomnium.playersWithAutoSellActive.contains(playerName)) {
+                            aresonSomnium.playersWithAutoSellActive.add(playerName);
+                            messageManager.sendPlainMessage(player, "autosell-activated");
+                        } else {
+                            aresonSomnium.playersWithAutoSellActive.remove(playerName);
+                            messageManager.sendPlainMessage(player, "autosell-deactivated");
+                        }
                     } else {
-                        aresonSomnium.playersWithAutoSellActive.remove(playerName);
-                        messageManager.sendPlainMessage(player, "autosell-deactivated");
+                        messageManager.sendPlainMessage(player, "no-permissions");
                     }
                 }
                 default -> aresonSomnium.getLogger().severe("Command not registered in SellCommand");

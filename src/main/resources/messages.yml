@@ -72,3 +72,5 @@ repair-success: "Oggetto riparato"
 repair-cant-repair: "Questo oggetto non può essere danneggiato"
 repair-no-damage: "Niente da riparare"
 repair-not-enough-coins: "Non hai abbastanza denaro per riparare"
+
+no-permissions: "&cNon hai il permesso"

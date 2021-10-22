@@ -52,7 +52,6 @@ commands:
     usage: /sellhand
   autosell:
     description: "Autosell items in inventory"
-    permission: aresonsomnium.player
     usage: /autosell
   giveConsumable:
     description: "Give a consumable object"
