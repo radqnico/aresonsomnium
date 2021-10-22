@@ -145,6 +145,7 @@ public class AresonSomnium extends JavaPlugin {
         lastHitPvP = new LastHitPvP();
 
         // Autosell task
+        playersWithAutoSellActive = new HashSet<>();
         getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> playersWithAutoSellActive.parallelStream().forEach(playerName -> {
             System.out.println("Autosell for " + playerName);
             Player player = getServer().getPlayerExact(playerName);
