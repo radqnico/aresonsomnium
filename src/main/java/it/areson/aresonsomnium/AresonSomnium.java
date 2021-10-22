@@ -146,6 +146,7 @@ public class AresonSomnium extends JavaPlugin {
 
         // Autosell task
         getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> playersWithAutoSellActive.parallelStream().forEach(playerName -> {
+            System.out.println("Autosell for " + playerName);
             Player player = getServer().getPlayerExact(playerName);
             if (player != null) {
                 sellItems(player, player.getInventory().getContents());
