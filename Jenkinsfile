@@ -60,7 +60,7 @@ pipeline {
                                 sshPublisherDesc(
                                         configName: "Areson",
                                         transfers: [
-                                                sshTransfer(execCommand: "screen -S test -X stuff ^['stop'^M")
+                                                sshTransfer(execCommand: "screen -S somnium -X stuff ^['stop'^M")
                                         ]
                                 )
                         ]
