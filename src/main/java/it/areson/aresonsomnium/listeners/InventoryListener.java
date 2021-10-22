@@ -39,7 +39,7 @@ public class InventoryListener extends GeneralEventListener {
     }
 
     @EventHandler
-    public void onInventoryInteractEvent(InventoryInteractEvent event) {
+    public void onInventoryInteractEvent(InventoryClickEvent event) {
         System.out.println("AAAAAAAAAAAAAAAA");
     }
 

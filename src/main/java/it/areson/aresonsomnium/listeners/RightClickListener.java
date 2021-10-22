@@ -89,6 +89,7 @@ public class RightClickListener extends GeneralEventListener {
     }
 
     private Optional<Pair<Double, Duration>> getMultiplierProperties(ItemStack itemStack) {
+        //TODO Deprecated
         List<String> lore = itemStack.getLore();
 
         if (lore != null && lore.size() >= 2) {
@@ -182,10 +183,11 @@ public class RightClickListener extends GeneralEventListener {
                     event.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-applied"));
                     event.setCancelled(true);
                 }
-            } else {
-                //TODO Nico
-                //aresonSomnium.getDebugger().debugError(aresonSomnium.getMessageManager().getPlainMessage("somniumplayer-not-found"));
             }
+            //TODO Nico
+//            else {
+//                aresonSomnium.getDebugger().debugError(aresonSomnium.getMessageManager().getPlainMessage("somniumplayer-not-found"));
+//            }
         }
     }
 
