@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -23,6 +24,7 @@ public class InventoryListener extends GeneralEventListener {
 
     @EventHandler
     public void onInventoryClickEvent(InventoryClickEvent event) {
+        System.out.println("BBBBBBBBBBBB");
         if(!event.isCancelled()) {
             HumanEntity whoClicked = event.getWhoClicked();
             if (whoClicked instanceof Player && event.getAction().equals(InventoryAction.SWAP_WITH_CURSOR)) {
@@ -37,7 +39,7 @@ public class InventoryListener extends GeneralEventListener {
     }
 
     @EventHandler
-    public void onInventoryEvent(InventoryEvent event) {
+    public void onInventoryInteractEvent(InventoryInteractEvent event) {
         System.out.println("AAAAAAAAAAAAAAAA");
     }
 
