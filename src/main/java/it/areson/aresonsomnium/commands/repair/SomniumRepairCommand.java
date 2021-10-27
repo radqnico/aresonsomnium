@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,12 +31,14 @@ public class SomniumRepairCommand implements CommandExecutor {
     private final MessageManager messageManager;
     private final RepairCountdown singleRepairCountdown;
     private final HashMap<String, LocalDateTime> fullRepairTimes;
+    private final long fullRepairDelay;
 
     public SomniumRepairCommand(AresonSomnium aresonSomnium, String command) {
         this.aresonSomnium = aresonSomnium;
         messageManager = aresonSomnium.getMessageManager();
         singleRepairCountdown = new RepairCountdown();
         fullRepairTimes = new HashMap<>();
+        fullRepairDelay = aresonSomnium.getConfig().getLong("repair.full-delay-seconds");
 
         PluginCommand pluginCommand = this.aresonSomnium.getCommand(command);
         if (pluginCommand != null) {
@@ -73,12 +76,28 @@ public class SomniumRepairCommand implements CommandExecutor {
         return true;
     }
 
-    // Delay
     public void fullRepair(Player player) {
         if (player.hasPermission(Constants.FULL_REPAIR_PERMISSION)) {
-            Arrays.stream(player.getInventory().getContents()).parallel().forEach(this::eventuallyRepairItemStack);
+            if (canFullRepair(player)) {
+                fullRepairTimes.put(player.getName(), LocalDateTime.now());
+                Arrays.stream(player.getInventory().getContents()).parallel().forEach(this::eventuallyRepairItemStack);
+            } else {
+                messageManager.sendPlainMessage(player, "cannot-repair-yet");
+            }
         } else {
             messageManager.sendPlainMessage(player, "no-permissions");
+        }
+    }
+
+
+    public boolean canFullRepair(Player player) {
+        String playerName = player.getName();
+
+        if (fullRepairTimes.containsKey(playerName)) {
+            LocalDateTime lastRepair = fullRepairTimes.get(playerName);
+            return Duration.between(lastRepair, LocalDateTime.now()).getSeconds() >= fullRepairDelay;
+        } else {
+            return true;
         }
     }
 
@@ -124,7 +143,7 @@ public class SomniumRepairCommand implements CommandExecutor {
                             player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-no-damage"));
                         }
                     } else {
-                        player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-cant-repair"));
+                        player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-cant-repair-time-left"));
                     }
                 } else {
                     player.sendMessage(booleanStringPair.right());

@@ -1,5 +1,6 @@
 repair:
-  delay-seconds: 10
+  single-delay-seconds: 10
+  full-delay-seconds: 86400
   cost:
     coins: 10
     obols: 5
