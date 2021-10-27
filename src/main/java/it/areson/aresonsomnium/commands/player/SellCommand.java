@@ -34,10 +34,9 @@ public class SellCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] arguments) {
         if (commandSender instanceof Player player) {
-            String commandName = command.getName();
-
             BigDecimal sold;
-            switch (commandName.toLowerCase()) {
+
+            switch (command.getName().toLowerCase()) {
                 case Constants.SELL_HAND_COMMAND -> {
                     ItemStack[] itemArray = {player.getInventory().getItemInMainHand()};
                     sold = aresonSomnium.sellItems(player, itemArray);
