@@ -97,7 +97,7 @@ public class SomniumRepairCommand implements CommandExecutor {
             if (ignoreLastRepairTime || canFullRepairByLastRepair(player)) {
                 fullRepairTimes.put(player.getName(), LocalDateTime.now());
                 Arrays.stream(player.getInventory().getContents()).parallel().forEach(this::eventuallyRepairItemStack);
-                messageManager.sendPlainMessage(player, "repair-success");
+                messageManager.sendPlainMessage(player, "full-repair-success");
             } else {
                 messageManager.sendPlainMessage(player, "cannot-repair-yet");
             }
@@ -153,7 +153,7 @@ public class SomniumRepairCommand implements CommandExecutor {
                             if (somniumPlayer.takePriceAmount(repairPrice)) {
                                 damageable.setDamage(0);
                                 itemStack.setItemMeta(damageable);
-                                player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-success"));
+                                player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("single-repair-success"));
                             } else {
                                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-not-enough-coins"));
                             }
@@ -182,7 +182,7 @@ public class SomniumRepairCommand implements CommandExecutor {
                         if (somniumPlayer.takePriceAmount(repairPrice)) {
                             damageable.setDamage(0);
                             itemStack.setItemMeta(damageable);
-                            player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-success"));
+                            player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("single-repair-success"));
                         } else {
                             player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-not-enough-coins"));
                         }

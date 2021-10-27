@@ -69,7 +69,8 @@ obolshard-item-lore: "&6Colleziona e consegna questi\n&6frammenti a &lCaronte &6
 cannot-repair-time-left: "&cNon puoi ancora riparare: tempo rimanente %seconds% secondi"
 cannot-repair-yet: "&cNon puoi ancora riparare"
 
-repair-success: "Oggetto riparato"
+single-repair-success: "Oggetto riparato"
+full-repair-success: "Oggetti riparati"
 repair-cant-repair: "Questo oggetto non può essere danneggiato"
 repair-no-damage: "Niente da riparare"
 repair-not-enough-coins: "Non hai abbastanza denaro per riparare"
