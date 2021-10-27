@@ -63,7 +63,7 @@ public class SomniumRepairCommand implements CommandExecutor {
                                 try {
                                     CoinType coinType = CoinType.valueOf(arguments[1].toUpperCase());
                                     switchActionCoins(player, coinType);
-                                } catch (IllegalArgumentException exception) {
+                                } catch (IllegalArgumentException illegalArgumentException) {
                                     commandSender.sendMessage("Tipo di valuta non valida");
                                     return true;
                                 }
