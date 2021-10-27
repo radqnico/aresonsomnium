@@ -1,15 +1,17 @@
 name: ${project.artifactId}
 version: ${project.version}
 main: ${project.groupId}.${project.artifactId}
-api-version: "1.16"
+api-version: "1.17"
 author: Areson
 
 depends: [ CommandPanels ]
 
 commands:
   somniumrepair:
+    description: "Repair command"
     permission: aresonsomnium.admin
   shopadmin:
+    description: "Shop admin command"
     permission: aresonsomnium.admin
   somniumadmin:
     description: "AresonSomnium admin command"

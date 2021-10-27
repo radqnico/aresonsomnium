@@ -13,13 +13,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Objects;
 
-public class SomniumRepairCommand implements CommandExecutor, TabCompleter {
+@SuppressWarnings("NullableProblems")
+public class SomniumRepairCommand implements CommandExecutor {
 
     private final RepairCountdown repairCountdown;
     private final AresonSomnium aresonSomnium;
@@ -30,21 +28,28 @@ public class SomniumRepairCommand implements CommandExecutor, TabCompleter {
         PluginCommand command = aresonSomnium.getCommand("somniumrepair");
         if (command != null) {
             command.setExecutor(this);
-            command.setTabCompleter(this);
         } else {
             aresonSomnium.getLogger().warning("Comando 'somniumrepair' non dichiarato");
         }
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String alias, @NotNull String[] arguments) {
+    public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] arguments) {
+        //somniumrepair playerName single/full coinType
         if (commandSender.hasPermission("aresonsomnium.admin")) {
-            if (arguments.length == 2) {
+            if (arguments.length == 3) {
                 String playerName = arguments[0];
-                CoinType type = CoinType.valueOf(arguments[1].toUpperCase());
-                Player player = aresonSomnium.getServer().getPlayer(playerName);
-                if (player != null) {
-                    switchActionCoins(player, type);
+                String repairModality = arguments[1];
+                try {
+                    CoinType coinType = CoinType.valueOf(arguments[2]);
+
+                    Player player = aresonSomnium.getServer().getPlayer(playerName);
+                    if (player != null) {
+                        switchActionCoins(player, coinType);
+                    }
+                } catch (IllegalArgumentException exception) {
+                    commandSender.sendMessage("Tipo di valuta non valida");
+                    return true;
                 }
             } else {
                 commandSender.sendMessage("Scrivi il nome del giocatore");
@@ -74,12 +79,11 @@ public class SomniumRepairCommand implements CommandExecutor, TabCompleter {
                 Pair<Boolean, String> booleanStringPair = repairCountdown.canRepair(player.getName());
                 if (booleanStringPair.left()) {
                     ItemMeta itemMeta = itemStack.getItemMeta();
-                    if (itemMeta instanceof Damageable) {
-                        Damageable damageable = (Damageable) itemMeta;
+                    if (itemMeta instanceof Damageable damageable) {
                         if (damageable.getDamage() != 0) {
                             repairCountdown.setLastRepairTime(player.getName());
                             damageable.setDamage(0);
-                            itemStack.setItemMeta((ItemMeta) damageable);
+                            itemStack.setItemMeta(damageable);
                             Price repairPrice = getRepairPriceFromConfig(aresonSomnium, CoinType.MONETE);
                             if (somniumPlayer.takePriceAmount(repairPrice)) {
                                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-success"));
@@ -104,12 +108,11 @@ public class SomniumRepairCommand implements CommandExecutor, TabCompleter {
         if (somniumPlayer != null) {
             if (!Objects.equals(itemStack.getType(), Material.AIR)) {
                 ItemMeta itemMeta = itemStack.getItemMeta();
-                if (itemMeta instanceof Damageable) {
-                    Damageable damageable = (Damageable) itemMeta;
+                if (itemMeta instanceof Damageable damageable) {
                     if (damageable.getDamage() != 0) {
                         repairCountdown.setLastRepairTime(player.getName());
                         damageable.setDamage(0);
-                        itemStack.setItemMeta((ItemMeta) damageable);
+                        itemStack.setItemMeta(damageable);
                         Price repairPrice = getRepairPriceFromConfig(aresonSomnium, CoinType.GEMME);
                         if (somniumPlayer.takePriceAmount(repairPrice)) {
                             player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-success"));
@@ -131,19 +134,11 @@ public class SomniumRepairCommand implements CommandExecutor, TabCompleter {
         int costCoins = config.getInt("repair.cost.coins");
         int costObols = config.getInt("repair.cost.obols");
         int costGems = config.getInt("repair.cost.gems");
-        switch (coinType){
-            case MONETE:
-                return new Price(costCoins, 0, 0);
-            case GEMME:
-                return new Price(0, 0, costGems);
-            case OBOLI:
-                return new Price(0, costObols, 0);
-        }
-        throw new IllegalArgumentException("Cointype is not valid");
+        return switch (coinType) {
+            case MONETE -> new Price(costCoins, 0, 0);
+            case GEMME -> new Price(0, 0, costGems);
+            case OBOLI -> new Price(0, costObols, 0);
+        };
     }
 
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        return null;
-    }
 }
