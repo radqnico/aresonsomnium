@@ -53,38 +53,53 @@ public class SomniumRepairCommand implements CommandExecutor {
         // somniumsinglerepair playerName coinType
         // somniumfullrepair playerName
         if (commandSender.hasPermission("aresonsomnium.admin")) {
-            String playerName = arguments[0];
-            Player player = aresonSomnium.getServer().getPlayer(playerName);
-            if (player != null) {
-                switch (command.getName().toLowerCase()) {
-                    case Constants.SINGLE_REPAIR_COMMAND -> {
-                        try {
-                            CoinType coinType = CoinType.valueOf(arguments[2].toUpperCase());
-                            switchActionCoins(player, coinType);
-                        } catch (IllegalArgumentException exception) {
-                            commandSender.sendMessage("Tipo di valuta non valida");
-                            return true;
+            if (arguments.length >= 1) {
+                String playerName = arguments[0];
+                Player player = aresonSomnium.getServer().getPlayer(playerName);
+                if (player != null) {
+                    switch (command.getName().toLowerCase()) {
+                        case Constants.SINGLE_REPAIR_COMMAND -> {
+                            if (arguments.length >= 2) {
+                                try {
+                                    CoinType coinType = CoinType.valueOf(arguments[2].toUpperCase());
+                                    switchActionCoins(player, coinType);
+                                } catch (IllegalArgumentException exception) {
+                                    commandSender.sendMessage("Tipo di valuta non valida");
+                                    return true;
+                                }
+                            } else {
+                                commandSender.sendMessage("Inserisci la valuta di pagamento");
+                            }
                         }
+                        case Constants.FULL_REPAIR_COMMAND -> {
+                            System.out.println("Full repair");
+                            fullRepair(player);
+                        }
+                        default -> commandSender.sendMessage("Comando non mappato");
                     }
-                    case Constants.FULL_REPAIR_COMMAND -> fullRepair(player);
-                    default -> commandSender.sendMessage("Comando non mappato");
+                } else {
+                    commandSender.sendMessage("Player non trovato: " + playerName);
                 }
-            } else {
-                commandSender.sendMessage("Player non trovato: " + playerName);
             }
+        } else {
+            commandSender.sendMessage("Inserisci il nome del giocatore");
         }
         return true;
     }
 
     public void fullRepair(Player player) {
         if (player.hasPermission(Constants.FULL_REPAIR_PERMISSION)) {
+            System.out.println("Si perm");
             if (canFullRepair(player)) {
+                System.out.println("si repair");
                 fullRepairTimes.put(player.getName(), LocalDateTime.now());
                 Arrays.stream(player.getInventory().getContents()).parallel().forEach(this::eventuallyRepairItemStack);
             } else {
+                System.out.println("No repair");
                 messageManager.sendPlainMessage(player, "cannot-repair-yet");
             }
         } else {
+            System.out.println("No perms");
             messageManager.sendPlainMessage(player, "no-permissions");
         }
     }
@@ -102,6 +117,10 @@ public class SomniumRepairCommand implements CommandExecutor {
     }
 
     public void eventuallyRepairItemStack(ItemStack itemStack) {
+        if(itemStack != null) {
+            System.out.println("Item: " + itemStack);
+        }
+
         if (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta() instanceof Damageable damageable) {
             damageable.setDamage(0);
         }
