@@ -6,25 +6,33 @@ import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import org.bukkit.Material;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Objects;
 
 @SuppressWarnings("NullableProblems")
 public class SomniumRepairCommand implements CommandExecutor {
 
-    private final RepairCountdown repairCountdown;
+    private final RepairCountdown singleRepairCountdown;
+    private final HashMap<String, LocalDateTime> fullRepairTimes;
     private final AresonSomnium aresonSomnium;
 
     public SomniumRepairCommand(AresonSomnium aresonSomnium) {
-        this.repairCountdown = new RepairCountdown();
+        this.singleRepairCountdown = new RepairCountdown();
+        fullRepairTimes = new HashMap<>();
         this.aresonSomnium = aresonSomnium;
+
         PluginCommand command = aresonSomnium.getCommand("somniumrepair");
         if (command != null) {
             command.setExecutor(this);
@@ -39,23 +47,43 @@ public class SomniumRepairCommand implements CommandExecutor {
         if (commandSender.hasPermission("aresonsomnium.admin")) {
             if (arguments.length == 3) {
                 String playerName = arguments[0];
-                String repairModality = arguments[1];
-                try {
-                    CoinType coinType = CoinType.valueOf(arguments[2]);
 
-                    Player player = aresonSomnium.getServer().getPlayer(playerName);
-                    if (player != null) {
-                        switchActionCoins(player, coinType);
+                Player player = aresonSomnium.getServer().getPlayer(playerName);
+                if (player != null) {
+                    try {
+                        CoinType coinType = CoinType.valueOf(arguments[2]);
+                        String repairModality = arguments[1];
+                        switch (repairModality) {
+                            case "single" -> switchActionCoins(player, coinType); //TODO singleRepair(player);
+                            case "full" -> fullRepair(player);
+                            default -> commandSender.sendMessage("Tipo di ripazione non valida: single o full");
+                        }
+                    } catch (IllegalArgumentException exception) {
+                        commandSender.sendMessage("Tipo di valuta non valida");
+                        return true;
                     }
-                } catch (IllegalArgumentException exception) {
-                    commandSender.sendMessage("Tipo di valuta non valida");
-                    return true;
                 }
+
             } else {
                 commandSender.sendMessage("Scrivi il nome del giocatore");
             }
         }
         return true;
+    }
+
+    public void singleRepair(Player player) {
+
+    }
+
+    // VIP Permissions
+    public void fullRepair(Player player) {
+        Arrays.stream(player.getInventory().getContents()).parallel().forEach(this::eventuallyRepairItemStack);
+    }
+
+    public void eventuallyRepairItemStack(ItemStack itemStack) {
+        if (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta() instanceof Damageable damageable) {
+            damageable.setDamage(0);
+        }
     }
 
     public void switchActionCoins(Player player, CoinType coinType) {
@@ -76,15 +104,15 @@ public class SomniumRepairCommand implements CommandExecutor {
         SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
         if (somniumPlayer != null) {
             if (!Objects.equals(itemStack.getType(), Material.AIR)) {
-                Pair<Boolean, String> booleanStringPair = repairCountdown.canRepair(player.getName());
+                Pair<Boolean, String> booleanStringPair = singleRepairCountdown.canRepair(player.getName());
                 if (booleanStringPair.left()) {
                     ItemMeta itemMeta = itemStack.getItemMeta();
                     if (itemMeta instanceof Damageable damageable) {
                         if (damageable.getDamage() != 0) {
-                            repairCountdown.setLastRepairTime(player.getName());
+                            singleRepairCountdown.setLastRepairTime(player.getName());
                             damageable.setDamage(0);
                             itemStack.setItemMeta(damageable);
-                            Price repairPrice = getRepairPriceFromConfig(aresonSomnium, CoinType.MONETE);
+                            Price repairPrice = getRepairPriceFromConfig(CoinType.MONETE);
                             if (somniumPlayer.takePriceAmount(repairPrice)) {
                                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-success"));
                             } else {
@@ -110,10 +138,10 @@ public class SomniumRepairCommand implements CommandExecutor {
                 ItemMeta itemMeta = itemStack.getItemMeta();
                 if (itemMeta instanceof Damageable damageable) {
                     if (damageable.getDamage() != 0) {
-                        repairCountdown.setLastRepairTime(player.getName());
+                        singleRepairCountdown.setLastRepairTime(player.getName());
                         damageable.setDamage(0);
                         itemStack.setItemMeta(damageable);
-                        Price repairPrice = getRepairPriceFromConfig(aresonSomnium, CoinType.GEMME);
+                        Price repairPrice = getRepairPriceFromConfig(CoinType.GEMME);
                         if (somniumPlayer.takePriceAmount(repairPrice)) {
                             player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-success"));
                         } else {
@@ -129,8 +157,8 @@ public class SomniumRepairCommand implements CommandExecutor {
         }
     }
 
-    private Price getRepairPriceFromConfig(JavaPlugin plugin, CoinType coinType) {
-        FileConfiguration config = plugin.getConfig();
+    private Price getRepairPriceFromConfig(CoinType coinType) {
+        FileConfiguration config = aresonSomnium.getConfig();
         int costCoins = config.getInt("repair.cost.coins");
         int costObols = config.getInt("repair.cost.obols");
         int costGems = config.getInt("repair.cost.gems");

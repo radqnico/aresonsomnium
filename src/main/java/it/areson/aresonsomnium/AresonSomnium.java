@@ -103,24 +103,20 @@ public class AresonSomnium extends JavaPlugin {
         saveDefaultConfig();
 
         AresonSomniumAPI.instance = this;
-        // Files
         registerFiles();
+        initListeners();
+        registerCommands();
 
         MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(this);
         somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection, PLAYER_TABLE_NAME);
-
         shopItemsManager = new ShopItemsManager(this, mySqlDBConnection);
 
-        // Files
-        registerFiles();
-        // Events
-        initListeners();
-        // Commands
-        registerCommands();
         // Placeholders
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new MultiplierPlaceholders(this).register();
+            new CoinsPlaceholders(this).register();
         }
+        Recaps.initRecaps(recaps);
 
         // LuckPerms
         RegisteredServiceProvider<LuckPerms> provider = getServer().getServicesManager().getRegistration(LuckPerms.class);
@@ -136,11 +132,6 @@ public class AresonSomnium extends JavaPlugin {
         // 1m  = 1200
         // 10m = 12000
         AutoSaveManager.startAutoSaveTask(this, 12000);
-
-        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new CoinsPlaceholders(this).register();
-        }
-        Recaps.initRecaps(recaps);
 
         new PlayerListener(this);
         lastHitPvP = new LastHitPvP();
