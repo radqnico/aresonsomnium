@@ -1,10 +1,12 @@
 package it.areson.aresonsomnium.commands.repair;
 
 import it.areson.aresonsomnium.AresonSomnium;
+import it.areson.aresonsomnium.Constants;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.players.SomniumPlayer;
+import it.areson.aresonsomnium.utils.file.MessageManager;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,60 +26,60 @@ import java.util.Objects;
 @SuppressWarnings("NullableProblems")
 public class SomniumRepairCommand implements CommandExecutor {
 
+    private final AresonSomnium aresonSomnium;
+    private final MessageManager messageManager;
     private final RepairCountdown singleRepairCountdown;
     private final HashMap<String, LocalDateTime> fullRepairTimes;
-    private final AresonSomnium aresonSomnium;
 
-    public SomniumRepairCommand(AresonSomnium aresonSomnium) {
-        this.singleRepairCountdown = new RepairCountdown();
-        fullRepairTimes = new HashMap<>();
+    public SomniumRepairCommand(AresonSomnium aresonSomnium, String command) {
         this.aresonSomnium = aresonSomnium;
+        messageManager = aresonSomnium.getMessageManager();
+        singleRepairCountdown = new RepairCountdown();
+        fullRepairTimes = new HashMap<>();
 
-        PluginCommand command = aresonSomnium.getCommand("somniumrepair");
-        if (command != null) {
-            command.setExecutor(this);
+        PluginCommand pluginCommand = this.aresonSomnium.getCommand(command);
+        if (pluginCommand != null) {
+            pluginCommand.setExecutor(this);
         } else {
-            aresonSomnium.getLogger().warning("Comando 'somniumrepair' non dichiarato");
+            this.aresonSomnium.getLogger().warning("Comando " + command + " non dichiarato");
         }
     }
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] arguments) {
-        //somniumrepair playerName single/full coinType
+        // somniumsinglerepair playerName coinType
+        // somniumfullrepair playerName
         if (commandSender.hasPermission("aresonsomnium.admin")) {
-            if (arguments.length == 3) {
-                String playerName = arguments[0];
-
-                Player player = aresonSomnium.getServer().getPlayer(playerName);
-                if (player != null) {
-                    try {
-                        CoinType coinType = CoinType.valueOf(arguments[2]);
-                        String repairModality = arguments[1];
-                        switch (repairModality) {
-                            case "single" -> switchActionCoins(player, coinType); //TODO singleRepair(player);
-                            case "full" -> fullRepair(player);
-                            default -> commandSender.sendMessage("Tipo di ripazione non valida: single o full");
+            String playerName = arguments[0];
+            Player player = aresonSomnium.getServer().getPlayer(playerName);
+            if (player != null) {
+                switch (command.getName().toLowerCase()) {
+                    case Constants.SINGLE_REPAIR_COMMAND -> {
+                        try {
+                            CoinType coinType = CoinType.valueOf(arguments[2].toUpperCase());
+                            switchActionCoins(player, coinType);
+                        } catch (IllegalArgumentException exception) {
+                            commandSender.sendMessage("Tipo di valuta non valida");
+                            return true;
                         }
-                    } catch (IllegalArgumentException exception) {
-                        commandSender.sendMessage("Tipo di valuta non valida");
-                        return true;
                     }
+                    case Constants.FULL_REPAIR_COMMAND -> fullRepair(player);
+                    default -> commandSender.sendMessage("Comando non mappato");
                 }
-
             } else {
-                commandSender.sendMessage("Scrivi il nome del giocatore");
+                commandSender.sendMessage("Player non trovato: " + playerName);
             }
         }
         return true;
     }
 
-    public void singleRepair(Player player) {
-
-    }
-
-    // VIP Permissions
+    // Delay
     public void fullRepair(Player player) {
-        Arrays.stream(player.getInventory().getContents()).parallel().forEach(this::eventuallyRepairItemStack);
+        if (player.hasPermission(Constants.FULL_REPAIR_PERMISSION)) {
+            Arrays.stream(player.getInventory().getContents()).parallel().forEach(this::eventuallyRepairItemStack);
+        } else {
+            messageManager.sendPlainMessage(player, "no-permissions");
+        }
     }
 
     public void eventuallyRepairItemStack(ItemStack itemStack) {

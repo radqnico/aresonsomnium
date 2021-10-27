@@ -209,7 +209,8 @@ public class AresonSomnium extends JavaPlugin {
 //        new CheckCommand(this);
         new ObolsCommand(this);
         new GiveConsumableCommand(this);
-        new SomniumRepairCommand(this);
+        new SomniumRepairCommand(this, Constants.SINGLE_REPAIR_COMMAND);
+        new SomniumRepairCommand(this, Constants.FULL_REPAIR_COMMAND);
         new OpenBookCommand(this);
     }
 

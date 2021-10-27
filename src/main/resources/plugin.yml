@@ -7,8 +7,11 @@ author: Areson
 depends: [ CommandPanels ]
 
 commands:
-  somniumrepair:
-    description: "Repair command"
+  somniumsinglerepair:
+    description: "Single repair command"
+    permission: aresonsomnium.admin
+  somniumfullrepair:
+    description: "Full repair command"
     permission: aresonsomnium.admin
   shopadmin:
     description: "Shop admin command"
