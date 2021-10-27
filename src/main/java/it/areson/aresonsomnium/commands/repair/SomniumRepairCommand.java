@@ -51,7 +51,7 @@ public class SomniumRepairCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] arguments) {
         // somniumsinglerepair playerName coinType
-        // somniumfullrepair playerName
+        // somniumfullrepair playerName ignoreLastRepairTime
         if (commandSender.hasPermission("aresonsomnium.admin")) {
             if (arguments.length >= 1) {
                 String playerName = arguments[0];
@@ -61,7 +61,7 @@ public class SomniumRepairCommand implements CommandExecutor {
                         case Constants.SINGLE_REPAIR_COMMAND -> {
                             if (arguments.length >= 2) {
                                 try {
-                                    CoinType coinType = CoinType.valueOf(arguments[2].toUpperCase());
+                                    CoinType coinType = CoinType.valueOf(arguments[1].toUpperCase());
                                     switchActionCoins(player, coinType);
                                 } catch (IllegalArgumentException exception) {
                                     commandSender.sendMessage("Tipo di valuta non valida");
@@ -72,40 +72,41 @@ public class SomniumRepairCommand implements CommandExecutor {
                             }
                         }
                         case Constants.FULL_REPAIR_COMMAND -> {
-                            System.out.println("Full repair");
-                            fullRepair(player);
+                            boolean ignoreLastRepairTime;
+                            if (arguments.length >= 2) {
+                                ignoreLastRepairTime = Boolean.parseBoolean(arguments[1]);
+                            } else {
+                                ignoreLastRepairTime = false;
+                            }
+                            fullRepair(player, ignoreLastRepairTime);
                         }
                         default -> commandSender.sendMessage("Comando non mappato");
                     }
                 } else {
                     commandSender.sendMessage("Player non trovato: " + playerName);
                 }
+            } else {
+                commandSender.sendMessage("Inserisci il nome del giocatore");
             }
-        } else {
-            commandSender.sendMessage("Inserisci il nome del giocatore");
         }
         return true;
     }
 
-    public void fullRepair(Player player) {
+    public void fullRepair(Player player, boolean ignoreLastRepairTime) {
         if (player.hasPermission(Constants.FULL_REPAIR_PERMISSION)) {
-            System.out.println("Si perm");
-            if (canFullRepair(player)) {
-                System.out.println("si repair");
+            if (ignoreLastRepairTime || canFullRepairByLastRepair(player)) {
                 fullRepairTimes.put(player.getName(), LocalDateTime.now());
                 Arrays.stream(player.getInventory().getContents()).parallel().forEach(this::eventuallyRepairItemStack);
             } else {
-                System.out.println("No repair");
                 messageManager.sendPlainMessage(player, "cannot-repair-yet");
             }
         } else {
-            System.out.println("No perms");
             messageManager.sendPlainMessage(player, "no-permissions");
         }
     }
 
 
-    public boolean canFullRepair(Player player) {
+    public boolean canFullRepairByLastRepair(Player player) {
         String playerName = player.getName();
 
         if (fullRepairTimes.containsKey(playerName)) {
@@ -117,8 +118,9 @@ public class SomniumRepairCommand implements CommandExecutor {
     }
 
     public void eventuallyRepairItemStack(ItemStack itemStack) {
-        if(itemStack != null) {
-            System.out.println("Item: " + itemStack);
+        if (itemStack != null) {
+            boolean dmg = itemStack.getItemMeta() instanceof Damageable;
+            System.out.println("Item: " + itemStack.displayName() + " -> " + dmg);
         }
 
         if (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta() instanceof Damageable damageable) {
@@ -150,10 +152,10 @@ public class SomniumRepairCommand implements CommandExecutor {
                     if (itemMeta instanceof Damageable damageable) {
                         if (damageable.getDamage() != 0) {
                             singleRepairCountdown.setLastRepairTime(player.getName());
-                            damageable.setDamage(0);
-                            itemStack.setItemMeta(damageable);
                             Price repairPrice = getRepairPriceFromConfig(CoinType.MONETE);
                             if (somniumPlayer.takePriceAmount(repairPrice)) {
+                                damageable.setDamage(0);
+                                itemStack.setItemMeta(damageable);
                                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-success"));
                             } else {
                                 player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-not-enough-coins"));
@@ -179,10 +181,10 @@ public class SomniumRepairCommand implements CommandExecutor {
                 if (itemMeta instanceof Damageable damageable) {
                     if (damageable.getDamage() != 0) {
                         singleRepairCountdown.setLastRepairTime(player.getName());
-                        damageable.setDamage(0);
-                        itemStack.setItemMeta(damageable);
                         Price repairPrice = getRepairPriceFromConfig(CoinType.GEMME);
                         if (somniumPlayer.takePriceAmount(repairPrice)) {
+                            damageable.setDamage(0);
+                            itemStack.setItemMeta(damageable);
                             player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-success"));
                         } else {
                             player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-not-enough-coins"));
