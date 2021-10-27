@@ -97,6 +97,7 @@ public class SomniumRepairCommand implements CommandExecutor {
             if (ignoreLastRepairTime || canFullRepairByLastRepair(player)) {
                 fullRepairTimes.put(player.getName(), LocalDateTime.now());
                 Arrays.stream(player.getInventory().getContents()).parallel().forEach(this::eventuallyRepairItemStack);
+                messageManager.sendPlainMessage(player, "repair-success");
             } else {
                 messageManager.sendPlainMessage(player, "cannot-repair-yet");
             }
@@ -118,13 +119,9 @@ public class SomniumRepairCommand implements CommandExecutor {
     }
 
     public void eventuallyRepairItemStack(ItemStack itemStack) {
-        if (itemStack != null) {
-            boolean dmg = itemStack.getItemMeta() instanceof Damageable;
-            System.out.println("Item: " + itemStack.displayName() + " -> " + dmg);
-        }
-
         if (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta() instanceof Damageable damageable) {
             damageable.setDamage(0);
+            itemStack.setItemMeta(damageable);
         }
     }
 
