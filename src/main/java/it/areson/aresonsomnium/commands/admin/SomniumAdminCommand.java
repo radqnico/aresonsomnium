@@ -48,64 +48,31 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 break;
             case 1:
                 switch (args[0].toLowerCase()) {
-                    case "stats":
-                    case "setcoins":
-                    case "addcoins":
-                    case "setdebuglevel":
-                        MessageUtils.notEnoughArguments(commandSender, command);
-                        break;
-                    case "listplayers":
-                        handleListPlayers(commandSender);
-                        break;
-                    case "deletelastloreline":
-                        handleDeleteLastLoreLine(commandSender);
-                        break;
+                    case "stats", "setcoins", "addcoins", "setdebuglevel" -> MessageUtils.notEnoughArguments(commandSender, command);
+                    case "listplayers" -> handleListPlayers(commandSender);
+                    case "deletelastloreline" -> handleDeleteLastLoreLine(commandSender);
                 }
                 break;
             case 2:
                 switch (args[0].toLowerCase()) {
-                    case "stats":
-                        handleStatsCommand(commandSender, args[1]);
-                        break;
-                    case "listplayers":
-                        MessageUtils.tooManyArguments(commandSender, command);
-                        break;
-                    case "setcoins":
-                    case "addcoins":
-                        MessageUtils.notEnoughArguments(commandSender, command);
-                        break;
+                    case "stats" -> handleStatsCommand(commandSender, args[1]);
+                    case "listplayers" -> MessageUtils.tooManyArguments(commandSender, command);
+                    case "setcoins", "addcoins" -> MessageUtils.notEnoughArguments(commandSender, command);
                 }
                 break;
             case 3:
                 switch (args[0].toLowerCase()) {
-                    case "addcoins":
-                    case "setcoins":
-                        MessageUtils.notEnoughArguments(commandSender, command);
-                        break;
-                    case "stats":
-                    case "listplayers":
-                        MessageUtils.tooManyArguments(commandSender, command);
-                        break;
-                    case "openrecap":
-                        handleOpenRecap(args[1], args[2]);
-                        break;
+                    case "addcoins", "setcoins" -> MessageUtils.notEnoughArguments(commandSender, command);
+                    case "stats", "listplayers" -> MessageUtils.tooManyArguments(commandSender, command);
+                    case "openrecap" -> handleOpenRecap(args[1], args[2]);
                 }
                 break;
             case 4:
                 switch (args[0].toLowerCase()) {
-                    case "setcoins":
-                        handleSetCoins(commandSender, args[1], args[2], args[3]);
-                        break;
-                    case "addcoins":
-                        handleAddRemoveCoins(commandSender, args[1], args[2], args[3], false);
-                        break;
-                    case "removecoins":
-                        handleAddRemoveCoins(commandSender, args[1], args[2], args[3], true);
-                        break;
-                    case "stats":
-                    case "listplayers":
-                        MessageUtils.tooManyArguments(commandSender, command);
-                        break;
+                    case "setcoins" -> handleSetCoins(commandSender, args[1], args[2], args[3]);
+                    case "addcoins" -> handleAddRemoveCoins(commandSender, args[1], args[2], args[3], false);
+                    case "removecoins" -> handleAddRemoveCoins(commandSender, args[1], args[2], args[3], true);
+                    case "stats", "listplayers" -> MessageUtils.tooManyArguments(commandSender, command);
                 }
                 break;
         }
@@ -122,7 +89,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 messageManager.sendPlainMessage(player, "somniumplayer-not-found", Pair.of("%player%", playerName));
             }
         } else {
-            messageManager.sendPlainMessage(player, "player-not-found", Pair.of("%player%", playerName));
+            aresonSomnium.getLogger().severe("Player not found in handleOpenRecap: " + playerName);
         }
     }
 
@@ -134,18 +101,13 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         }
         if (strings.length == 2) {
             switch (strings[0].toLowerCase()) {
-                case "stats":
-                case "setcoins":
-                case "addcoins":
-                case "removecoins":
-                    StringUtil.copyPartialMatches(
-                            strings[1],
-                            aresonSomnium.getServer().getOnlinePlayers().stream()
-                                    .map(HumanEntity::getName)
-                                    .collect(Collectors.toList()),
-                            suggestions
-                    );
-                    break;
+                case "stats", "setcoins", "addcoins", "removecoins" -> StringUtil.copyPartialMatches(
+                        strings[1],
+                        aresonSomnium.getServer().getOnlinePlayers().stream()
+                                .map(HumanEntity::getName)
+                                .collect(Collectors.toList()),
+                        suggestions
+                );
             }
         }
         if (strings.length == 3) {
@@ -161,11 +123,11 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleDeleteLastLoreLine(CommandSender commandSender) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
+        if (commandSender instanceof Player player) {
             ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
             ItemMeta itemMeta = itemInMainHand.getItemMeta();
             if (Objects.nonNull(itemMeta)) {
+                //TODO Deprecated
                 List<String> lore = itemMeta.getLore();
                 if (Objects.nonNull(lore) && lore.size() > 0) {
                     lore.remove(lore.size() - 1);
@@ -196,7 +158,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                 messageManager.sendPlainMessage(player, "somniumplayer-not-found", Pair.of("%player%", playerName));
             }
         } else {
-            messageManager.sendPlainMessage(player, "player-not-found", Pair.of("%player%", playerName));
+            aresonSomnium.getLogger().severe("Player not found in handleStatsCommand: " + playerName);
         }
     }
 
@@ -218,17 +180,10 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     amount = removing ? amount.negate() : amount;
                     CoinType type = CoinType.valueOf(coinType.toUpperCase());
                     switch (type) {
-                        case OBOLI:
-                            somniumPlayer.getWallet().changeObols(amount.toBigInteger());
-                            break;
-                        case GEMME:
-                            somniumPlayer.getWallet().changeGems(amount.toBigInteger());
-                            break;
-                        case MONETE:
-                            Wallet.addCoins(player, amount);
-                            break;
-                        default:
-                            messageManager.sendPlainMessage(player, "coins-type-error");
+                        case OBOLI -> somniumPlayer.getWallet().changeObols(amount.toBigInteger());
+                        case GEMME -> somniumPlayer.getWallet().changeGems(amount.toBigInteger());
+                        case MONETE -> Wallet.addCoins(player, amount);
+                        default -> messageManager.sendPlainMessage(player, "coins-type-error");
                     }
                     switch (type) {
                         case MONETE:
@@ -261,20 +216,19 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(amountString));
                     CoinType type = CoinType.valueOf(coinType.toUpperCase());
                     switch (type) {
-                        case OBOLI:
+                        case OBOLI -> {
                             somniumPlayer.getWallet().setObols(amount.toBigInteger());
                             messageManager.sendPlainMessage(player, "coins-set");
-                            break;
-                        case GEMME:
+                        }
+                        case GEMME -> {
                             somniumPlayer.getWallet().setGems(amount.toBigInteger());
                             messageManager.sendPlainMessage(player, "coins-set");
-                            break;
-                        case MONETE:
+                        }
+                        case MONETE -> {
                             Wallet.setCoins(player, amount);
                             messageManager.sendPlainMessage(player, "coins-set");
-                            break;
-                        default:
-                            messageManager.sendPlainMessage(player, "coins-type-error");
+                        }
+                        default -> messageManager.sendPlainMessage(player, "coins-type-error");
                     }
                 } catch (NumberFormatException exception) {
                     messageManager.sendPlainMessage(player, "not-a-number");
