@@ -41,20 +41,6 @@ public class FileManager {
         }
     }
 
-    public void writeBytes(String path, byte[] byteArray) {
-        String encoded = Base64.getEncoder().encodeToString(byteArray);
-        fileConfiguration.set(path, encoded);
-        save();
-    }
-
-    public byte[] readBytes(String path) {
-        String string = fileConfiguration.getString(path);
-        if (string != null) {
-            return Base64.getDecoder().decode(string.getBytes());
-        }
-        return null;
-    }
-
     public Optional<Location> getLocation(String path) {
         String worldName = fileConfiguration.getString(path + ".world");
         if (worldName != null) {
