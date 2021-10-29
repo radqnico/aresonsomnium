@@ -53,41 +53,47 @@ public class SomniumRepairCommand implements CommandExecutor {
         // somniumsinglerepair playerName coinType
         // somniumfullrepair playerName ignoreLastRepairTime
         if (commandSender.hasPermission("aresonsomnium.admin")) {
+
+            String playerName;
+            Player player;
             if (arguments.length >= 1) {
-                String playerName = arguments[0];
-                Player player = aresonSomnium.getServer().getPlayer(playerName);
-                if (player != null) {
-                    switch (command.getName().toLowerCase()) {
-                        case Constants.SINGLE_REPAIR_COMMAND -> {
-                            if (arguments.length >= 2) {
-                                try {
-                                    CoinType coinType = CoinType.valueOf(arguments[1].toUpperCase());
-                                    switchActionCoins(player, coinType);
-                                } catch (IllegalArgumentException illegalArgumentException) {
-                                    commandSender.sendMessage("Tipo di valuta non valida");
-                                    return true;
-                                }
-                            } else {
-                                commandSender.sendMessage("Inserisci la valuta di pagamento");
-                            }
-                        }
-                        case Constants.FULL_REPAIR_COMMAND -> {
-                            boolean ignoreLastRepairTime;
-                            if (arguments.length >= 2) {
-                                ignoreLastRepairTime = Boolean.parseBoolean(arguments[1]);
-                            } else {
-                                ignoreLastRepairTime = false;
-                            }
-                            fullRepair(player, ignoreLastRepairTime);
-                        }
-                        default -> commandSender.sendMessage("Comando non mappato");
-                    }
-                } else {
+                playerName = arguments[0];
+                player = aresonSomnium.getServer().getPlayer(playerName);
+                if (player == null) {
                     commandSender.sendMessage("Player non trovato: " + playerName);
+                    return true;
                 }
             } else {
                 commandSender.sendMessage("Inserisci il nome del giocatore");
+                return true;
             }
+
+            switch (command.getName().toLowerCase()) {
+                case Constants.SINGLE_REPAIR_COMMAND -> {
+                    if (arguments.length >= 2) {
+                        try {
+                            CoinType coinType = CoinType.valueOf(arguments[1].toUpperCase());
+                            switchActionCoins(player, coinType);
+                        } catch (IllegalArgumentException illegalArgumentException) {
+                            commandSender.sendMessage("Tipo di valuta non valida");
+                            return true;
+                        }
+                    } else {
+                        commandSender.sendMessage("Inserisci la valuta di pagamento");
+                    }
+                }
+                case Constants.FULL_REPAIR_COMMAND -> {
+                    boolean ignoreLastRepairTime;
+                    if (arguments.length >= 2) {
+                        ignoreLastRepairTime = Boolean.parseBoolean(arguments[1]);
+                    } else {
+                        ignoreLastRepairTime = false;
+                    }
+                    fullRepair(player, ignoreLastRepairTime);
+                }
+                default -> commandSender.sendMessage("Comando non mappato");
+            }
+
         }
         return true;
     }
