@@ -125,7 +125,7 @@ public class SomniumRepairCommand implements CommandExecutor {
                     messageManager.sendPlainMessage(player, "cannot-repair-yet");
                 }
             } else {
-                messageManager.sendPlainMessage(player, "repair-no-damage");
+                messageManager.sendPlainMessage(player, "nothing-to-repair");
             }
         } else {
             messageManager.sendPlainMessage(player, "repair-cant-repair");
@@ -147,19 +147,31 @@ public class SomniumRepairCommand implements CommandExecutor {
         return singleRepairCoinsPrice;
     }
 
-    //TODO HasSomethingToRepair
     public void fullRepair(Player player, boolean ignoreLastRepairTime) {
         if (player.hasPermission(Constants.FULL_REPAIR_PERMISSION)) {
-            if (ignoreLastRepairTime || canFullRepairByLastRepair(player)) {
-                fullRepairTimes.put(player.getName(), LocalDateTime.now());
-                Arrays.stream(player.getInventory().getContents()).parallel().forEach(this::eventuallyRepairItemStack);
-                messageManager.sendPlainMessage(player, "full-repair-success");
+            if (hasSomethingToRepair(player)) {
+                if (ignoreLastRepairTime || canFullRepairByLastRepair(player)) {
+                    fullRepairTimes.put(player.getName(), LocalDateTime.now());
+                    Arrays.stream(player.getInventory().getContents()).parallel().forEach(this::eventuallyRepairItemStack);
+                    messageManager.sendPlainMessage(player, "full-repair-success");
+                } else {
+                    messageManager.sendPlainMessage(player, "cannot-repair-yet");
+                }
             } else {
-                messageManager.sendPlainMessage(player, "cannot-repair-yet");
+                messageManager.sendPlainMessage(player, "nothing-to-repair");
             }
         } else {
             messageManager.sendPlainMessage(player, "no-permissions");
         }
+    }
+
+    public boolean hasSomethingToRepair(Player player) {
+        for (ItemStack itemStack : player.getInventory().getContents()) {
+            if (hasDamage(itemStack)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean canSingleRepairByLastRepair(Player player) {
