@@ -26,7 +26,7 @@ public class SomniumRepairCommand implements CommandExecutor {
     private final MessageManager messageManager;
     private final HashMap<String, LocalDateTime> singleRepairTimes;
     private final HashMap<String, LocalDateTime> fullRepairTimes;
-    private final long singleRepairDelay;
+    private final long singleFreeRepairDelay;
     private final long fullRepairDelay;
     private final Price singleRepairCoinsPrice;
     private final Price singleRepairObolsPrice;
@@ -37,7 +37,7 @@ public class SomniumRepairCommand implements CommandExecutor {
         messageManager = aresonSomnium.getMessageManager();
         singleRepairTimes = new HashMap<>();
         fullRepairTimes = new HashMap<>();
-        singleRepairDelay = aresonSomnium.getConfig().getLong("repair.single-delay-seconds");
+        singleFreeRepairDelay = aresonSomnium.getConfig().getLong("repair.single-delay-seconds");
         fullRepairDelay = aresonSomnium.getConfig().getLong("repair.full-delay-seconds");
 
         singleRepairCoinsPrice = new Price(aresonSomnium.getConfig().getInt("repair.cost.coins"), 0, 0);
@@ -73,6 +73,7 @@ public class SomniumRepairCommand implements CommandExecutor {
             }
 
             switch (command.getName().toLowerCase()) {
+                case Constants.SINGLE_FREE_REPAIR_COMMAND -> singleFreeRepair(player);
                 case Constants.SINGLE_REPAIR_COMMAND -> {
                     if (arguments.length >= 2) {
                         try {
@@ -102,27 +103,42 @@ public class SomniumRepairCommand implements CommandExecutor {
         return true;
     }
 
-    public void singleRepair(Player player, CoinType coinType) {
+    public void singleFreeRepair(Player player) {
         ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
         if (isDamageable(itemInMainHand)) {
             if (hasDamage(itemInMainHand)) {
                 if (canSingleRepairByLastRepair(player)) {
-                    Price repairPrice = getSingleRepairPrice(coinType);
-                    SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
-                    if (somniumPlayer != null && somniumPlayer.canAfford(repairPrice)) {
-                        boolean result = somniumPlayer.takePriceAmount(repairPrice);
-                        if (result) {
-                            singleRepairTimes.put(player.getName(), LocalDateTime.now());
-                            eventuallyRepairItemStack(itemInMainHand);
-                            messageManager.sendPlainMessage(player, "single-repair-success");
-                        } else {
-                            messageManager.sendPlainMessage(player, "generic-error");
-                        }
-                    } else {
-                        messageManager.sendPlainMessage(player, "repair-not-enough-coins");
-                    }
+                    singleRepairTimes.put(player.getName(), LocalDateTime.now());
+                    eventuallyRepairItemStack(itemInMainHand);
+                    messageManager.sendPlainMessage(player, "single-repair-success");
                 } else {
                     messageManager.sendPlainMessage(player, "cannot-repair-yet");
+                }
+            } else {
+                messageManager.sendPlainMessage(player, "nothing-to-repair");
+            }
+        } else {
+            messageManager.sendPlainMessage(player, "repair-cant-repair");
+        }
+    }
+
+    public void singleRepair(Player player, CoinType coinType) {
+        ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
+        if (isDamageable(itemInMainHand)) {
+            if (hasDamage(itemInMainHand)) {
+                Price repairPrice = getSingleRepairPrice(coinType);
+                SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
+                if (somniumPlayer != null && somniumPlayer.canAfford(repairPrice)) {
+                    boolean result = somniumPlayer.takePriceAmount(repairPrice);
+                    if (result) {
+                        singleRepairTimes.put(player.getName(), LocalDateTime.now());
+                        eventuallyRepairItemStack(itemInMainHand);
+                        messageManager.sendPlainMessage(player, "single-repair-success");
+                    } else {
+                        messageManager.sendPlainMessage(player, "generic-error");
+                    }
+                } else {
+                    messageManager.sendPlainMessage(player, "repair-not-enough-coins");
                 }
             } else {
                 messageManager.sendPlainMessage(player, "nothing-to-repair");
@@ -179,7 +195,7 @@ public class SomniumRepairCommand implements CommandExecutor {
 
         if (singleRepairTimes.containsKey(playerName)) {
             LocalDateTime lastRepair = singleRepairTimes.get(playerName);
-            return Duration.between(lastRepair, LocalDateTime.now()).getSeconds() >= singleRepairDelay;
+            return Duration.between(lastRepair, LocalDateTime.now()).getSeconds() >= singleFreeRepairDelay;
         } else {
             return true;
         }
@@ -211,17 +227,5 @@ public class SomniumRepairCommand implements CommandExecutor {
             itemStack.setItemMeta(damageable);
         }
     }
-
-//    private void repairSingleItemCoins(Player player, ItemStack itemStack) {
-//            if (damageable.getDamage() != 0) {
-//                singleRepairCountdown.setLastRepairTime(player.getName());
-//                Price repairPrice = getRepairPriceFromConfig(CoinType.MONETE);
-//                if (somniumPlayer.takePriceAmount(repairPrice)) {
-//                    damageable.setDamage(0);
-//                    itemStack.setItemMeta(damageable);
-//                    player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("single-repair-success"));
-//                } else {
-//                    player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("repair-not-enough-coins"));
-//                }
 
 }
