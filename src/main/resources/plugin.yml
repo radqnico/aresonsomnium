@@ -7,6 +7,9 @@ author: Areson
 depends: [ CommandPanels ]
 
 commands:
+  somniumsinglefreerepair:
+    description: "Single free repair command"
+    permission: aresonsomnium.admin
   somniumsinglerepair:
     description: "Single repair command"
     permission: aresonsomnium.admin
