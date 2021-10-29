@@ -24,19 +24,18 @@ public class SomniumPlayerManager {
         return onlinePlayers.get(player);
     }
 
-    public SomniumPlayer addSomniumPlayer(Player player) {
+    public void addSomniumPlayer(Player player) {
         SomniumPlayer somniumPlayer = new SomniumPlayer(connection, tableName, player);
         onlinePlayers.put(player, somniumPlayer);
-        return somniumPlayer;
     }
 
-    public void savePlayer(Player player) {
-        onlinePlayers.get(player).saveToDB();
-    }
+//    public void savePlayer(Player player) {
+//        onlinePlayers.get(player).saveToDB();
+//    }
 
-    public void removeSomniumPlayer(Player player) {
-        onlinePlayers.remove(player);
-    }
+//    public void removeSomniumPlayer(Player player) {
+//        onlinePlayers.remove(player);
+//    }
 
     public void saveAndRemoveSomniumPlayer(Player player) {
         onlinePlayers.remove(player).saveToDB();

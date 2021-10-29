@@ -71,8 +71,10 @@ cannot-repair-yet: "&cNon puoi ancora riparare"
 
 single-repair-success: "Oggetto riparato"
 full-repair-success: "Oggetti riparati"
-repair-cant-repair: "Questo oggetto non può essere danneggiato"
+repair-cant-repair: "Questo oggetto non è riparabile"
 repair-no-damage: "Niente da riparare"
 repair-not-enough-coins: "Non hai abbastanza denaro per riparare"
 
 no-permissions: "&cNon hai il permesso"
+
+generic-error: "&cErrore generico"
