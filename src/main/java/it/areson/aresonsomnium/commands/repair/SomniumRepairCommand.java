@@ -159,6 +159,7 @@ public class SomniumRepairCommand implements CommandExecutor {
             case OBOLI -> {
                 return singleRepairObolsPrice;
             }
+            default -> {}
         }
         return singleRepairCoinsPrice;
     }

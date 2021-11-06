@@ -47,22 +47,14 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
                 break;
             case 1:
                 switch (args[0].toLowerCase()) {
-                    case "setblock":
-                        handleSetBlock(commandSender);
-                        break;
-                    case "additem":
-                        handleAddItem(commandSender);
-                        break;
-                    case "testgive":
-                        handleTestGive(commandSender);
-                        break;
-                    default:
-                        commandSender.sendMessage(errorMessage("Funzione non trovata"));
-                        break;
+                    case "setblock" -> handleSetBlock(commandSender);
+                    case "additem" -> handleAddItem(commandSender);
+                    case "testgive" -> handleTestGive(commandSender);
+                    default -> commandSender.sendMessage(errorMessage("Funzione non trovata"));
                 }
                 break;
             case 3:
-                if ("givegomma".equals(args[0].toLowerCase())) {
+                if ("givegomma".equalsIgnoreCase(args[0])) {
                     try {
                         int amount = Integer.parseInt(args[2]);
                         String nick = args[1];
@@ -73,6 +65,8 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
                 } else {
                     commandSender.sendMessage(errorMessage("Funzione non trovata"));
                 }
+                break;
+            default:
                 break;
         }
         return true;
@@ -110,8 +104,7 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleTestGive(CommandSender commandSender) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
+        if (commandSender instanceof Player player) {
             List<ItemStack> itemList = aresonSomnium.getGommaObjectsFileReader().getItemList();
             Collections.shuffle(itemList);
             ItemStack itemStack = itemList.get(new Random().nextInt(itemList.size()));
@@ -126,8 +119,7 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleAddItem(CommandSender commandSender) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
+        if (commandSender instanceof Player player) {
             ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
             if (!Material.AIR.equals(itemInMainHand.getType())) {
                 aresonSomnium.getGommaObjectsFileReader().storeItem(itemInMainHand);
@@ -142,8 +134,7 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleSetBlock(CommandSender commandSender) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
+        if (commandSender instanceof Player player) {
             Block targetBlock = player.getTargetBlock(100, TargetBlockInfo.FluidMode.NEVER);
             if (Objects.nonNull(targetBlock)) {
                 Location location = targetBlock.getLocation();

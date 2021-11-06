@@ -111,13 +111,13 @@ public class Price {
             }
             lore.add(start);
             if (coins.compareTo(BigDecimal.valueOf(0)) > 0) {
-                lore.add(Component.text().content(coins.toString() + " ⛃").color(YELLOW).decoration(ITALIC, false).build());
+                lore.add(Component.text().content(coins + " ⛃").color(YELLOW).decoration(ITALIC, false).build());
             }
             if (obols.compareTo(BigInteger.valueOf(0)) > 0) {
-                lore.add(Component.text().content(obols.toString() + " ❂").color(GOLD).decoration(ITALIC, false).build());
+                lore.add(Component.text().content(obols + " ❂").color(GOLD).decoration(ITALIC, false).build());
             }
             if (gems.compareTo(BigInteger.valueOf(0)) > 0) {
-                lore.add(Component.text().content(gems.toString() + " ♦").color(GREEN).decoration(ITALIC, false).build());
+                lore.add(Component.text().content(gems + " ♦").color(GREEN).decoration(ITALIC, false).build());
             }
         } else {
             TextComponent start = Component.text().content("Oggetto non ").color(RED).decoration(ITALIC, false).build();
@@ -134,15 +134,11 @@ public class Price {
 
     public void setPrice(CoinType coinType, BigDecimal price) {
         switch (coinType) {
-            case OBOLI:
-                setObols(price.toBigInteger());
-                break;
-            case GEMME:
-                setGems(price.toBigInteger());
-                break;
-            case MONETE:
-                setCoins(price);
-                break;
+            case OBOLI -> setObols(price.toBigInteger());
+            case GEMME -> setGems(price.toBigInteger());
+            case MONETE -> setCoins(price);
+            default -> {
+            }
         }
     }
 

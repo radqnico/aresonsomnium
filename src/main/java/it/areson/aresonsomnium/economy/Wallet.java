@@ -94,15 +94,20 @@ public class Wallet {
                         BigDecimal amount = new BigDecimal(matcherAmount.group(0));
                         CoinType coinType = CoinType.valueOf(matcherCoinType.group(0).toUpperCase());
                         switch (coinType) {
-                            case OBOLI:
+                            case OBOLI -> {
                                 somniumPlayer.getWallet().changeObols(amount.toBigInteger());
                                 return true;
-                            case GEMME:
+                            }
+                            case GEMME -> {
                                 somniumPlayer.getWallet().changeGems(amount.toBigInteger());
                                 return true;
-                            case MONETE:
+                            }
+                            case MONETE -> {
                                 Wallet.addCoins(somniumPlayer.getPlayer(), amount);
                                 return true;
+                            }
+                            default -> {
+                            }
                         }
                     }
                 }

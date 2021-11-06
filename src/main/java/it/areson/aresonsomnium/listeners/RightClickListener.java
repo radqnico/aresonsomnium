@@ -1,8 +1,8 @@
 package it.areson.aresonsomnium.listeners;
 
-import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.Wallet;
+import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import net.luckperms.api.model.data.TemporaryNodeMergeStrategy;
 import net.luckperms.api.node.Node;
@@ -79,6 +79,8 @@ public class RightClickListener extends GeneralEventListener {
                         case MULTIPLIER_MODEL_DATA -> {
                             playerDelays.put(player.getName(), Instant.now());
                             activateMultiplier(event);
+                        }
+                        default -> {
                         }
                     }
                 } else {
@@ -183,11 +185,9 @@ public class RightClickListener extends GeneralEventListener {
                     event.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-applied"));
                     event.setCancelled(true);
                 }
+            } else {
+                aresonSomnium.getLogger().warning("Somnium player not found while redeemCheck");
             }
-            //TODO Nico
-//            else {
-//                aresonSomnium.getDebugger().debugError(aresonSomnium.getMessageManager().getPlainMessage("somniumplayer-not-found"));
-//            }
         }
     }
 
