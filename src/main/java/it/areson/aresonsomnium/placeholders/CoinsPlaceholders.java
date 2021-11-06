@@ -33,8 +33,7 @@ public class CoinsPlaceholders extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer offlinePlayer, String query) {
-        if (offlinePlayer != null && offlinePlayer.getName() != null && offlinePlayer instanceof Player) {
-            Player player = (Player) offlinePlayer;
+        if (offlinePlayer != null && offlinePlayer.getName() != null && offlinePlayer instanceof Player player) {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (somniumPlayer != null) {
                 switch (query.toLowerCase()) {
@@ -46,6 +45,8 @@ public class CoinsPlaceholders extends PlaceholderExpansion {
                         return somniumPlayer.getWallet().getGems().toString();
                     case "playedseconds":
                         return somniumPlayer.getSecondsPlayedTotal() + "";
+                    default:
+                        break;
                 }
             }
         }

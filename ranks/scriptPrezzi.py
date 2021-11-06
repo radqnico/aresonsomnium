@@ -51,4 +51,3 @@ blocks = getBlocks()
 for b in blocks:
     print(str(counter + 1) + ": " + str(price(b, totPrices[counter])))
     counter = counter + 1
-
