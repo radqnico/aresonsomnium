@@ -8,6 +8,7 @@ import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import it.areson.aresonsomnium.utils.file.MessageManager;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.*;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -51,6 +52,8 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "stats", "setcoins", "addcoins", "setdebuglevel" -> MessageUtils.notEnoughArguments(commandSender, command);
                     case "listplayers" -> handleListPlayers(commandSender);
                     case "deletelastloreline" -> handleDeleteLastLoreLine(commandSender);
+                    default -> {
+                    }
                 }
                 break;
             case 2:
@@ -58,6 +61,8 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "stats" -> handleStatsCommand(commandSender, args[1]);
                     case "listplayers" -> MessageUtils.tooManyArguments(commandSender, command);
                     case "setcoins", "addcoins" -> MessageUtils.notEnoughArguments(commandSender, command);
+                    default -> {
+                    }
                 }
                 break;
             case 3:
@@ -65,6 +70,8 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "addcoins", "setcoins" -> MessageUtils.notEnoughArguments(commandSender, command);
                     case "stats", "listplayers" -> MessageUtils.tooManyArguments(commandSender, command);
                     case "openrecap" -> handleOpenRecap(args[1], args[2]);
+                    default -> {
+                    }
                 }
                 break;
             case 4:
@@ -73,7 +80,11 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     case "addcoins" -> handleAddRemoveCoins(commandSender, args[1], args[2], args[3], false);
                     case "removecoins" -> handleAddRemoveCoins(commandSender, args[1], args[2], args[3], true);
                     case "stats", "listplayers" -> MessageUtils.tooManyArguments(commandSender, command);
+                    default -> {
+                    }
                 }
+                break;
+            default:
                 break;
         }
         return true;
@@ -108,6 +119,8 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                                 .collect(Collectors.toList()),
                         suggestions
                 );
+                default -> {
+                }
             }
         }
         if (strings.length == 3) {
@@ -127,12 +140,11 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
             ItemMeta itemMeta = itemInMainHand.getItemMeta();
             if (Objects.nonNull(itemMeta)) {
-                //TODO Deprecated
-                List<String> lore = itemMeta.getLore();
+                List<Component> lore = itemMeta.lore();
                 if (Objects.nonNull(lore) && lore.size() > 0) {
                     lore.remove(lore.size() - 1);
                 }
-                itemMeta.setLore(lore);
+                itemMeta.lore(lore);
             }
             itemInMainHand.setItemMeta(itemMeta);
         } else {
@@ -194,6 +206,8 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                             } else {
                                 messageManager.sendPlainMessage(player, "coins-add", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()));
                             }
+                            break;
+                        default:
                             break;
                     }
                 } catch (NumberFormatException exception) {
