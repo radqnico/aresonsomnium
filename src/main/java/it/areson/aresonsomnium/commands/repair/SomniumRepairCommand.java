@@ -55,7 +55,7 @@ public class SomniumRepairCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] arguments) {
         // somniumsinglerepair playerName coinType
-        // somniumfullrepair playerName ignoreLastRepairTime
+        // somniumfullrepair playerName ignoreLastRepairTime ignorePermission
         if (commandSender.hasPermission("aresonsomnium.admin")) {
 
             String playerName;
@@ -88,13 +88,9 @@ public class SomniumRepairCommand implements CommandExecutor {
                     }
                 }
                 case Constants.FULL_REPAIR_COMMAND -> {
-                    boolean ignoreLastRepairTime;
-                    if (arguments.length >= 2) {
-                        ignoreLastRepairTime = Boolean.parseBoolean(arguments[1]);
-                    } else {
-                        ignoreLastRepairTime = false;
-                    }
-                    fullRepair(player, ignoreLastRepairTime);
+                    boolean ignoreLastRepairTime = arguments.length >= 2 && Boolean.parseBoolean(arguments[1]);
+                    boolean ignorePermission = arguments.length >= 3 && Boolean.parseBoolean(arguments[2]);
+                    fullRepair(player, ignoreLastRepairTime, ignorePermission);
                 }
                 default -> commandSender.sendMessage("Comando non mappato");
             }
@@ -159,13 +155,14 @@ public class SomniumRepairCommand implements CommandExecutor {
             case OBOLI -> {
                 return singleRepairObolsPrice;
             }
-            default -> {}
+            default -> {
+            }
         }
         return singleRepairCoinsPrice;
     }
 
-    public void fullRepair(Player player, boolean ignoreLastRepairTime) {
-        if (player.hasPermission(Constants.FULL_REPAIR_PERMISSION)) {
+    public void fullRepair(Player player, boolean ignoreLastRepairTime, boolean ignorePermission) {
+        if (ignorePermission || player.hasPermission(Constants.FULL_REPAIR_PERMISSION)) {
             if (hasSomethingToRepair(player)) {
                 if (ignoreLastRepairTime || canFullRepairByLastRepair(player)) {
                     fullRepairTimes.put(player.getName(), LocalDateTime.now());

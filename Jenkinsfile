@@ -12,6 +12,9 @@ String getChangeString() {
 
 pipeline {
     agent any
+    tools {
+        jdk "JDK16"
+    }
 
     stages {
         stage("Clean") {
