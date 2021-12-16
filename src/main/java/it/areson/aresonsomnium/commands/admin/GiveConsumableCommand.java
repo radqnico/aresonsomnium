@@ -16,8 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static it.areson.aresonsomnium.Constants.BOMB3_MODEL_DATA;
-import static it.areson.aresonsomnium.Constants.MULTIPLIER_MODEL_DATA;
+import static it.areson.aresonsomnium.Constants.*;
 import static net.md_5.bungee.api.ChatColor.*;
 
 @SuppressWarnings("NullableProblems")
@@ -27,6 +26,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
     public HashMap<String, ItemStack> itemStacks;
     public final String multiplierIndexName = "multiplier";
     public final String bomb3IndexName = "bomb3";
+    public final String repairAllIndexName = "repairAll";
 
     public GiveConsumableCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
@@ -44,9 +44,11 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
 
         itemStacks.put(multiplierIndexName, createConsumableItemStack(Material.CLOCK, "Moltiplicatore", new ArrayList<>(), MULTIPLIER_MODEL_DATA));
         itemStacks.put(bomb3IndexName, createConsumableItemStack(Material.TNT, "Bomb3", new ArrayList<>(), BOMB3_MODEL_DATA));
+        itemStacks.put(repairAllIndexName, createConsumableItemStack(Material.PAPER, "Pergamena della riparazione", new ArrayList<>(), REPAIR_ALL_MODEL_DATA));
     }
 
     private ItemStack createConsumableItemStack(Material material, String displayName, ArrayList<String> lore, int modelValue) {
+        //TODO Deprecated
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
@@ -66,6 +68,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
     }
 
     public ItemStack alignMultiplierItemStack(ItemStack originalItem, int multiplier, String duration) {
+        //TODO Deprecated
         ItemStack finalItem = originalItem.clone();
         String visibleMultiplier = (double) multiplier / 100 + "x";
 
@@ -144,7 +147,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
                     aresonSomnium.sendErrorMessage(commandSender, "Non ho trovato alcun player di nome " + playerName);
                 }
             } else if (arguments.length >= 1) {
-                aresonSomnium.sendInfoMessage(commandSender, "Inserisci il nome del reward. Disponibili: " + itemStacks.keySet().toString());
+                aresonSomnium.sendInfoMessage(commandSender, "Inserisci il nome del reward. Disponibili: " + itemStacks.keySet());
             } else {
                 aresonSomnium.sendInfoMessage(commandSender, "Utilizzo del comando: /giveConsumable nomePlayer nomeOggetto");
             }

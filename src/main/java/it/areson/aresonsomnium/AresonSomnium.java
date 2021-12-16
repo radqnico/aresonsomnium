@@ -6,7 +6,6 @@ import it.areson.aresonsomnium.commands.admin.GiveConsumableCommand;
 import it.areson.aresonsomnium.commands.admin.ObolsCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumAdminCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumGommaCommand;
-import it.areson.aresonsomnium.commands.player.CheckCommand;
 import it.areson.aresonsomnium.commands.player.OpenBookCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
@@ -14,6 +13,8 @@ import it.areson.aresonsomnium.commands.repair.SomniumRepairCommand;
 import it.areson.aresonsomnium.commands.shopadmin.*;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.BlockPrice;
+import it.areson.aresonsomnium.economy.CoinType;
+import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.economy.items.ShopItemsManager;
 import it.areson.aresonsomnium.elements.Multiplier;
@@ -22,6 +23,7 @@ import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import it.areson.aresonsomnium.listeners.*;
 import it.areson.aresonsomnium.placeholders.CoinsPlaceholders;
 import it.areson.aresonsomnium.placeholders.MultiplierPlaceholders;
+import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.pvp.LastHitPvP;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
@@ -38,11 +40,13 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -88,6 +92,15 @@ public class AresonSomnium extends JavaPlugin {
     private FileManager recaps;
     private FileManager briefing;
     private LastHitPvP lastHitPvP;
+    //Repair
+    private HashMap<String, LocalDateTime> fullRepairTimes;
+    private long fullRepairDelay;
+    private Price singleRepairCoinsPrice;
+    private Price singleRepairObolsPrice;
+    private Price singleRepairGemsPrice;
+    private HashMap<String, LocalDateTime> singleRepairTimes;
+    private long singleFreeRepairDelay;
+
 
     public ShopItemsManager shopItemsManager;
     public Optional<LuckPerms> luckPerms;
@@ -135,6 +148,15 @@ public class AresonSomnium extends JavaPlugin {
 
         new PlayerListener(this);
         lastHitPvP = new LastHitPvP();
+
+        //Repair
+        fullRepairTimes = new HashMap<>();
+        singleRepairTimes = new HashMap<>();
+        fullRepairDelay = getConfig().getLong("repair.full-delay-seconds");
+        singleRepairCoinsPrice = new Price(getConfig().getInt("repair.cost.coins"), 0, 0);
+        singleRepairObolsPrice = new Price(0, getConfig().getInt("repair.cost.obols"), 0);
+        singleRepairGemsPrice = new Price(0, 0, getConfig().getInt("repair.cost.gems"));
+        singleFreeRepairDelay = getConfig().getLong("repair.single-delay-seconds");
 
         // Autosell task
         playersWithAutoSellActive = new HashSet<>();
@@ -371,6 +393,138 @@ public class AresonSomnium extends JavaPlugin {
 
     public FileManager getBriefing() {
         return briefing;
+    }
+
+    public boolean hasDamage(ItemStack itemStack) {
+        return itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta() instanceof Damageable damageable && damageable.hasDamage();
+    }
+
+    public boolean hasSomethingToRepair(Player player) {
+        for (ItemStack itemStack : player.getInventory().getContents()) {
+            if (hasDamage(itemStack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean canFullRepairByLastRepair(Player player) {
+        String playerName = player.getName();
+
+        if (fullRepairTimes.containsKey(playerName)) {
+            LocalDateTime lastRepair = fullRepairTimes.get(playerName);
+            return Duration.between(lastRepair, LocalDateTime.now()).getSeconds() >= fullRepairDelay;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean fullRepair(Player player, boolean ignoreLastRepairTime, boolean ignorePermission) {
+        if (ignorePermission || player.hasPermission(Constants.FULL_REPAIR_PERMISSION)) {
+            if (hasSomethingToRepair(player)) {
+                if (ignoreLastRepairTime || canFullRepairByLastRepair(player)) {
+                    fullRepairTimes.put(player.getName(), LocalDateTime.now());
+                    Arrays.stream(player.getInventory().getContents()).parallel().forEach(this::eventuallyRepairItemStack);
+                    messageManager.sendPlainMessage(player, "full-repair-success");
+                    return true;
+                } else {
+                    messageManager.sendPlainMessage(player, "cannot-repair-yet");
+                }
+            } else {
+                messageManager.sendPlainMessage(player, "nothing-to-repair");
+            }
+        } else {
+            messageManager.sendPlainMessage(player, "no-permissions");
+        }
+        return false;
+    }
+
+    public void singleRepair(Player player, CoinType coinType) {
+        ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
+        if (isDamageable(itemInMainHand)) {
+            if (hasDamage(itemInMainHand)) {
+                Price repairPrice = getSingleRepairPrice(coinType);
+                SomniumPlayer somniumPlayer = getSomniumPlayerManager().getSomniumPlayer(player);
+                if (somniumPlayer != null && somniumPlayer.canAfford(repairPrice)) {
+                    boolean result = somniumPlayer.takePriceAmount(repairPrice);
+                    if (result) {
+                        singleRepairTimes.put(player.getName(), LocalDateTime.now());
+                        eventuallyRepairItemStack(itemInMainHand);
+                        messageManager.sendPlainMessage(player, "single-repair-success");
+                    } else {
+                        messageManager.sendPlainMessage(player, "generic-error");
+                    }
+                } else {
+                    messageManager.sendPlainMessage(player, "repair-not-enough-coins");
+                }
+            } else {
+                messageManager.sendPlainMessage(player, "nothing-to-repair");
+            }
+        } else {
+            messageManager.sendPlainMessage(player, "repair-cant-repair");
+        }
+    }
+
+    public void eventuallyRepairItemStack(ItemStack itemStack) {
+        if (isDamageable(itemStack)) {
+            Damageable damageable = (Damageable) itemStack.getItemMeta();
+            damageable.setDamage(0);
+            itemStack.setItemMeta(damageable);
+        }
+    }
+
+    public boolean isDamageable(ItemStack itemStack) {
+        return itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta() instanceof Damageable;
+    }
+
+
+    public Price getSingleRepairPrice(CoinType coinType) {
+        switch (coinType) {
+            case MONETE -> {
+                return singleRepairCoinsPrice;
+            }
+            case GEMME -> {
+                return singleRepairGemsPrice;
+            }
+            case OBOLI -> {
+                return singleRepairObolsPrice;
+            }
+            default -> {
+            }
+        }
+        return singleRepairCoinsPrice;
+    }
+
+
+    public void singleFreeRepair(Player player) {
+        ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
+        if (isDamageable(itemInMainHand)) {
+            if (hasDamage(itemInMainHand)) {
+                if (canSingleRepairByLastRepair(player)) {
+                    singleRepairTimes.put(player.getName(), LocalDateTime.now());
+                    eventuallyRepairItemStack(itemInMainHand);
+                    messageManager.sendPlainMessage(player, "single-repair-success");
+                } else {
+                    messageManager.sendPlainMessage(player, "cannot-repair-yet");
+                }
+            } else {
+                messageManager.sendPlainMessage(player, "nothing-to-repair");
+            }
+        } else {
+            messageManager.sendPlainMessage(player, "repair-cant-repair");
+        }
+    }
+
+
+    public boolean canSingleRepairByLastRepair(Player player) {
+        String playerName = player.getName();
+
+        if (singleRepairTimes.containsKey(playerName)) {
+            LocalDateTime lastRepair = singleRepairTimes.get(playerName);
+            return Duration.between(lastRepair, LocalDateTime.now()).getSeconds() >= singleFreeRepairDelay;
+        } else {
+            return true;
+        }
     }
 
 }

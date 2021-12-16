@@ -80,6 +80,10 @@ public class RightClickListener extends GeneralEventListener {
                             playerDelays.put(player.getName(), Instant.now());
                             activateMultiplier(event);
                         }
+                        case REPAIR_ALL_MODEL_DATA -> {
+                            playerDelays.put(player.getName(), Instant.now());
+                            repairAll(event);
+                        }
                         default -> {
                         }
                     }
@@ -187,6 +191,16 @@ public class RightClickListener extends GeneralEventListener {
                 }
             } else {
                 aresonSomnium.getLogger().warning("Somnium player not found while redeemCheck");
+            }
+        }
+    }
+
+    public void repairAll(PlayerInteractEvent event) {
+        ItemStack itemStack = event.getItem();
+
+        if (itemStack != null) {
+            if (aresonSomnium.fullRepair(event.getPlayer(), false, true)) {
+                itemStack.setAmount(itemStack.getAmount() - 1);
             }
         }
     }
