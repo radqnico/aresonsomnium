@@ -5,3 +5,6 @@ repair:
     coins: 10
     obols: 5
     gems: 1
+
+steal-coins-worlds:
+  - worldname
