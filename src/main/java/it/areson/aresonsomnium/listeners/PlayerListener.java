@@ -20,30 +20,29 @@ public class PlayerListener extends GeneralEventListener {
     }
 
     @EventHandler
-    public void onEntityDamageEvent(EntityDamageByEntityEvent event) {
-        System.out.println(event.getDamager().getType());
-        System.out.println(event.getEntity().getType());
+    public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
+        // Listen for last hit
+        if (event.getDamager() instanceof Player damager && event.getEntity() instanceof Player damaged) {
+            AresonSomniumAPI.instance.getLastHitPvP().setLastHit(damager, damaged);
+        }
+    }
 
-//        if (event.getEntity() instanceof Player player) {
-//            //Set last hit
-//            event.get
-//            AresonSomniumAPI.instance.getLastHitPvP().setLastHit(player, );
-//
-//            //Listen for death
-//            if (event.getDamage() >= player.getHealth()) {
-//                Optional<Player> killer = AresonSomniumAPI.instance.getLastHitPvP().getKiller(player);
-//                killer.ifPresent(playerKiller -> {
-//                    SomniumPlayer somniumPlayerKiller = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(playerKiller);
-//                    SomniumPlayer somniumPlayer = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(player);
-//                    if (somniumPlayer != null && somniumPlayerKiller != null) {
-//                        BigDecimal coinsPlayer = Wallet.getCoins(player);
-//                        BigDecimal amountToSteal = coinsPlayer.multiply(BigDecimal.valueOf(0.05));
-//                        Wallet.addCoins(player, amountToSteal.negate());
-//                        Wallet.addCoins(playerKiller, amountToSteal);
-//                    }
-//                });
-//            }
-//        }
+    @EventHandler
+    public void onEntityDamageEvent(EntityDamageEvent event) {
+        // Listen for death
+        if (event.getEntity() instanceof Player damaged && event.getDamage() >= damaged.getHealth()) {
+            Optional<Player> killer = AresonSomniumAPI.instance.getLastHitPvP().getKiller(damaged);
+            killer.ifPresent(playerKiller -> {
+                SomniumPlayer somniumPlayerKiller = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(playerKiller);
+                SomniumPlayer somniumPlayer = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(damaged);
+                if (somniumPlayer != null && somniumPlayerKiller != null) {
+                    BigDecimal coinsPlayer = Wallet.getCoins(damaged);
+                    BigDecimal amountToSteal = coinsPlayer.multiply(BigDecimal.valueOf(0.05));
+                    Wallet.addCoins(damaged, amountToSteal.negate());
+                    Wallet.addCoins(playerKiller, amountToSteal);
+                }
+            });
+        }
     }
 
 }
