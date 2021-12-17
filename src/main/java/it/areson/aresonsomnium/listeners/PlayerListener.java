@@ -19,9 +19,8 @@ public class PlayerListener extends GeneralEventListener {
     }
 
     @EventHandler
-    public void onPlayerKill(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
+    public void onEntityDamageEvent(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player player) {
             if (event.getDamage() >= player.getHealth()) {
                 Optional<Player> killer = AresonSomniumAPI.instance.getLastHitPvP().getKiller(player);
                 killer.ifPresent(playerKiller -> {

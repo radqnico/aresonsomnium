@@ -61,4 +61,5 @@ public class OpenBookCommand implements CommandExecutor {
         }
         return Optional.empty();
     }
+
 }
