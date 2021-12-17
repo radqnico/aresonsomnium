@@ -44,7 +44,11 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
 
         itemStacks.put(multiplierIndexName, createConsumableItemStack(Material.CLOCK, "Moltiplicatore", new ArrayList<>(), MULTIPLIER_MODEL_DATA));
         itemStacks.put(bomb3IndexName, createConsumableItemStack(Material.TNT, "Bomb3", new ArrayList<>(), BOMB3_MODEL_DATA));
-        itemStacks.put(repairAllIndexName, createConsumableItemStack(Material.PAPER, "Pergamena della riparazione", new ArrayList<>(), REPAIR_ALL_MODEL_DATA));
+        itemStacks.put(repairAllIndexName, createConsumableItemStack(Material.PAPER, AQUA + "" + BOLD + "Pergamena della riparazione", new ArrayList<>(Arrays.asList(
+                GRAY + "Consumando questo oggetto tutti",
+                GRAY + "gli oggetti riparabili nel tuo inventario",
+                GRAY + "verranno riparati"
+        )), REPAIR_ALL_MODEL_DATA));
     }
 
     private ItemStack createConsumableItemStack(Material material, String displayName, ArrayList<String> lore, int modelValue) {
