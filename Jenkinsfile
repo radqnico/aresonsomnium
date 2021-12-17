@@ -45,19 +45,9 @@ pipeline {
                                     sourceFiles: "**/*.jar",
                                     remoteDirectory: "/home/minecraft/somnium/plugins/",
                                     flatten: true,
-                                    excludes: "**/*original*.jar"
+                                    excludes: "**/*original*.jar",
+                                    execCommand: "restartServer somnium"
                                 )
-                            ]
-                        )
-                    ]
-                )
-                sshPublisher(
-                    failOnError: false,
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: "Areson",
-                            transfers: [
-                                sshTransfer(execCommand: "screen -S somnium -X stuff ^['stop'^M")
                             ]
                         )
                     ]
