@@ -24,10 +24,6 @@ public class Pair<A, B> {
         return right;
     }
 
-    public static Pair<Double, Duration> emptyMultiplier() {
-        return new Pair<>(0.0, Duration.ZERO);
-    }
-
     public static Pair<Double, Duration> compare(Pair<Double, Duration> a, Pair<Double, Duration> b) {
         return b;
     }

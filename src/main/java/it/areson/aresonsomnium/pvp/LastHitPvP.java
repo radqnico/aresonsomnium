@@ -17,8 +17,8 @@ public class LastHitPvP {
         lastHit = new HashMap<>();
     }
 
-    public void setLastHit(Player hitter, Player hit) {
-        lastHit.put(hit, Pair.of(hitter, LocalDateTime.now()));
+    public void setLastHit(Player hitter, Player hitted) {
+        lastHit.put(hitted, Pair.of(hitter, LocalDateTime.now()));
     }
 
     public Optional<Player> getKiller(Player player) {
