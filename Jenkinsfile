@@ -45,7 +45,14 @@ pipeline {
                                     sourceFiles: "**/*.jar",
                                     remoteDirectory: "/home/minecraft/somnium/plugins/",
                                     flatten: true,
-                                    excludes: "**/*original*.jar",
+                                    excludes: "**/*original*.jar"
+                                )
+                            ]
+                        ),
+                        sshPublisherDesc(
+                            configName: "AresonRoot",
+                            transfers: [
+                                sshTransfer(
                                     execCommand: "restartServer somnium"
                                 )
                             ]

@@ -6,8 +6,10 @@ import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.meta.Damageable;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -51,6 +53,15 @@ public class PlayerListener extends GeneralEventListener {
                     Wallet.addCoins(playerKiller, amountToSteal);
                 }
             });
+        }
+    }
+
+    @EventHandler
+    public void onBlockBreakEvent(BlockBreakEvent event) {
+        if(!event.isCancelled()) {
+            if(event.getPlayer().getItemInUse() instanceof Damageable damageable) {
+                event.getPlayer().sendMessage(damageable.getDamage() + "");
+            }
         }
     }
 
