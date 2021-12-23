@@ -77,4 +77,6 @@ repair-not-enough-coins: "Non hai abbastanza denaro per riparare"
 
 no-permissions: "&cNon hai il permesso"
 
+item-low-life: "&6Il tuo strumento ha meno del 10% di vita!"
+
 generic-error: "&cErrore generico"

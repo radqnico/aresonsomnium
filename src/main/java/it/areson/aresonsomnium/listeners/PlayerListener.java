@@ -4,6 +4,7 @@ import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
+import it.areson.aresonsomnium.utils.file.MessageManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -17,10 +18,12 @@ import java.util.HashSet;
 
 public class PlayerListener extends GeneralEventListener {
 
+    private final MessageManager messageManager;
     private final HashSet<String> stealCoinsWorlds;
 
-    public PlayerListener(AresonSomnium aresonSomnium) {
+    public PlayerListener(AresonSomnium aresonSomnium, MessageManager messageManager) {
         super(aresonSomnium);
+        this.messageManager = messageManager;
         registerEvents();
 
         stealCoinsWorlds = new HashSet<>(aresonSomnium.getConfig().getStringList("steal-coins-worlds"));
@@ -61,8 +64,8 @@ public class PlayerListener extends GeneralEventListener {
         if (!event.isCancelled()) {
             ItemStack itemInMainHand = event.getPlayer().getInventory().getItemInMainHand();
             if (itemInMainHand.getItemMeta() instanceof Damageable damageable) {
-                if ((damageable.getDamage() * 100) / itemInMainHand.getType().getMaxDurability() > 95) {
-                    aresonSomnium.sendInfoMessage(event.getPlayer(), "Il tuo strumento ha meno del 5% di vita!");
+                if ((damageable.getDamage() * 100) / itemInMainHand.getType().getMaxDurability() > 90) {
+                    messageManager.sendPlainMessage(event.getPlayer(), "item-low-life");
                 }
             }
         }
