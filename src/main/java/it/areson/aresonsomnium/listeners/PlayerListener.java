@@ -58,7 +58,9 @@ public class PlayerListener extends GeneralEventListener {
 
     @EventHandler
     public void onBlockBreakEvent(BlockBreakEvent event) {
+        System.out.println(event.isCancelled());
         if(!event.isCancelled()) {
+            System.out.println(event.getPlayer().getItemInUse().toString());
             if(event.getPlayer().getItemInUse() instanceof Damageable damageable) {
                 event.getPlayer().sendMessage(damageable.getDamage() + "");
             }
