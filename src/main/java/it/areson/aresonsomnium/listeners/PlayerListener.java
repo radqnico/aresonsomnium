@@ -11,7 +11,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -62,9 +61,9 @@ public class PlayerListener extends GeneralEventListener {
         if (!event.isCancelled()) {
             ItemStack itemInMainHand = event.getPlayer().getInventory().getItemInMainHand();
             if (itemInMainHand.getItemMeta() instanceof Damageable damageable) {
-                event.getPlayer().sendMessage(damageable.getDamage() + "");
-                event.getPlayer().sendMessage(itemInMainHand.getMaxItemUseDuration() +"");
-                event.getPlayer().sendMessage(itemInMainHand.getType().getMaxDurability() + "");
+                if ((damageable.getDamage() * 100) / itemInMainHand.getType().getMaxDurability() > 95) {
+                    aresonSomnium.sendInfoMessage(event.getPlayer(), "Il tuo strumento ha meno del 5% di vita!");
+                }
             }
         }
     }
