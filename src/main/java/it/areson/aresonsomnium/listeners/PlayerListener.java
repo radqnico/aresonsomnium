@@ -8,12 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.meta.Damageable;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.Optional;
 
 public class PlayerListener extends GeneralEventListener {
 
@@ -37,31 +36,33 @@ public class PlayerListener extends GeneralEventListener {
     }
 
     @EventHandler
-    public void onEntityDamageEvent(EntityDamageEvent event) {
+    public void onPlayerDeathEvent(PlayerDeathEvent event) {
         // Listen for death
-        if (event.getEntity() instanceof Player damaged &&
-                event.getDamage() >= damaged.getHealth() &&
-                stealCoinsWorlds.contains(damaged.getWorld().getName())) {
-            Optional<Player> killer = AresonSomniumAPI.instance.getLastHitPvP().getKiller(damaged);
-            killer.ifPresent(playerKiller -> {
+        if (stealCoinsWorlds.contains(event.getEntity().getWorld().getName())) {
+//            Optional<Player> killer = AresonSomniumAPI.instance.getLastHitPvP().getKiller(event.getEntity());
+//            killer.ifPresent(playerKiller -> {
+            Player playerKiller = event.getEntity().getKiller();
+            if (playerKiller != null) {
                 SomniumPlayer somniumPlayerKiller = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(playerKiller);
-                SomniumPlayer somniumPlayer = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(damaged);
+                SomniumPlayer somniumPlayer = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(event.getEntity());
                 if (somniumPlayer != null && somniumPlayerKiller != null) {
-                    BigDecimal coinsPlayer = Wallet.getCoins(damaged);
+                    BigDecimal coinsPlayer = Wallet.getCoins(event.getEntity());
                     BigDecimal amountToSteal = coinsPlayer.multiply(BigDecimal.valueOf(0.05));
-                    Wallet.addCoins(damaged, amountToSteal.negate());
+                    Wallet.addCoins(event.getEntity(), amountToSteal.negate());
                     Wallet.addCoins(playerKiller, amountToSteal);
                 }
-            });
+            }
         }
     }
 
     @EventHandler
     public void onBlockBreakEvent(BlockBreakEvent event) {
-        System.out.println(event.isCancelled());
-        if(!event.isCancelled()) {
-            System.out.println(event.getPlayer().getItemInUse().toString());
-            if(event.getPlayer().getItemInUse() instanceof Damageable damageable) {
+        if (!event.isCancelled()) {
+            System.out.println(event.getPlayer().getActiveItem());
+            System.out.println(event.getPlayer().getItemUseRemainingTime());
+            System.out.println(event.getPlayer().getInventory().getItemInMainHand());
+            System.out.println(event.getPlayer().getInventory().getItemInMainHand());
+            if (event.getPlayer().getItemInUse() instanceof Damageable damageable) {
                 event.getPlayer().sendMessage(damageable.getDamage() + "");
             }
         }
