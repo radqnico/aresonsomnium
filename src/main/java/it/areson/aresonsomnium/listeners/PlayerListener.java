@@ -87,7 +87,7 @@ public class PlayerListener extends GeneralEventListener {
             if (oldValue > 10) {
                 playerBlocksBroken.put(playerName, 1);
             } else {
-                playerBlocksBroken.put(playerName, +1);
+                playerBlocksBroken.put(playerName, oldValue + 1);
             }
         } else {
             playerBlocksBroken.put(playerName, 1);
