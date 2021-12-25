@@ -14,12 +14,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class PlayerListener extends GeneralEventListener {
 
     private final MessageManager messageManager;
     private final HashSet<String> stealCoinsWorlds;
+    private final HashMap<String, Integer> playerBlocksBroken;
 
     public PlayerListener(AresonSomnium aresonSomnium, MessageManager messageManager) {
         super(aresonSomnium);
@@ -27,6 +29,7 @@ public class PlayerListener extends GeneralEventListener {
         registerEvents();
 
         stealCoinsWorlds = new HashSet<>(aresonSomnium.getConfig().getStringList("steal-coins-worlds"));
+        playerBlocksBroken = new HashMap<>();
     }
 
     @EventHandler
@@ -64,10 +67,28 @@ public class PlayerListener extends GeneralEventListener {
         if (!event.isCancelled()) {
             ItemStack itemInMainHand = event.getPlayer().getInventory().getItemInMainHand();
             if (itemInMainHand.getItemMeta() instanceof Damageable damageable) {
-                if ((damageable.getDamage() * 100) / itemInMainHand.getType().getMaxDurability() > 90) {
+                if ((damageable.getDamage() * 100) / itemInMainHand.getType().getMaxDurability() > 90 && isTimeToSendWarn(event.getPlayer().getName())) {
                     messageManager.sendPlainMessage(event.getPlayer(), "item-low-life");
                 }
+                increaseBrokenBlocks(event.getPlayer().getName());
             }
+        }
+    }
+
+    private boolean isTimeToSendWarn(String playerName) {
+        return !playerBlocksBroken.containsKey(playerName) || playerBlocksBroken.get(playerName) > 10;
+    }
+
+    private void increaseBrokenBlocks(String playerName) {
+        if (playerBlocksBroken.containsKey(playerName)) {
+            Integer oldValue = playerBlocksBroken.get(playerName);
+            if (oldValue > 10) {
+                playerBlocksBroken.put(playerName, 1);
+            } else {
+                playerBlocksBroken.put(playerName, +1);
+            }
+        } else {
+            playerBlocksBroken.put(playerName, 1);
         }
     }
 
