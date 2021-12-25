@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -55,7 +56,8 @@ public class PlayerListener extends GeneralEventListener {
                 SomniumPlayer somniumPlayer = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(event.getPlayer());
                 if (somniumPlayer != null && somniumPlayerKiller != null) {
                     BigDecimal coinsPlayer = Wallet.getCoins(event.getPlayer());
-                    BigDecimal amountToSteal = coinsPlayer.multiply(percentOfCoins);
+                    BigDecimal amountToSteal = coinsPlayer.multiply(percentOfCoins).setScale(1, RoundingMode.HALF_UP);
+
                     Wallet.addCoins(event.getPlayer(), amountToSteal.negate());
                     Wallet.addCoins(playerKiller, amountToSteal);
 
