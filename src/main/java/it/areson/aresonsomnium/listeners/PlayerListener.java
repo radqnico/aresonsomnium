@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Optional;
 
 public class PlayerListener extends GeneralEventListener {
 
@@ -50,8 +51,9 @@ public class PlayerListener extends GeneralEventListener {
     public void onPlayerDeathEvent(PlayerDeathEvent event) {
         // Listen for death
         if (stealCoinsWorlds.contains(event.getPlayer().getWorld().getName())) {
-            Player playerKiller = event.getPlayer().getKiller();
-            if (playerKiller != null) {
+            Optional<Player> killer = aresonSomnium.getLastHitPvP().getKiller(event.getPlayer());
+            if (killer.isPresent()) {
+                Player playerKiller = killer.get();
                 SomniumPlayer somniumPlayerKiller = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(playerKiller);
                 SomniumPlayer somniumPlayer = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(event.getPlayer());
                 if (somniumPlayer != null && somniumPlayerKiller != null) {

@@ -147,7 +147,7 @@ public class AresonSomnium extends JavaPlugin {
         AutoSaveManager.startAutoSaveTask(this, 12000);
 
         new PlayerListener(this, messageManager);
-        lastHitPvP = new LastHitPvP();
+        lastHitPvP = new LastHitPvP(this);
 
         //Repair
         fullRepairTimes = new HashMap<>();

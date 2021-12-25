@@ -1,5 +1,6 @@
 package it.areson.aresonsomnium.pvp;
 
+import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.elements.Pair;
 import org.bukkit.entity.Player;
 
@@ -10,28 +11,29 @@ import java.util.Optional;
 
 public class LastHitPvP {
 
-    public static int SECONDS_LAST_HIT = 10;
-    private final HashMap<Player, Pair<Player, LocalDateTime>> lastHit;
+    public final int secondsLastHit;
+    private final HashMap<Player, Pair<Player, LocalDateTime>> lastHits;
 
-    public LastHitPvP() {
-        lastHit = new HashMap<>();
+    public LastHitPvP(AresonSomnium aresonSomnium) {
+        lastHits = new HashMap<>();
+        secondsLastHit = aresonSomnium.getConfig().getInt("steal-coins.seconds-last-hit");
     }
 
     public void setLastHit(Player hitter, Player hitted) {
-        lastHit.put(hitted, Pair.of(hitter, LocalDateTime.now()));
+        lastHits.put(hitted, Pair.of(hitter, LocalDateTime.now()));
     }
 
     public Optional<Player> getKiller(Player player) {
-        Pair<Player, LocalDateTime> playerLocalDateTimePair = lastHit.get(player);
+        Pair<Player, LocalDateTime> playerLocalDateTimePair = lastHits.get(player);
         if (playerLocalDateTimePair == null) {
             return Optional.empty();
         }
         LocalDateTime time = playerLocalDateTimePair.right();
         long seconds = Duration.between(time, LocalDateTime.now()).getSeconds();
-        if (seconds > SECONDS_LAST_HIT) {
+        if (seconds > secondsLastHit) {
             return Optional.empty();
         }
-        return Optional.ofNullable(lastHit.get(player).left());
+        return Optional.of(playerLocalDateTimePair.left());
     }
 
 }

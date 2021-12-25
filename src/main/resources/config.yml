@@ -10,3 +10,4 @@ steal-coins:
   allowed-worlds:
     - worldname
   percent-of-coins: 5
+  seconds-last-hit: 30
