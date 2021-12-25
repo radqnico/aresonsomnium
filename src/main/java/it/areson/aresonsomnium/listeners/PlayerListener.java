@@ -3,6 +3,7 @@ package it.areson.aresonsomnium.listeners;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.economy.Wallet;
+import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.file.MessageManager;
 import org.bukkit.entity.Player;
@@ -21,6 +22,7 @@ public class PlayerListener extends GeneralEventListener {
 
     private final MessageManager messageManager;
     private final HashSet<String> stealCoinsWorlds;
+    private final BigDecimal percentOfCoins;
     private final HashMap<String, Integer> playerBlocksBroken;
 
     public PlayerListener(AresonSomnium aresonSomnium, MessageManager messageManager) {
@@ -28,7 +30,8 @@ public class PlayerListener extends GeneralEventListener {
         this.messageManager = messageManager;
         registerEvents();
 
-        stealCoinsWorlds = new HashSet<>(aresonSomnium.getConfig().getStringList("steal-coins-worlds"));
+        stealCoinsWorlds = new HashSet<>(aresonSomnium.getConfig().getStringList("steal-coins.allowed-worlds"));
+        percentOfCoins = BigDecimal.valueOf(aresonSomnium.getConfig().getDouble("steal-coins.percent-of-coins") / 100);
         playerBlocksBroken = new HashMap<>();
     }
 
@@ -45,18 +48,25 @@ public class PlayerListener extends GeneralEventListener {
     @EventHandler
     public void onPlayerDeathEvent(PlayerDeathEvent event) {
         // Listen for death
-        if (stealCoinsWorlds.contains(event.getEntity().getWorld().getName())) {
-//            Optional<Player> killer = AresonSomniumAPI.instance.getLastHitPvP().getKiller(event.getEntity());
-//            killer.ifPresent(playerKiller -> {
-            Player playerKiller = event.getEntity().getKiller();
+        if (stealCoinsWorlds.contains(event.getPlayer().getWorld().getName())) {
+            Player playerKiller = event.getPlayer().getKiller();
             if (playerKiller != null) {
                 SomniumPlayer somniumPlayerKiller = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(playerKiller);
-                SomniumPlayer somniumPlayer = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(event.getEntity());
+                SomniumPlayer somniumPlayer = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(event.getPlayer());
                 if (somniumPlayer != null && somniumPlayerKiller != null) {
-                    BigDecimal coinsPlayer = Wallet.getCoins(event.getEntity());
-                    BigDecimal amountToSteal = coinsPlayer.multiply(BigDecimal.valueOf(0.05));
-                    Wallet.addCoins(event.getEntity(), amountToSteal.negate());
+                    BigDecimal coinsPlayer = Wallet.getCoins(event.getPlayer());
+                    BigDecimal amountToSteal = coinsPlayer.multiply(percentOfCoins);
+                    Wallet.addCoins(event.getPlayer(), amountToSteal.negate());
                     Wallet.addCoins(playerKiller, amountToSteal);
+
+                    messageManager.sendPlainMessage(playerKiller, "steal-coins-earned",
+                            Pair.of("%coins%", amountToSteal + ""),
+                            Pair.of("%playerName%", event.getPlayer().getName())
+                    );
+                    messageManager.sendPlainMessage(event.getPlayer(), "steal-coins-lost",
+                            Pair.of("%coins%", amountToSteal + ""),
+                            Pair.of("%playerName%", playerKiller.getName())
+                    );
                 }
             }
         }

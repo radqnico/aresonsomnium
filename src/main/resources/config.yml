@@ -6,5 +6,7 @@ repair:
     obols: 5
     gems: 1
 
-steal-coins-worlds:
-  - worldname
+steal-coins:
+  allowed-worlds:
+    - worldname
+  percent-of-coins: 5

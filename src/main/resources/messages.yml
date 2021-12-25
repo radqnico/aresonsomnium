@@ -79,4 +79,7 @@ no-permissions: "&cNon hai il permesso"
 
 item-low-life: "&6Il tuo strumento ha meno del 10% di vita!"
 
+steal-coins-earned: "Hai guadagnato %coins% coins per aver ucciso %playerName%"
+steal-coins-lost: "Hai perso %coins% coins per essere stato ucciso da %playerName%"
+
 generic-error: "&cErrore generico"
