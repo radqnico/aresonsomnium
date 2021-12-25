@@ -67,6 +67,8 @@ public class PlayerListener extends GeneralEventListener {
         if (!event.isCancelled()) {
             ItemStack itemInMainHand = event.getPlayer().getInventory().getItemInMainHand();
             if (itemInMainHand.getItemMeta() instanceof Damageable damageable) {
+                System.out.println(playerBlocksBroken);
+                System.out.println(isTimeToSendWarn(event.getPlayer().getName()));
                 if ((damageable.getDamage() * 100) / itemInMainHand.getType().getMaxDurability() > 90 && isTimeToSendWarn(event.getPlayer().getName())) {
                     messageManager.sendPlainMessage(event.getPlayer(), "item-low-life");
                 }
