@@ -101,6 +101,7 @@ public class RightClickListener extends GeneralEventListener {
         //TODO Deprecated
         List<String> lore = itemStack.getLore();
 
+        System.out.println(itemStack.getItemMeta().getPersistentDataContainer().getKeys());
         if (lore != null && lore.size() >= 2) {
             try {
                 String stringMultiplier = lore.get(0);

@@ -2,6 +2,7 @@ package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.command.*;
 import org.bukkit.enchantments.Enchantment;
@@ -10,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.time.Duration;
 import java.time.format.DateTimeParseException;
@@ -73,14 +76,19 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
     }
 
     public ItemStack alignMultiplierItemStack(ItemStack originalItem, int multiplier, String duration) {
-        //TODO Deprecated
         ItemStack finalItem = originalItem.clone();
         String visibleMultiplier = (double) multiplier / 100 + "x";
 
         ItemMeta itemMeta = finalItem.getItemMeta();
         if (itemMeta != null) {
-            System.out.println(itemMeta.displayName());
-            itemMeta.displayName(Component.text(AQUA + "" + BOLD + itemMeta.getDisplayName() + " " + visibleMultiplier));
+            String previousName = "";
+            if (itemMeta.displayName() instanceof TextComponent textComponent) {
+                previousName = textComponent.content();
+            } else {
+                previousName = "NOT_FOUND";
+            }
+
+            itemMeta.displayName(Component.text(AQUA + "" + BOLD + previousName + " " + visibleMultiplier));
 
             List<Component> lore = new ArrayList<>();
             lore.add(Component.text(GRAY + "Moltiplicatore: " + GREEN + visibleMultiplier));
@@ -89,6 +97,10 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
             if (oldLore != null) {
                 lore.addAll(oldLore);
             }
+
+            PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
+            persistentDataContainer.set(aresonSomnium.multiplierValueNamespacedKey, PersistentDataType.INTEGER, multiplier);
+            persistentDataContainer.set(aresonSomnium.multiplierDurationNamespacedKey, PersistentDataType.STRING, duration);
 
             itemMeta.lore(lore);
         }
@@ -135,7 +147,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
                                 // Getting Duration
                                 String duration = "10m";
                                 if (arguments.length > 4) {
-                                    //TODO Not working well
+                                    //TODO Not working well with 1d
                                     duration = Duration.parse("PT" + arguments[4]).toString().substring(2).toLowerCase();
                                 }
 

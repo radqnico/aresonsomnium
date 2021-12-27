@@ -35,6 +35,7 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.node.Node;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.enchantments.Enchantment;
@@ -62,6 +63,10 @@ import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 public class AresonSomnium extends JavaPlugin {
 
     private final Multiplier defaultMultiplier = new Multiplier();
+    private final HashMap<String, Multiplier> playerMultipliers = new HashMap<>();
+    public NamespacedKey multiplierValueNamespacedKey;
+    public NamespacedKey multiplierDurationNamespacedKey;
+
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private final String messagePrefix = "[Somnium]";
     public HashSet<String> playersWithAutoSellActive;
@@ -84,7 +89,7 @@ public class AresonSomnium extends JavaPlugin {
         put(Material.LIGHT_BLUE_CONCRETE, Constants.PERMISSION_SETTIMO_CIELO);
         put(Material.WHITE_CONCRETE, Constants.PERMISSION_NONO_CIELO);
     }};
-    private final HashMap<String, Multiplier> playerMultipliers = new HashMap<>();
+
     private SomniumPlayerManager somniumPlayerManager;
     private GatewayListener playerDBEvents;
     private GommaObjectsFileReader gommaObjectsFileReader;
@@ -124,6 +129,10 @@ public class AresonSomnium extends JavaPlugin {
         somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection, PLAYER_TABLE_NAME);
         shopItemsManager = new ShopItemsManager(this, mySqlDBConnection);
 
+        // Multiplier
+        multiplierValueNamespacedKey = new NamespacedKey(this, Constants.MULTIPLIER_VALUE_KEY);
+        multiplierDurationNamespacedKey = new NamespacedKey(this, Constants.MULTIPLIER_DURATION_KEY);
+
         // Placeholders
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new MultiplierPlaceholders(this).register();
@@ -150,13 +159,7 @@ public class AresonSomnium extends JavaPlugin {
         lastHitPvP = new LastHitPvP(this);
 
         //Repair
-        fullRepairTimes = new HashMap<>();
-        singleRepairTimes = new HashMap<>();
-        fullRepairDelay = getConfig().getLong("repair.full-delay-seconds");
-        singleRepairCoinsPrice = new Price(getConfig().getInt("repair.cost.coins"), 0, 0);
-        singleRepairObolsPrice = new Price(0, getConfig().getInt("repair.cost.obols"), 0);
-        singleRepairGemsPrice = new Price(0, 0, getConfig().getInt("repair.cost.gems"));
-        singleFreeRepairDelay = getConfig().getLong("repair.single-delay-seconds");
+        initializeRepair();
 
         // Autosell task
         playersWithAutoSellActive = new HashSet<>();
@@ -171,6 +174,16 @@ public class AresonSomnium extends JavaPlugin {
                 playersWithAutoSellActive.remove(playerName);
             }
         }), 0, 300);
+    }
+
+    private void initializeRepair() {
+        fullRepairTimes = new HashMap<>();
+        singleRepairTimes = new HashMap<>();
+        fullRepairDelay = getConfig().getLong("repair.full-delay-seconds");
+        singleRepairCoinsPrice = new Price(getConfig().getInt("repair.cost.coins"), 0, 0);
+        singleRepairObolsPrice = new Price(0, getConfig().getInt("repair.cost.obols"), 0);
+        singleRepairGemsPrice = new Price(0, 0, getConfig().getInt("repair.cost.gems"));
+        singleFreeRepairDelay = getConfig().getLong("repair.single-delay-seconds");
     }
 
     public LastHitPvP getLastHitPvP() {

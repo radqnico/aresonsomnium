@@ -21,6 +21,8 @@ public class Constants {
     public static final String PERMISSION_NONO_CIELO = "aresonsomnium.nonocielo";
 
     public static final String PERMISSION_MULTIPLIER = "aresonsomnium.multiplier";
+    public static final String MULTIPLIER_VALUE_KEY = "multiplier_value";
+    public static final String MULTIPLIER_DURATION_KEY = "multiplier_duration";
 
     public static final String SELL_ALL_COMMAND = "sellall";
     public static final String SELL_HAND_COMMAND = "sellhand";
