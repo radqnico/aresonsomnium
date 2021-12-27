@@ -1,6 +1,7 @@
 package it.areson.aresonsomnium.commands.admin;
 
 import it.areson.aresonsomnium.AresonSomnium;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.command.*;
 import org.bukkit.enchantments.Enchantment;
@@ -52,15 +53,15 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
     }
 
     private ItemStack createConsumableItemStack(Material material, String displayName, ArrayList<String> lore, int modelValue) {
-        //TODO Deprecated
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
-            itemMeta.setDisplayName(displayName);
+            itemMeta.displayName(Component.text(displayName));
 
-            lore.add("");
-            lore.add(GRAY + "Click destro per utilizzarlo");
-            itemMeta.setLore(lore);
+            List<Component> loreCorrectFormat = lore.parallelStream().map(Component::text).collect(Collectors.toList());
+            loreCorrectFormat.add(Component.text(""));
+            loreCorrectFormat.add(Component.text(GRAY + "Click destro per utilizzarlo"));
+            itemMeta.lore(loreCorrectFormat);
 
             itemMeta.addEnchant(Enchantment.DURABILITY, 1, false);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -78,14 +79,18 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
 
         ItemMeta itemMeta = finalItem.getItemMeta();
         if (itemMeta != null) {
-            itemMeta.setDisplayName(AQUA + "" + BOLD + itemMeta.getDisplayName() + " " + visibleMultiplier);
+            System.out.println(itemMeta.displayName());
+            itemMeta.displayName(Component.text(AQUA + "" + BOLD + itemMeta.getDisplayName() + " " + visibleMultiplier));
 
-            ArrayList<String> lore = new ArrayList<>();
-            lore.add(GRAY + "Moltiplicatore: " + GREEN + visibleMultiplier);
-            lore.add(GRAY + "Durata: " + GREEN + duration);
-            lore.addAll(itemMeta.getLore());
+            List<Component> lore = new ArrayList<>();
+            lore.add(Component.text(GRAY + "Moltiplicatore: " + GREEN + visibleMultiplier));
+            lore.add(Component.text(GRAY + "Durata: " + GREEN + duration));
+            List<Component> oldLore = itemMeta.lore();
+            if (oldLore != null) {
+                lore.addAll(oldLore);
+            }
 
-            itemMeta.setLore(lore);
+            itemMeta.lore(lore);
         }
         finalItem.setItemMeta(itemMeta);
 
