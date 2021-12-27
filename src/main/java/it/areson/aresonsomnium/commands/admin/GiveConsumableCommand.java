@@ -77,7 +77,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
 
     public ItemStack alignMultiplierItemStack(ItemStack originalItem, int multiplier, String duration) {
         ItemStack finalItem = originalItem.clone();
-        String visibleMultiplier = (double) multiplier / 100 + "x";
+        String visibleMultiplier = multiplier / 100.0 + "x";
 
         ItemMeta itemMeta = finalItem.getItemMeta();
         if (itemMeta != null) {
@@ -99,7 +99,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
             }
 
             PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
-            persistentDataContainer.set(aresonSomnium.multiplierValueNamespacedKey, PersistentDataType.INTEGER, multiplier);
+            persistentDataContainer.set(aresonSomnium.multiplierValueNamespacedKey, PersistentDataType.DOUBLE, multiplier / 100.0);
             persistentDataContainer.set(aresonSomnium.multiplierDurationNamespacedKey, PersistentDataType.STRING, duration);
 
             itemMeta.lore(lore);

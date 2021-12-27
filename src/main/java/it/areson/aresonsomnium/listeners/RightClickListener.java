@@ -19,16 +19,16 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import static it.areson.aresonsomnium.Constants.*;
-import static net.md_5.bungee.api.ChatColor.COLOR_CHAR;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class RightClickListener extends GeneralEventListener {
@@ -98,27 +98,18 @@ public class RightClickListener extends GeneralEventListener {
     }
 
     private Optional<Pair<Double, Duration>> getMultiplierProperties(ItemStack itemStack) {
-        //TODO Deprecated
-        List<String> lore = itemStack.getLore();
-
-        System.out.println(itemStack.getItemMeta().getPersistentDataContainer().getKeys());
-        if (lore != null && lore.size() >= 2) {
+        if (itemStack.hasItemMeta()) {
             try {
-                String stringMultiplier = lore.get(0);
-                stringMultiplier = stringMultiplier.replaceAll(COLOR_CHAR + ".", "");
-                stringMultiplier = stringMultiplier.substring(stringMultiplier.indexOf(" ") + 1, stringMultiplier.length() - 1);
-                double multiplier = Double.parseDouble(stringMultiplier);
+                PersistentDataContainer persistentDataContainer = itemStack.getItemMeta().getPersistentDataContainer();
+                Double multiplier = persistentDataContainer.get(aresonSomnium.multiplierValueNamespacedKey, PersistentDataType.DOUBLE);
 
-                String stringDuration = lore.get(1);
-                // Remove colors
-                stringDuration = stringDuration.replaceAll(COLOR_CHAR + ".", "");
-                // Take from the space
-                stringDuration = stringDuration.substring(stringDuration.indexOf(" ") + 1);
-                Duration duration = Duration.parse("PT" + stringDuration);
+                //TODO Sembra non esser corretto il modo di parsare la duration
+                String duration = persistentDataContainer.get(aresonSomnium.multiplierDurationNamespacedKey, PersistentDataType.STRING);
+                Duration parsedDuration = Duration.parse("PT" + duration);
 
-                return Optional.of(Pair.of(multiplier, duration));
+                return Optional.of(Pair.of(multiplier, parsedDuration));
             } catch (Exception exception) {
-                aresonSomnium.getLogger().severe("Error while parsing from lore of multiplier consumable item");
+                aresonSomnium.getLogger().severe("Error while parsing multiplier of consumable item");
                 exception.printStackTrace();
             }
         }
