@@ -42,10 +42,9 @@ pipeline {
                             configName: "Areson",
                             transfers: [
                                 sshTransfer(
-                                    sourceFiles: "**/*.jar",
+                                    sourceFiles: "**/*dependencies.jar.jar",
                                     remoteDirectory: "/home/minecraft/somnium/plugins/",
-                                    flatten: true,
-                                    excludes: "**/*original*.jar"
+                                    flatten: true
                                 )
                             ]
                         ),

@@ -135,6 +135,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
                                 // Getting Duration
                                 String duration = "10m";
                                 if (arguments.length > 4) {
+                                    //TODO Not working well
                                     duration = Duration.parse("PT" + arguments[4]).toString().substring(2).toLowerCase();
                                 }
 
