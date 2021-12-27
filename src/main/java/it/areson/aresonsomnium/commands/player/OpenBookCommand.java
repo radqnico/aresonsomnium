@@ -24,6 +24,7 @@ public class OpenBookCommand implements CommandExecutor {
         }
     }
 
+    //TODO Usa il file sbagliato
     //TODO From it to en
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] arguments) {

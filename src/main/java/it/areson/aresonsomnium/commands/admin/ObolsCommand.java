@@ -73,7 +73,7 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
     private void handleGenerateObolShard(String playerName, int amount) {
         Player player = aresonSomnium.getServer().getPlayer(playerName);
         if (player != null) {
-            HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(generateObolShard(aresonSomnium, amount));
+            HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(generateObolShard(amount));
             if (!remaining.isEmpty()) {
                 for (Integer integer : remaining.keySet()) {
                     player.getWorld().dropItem(player.getLocation(), remaining.get(integer));
@@ -124,11 +124,10 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
     }
 
 
-    public ItemStack generateObolShard(AresonSomnium aresonSomnium, int amount) {
+    public ItemStack generateObolShard(int amount) {
         ItemStack itemStack = new ItemStack(Material.GOLD_NUGGET, amount);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
-            //TODO Forse va usato il translate color
             itemMeta.displayName(Component.text(messageManager.getMessageWithoutPrefix("obolshard-item-name")));
 
             String loreString = messageManager.getMessageWithoutPrefix("obolshard-item-lore");

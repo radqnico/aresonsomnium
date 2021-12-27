@@ -4,6 +4,7 @@ import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import net.ess3.api.Economy;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -36,17 +37,16 @@ public class Wallet {
         return new Wallet(BigInteger.ZERO, BigInteger.ZERO);
     }
 
-
     // TODO Salvare un oggetto "stampo" e modificare il dato che serve all'occasione
     public static ItemStack generateCheck(BigDecimal amount, CoinType coinType) {
         ItemStack itemStack = new ItemStack(Material.PAPER);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
-            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&6Assegno in &e&l" + coinType.getCoinName()));
-            List<String> lore = new ArrayList<>();
-            lore.add(ChatColor.translateAlternateColorCodes('&', "&7Valore:"));
-            lore.add(ChatColor.translateAlternateColorCodes('&', "&a" + amount.toString() + " " + coinType.getCoinName()));
-            itemMeta.setLore(lore);
+            itemMeta.displayName(Component.text(ChatColor.translateAlternateColorCodes('&', "&6Assegno in &e&l" + coinType.getCoinName())));
+            List<Component> lore = new ArrayList<>();
+            lore.add(Component.text(ChatColor.translateAlternateColorCodes('&', "&7Valore:")));
+            lore.add(Component.text(ChatColor.translateAlternateColorCodes('&', "&a" + amount.toString() + " " + coinType.getCoinName())));
+            itemMeta.lore(lore);
             itemMeta.setCustomModelData(CHECK_MODEL_DATA);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             itemMeta.addEnchant(Enchantment.DAMAGE_UNDEAD, 1, true);
@@ -55,6 +55,7 @@ public class Wallet {
         return itemStack;
     }
 
+    //TODO Usare persistent data
     public static boolean applyCheck(SomniumPlayer somniumPlayer, ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
 

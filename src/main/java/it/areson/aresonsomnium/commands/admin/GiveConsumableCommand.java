@@ -81,7 +81,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
 
         ItemMeta itemMeta = finalItem.getItemMeta();
         if (itemMeta != null) {
-            String previousName = "";
+            String previousName;
             if (itemMeta.displayName() instanceof TextComponent textComponent) {
                 previousName = textComponent.content();
             } else {
@@ -147,7 +147,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
                                 // Getting Duration
                                 String duration = "10m";
                                 if (arguments.length > 4) {
-                                    //TODO Not working well with 1d
+                                    //TODO Not working with 1d
                                     duration = Duration.parse("PT" + arguments[4]).toString().substring(2).toLowerCase();
                                 }
 
