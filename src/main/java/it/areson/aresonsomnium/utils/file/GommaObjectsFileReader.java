@@ -1,5 +1,6 @@
 package it.areson.aresonsomnium.utils.file;
 
+import it.areson.aresonlib.file.FileManager;
 import it.areson.aresonsomnium.AresonSomnium;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -38,14 +39,14 @@ public class GommaObjectsFileReader extends FileManager {
                         maxKey = i;
                     }
                 } catch (NumberFormatException exception) {
-                    aresonSomnium.getLogger().severe("GOMMA GOMMA: chiave " + key + " non valida. Usa solo numeri interi positivi.");
+                    javaPlugin.getLogger().severe("GOMMA GOMMA: chiave " + key + " non valida. Usa solo numeri interi positivi.");
                 }
             }
             maxKey++;
             itemsSection.set(maxKey + ".item", Base64.getEncoder().encodeToString(itemStack.serializeAsBytes()));
             itemsSection.set(maxKey + ".amount", itemStack.getAmount());
             itemsSection.set(maxKey + ".material-READONLY", itemStack.getType().name());
-            save();
+            saveFileConfiguration();
         }
     }
 
@@ -63,7 +64,7 @@ public class GommaObjectsFileReader extends FileManager {
                     itemStack.setAmount(itemsSection.getInt(key + ".amount", 1));
                     itemStacks.add(itemStack);
                 } catch (NumberFormatException exception) {
-                    aresonSomnium.getLogger().severe("GOMMA GOMMA: chiave " + key + " non valida. Usa solo numeri interi positivi.");
+                    javaPlugin.getLogger().severe("GOMMA GOMMA: chiave " + key + " non valida. Usa solo numeri interi positivi.");
                 }
             }
         }
@@ -81,7 +82,7 @@ public class GommaObjectsFileReader extends FileManager {
             float yaw = (float) locationSector.getDouble("yaw");
             float pitch = (float) locationSector.getDouble("pitch");
             if (Objects.nonNull(world)) {
-                return new Location(aresonSomnium.getServer().getWorld(world), x, y, z, yaw, pitch).toBlockLocation();
+                return new Location(javaPlugin.getServer().getWorld(world), x, y, z, yaw, pitch).toBlockLocation();
             }
         }
         return null;
@@ -98,7 +99,7 @@ public class GommaObjectsFileReader extends FileManager {
             locationSector.set("z", location.getZ());
             locationSector.set("yaw", location.getYaw());
             locationSector.set("pitch", location.getPitch());
-            save();
+            saveFileConfiguration();
         }
     }
 

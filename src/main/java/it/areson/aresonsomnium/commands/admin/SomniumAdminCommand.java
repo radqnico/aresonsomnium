@@ -1,13 +1,13 @@
 package it.areson.aresonsomnium.commands.admin;
 
+import it.areson.aresonlib.file.MessageManager;
+import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.Recaps;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
-import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.MessageUtils;
-import it.areson.aresonsomnium.utils.file.MessageManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.*;
 import org.bukkit.entity.HumanEntity;
@@ -29,10 +29,10 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
     private final MessageManager messageManager;
     private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "deleteLastLoreLine", "addCoins", "removeCoins", "openRecap"};
 
-    public SomniumAdminCommand(AresonSomnium plugin) {
-        aresonSomnium = plugin;
-        messageManager = plugin.getMessageManager();
-        PluginCommand command = aresonSomnium.getCommand("SomniumAdmin");
+    public SomniumAdminCommand(AresonSomnium aresonSomnium, MessageManager messageManager) {
+        this.aresonSomnium = aresonSomnium;
+        this.messageManager = messageManager;
+        PluginCommand command = this.aresonSomnium.getCommand("SomniumAdmin");
         if (command != null) {
             command.setExecutor(this);
             command.setTabCompleter(this);
@@ -97,7 +97,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             if (Objects.nonNull(somniumPlayer)) {
                 Recaps.openRecapToPlayer(player, Integer.parseInt(recap));
             } else {
-                messageManager.sendPlainMessage(player, "somniumplayer-not-found", Pair.of("%player%", playerName));
+                messageManager.sendMessage(player, "somniumplayer-not-found", new Substitution("%player%", playerName));
             }
         } else {
             aresonSomnium.getLogger().severe("Player not found in handleOpenRecap: " + playerName);
@@ -148,7 +148,7 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
             }
             itemInMainHand.setItemMeta(itemMeta);
         } else {
-            messageManager.sendPlainMessage(commandSender, "player-only-command");
+            messageManager.sendMessage(commandSender, "player-only-command");
         }
     }
 
@@ -157,17 +157,17 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         if (Objects.nonNull(player)) {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (Objects.nonNull(somniumPlayer)) {
-                messageManager.sendPlainMessage(
+                messageManager.sendMessage(
                         commandSender,
                         "stats-format",
-                        Pair.of("%player%", playerName),
-                        Pair.of("%secondsPlayed%", somniumPlayer.getSecondsPlayedTotal() + ""),
-                        Pair.of("%coins%", Wallet.getCoins(player).toString()),
-                        Pair.of("%obols%", somniumPlayer.getWallet().getObols().toString()),
-                        Pair.of("%gems%", somniumPlayer.getWallet().getGems().toString())
+                        new Substitution("%player%", playerName),
+                        new Substitution("%secondsPlayed%", somniumPlayer.getSecondsPlayedTotal() + ""),
+                        new Substitution("%coins%", Wallet.getCoins(player).toString()),
+                        new Substitution("%obols%", somniumPlayer.getWallet().getObols().toString()),
+                        new Substitution("%gems%", somniumPlayer.getWallet().getGems().toString())
                 );
             } else {
-                messageManager.sendPlainMessage(player, "somniumplayer-not-found", Pair.of("%player%", playerName));
+                messageManager.sendMessage(player, "somniumplayer-not-found", new Substitution("%player%", playerName));
             }
         } else {
             aresonSomnium.getLogger().severe("Player not found in handleStatsCommand: " + playerName);
@@ -195,29 +195,29 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                         case OBOLI -> somniumPlayer.getWallet().changeObols(amount.toBigInteger());
                         case GEMME -> somniumPlayer.getWallet().changeGems(amount.toBigInteger());
                         case MONETE -> Wallet.addCoins(player, amount);
-                        default -> messageManager.sendPlainMessage(player, "coins-type-error");
+                        default -> messageManager.sendMessage(player, "coins-type-error");
                     }
                     switch (type) {
                         case MONETE:
                         case GEMME:
                         case OBOLI:
                             if (removing) {
-                                messageManager.sendPlainMessage(player, "coins-remove", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.negate().toString()));
+                                messageManager.sendMessage(player, "coins-remove", new Substitution("%type%", type.getCoinName()), new Substitution("%amount%", amount.negate().toString()));
                             } else {
-                                messageManager.sendPlainMessage(player, "coins-add", Pair.of("%type%", type.getCoinName()), Pair.of("%amount%", amount.toString()));
+                                messageManager.sendMessage(player, "coins-add", new Substitution("%type%", type.getCoinName()), new Substitution("%amount%", amount.toString()));
                             }
                             break;
                         default:
                             break;
                     }
                 } catch (NumberFormatException exception) {
-                    messageManager.sendPlainMessage(player, "not-a-number");
+                    messageManager.sendMessage(player, "not-a-number");
                 }
             } else {
-                messageManager.sendPlainMessage(player, "somniumplayer-not-found", Pair.of("%player%", playerName));
+                messageManager.sendMessage(player, "somniumplayer-not-found", new Substitution("%player%", playerName));
             }
         } else {
-            messageManager.sendPlainMessage(commandSender, "player-not-found", Pair.of("%player%", playerName));
+            messageManager.sendMessage(commandSender, "player-not-found", new Substitution("%player%", playerName));
         }
     }
 
@@ -232,26 +232,26 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     switch (type) {
                         case OBOLI -> {
                             somniumPlayer.getWallet().setObols(amount.toBigInteger());
-                            messageManager.sendPlainMessage(player, "coins-set");
+                            messageManager.sendMessage(player, "coins-set");
                         }
                         case GEMME -> {
                             somniumPlayer.getWallet().setGems(amount.toBigInteger());
-                            messageManager.sendPlainMessage(player, "coins-set");
+                            messageManager.sendMessage(player, "coins-set");
                         }
                         case MONETE -> {
                             Wallet.setCoins(player, amount);
-                            messageManager.sendPlainMessage(player, "coins-set");
+                            messageManager.sendMessage(player, "coins-set");
                         }
-                        default -> messageManager.sendPlainMessage(player, "coins-type-error");
+                        default -> messageManager.sendMessage(player, "coins-type-error");
                     }
                 } catch (NumberFormatException exception) {
-                    messageManager.sendPlainMessage(player, "not-a-number");
+                    messageManager.sendMessage(player, "not-a-number");
                 }
             } else {
-                messageManager.sendPlainMessage(player, "somniumplayer-not-found", Pair.of("%player%", playerName));
+                messageManager.sendMessage(player, "somniumplayer-not-found", new Substitution("%player%", playerName));
             }
         } else {
-            messageManager.sendPlainMessage(commandSender, "player-not-found", Pair.of("%player%", playerName));
+            messageManager.sendMessage(commandSender, "player-not-found", new Substitution("%player%", playerName));
         }
     }
 

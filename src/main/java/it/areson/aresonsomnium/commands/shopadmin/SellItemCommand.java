@@ -1,12 +1,13 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
+import it.areson.aresonlib.file.MessageManager;
+import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.AresonCommand;
 import it.areson.aresonsomnium.commands.CommandParserCommand;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.items.ShopItem;
-import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.SoundManager;
 import org.bukkit.Material;
@@ -21,7 +22,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,10 +29,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("NullableProblems")
 @AresonCommand("sellitem")
 public class SellItemCommand extends CommandParserCommand {
 
-    public static void buyItem(int id, Player player, CommandSender commandSender) {
+    private final MessageManager messageManager;
+
+    public SellItemCommand(MessageManager messageManager) {
+        this.messageManager = messageManager;
+    }
+
+    public void buyItem(int id, Player player, CommandSender commandSender) {
         if (player != null) {
             SomniumPlayer somniumPlayer = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(player);
             if (somniumPlayer != null) {
@@ -43,20 +50,20 @@ public class SellItemCommand extends CommandParserCommand {
                         PlayerInventory inventory = player.getInventory();
                         sellIfContains(somniumPlayer, shopItem, id, inventory);
                     } else {
-                        player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-sell-not-sellable"));
+                        messageManager.sendMessage(commandSender, "item-sell-not-sellable");
                     }
                 } else {
-                    commandSender.sendMessage("ID '" + id + "' non trovato");
+                    messageManager.sendFreeMessage(commandSender, "ID '" + id + "' non trovato");
                 }
             } else {
-                player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-sell-error"));
+                messageManager.sendMessage(commandSender, "item-sell-error");
             }
         } else {
             commandSender.sendMessage("Giocatore non trovato");
         }
     }
 
-    public static void sellIfContains(SomniumPlayer somniumPlayer, ShopItem shopItem, int id, Inventory inventory) {
+    public void sellIfContains(SomniumPlayer somniumPlayer, ShopItem shopItem, int id, Inventory inventory) {
         Material type = shopItem.getItemStack(false, false).getType();
         if (inventory.contains(type)) {
             for (int i = 0; i < inventory.getSize(); i++) {
@@ -72,12 +79,13 @@ public class SellItemCommand extends CommandParserCommand {
                             Price sellingPrice = shopItem.getSellingPrice().clone();
                             sellingPrice.multiply(amount);
                             somniumPlayer.givePriceAmount(sellingPrice);
-                            somniumPlayer.getPlayer().sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage(
+                            messageManager.sendMessage(
+                                    somniumPlayer.getPlayer(),
                                     "item-sell-success",
-                                    Pair.of("%coins%", sellingPrice.getCoins().toString()),
-                                    Pair.of("%gems%", sellingPrice.getGems().toString()),
-                                    Pair.of("%obols%", sellingPrice.getObols().toString())
-                            ));
+                                    new Substitution("%coins%", sellingPrice.getCoins().toString()),
+                                    new Substitution("%gems%", sellingPrice.getGems().toString()),
+                                    new Substitution("%obols%", sellingPrice.getObols().toString())
+                            );
                             SoundManager.playCoinsSound(somniumPlayer.getPlayer());
                             return;
                         }
@@ -85,7 +93,7 @@ public class SellItemCommand extends CommandParserCommand {
                 }
             }
         } else {
-            somniumPlayer.getPlayer().sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-sell-not-present"));
+            messageManager.sendMessage(somniumPlayer.getPlayer(), "item-sell-not-present");
         }
         SoundManager.playDeniedSound(somniumPlayer.getPlayer());
     }
@@ -105,14 +113,15 @@ public class SellItemCommand extends CommandParserCommand {
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] arguments) {
         List<String> suggestions = new ArrayList<>();
-        if (strings.length == 2) {
+        if (arguments.length == 2) {
             return null;
         }
-        if (strings.length == 3) {
-            boolean b = suggestions.addAll(Arrays.stream(CoinType.values()).map(coinType -> coinType.name().toLowerCase()).collect(Collectors.toList()));
+        if (arguments.length == 3) {
+            suggestions.addAll(Arrays.stream(CoinType.values()).map(coinType -> coinType.name().toLowerCase()).collect(Collectors.toList()));
         }
         return suggestions;
     }
+
 }

@@ -1,9 +1,9 @@
 package it.areson.aresonsomnium.commands.player;
 
+import it.areson.aresonlib.file.MessageManager;
+import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.Constants;
-import it.areson.aresonsomnium.elements.Pair;
-import it.areson.aresonsomnium.utils.file.MessageManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,9 +19,9 @@ public class SellCommand implements CommandExecutor {
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
 
-    public SellCommand(AresonSomnium aresonSomnium, String command) {
+    public SellCommand(AresonSomnium aresonSomnium, MessageManager messageManager, String command) {
         this.aresonSomnium = aresonSomnium;
-        messageManager = this.aresonSomnium.getMessageManager();
+        this.messageManager = messageManager;
 
         PluginCommand pluginCommand = this.aresonSomnium.getCommand(command);
         if (pluginCommand != null) {
@@ -41,17 +41,17 @@ public class SellCommand implements CommandExecutor {
                     ItemStack[] itemArray = {player.getInventory().getItemInMainHand()};
                     sold = aresonSomnium.sellItems(player, itemArray);
                     if (sold.compareTo(BigDecimal.ZERO) > 0) {
-                        messageManager.sendPlainMessage(player, "item-sold", Pair.of("%money%", "" + sold));
+                        messageManager.sendMessage(player, "item-sold", new Substitution("%money%", "" + sold));
                     } else {
-                        messageManager.sendPlainMessage(player, "item-not-sellable");
+                        messageManager.sendMessage(player, "item-not-sellable");
                     }
                 }
                 case Constants.SELL_ALL_COMMAND -> {
                     sold = aresonSomnium.sellItems(player, player.getInventory().getContents());
                     if (sold.compareTo(BigDecimal.ZERO) > 0) {
-                        messageManager.sendPlainMessage(player, "items-sold", Pair.of("%money%", "" + sold));
+                        messageManager.sendMessage(player, "items-sold", new Substitution("%money%", "" + sold));
                     } else {
-                        messageManager.sendPlainMessage(player, "items-not-sellable");
+                        messageManager.sendMessage(player, "items-not-sellable");
                     }
                 }
                 case Constants.AUTO_SELL_COMMAND -> {
@@ -59,13 +59,13 @@ public class SellCommand implements CommandExecutor {
                         String playerName = player.getName();
                         if (!aresonSomnium.playersWithAutoSellActive.contains(playerName)) {
                             aresonSomnium.playersWithAutoSellActive.add(playerName);
-                            messageManager.sendPlainMessage(player, "autosell-activated");
+                            messageManager.sendMessage(player, "autosell-activated");
                         } else {
                             aresonSomnium.playersWithAutoSellActive.remove(playerName);
-                            messageManager.sendPlainMessage(player, "autosell-deactivated");
+                            messageManager.sendMessage(player, "autosell-deactivated");
                         }
                     } else {
-                        messageManager.sendPlainMessage(player, "no-permissions");
+                        messageManager.sendMessage(player, "no-permissions");
                     }
                 }
                 default -> aresonSomnium.getLogger().severe("Command not registered in SellCommand");

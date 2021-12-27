@@ -1,5 +1,6 @@
 package it.areson.aresonsomnium.listeners;
 
+import it.areson.aresonlib.file.MessageManager;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.elements.Pair;
@@ -32,11 +33,13 @@ import static net.md_5.bungee.api.ChatColor.COLOR_CHAR;
 @SuppressWarnings("FieldCanBeLocal")
 public class RightClickListener extends GeneralEventListener {
 
+    private final MessageManager messageManager;
     private final HashMap<String, Instant> playerDelays;
     private final int delaySeconds = 2;
 
-    public RightClickListener(AresonSomnium aresonSomnium) {
+    public RightClickListener(AresonSomnium aresonSomnium, MessageManager messageManager) {
         super(aresonSomnium);
+        this.messageManager = messageManager;
 
         playerDelays = new HashMap<>();
     }
@@ -168,9 +171,10 @@ public class RightClickListener extends GeneralEventListener {
 
                 if (playerInventory.addItem(aresonSomnium.getGommaObjectsFileReader().getRandomItem()).isEmpty()) {
                     itemInMainHand.setAmount(itemInMainHand.getAmount() - 1);
-                    player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("gomma-item-give"));
+
+                    messageManager.sendMessage(player, "gomma-item-give");
                 } else {
-                    player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("gomma-error-give"));
+                    messageManager.sendMessage(player, "gomma-error-give");
                 }
                 event.setCancelled(true);
             }
@@ -186,7 +190,7 @@ public class RightClickListener extends GeneralEventListener {
             if (somniumPlayer != null) {
                 if (Wallet.applyCheck(somniumPlayer, itemStack)) {
                     itemStack.setAmount(itemStack.getAmount() - 1);
-                    event.getPlayer().sendMessage(aresonSomnium.getMessageManager().getPlainMessage("check-applied"));
+                    messageManager.sendMessage(event.getPlayer(), "check-applied");
                     event.setCancelled(true);
                 }
             } else {

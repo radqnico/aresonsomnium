@@ -1,5 +1,7 @@
 package it.areson.aresonsomnium.commands.repair;
 
+import it.areson.aresonlib.file.MessageManager;
+import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.elements.Pair;
 
@@ -11,11 +13,12 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 
 public class RepairCountdown {
 
+    private final MessageManager messageManager;
     private final HashMap<String, LocalDateTime> lastRepairTimes;
 
-    public RepairCountdown() {
+    public RepairCountdown(MessageManager messageManager) {
+        this.messageManager = messageManager;
         this.lastRepairTimes = new HashMap<>();
-
     }
 
     public void setLastRepairTime(String playerName) {
@@ -32,7 +35,7 @@ public class RepairCountdown {
             return Pair.of(true, null);
         } else {
             long remaining = Duration.between(LocalDateTime.now(), lastRepairTime.plus(timeToWait, SECONDS)).getSeconds();
-            return Pair.of(false, AresonSomniumAPI.instance.getMessageManager().getPlainMessage("cannot-repair-yet", Pair.of("%seconds%", (remaining + 1) + "")));
+            return Pair.of(false, messageManager.getMessage("cannot-repair-yet", new Substitution("%seconds%", (remaining + 1) + "")));
         }
     }
 

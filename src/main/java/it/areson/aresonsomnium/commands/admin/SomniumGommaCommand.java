@@ -1,7 +1,8 @@
 package it.areson.aresonsomnium.commands.admin;
 
 import com.destroystokyo.paper.block.TargetBlockInfo;
-import it.areson.aresonsomnium.elements.Pair;
+import it.areson.aresonlib.file.MessageManager;
+import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.utils.MessageUtils;
 import org.bukkit.Location;
@@ -27,9 +28,11 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
 
     private final String[] subCommands = new String[]{"setBlock", "addItem", "testGive", "giveGomma"};
     private final AresonSomnium aresonSomnium;
+    private final MessageManager messageManager;
 
-    public SomniumGommaCommand(AresonSomnium aresonSomnium) {
+    public SomniumGommaCommand(AresonSomnium aresonSomnium, MessageManager messageManager) {
         this.aresonSomnium = aresonSomnium;
+        this.messageManager = messageManager;
         PluginCommand command = this.aresonSomnium.getCommand("gomma");
         if (command != null) {
             command.setExecutor(this);
@@ -60,7 +63,7 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
                         String nick = args[1];
                         handleGiveGomma(nick, amount);
                     } catch (NumberFormatException e) {
-                        commandSender.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("not-a-number"));
+                        messageManager.sendMessage(commandSender, "not-a-number");
                     }
                 } else {
                     commandSender.sendMessage(errorMessage("Funzione non trovata"));
@@ -75,13 +78,13 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
     private void handleGiveGomma(String nick, int amount) {
         Player player = aresonSomnium.getServer().getPlayer(nick);
         if (player != null) {
-            ItemStack gommaItem = new ItemStack(Material.valueOf(aresonSomnium.getMessageManager().getPlainMessageNoPrefix("gomma-material")));
+            ItemStack gommaItem = new ItemStack(Material.valueOf(messageManager.getMessageWithoutPrefix("gomma-material")));
 
             ItemMeta itemMeta = gommaItem.getItemMeta();
             if (Objects.nonNull(itemMeta)) {
-                itemMeta.setDisplayName(aresonSomnium.getMessageManager().getPlainMessageNoPrefix("gomma-item-name"));
+                itemMeta.setDisplayName(messageManager.getMessageWithoutPrefix("gomma-item-name"));
 
-                String loreString = aresonSomnium.getMessageManager().getPlainMessageNoPrefix("gomma-item-lore");
+                String loreString = messageManager.getMessageWithoutPrefix("gomma-item-lore");
                 String[] split = loreString.split("\\n");
                 ArrayList<String> lore = new ArrayList<>(Arrays.asList(split));
                 itemMeta.setLore(lore);
@@ -94,7 +97,7 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
             gommaItem.setAmount(amount);
 
             if (player.getInventory().addItem(gommaItem).isEmpty()) {
-                player.sendMessage(aresonSomnium.getMessageManager().getPlainMessage("gomma-give", Pair.of("%amount%", "" + amount)));
+                messageManager.sendMessage(player, "gomma-give", new Substitution("%amount%", "" + amount));
             } else {
                 player.sendMessage(MessageUtils.errorMessage("Non hai abbastanza spazio"));
             }

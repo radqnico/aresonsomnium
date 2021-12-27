@@ -1,11 +1,11 @@
 package it.areson.aresonsomnium.listeners;
 
+import it.areson.aresonlib.file.MessageManager;
+import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.economy.Wallet;
-import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.players.SomniumPlayer;
-import it.areson.aresonsomnium.utils.file.MessageManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -63,13 +63,13 @@ public class PlayerListener extends GeneralEventListener {
                     Wallet.addCoins(event.getPlayer(), amountToSteal.negate());
                     Wallet.addCoins(playerKiller, amountToSteal);
 
-                    messageManager.sendPlainMessage(playerKiller, "steal-coins-earned",
-                            Pair.of("%coins%", amountToSteal + ""),
-                            Pair.of("%playerName%", event.getPlayer().getName())
+                    messageManager.sendMessage(playerKiller, "steal-coins-earned",
+                            new Substitution("%coins%", amountToSteal + ""),
+                            new Substitution("%playerName%", event.getPlayer().getName())
                     );
-                    messageManager.sendPlainMessage(event.getPlayer(), "steal-coins-lost",
-                            Pair.of("%coins%", amountToSteal + ""),
-                            Pair.of("%playerName%", playerKiller.getName())
+                    messageManager.sendMessage(event.getPlayer(), "steal-coins-lost",
+                            new Substitution("%coins%", amountToSteal + ""),
+                            new Substitution("%playerName%", playerKiller.getName())
                     );
                 }
             }
@@ -83,7 +83,7 @@ public class PlayerListener extends GeneralEventListener {
             if (itemInMainHand.getItemMeta() instanceof Damageable damageable) {
                 if ((damageable.getDamage() * 100) / itemInMainHand.getType().getMaxDurability() > 90) {
                     if (isTimeToSendWarn(event.getPlayer().getName())) {
-                        messageManager.sendPlainMessage(event.getPlayer(), "item-low-life");
+                        messageManager.sendMessage(event.getPlayer(), "item-low-life");
                     }
                     increaseBrokenBlocks(event.getPlayer().getName());
                 }

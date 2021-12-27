@@ -1,5 +1,8 @@
 package it.areson.aresonsomnium;
 
+import it.areson.aresonlib.file.FileManager;
+import it.areson.aresonlib.file.MessageManager;
+import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.CommandParser;
 import it.areson.aresonsomnium.commands.admin.GiveConsumableCommand;
@@ -18,7 +21,6 @@ import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.economy.items.ShopItemsManager;
 import it.areson.aresonsomnium.elements.Multiplier;
-import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import it.areson.aresonsomnium.listeners.*;
 import it.areson.aresonsomnium.placeholders.CoinsPlaceholders;
@@ -27,9 +29,7 @@ import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.players.SomniumPlayerManager;
 import it.areson.aresonsomnium.pvp.LastHitPvP;
 import it.areson.aresonsomnium.utils.AutoSaveManager;
-import it.areson.aresonsomnium.utils.file.FileManager;
 import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
-import it.areson.aresonsomnium.utils.file.MessageManager;
 import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.node.Node;
@@ -165,7 +165,7 @@ public class AresonSomnium extends JavaPlugin {
             if (player != null) {
                 BigDecimal sold = sellItems(player, player.getInventory().getContents());
                 if (sold.compareTo(BigDecimal.ZERO) > 0) {
-                    messageManager.sendPlainMessage(player, "autosell-sold", Pair.of("%money%", "" + sold));
+                    messageManager.sendMessage(player, "autosell-sold", new Substitution("%money%", "" + sold));
                 }
             } else {
                 playersWithAutoSellActive.remove(playerName);
@@ -175,10 +175,6 @@ public class AresonSomnium extends JavaPlugin {
 
     public LastHitPvP getLastHitPvP() {
         return lastHitPvP;
-    }
-
-    public MessageManager getMessageManager() {
-        return messageManager;
     }
 
     private void registerFiles() {
@@ -205,14 +201,14 @@ public class AresonSomnium extends JavaPlugin {
             parserShopAdmin.addAresonCommand(new EditItemsCommand());
             parserShopAdmin.addAresonCommand(new ReloadItemsCommand());
             parserShopAdmin.addAresonCommand(new SetItemPriceCommand());
-            parserShopAdmin.addAresonCommand(new BuyItemCommand());
-            parserShopAdmin.addAresonCommand(new SellItemCommand());
+            parserShopAdmin.addAresonCommand(new BuyItemCommand(messageManager));
+            parserShopAdmin.addAresonCommand(new SellItemCommand(messageManager));
             parserShopAdmin.registerCommands();
             parserShopAdmin.addAresonCommand(new EditItemsCommand());
             parserShopAdmin.addAresonCommand(new ReloadItemsCommand());
             parserShopAdmin.addAresonCommand(new SetItemPriceCommand());
-            parserShopAdmin.addAresonCommand(new BuyItemCommand());
-            parserShopAdmin.addAresonCommand(new SellItemCommand());
+            parserShopAdmin.addAresonCommand(new BuyItemCommand(messageManager));
+            parserShopAdmin.addAresonCommand(new SellItemCommand(messageManager));
             parserShopAdmin.addAresonCommand(new SellLootableCommand());
             parserShopAdmin.registerCommands();
         } catch (Exception exception) {
@@ -222,14 +218,14 @@ public class AresonSomnium extends JavaPlugin {
         command.setExecutor(parserShopAdmin);
         command.setTabCompleter(parserShopAdmin);
 
-        new SomniumAdminCommand(this);
-        new StatsCommand(this);
-        new SomniumGommaCommand(this);
-        new SellCommand(this, Constants.SELL_HAND_COMMAND);
-        new SellCommand(this, Constants.SELL_ALL_COMMAND);
-        new SellCommand(this, Constants.AUTO_SELL_COMMAND);
+        new SomniumAdminCommand(this, messageManager);
+        new StatsCommand(this, messageManager);
+        new SomniumGommaCommand(this, messageManager);
+        new SellCommand(this, messageManager, Constants.SELL_HAND_COMMAND);
+        new SellCommand(this, messageManager, Constants.SELL_ALL_COMMAND);
+        new SellCommand(this, messageManager, Constants.AUTO_SELL_COMMAND);
 //        new CheckCommand(this);
-        new ObolsCommand(this);
+        new ObolsCommand(this, messageManager);
         new GiveConsumableCommand(this);
         new SomniumRepairCommand(this, Constants.SINGLE_FREE_REPAIR_COMMAND);
         new SomniumRepairCommand(this, Constants.SINGLE_REPAIR_COMMAND);
@@ -240,7 +236,7 @@ public class AresonSomnium extends JavaPlugin {
     private void initListeners() {
         playerDBEvents = new GatewayListener(this);
         InventoryListener inventoryListener = new InventoryListener(this);
-        RightClickListener rightClickListener = new RightClickListener(this);
+        RightClickListener rightClickListener = new RightClickListener(this, messageManager);
         AnvilListener anvilListener = new AnvilListener(this);
 
         playerDBEvents.registerEvents();
@@ -425,16 +421,16 @@ public class AresonSomnium extends JavaPlugin {
                 if (ignoreLastRepairTime || canFullRepairByLastRepair(player)) {
                     fullRepairTimes.put(player.getName(), LocalDateTime.now());
                     Arrays.stream(player.getInventory().getContents()).parallel().forEach(this::eventuallyRepairItemStack);
-                    messageManager.sendPlainMessage(player, "full-repair-success");
+                    messageManager.sendMessage(player, "full-repair-success");
                     return true;
                 } else {
-                    messageManager.sendPlainMessage(player, "cannot-repair-yet");
+                    messageManager.sendMessage(player, "cannot-repair-yet");
                 }
             } else {
-                messageManager.sendPlainMessage(player, "nothing-to-repair");
+                messageManager.sendMessage(player, "nothing-to-repair");
             }
         } else {
-            messageManager.sendPlainMessage(player, "no-permissions");
+            messageManager.sendMessage(player, "no-permissions");
         }
         return false;
     }
@@ -450,18 +446,18 @@ public class AresonSomnium extends JavaPlugin {
                     if (result) {
                         singleRepairTimes.put(player.getName(), LocalDateTime.now());
                         eventuallyRepairItemStack(itemInMainHand);
-                        messageManager.sendPlainMessage(player, "single-repair-success");
+                        messageManager.sendMessage(player, "single-repair-success");
                     } else {
-                        messageManager.sendPlainMessage(player, "generic-error");
+                        messageManager.sendMessage(player, "generic-error");
                     }
                 } else {
-                    messageManager.sendPlainMessage(player, "repair-not-enough-coins");
+                    messageManager.sendMessage(player, "repair-not-enough-coins");
                 }
             } else {
-                messageManager.sendPlainMessage(player, "nothing-to-repair");
+                messageManager.sendMessage(player, "nothing-to-repair");
             }
         } else {
-            messageManager.sendPlainMessage(player, "repair-cant-repair");
+            messageManager.sendMessage(player, "repair-cant-repair");
         }
     }
 
@@ -503,15 +499,15 @@ public class AresonSomnium extends JavaPlugin {
                 if (canSingleRepairByLastRepair(player)) {
                     singleRepairTimes.put(player.getName(), LocalDateTime.now());
                     eventuallyRepairItemStack(itemInMainHand);
-                    messageManager.sendPlainMessage(player, "single-repair-success");
+                    messageManager.sendMessage(player, "single-repair-success");
                 } else {
-                    messageManager.sendPlainMessage(player, "cannot-repair-yet");
+                    messageManager.sendMessage(player, "cannot-repair-yet");
                 }
             } else {
-                messageManager.sendPlainMessage(player, "nothing-to-repair");
+                messageManager.sendMessage(player, "nothing-to-repair");
             }
         } else {
-            messageManager.sendPlainMessage(player, "repair-cant-repair");
+            messageManager.sendMessage(player, "repair-cant-repair");
         }
     }
 

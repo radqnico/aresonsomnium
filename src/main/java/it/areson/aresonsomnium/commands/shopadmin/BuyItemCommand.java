@@ -1,11 +1,12 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
+import it.areson.aresonlib.file.MessageManager;
+import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.AresonCommand;
 import it.areson.aresonsomnium.commands.CommandParserCommand;
 import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.items.ShopItem;
-import it.areson.aresonsomnium.elements.Pair;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.SoundManager;
 import org.bukkit.command.Command;
@@ -20,7 +21,13 @@ import java.util.Optional;
 @AresonCommand("buyitem")
 public class BuyItemCommand extends CommandParserCommand {
 
-    public static void buyItem(int id, Player player, CommandSender commandSender, boolean putTags) {
+    private final MessageManager messageManager;
+
+    public BuyItemCommand(MessageManager messageManager) {
+        this.messageManager = messageManager;
+    }
+
+    public void buyItem(int id, Player player, CommandSender commandSender, boolean putTags) {
         if (player != null) {
             SomniumPlayer somniumPlayer = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(player);
             if (somniumPlayer != null) {
@@ -32,32 +39,33 @@ public class BuyItemCommand extends CommandParserCommand {
                             if (player.getInventory().addItem(shopItem.getItemStack(false, false, putTags)).isEmpty()) {
                                 Price price = shopItem.getShoppingPrice();
                                 somniumPlayer.takePriceAmount(price);
-                                player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage(
+                                messageManager.sendMessage(
+                                        player,
                                         "item-buy-success",
-                                        Pair.of("%coins%", price.getCoins().toString()),
-                                        Pair.of("%gems%", price.getGems().toString()),
-                                        Pair.of("%obols%", price.getObols().toString()))
+                                        new Substitution("%coins%", price.getCoins().toString()),
+                                        new Substitution("%gems%", price.getGems().toString()),
+                                        new Substitution("%obols%", price.getObols().toString())
                                 );
                                 SoundManager.playCoinsSound(player);
                                 return;
                             } else {
-                                player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-buy-not-enough-space"));
+                                messageManager.sendMessage(commandSender, "item-buy-not-enough-space");
                             }
                         } else {
-                            player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-buy-not-enough-money"));
+                            messageManager.sendMessage(commandSender, "item-buy-not-enough-money");
                         }
                     } else {
-                        player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-buy-not-buyable"));
+                        messageManager.sendMessage(commandSender, "item-buy-not-buyable");
                     }
                 } else {
-                    commandSender.sendMessage("ID '" + id + "' non trovato");
+                    messageManager.sendFreeMessage(commandSender, "ID '" + id + "' non trovato");
                 }
             } else {
-                player.sendMessage(AresonSomniumAPI.instance.getMessageManager().getPlainMessage("item-buy-error"));
+                messageManager.sendMessage(commandSender, "item-buy-error");
             }
             SoundManager.playDeniedSound(player);
         } else {
-            commandSender.sendMessage("Giocatore non trovato");
+            messageManager.sendMessage(commandSender, "Giocatore non trovato");
         }
     }
 
@@ -66,7 +74,7 @@ public class BuyItemCommand extends CommandParserCommand {
         // / /shopadmin buyitem <player> <id> <true/false>
         try {
             boolean putTags = true;
-            if(strings.length == 4) {
+            if (strings.length == 4) {
                 putTags = Boolean.parseBoolean(strings[3]);
             }
             int id = Integer.parseInt(strings[2]);

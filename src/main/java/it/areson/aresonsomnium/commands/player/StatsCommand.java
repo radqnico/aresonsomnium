@@ -1,13 +1,13 @@
 package it.areson.aresonsomnium.commands.player;
 
+import it.areson.aresonlib.file.MessageManager;
+import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.MessageUtils;
-import it.areson.aresonsomnium.elements.Pair;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
-import org.bukkit.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +17,13 @@ import java.util.Objects;
 @SuppressWarnings("NullableProblems")
 public class StatsCommand implements CommandExecutor, TabCompleter {
 
-    private final PluginCommand command;
     private final AresonSomnium aresonSomnium;
+    private final MessageManager messageManager;
 
-    public StatsCommand(AresonSomnium aresonSomnium) {
+    public StatsCommand(AresonSomnium aresonSomnium, MessageManager messageManager) {
         this.aresonSomnium = aresonSomnium;
-        command = this.aresonSomnium.getCommand("stats");
+        this.messageManager = messageManager;
+        PluginCommand command = this.aresonSomnium.getCommand("stats");
         if (command != null) {
             command.setExecutor(this);
             command.setTabCompleter(this);
@@ -42,19 +43,17 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleStats(CommandSender commandSender) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
+        if (commandSender instanceof Player player) {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (Objects.nonNull(somniumPlayer)) {
-                String toSend = aresonSomnium.getMessageManager().getPlainMessage(
+                messageManager.sendMessage(player,
                         "stats-format",
-                        Pair.of("%player%", player.getName()),
-                        Pair.of("%secondsPlayed%", somniumPlayer.getSecondsPlayedTotal()+""),
-                        Pair.of("%coins%", Wallet.getCoins(player).toString()),
-                        Pair.of("%obols%", somniumPlayer.getWallet().getObols().toString()),
-                        Pair.of("%gems%", somniumPlayer.getWallet().getGems().toString())
+                        new Substitution("%player%", player.getName()),
+                        new Substitution("%secondsPlayed%", somniumPlayer.getSecondsPlayedTotal() + ""),
+                        new Substitution("%coins%", Wallet.getCoins(player).toString()),
+                        new Substitution("%obols%", somniumPlayer.getWallet().getObols().toString()),
+                        new Substitution("%gems%", somniumPlayer.getWallet().getGems().toString())
                 );
-                commandSender.sendMessage(toSend);
             } else {
                 commandSender.sendMessage(MessageUtils.errorMessage("Riscontrato un problema con i tuoi dati. Segnala il problema  allo staff."));
             }
