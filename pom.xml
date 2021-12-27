@@ -56,14 +56,6 @@
             <id>areson</id>
             <url>https://nexus.areson.it/repository/areson-public/</url>
         </repository>
-        <repository>
-            <id>ess-repo</id>
-            <url>https://ci.ender.zone/plugin/repository/everything/</url>
-        </repository>
-        <repository>
-            <id>placeholderapi</id>
-            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
     </repositories>
 
     <dependencies>
