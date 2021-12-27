@@ -103,7 +103,6 @@ public class RightClickListener extends GeneralEventListener {
                 PersistentDataContainer persistentDataContainer = itemStack.getItemMeta().getPersistentDataContainer();
                 Double multiplier = persistentDataContainer.get(aresonSomnium.multiplierValueNamespacedKey, PersistentDataType.DOUBLE);
 
-                //TODO Sembra non esser corretto il modo di parsare la duration
                 String duration = persistentDataContainer.get(aresonSomnium.multiplierDurationNamespacedKey, PersistentDataType.STRING);
                 Duration parsedDuration = Duration.parse("PT" + duration);
 
