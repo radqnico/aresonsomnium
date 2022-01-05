@@ -16,20 +16,20 @@ public class GommaObjectsFileReader extends FileManager {
     }
 
     public void checkGommaLocation() {
-        if (!fileConfiguration.isConfigurationSection("location")) {
-            fileConfiguration.createSection("location");
+        if (!yamlConfiguration.isConfigurationSection("location")) {
+            yamlConfiguration.createSection("location");
         }
     }
 
     public void checkItemsSection() {
-        if (!fileConfiguration.isConfigurationSection("items")) {
-            fileConfiguration.createSection("items");
+        if (!yamlConfiguration.isConfigurationSection("items")) {
+            yamlConfiguration.createSection("items");
         }
     }
 
     public void storeItem(ItemStack itemStack) {
         checkItemsSection();
-        ConfigurationSection itemsSection = fileConfiguration.getConfigurationSection("items");
+        ConfigurationSection itemsSection = yamlConfiguration.getConfigurationSection("items");
         int maxKey = -1;
         if (Objects.nonNull(itemsSection)) {
             for (String key : itemsSection.getKeys(false)) {
@@ -46,13 +46,13 @@ public class GommaObjectsFileReader extends FileManager {
             itemsSection.set(maxKey + ".item", Base64.getEncoder().encodeToString(itemStack.serializeAsBytes()));
             itemsSection.set(maxKey + ".amount", itemStack.getAmount());
             itemsSection.set(maxKey + ".material-READONLY", itemStack.getType().name());
-            saveFileConfiguration();
+            saveYamlConfiguration();
         }
     }
 
     public List<ItemStack> getItemList() {
         checkItemsSection();
-        ConfigurationSection itemsSection = fileConfiguration.getConfigurationSection("items");
+        ConfigurationSection itemsSection = yamlConfiguration.getConfigurationSection("items");
         List<ItemStack> itemStacks = new ArrayList<>();
         if (Objects.nonNull(itemsSection)) {
             for (String key : itemsSection.getKeys(false)) {
@@ -73,7 +73,7 @@ public class GommaObjectsFileReader extends FileManager {
 
     public Location getGommaBlock() {
         checkGommaLocation();
-        ConfigurationSection locationSector = fileConfiguration.getConfigurationSection("location");
+        ConfigurationSection locationSector = yamlConfiguration.getConfigurationSection("location");
         if (Objects.nonNull(locationSector)) {
             String world = locationSector.getString("world");
             double x = locationSector.getDouble("x");
@@ -91,7 +91,8 @@ public class GommaObjectsFileReader extends FileManager {
     public void setGommaBlock(Location location) {
         checkGommaLocation();
         location = location.toBlockLocation();
-        ConfigurationSection locationSector = fileConfiguration.getConfigurationSection("location");
+        ConfigurationSection locationSector = yamlConfiguration.getConfigurationSection("location");
+
         if (Objects.nonNull(locationSector)) {
             locationSector.set("world", location.getWorld().getName());
             locationSector.set("x", location.getX());
@@ -99,7 +100,7 @@ public class GommaObjectsFileReader extends FileManager {
             locationSector.set("z", location.getZ());
             locationSector.set("yaw", location.getYaw());
             locationSector.set("pitch", location.getPitch());
-            saveFileConfiguration();
+            saveYamlConfiguration();
         }
     }
 

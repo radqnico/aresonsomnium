@@ -25,7 +25,7 @@ public class AnvilListener extends GeneralEventListener {
         if (firstItem != null && secondItem != null && secondItem.getType().equals(Material.ENCHANTED_BOOK)) {
             if (aresonSomnium.isALockedEnchantFromEnchants(firstItem)) {
                 cancelEvent(event);
-                aresonSomnium.sendErrorMessage(event.getView().getPlayer(), "Questo oggetto è immodificabile");
+                aresonSomnium.sendErrorMessage(event.getView().getPlayer(), "Questo oggetto non è modificabile");
                 return;
             }
 

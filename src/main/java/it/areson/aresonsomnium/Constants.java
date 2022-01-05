@@ -28,7 +28,6 @@ public class Constants {
     public static final String SELL_HAND_COMMAND = "sellhand";
     public static final String AUTO_SELL_COMMAND = "autosell";
 
-
     public static final String SINGLE_FREE_REPAIR_COMMAND = "somniumsinglefreerepair";
     public static final String SINGLE_REPAIR_COMMAND = "somniumsinglerepair";
     public static final String FULL_REPAIR_COMMAND = "somniumfullrepair";

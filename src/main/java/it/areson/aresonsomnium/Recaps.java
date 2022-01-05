@@ -6,7 +6,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -19,7 +19,7 @@ public class Recaps {
 
     public static void initRecaps(FileManager recapFile) {
         recaps = new HashMap<>();
-        FileConfiguration recapConfig = recapFile.getFileConfiguration();
+        YamlConfiguration recapConfig = recapFile.getYamlConfiguration();
         if (!recapConfig.isConfigurationSection("recaps")) {
             AresonSomniumAPI.instance.getLogger().severe("Recaps not valid.");
             return;

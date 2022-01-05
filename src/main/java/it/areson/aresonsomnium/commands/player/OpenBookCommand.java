@@ -7,7 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
@@ -34,14 +34,14 @@ public class OpenBookCommand implements CommandExecutor {
                 try {
                     int briefNumber = Integer.parseInt(arguments[0]);
                     BookBuilder builder = new BookBuilder();
-                    FileConfiguration configuration = AresonSomniumAPI.instance.getBriefing().getFileConfiguration();
+                    YamlConfiguration yamlConfiguration = AresonSomniumAPI.instance.getBriefing().getYamlConfiguration();
                     String path = String.format("riassunti.%d", briefNumber);
-                    if (configuration.isConfigurationSection(path)) {
+                    if (yamlConfiguration.isConfigurationSection(path)) {
                         // TODO Max 32 char title length
-                        String chapterTitle = configuration.getString(path + ".titolo");
+                        String chapterTitle = yamlConfiguration.getString(path + ".titolo");
                         String title = chapterTitle.length() > 32 ? "Blank" : chapterTitle;
                         String author = "Areson";
-                        String content = "&c&l" + chapterTitle + "&r&0\n\n" + configuration.getString(path + ".testo");
+                        String content = "&c&l" + chapterTitle + "&r&0\n\n" + yamlConfiguration.getString(path + ".testo");
                         builder.buildWrittenBook(title, author, content);
                         player.openBook(builder.getWrittenBook());
                     } else {

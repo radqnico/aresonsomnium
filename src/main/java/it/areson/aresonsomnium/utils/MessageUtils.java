@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 
 public class MessageUtils {
 
-
     public static void notEnoughArguments(CommandSender commandSender, Command command) {
         commandSender.sendMessage(errorMessage("Parametri non sufficienti"));
         commandSender.sendMessage(command.getUsage());

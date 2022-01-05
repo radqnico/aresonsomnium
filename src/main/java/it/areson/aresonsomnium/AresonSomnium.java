@@ -154,8 +154,6 @@ public class AresonSomnium extends JavaPlugin {
         // 1m  = 1200
         // 10m = 12000
         AutoSaveManager.startAutoSaveTask(this, 12000);
-
-        new PlayerListener(this, messageManager);
         lastHitPvP = new LastHitPvP(this);
 
         //Repair
@@ -202,7 +200,6 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     private void registerCommands() {
-
         CommandParser parserShopAdmin = new CommandParser(this);
         PluginCommand command = this.getCommand("shopadmin");
         if (command == null) {
@@ -251,6 +248,7 @@ public class AresonSomnium extends JavaPlugin {
         InventoryListener inventoryListener = new InventoryListener(this);
         RightClickListener rightClickListener = new RightClickListener(this, messageManager);
         AnvilListener anvilListener = new AnvilListener(this);
+        new PlayerListener(this, messageManager);
 
         playerDBEvents.registerEvents();
         inventoryListener.registerEvents();
@@ -306,7 +304,6 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player, Collection<Node> permissions) {
-
         getLogger().info("Forcing the update of multiplier for player " + player.getName());
 
         return extractPlayerMaxMultiplierTupleFromPermissions(permissions).thenApplyAsync((latestMultiplier) -> {
