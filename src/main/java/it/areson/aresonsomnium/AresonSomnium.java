@@ -534,12 +534,14 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public Duration getDurationFromString(String duration) {
-        int dLetterPosition = duration.indexOf("d");
-        if (dLetterPosition != -1) {
+        duration = duration.toUpperCase();
+        int dLetterPosition = duration.indexOf("D");
+        if (dLetterPosition != -1 && dLetterPosition < duration.length() - 1) {
             StringBuilder stringBuilder = new StringBuilder(duration);
             stringBuilder.insert(dLetterPosition + 1, "T");
             duration = stringBuilder.toString();
         }
+        System.out.println("P" + duration);
         return Duration.parse("P" + duration);
     }
 
