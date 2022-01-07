@@ -1,5 +1,6 @@
 package it.areson.aresonsomnium.commands.admin;
 
+import it.areson.aresonlib.utils.DurationUtils;
 import it.areson.aresonsomnium.AresonSomnium;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -147,7 +148,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
                                 // Getting Duration
                                 Duration duration = Duration.ofMinutes(10);
                                 if (arguments.length > 4) {
-                                    duration = aresonSomnium.getDurationFromString(arguments[4]);
+                                    duration = DurationUtils.getDurationFromString(arguments[4]);
                                 }
 
                                 reward = alignMultiplierItemStack(reward, multiplier, duration);
