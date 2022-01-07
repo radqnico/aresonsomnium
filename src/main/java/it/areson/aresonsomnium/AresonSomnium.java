@@ -536,13 +536,15 @@ public class AresonSomnium extends JavaPlugin {
     public Duration getDurationFromString(String duration) {
         duration = duration.toUpperCase();
         int dLetterPosition = duration.indexOf("D");
-        if (dLetterPosition != -1 && dLetterPosition < duration.length() - 1) {
+        if (dLetterPosition != -1 && dLetterPosition + 1 < duration.length()) {
             StringBuilder stringBuilder = new StringBuilder(duration);
             stringBuilder.insert(dLetterPosition + 1, "T");
             duration = stringBuilder.toString();
+        } else {
+            duration = "PT" + duration;
         }
-        System.out.println("P" + duration);
-        return Duration.parse("P" + duration);
+        System.out.println(duration);
+        return Duration.parse(duration);
     }
 
 }
