@@ -75,7 +75,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
         return itemStack;
     }
 
-    public ItemStack alignMultiplierItemStack(ItemStack originalItem, int multiplier, String duration) {
+    public ItemStack alignMultiplierItemStack(ItemStack originalItem, int multiplier, Duration duration) {
         ItemStack finalItem = originalItem.clone();
         String visibleMultiplier = multiplier / 100.0 + "x";
 
@@ -92,7 +92,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
 
             List<Component> lore = new ArrayList<>();
             lore.add(Component.text(GRAY + "Moltiplicatore: " + GREEN + visibleMultiplier));
-            lore.add(Component.text(GRAY + "Durata: " + GREEN + duration));
+            lore.add(Component.text(GRAY + "Durata: " + GREEN + duration.toString().substring(2).toLowerCase()));
             List<Component> oldLore = itemMeta.lore();
             if (oldLore != null) {
                 lore.addAll(oldLore);
@@ -100,7 +100,7 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
 
             PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
             persistentDataContainer.set(aresonSomnium.multiplierValueNamespacedKey, PersistentDataType.DOUBLE, multiplier / 100.0);
-            persistentDataContainer.set(aresonSomnium.multiplierDurationNamespacedKey, PersistentDataType.STRING, duration);
+            persistentDataContainer.set(aresonSomnium.multiplierDurationNamespacedKey, PersistentDataType.STRING, duration.toString());
 
             itemMeta.lore(lore);
         }
@@ -145,10 +145,9 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
                                 }
 
                                 // Getting Duration
-                                String duration = "10m";
+                                Duration duration = Duration.ofMinutes(10);
                                 if (arguments.length > 4) {
-                                    //TODO Not working with 1d
-                                    duration = Duration.parse("PT" + arguments[4]).toString().substring(2).toLowerCase();
+                                    duration = aresonSomnium.getDurationFromString(arguments[4]);
                                 }
 
                                 reward = alignMultiplierItemStack(reward, multiplier, duration);

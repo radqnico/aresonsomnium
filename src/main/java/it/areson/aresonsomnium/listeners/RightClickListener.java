@@ -103,8 +103,8 @@ public class RightClickListener extends GeneralEventListener {
                 PersistentDataContainer persistentDataContainer = itemStack.getItemMeta().getPersistentDataContainer();
                 Double multiplier = persistentDataContainer.get(aresonSomnium.multiplierValueNamespacedKey, PersistentDataType.DOUBLE);
 
-                String duration = persistentDataContainer.get(aresonSomnium.multiplierDurationNamespacedKey, PersistentDataType.STRING);
-                Duration parsedDuration = Duration.parse("PT" + duration);
+                String duration = persistentDataContainer.getOrDefault(aresonSomnium.multiplierDurationNamespacedKey, PersistentDataType.STRING, "PT10M");
+                Duration parsedDuration = Duration.parse(duration);
 
                 return Optional.of(Pair.of(multiplier, parsedDuration));
             } catch (Exception exception) {
