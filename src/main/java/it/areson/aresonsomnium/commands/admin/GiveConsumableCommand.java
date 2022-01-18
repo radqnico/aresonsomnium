@@ -32,9 +32,15 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
     public final String multiplierIndexName = "multiplier";
     public final String bomb3IndexName = "bomb3";
     public final String repairAllIndexName = "repairAll";
+    private final ArrayList<String> quantitySuggestions;
+    private final ArrayList<String> multiplierSuggestions;
+    private final ArrayList<String> durationSuggestions;
 
     public GiveConsumableCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
+        quantitySuggestions = IntStream.rangeClosed(1, 64).boxed().map(Object::toString).collect(Collectors.toCollection(ArrayList::new));
+        multiplierSuggestions = new ArrayList<>(Arrays.asList("100", "150", "200", "275"));
+        durationSuggestions = new ArrayList<>(Arrays.asList("1d", "12h30m40s", "3h20m", "30m"));
 
         PluginCommand pluginCommand = aresonSomnium.getCommand("giveConsumable");
         if (!Objects.isNull(pluginCommand)) {
@@ -185,23 +191,18 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
         List<String> suggestions = new ArrayList<>();
 
         if (arguments.length == 1) {
-            List<String> playerNames = aresonSomnium.getServer().getOnlinePlayers()
+            suggestions = aresonSomnium.getServer().getOnlinePlayers()
                     .stream().map(HumanEntity::getName)
                     .filter(playerName -> playerName.startsWith(arguments[0]))
                     .collect(Collectors.toList());
-            suggestions.addAll(playerNames);
         } else if (arguments.length == 2) {
-            List<String> rewards = itemStacks.keySet().stream().filter(key -> key.startsWith(arguments[1])).collect(Collectors.toList());
-            suggestions.addAll(rewards);
+            suggestions = itemStacks.keySet().stream().filter(key -> key.startsWith(arguments[1])).collect(Collectors.toList());
         } else if (arguments.length == 3) {
-            List<String> quantities = IntStream.rangeClosed(1, 64).boxed().map(Object::toString).collect(Collectors.toList());
-            suggestions.addAll(quantities);
+            suggestions = quantitySuggestions;
         } else if (arguments.length == 4 && arguments[1].equals(multiplierIndexName)) {
-            List<String> values = Arrays.asList("100", "150", "200", "275");
-            suggestions.addAll(values);
+            suggestions = multiplierSuggestions;
         } else if (arguments.length == 5 && arguments[1].equals(multiplierIndexName)) {
-            List<String> values = Arrays.asList("1d", "12h30m40s", "3h20m", "30m");
-            suggestions.addAll(values);
+            suggestions = durationSuggestions;
         }
 
         return suggestions;
