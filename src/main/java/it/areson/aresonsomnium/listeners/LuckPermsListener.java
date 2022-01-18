@@ -20,13 +20,12 @@ public class LuckPermsListener {
     }
 
     private void onNodeMutateEvent(NodeMutateEvent event) {
+        //TODO Refresh only if key starts with multiplier
+        //TODO maybe UserDataRecalculateEvent
         if (event.isUser()) {
-            String playerName = ((User) event.getTarget()).getUsername();
-            if (playerName != null) {
-                Player player = aresonSomnium.getServer().getPlayer(playerName);
-                if (player != null) {
-                    aresonSomnium.forceMultiplierRefresh(player, event.getDataAfter());
-                }
+            Player player = aresonSomnium.getServer().getPlayer(((User) event.getTarget()).getUniqueId());
+            if (player != null) {
+                aresonSomnium.forceMultiplierRefresh(player, event.getDataAfter());
             }
         }
     }
