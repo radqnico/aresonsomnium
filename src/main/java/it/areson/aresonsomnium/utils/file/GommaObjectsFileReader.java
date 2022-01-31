@@ -1,6 +1,6 @@
 package it.areson.aresonsomnium.utils.file;
 
-import it.areson.aresonlib.file.FileManager;
+import it.areson.aresonlib.files.FileManager;
 import it.areson.aresonsomnium.AresonSomnium;
 import org.bukkit.Location;
 import org.bukkit.Material;

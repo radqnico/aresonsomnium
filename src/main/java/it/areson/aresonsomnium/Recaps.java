@@ -1,6 +1,6 @@
 package it.areson.aresonsomnium;
 
-import it.areson.aresonlib.file.FileManager;
+import it.areson.aresonlib.files.FileManager;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;

@@ -1,6 +1,6 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
-import it.areson.aresonlib.file.MessageManager;
+import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.AresonCommand;

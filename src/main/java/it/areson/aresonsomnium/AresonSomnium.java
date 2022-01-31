@@ -1,7 +1,7 @@
 package it.areson.aresonsomnium;
 
-import it.areson.aresonlib.file.FileManager;
-import it.areson.aresonlib.file.MessageManager;
+import it.areson.aresonlib.files.FileManager;
+import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.CommandParser;
