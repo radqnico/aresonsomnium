@@ -3,8 +3,8 @@ version: ${project.version}
 main: ${project.groupId}.${project.artifactId}
 api-version: 1.18
 author: Areson
-
-depends: [ CommandPanels ]
+depends:
+  - CommandPanels
 
 commands:
   somniumsinglefreerepair:
