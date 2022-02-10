@@ -8,6 +8,7 @@ depend:
   - Essentials
   - LuckPerms
   - PlaceholderAPI
+  - WorldGuard
 
 commands:
   somniumsinglefreerepair:
