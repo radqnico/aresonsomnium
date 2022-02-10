@@ -1,10 +1,9 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.api.AresonSomniumAPI;
-import it.areson.aresonsomnium.commands.AresonCommand;
 import it.areson.aresonsomnium.commands.CommandParserCommand;
 import it.areson.aresonsomnium.economy.items.ShopItem;
+import it.areson.aresonsomnium.economy.items.ShopItemsManager;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.SoundManager;
 import org.bukkit.Material;
@@ -21,83 +20,77 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-@AresonCommand("selllootable")
 public class SellLootableCommand extends CommandParserCommand {
+
+    private final AresonSomnium aresonSomnium;
+    private final ShopItemsManager shopItemsManager;
+
+    public SellLootableCommand(AresonSomnium aresonSomnium) {
+        this.aresonSomnium = aresonSomnium;
+        this.shopItemsManager = aresonSomnium.getShopItemsManager();
+    }
+
     private void sellItem(CommandSender commandSender, Player player, Material material, int quantity) {
-        SomniumPlayer somniumPlayer = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(player);
-        if (somniumPlayer == null)
-        {
+        SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
+        if (somniumPlayer == null) {
             commandSender.sendMessage("Il giocatore non esiste nel somnium");
             return;
         }
-        Optional<ShopItem> item = AresonSomniumAPI.instance.shopItemsManager.getItemsGateway().getShopItemByMaterialAmount(material, quantity);
-        if (!item.isPresent())
-        {
+        Optional<ShopItem> item = shopItemsManager.getItemsGateway().getShopItemByMaterialAmount(material, quantity);
+        if (item.isEmpty()) {
             commandSender.sendMessage("Combinazione materiale-quantità non esistente");
             return;
         }
         PlayerInventory inventory = player.getInventory();
         List<ItemStack> stacks = getStackFromInventory(inventory, material);
-        if (stacks.size() <= 0)
-        {
+        if (stacks.size() <= 0) {
             commandSender.sendMessage("Non è presente il materiale nell'inventario");
             SoundManager.playDeniedSound(somniumPlayer.getPlayer());
             return;
         }
         int totalAmount = getTotalAmount(stacks);
-        if (totalAmount < quantity)
-        {
+        if (totalAmount < quantity) {
             commandSender.sendMessage("Quantità insufficiente");
             SoundManager.playDeniedSound(somniumPlayer.getPlayer());
             return;
         }
-        removeFromInventory(inventory, stacks, quantity);
+        removeFromInventory(stacks, quantity);
         somniumPlayer.givePriceAmount(item.get().getSellingPrice());
         SoundManager.playCoinsSound(player);
         commandSender.sendMessage("Vendita completata");
     }
 
-    private int getTotalAmount(List<ItemStack> stacks)
-    {
+    private int getTotalAmount(List<ItemStack> stacks) {
         int totalAmount = 0;
-        for (ItemStack stack : stacks)
-        {
+        for (ItemStack stack : stacks) {
             totalAmount += stack.getAmount();
         }
-        return  totalAmount;
+        return totalAmount;
     }
 
-    private List<ItemStack> getStackFromInventory(PlayerInventory inventory, Material material)
-    {
+    private List<ItemStack> getStackFromInventory(PlayerInventory inventory, Material material) {
         List<ItemStack> stacks = new ArrayList<>();
-        for (ItemStack stack : inventory)
-        {
-            if (stack == null)
-            {
+        for (ItemStack stack : inventory) {
+            if (stack == null) {
                 continue;
             }
-            if (stack.getType().equals(material))
-            {
+            if (stack.getType().equals(material)) {
                 stacks.add(stack);
             }
         }
         return stacks;
     }
 
-    private void removeFromInventory(PlayerInventory inventory, List<ItemStack> stacks, int amountToRemove)
-    {
-        for (ItemStack stack : stacks)
-        {
+    private void removeFromInventory(List<ItemStack> stacks, int amountToRemove) {
+        for (ItemStack stack : stacks) {
             int amount = stack.getAmount();
-            if (amount > amountToRemove)
-            {
+            if (amount > amountToRemove) {
                 stack.setAmount(amount - amountToRemove);
                 break;
             }
             amountToRemove -= amount;
             stack.setAmount(0);
-            if (amountToRemove <= 0)
-            {
+            if (amountToRemove <= 0) {
                 break;
             }
         }
@@ -110,15 +103,13 @@ public class SellLootableCommand extends CommandParserCommand {
             int quantity = Integer.parseInt(strings[3]);
             String materialId = strings[2];
             String playerName = strings[1];
-            Player player = AresonSomniumAPI.instance.getServer().getPlayer(playerName);
+            Player player = aresonSomnium.getServer().getPlayer(playerName);
             Material material = Material.getMaterial(materialId);
-            if (material == null)
-            {
+            if (material == null) {
                 commandSender.sendMessage("Nessun materiale trovato con l'id.");
                 return true;
             }
-            if (quantity <= 0 || quantity > material.getMaxStackSize())
-            {
+            if (quantity <= 0 || quantity > material.getMaxStackSize()) {
                 commandSender.sendMessage("La quantità non è valida");
                 return true;
             }
@@ -132,8 +123,7 @@ public class SellLootableCommand extends CommandParserCommand {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         List<String> suggestions = new ArrayList<>();
-        switch (strings.length)
-        {
+        switch (strings.length) {
             case 2:
                 return null;
             case 3:

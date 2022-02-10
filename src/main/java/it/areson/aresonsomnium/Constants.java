@@ -33,6 +33,8 @@ public class Constants {
     public static final String FULL_REPAIR_COMMAND = "somniumfullrepair";
     public static final String FULL_REPAIR_PERMISSION = "aresonsomnium.fullrepair";
 
+    public static final String WG_PERMISSION_FLY_FLAG = "permission-fly";
+
 
     public static final int CHECK_MODEL_DATA = 999;
     public static final int OBOL_MODEL_DATA = 998;
@@ -42,5 +44,14 @@ public class Constants {
     public static final int REPAIR_ALL_MODEL_DATA = 994;
 
     public static final int OBOLS_CHANGE_AMOUNT = 20;
+
+    //Database
+    public static final String DB_HOST = "localhost";
+    public static final String DB_USER = "root";
+    public static final String DB_PASSWORD = "CKK6z9P3hKyCgvk4";
+    public static final String DB_NAME = "aresonSomnium";
+    public static final String DB_PLAYER_TABLE = "somniumPlayer";
+    public static final String DB_GUIS_TABLE = "somniumGuis";
+    public static final String DB_ITEMS_TABLE = "items";
 
 }

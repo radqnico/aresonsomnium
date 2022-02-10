@@ -1,5 +1,6 @@
 package it.areson.aresonsomnium.economy.items;
 
+import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.Price;
 import org.bukkit.Material;
@@ -13,21 +14,23 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.zip.ZipException;
 
+import static it.areson.aresonsomnium.Constants.DB_ITEMS_TABLE;
+
 public class ItemsDBGateway {
 
+    private final AresonSomnium aresonSomnium;
     private final MySqlDBConnection mySqlDBConnection;
-    private final String itemsTableName;
     // id -> item
     private final HashMap<Integer, ShopItem> cache;
 
-    public ItemsDBGateway(MySqlDBConnection mySqlDBConnection, String itemsTableName) {
+    public ItemsDBGateway(AresonSomnium aresonSomnium, MySqlDBConnection mySqlDBConnection) {
+        this.aresonSomnium = aresonSomnium;
         this.mySqlDBConnection = mySqlDBConnection;
-        this.itemsTableName = itemsTableName;
         cache = new HashMap<>();
     }
 
     public List<ShopItem> getAllItems(boolean invalidateCache) {
-        String query = "SELECT * FROM " + itemsTableName;
+        String query = "SELECT * FROM " + DB_ITEMS_TABLE;
         List<ShopItem> shopItems = new ArrayList<>();
         try {
             Connection connection = mySqlDBConnection.connect();
@@ -60,7 +63,7 @@ public class ItemsDBGateway {
             return Optional.of(cached);
         }
 
-        String query = "SELECT * FROM " + itemsTableName + " WHERE id=" + itemId;
+        String query = "SELECT * FROM " + DB_ITEMS_TABLE + " WHERE id=" + itemId;
         Optional<ShopItem> optionalShopItem = Optional.empty();
         try {
             Connection connection = mySqlDBConnection.connect();
@@ -80,27 +83,25 @@ public class ItemsDBGateway {
         return optionalShopItem;
     }
 
-    public boolean removeItem(int id) {
-        String query = "DELETE FROM " + itemsTableName + " WHERE id = " + id;
+    public void removeItem(int id) {
+        String query = "DELETE FROM " + DB_ITEMS_TABLE + " WHERE id = " + id;
         try {
             Connection connection = mySqlDBConnection.connect();
             int affectedRows = mySqlDBConnection.update(connection, query);
             connection.close();
             if (affectedRows > 0) {
                 cache.remove(id);
-                return true;
             }
         } catch (SQLException exception) {
             mySqlDBConnection.printSqlExceptionDetails(exception);
         }
-        return false;
     }
 
-    public boolean upsertShopItem(ShopItem shopItem) {
+    public void upsertShopItem(ShopItem shopItem) {
         String query;
         String formatted;
         if (shopItem.getId() == -1) {
-            query = "INSERT INTO " + itemsTableName +
+            query = "INSERT INTO " + DB_ITEMS_TABLE +
                     "(itemStack, amount, shoppingCoins, shoppingObols, shoppingGems, sellingCoins, sellingObols, sellingGems) " +
                     "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')";
             formatted = String.format(query,
@@ -114,7 +115,7 @@ public class ItemsDBGateway {
                     shopItem.getSellingPrice().getGems().toString()
             );
         } else {
-            query = "UPDATE " + itemsTableName + " " +
+            query = "UPDATE " + DB_ITEMS_TABLE + " " +
                     "SET itemStack='%s', amount='%s', shoppingCoins='%s', shoppingObols='%s', shoppingGems='%s', sellingCoins='%s', sellingObols='%s', sellingGems='%s' " +
                     "WHERE id=%d";
             formatted = String.format(query,
@@ -131,15 +132,11 @@ public class ItemsDBGateway {
         }
         try {
             Connection connection = mySqlDBConnection.connect();
-            int affectedRows = mySqlDBConnection.update(connection, formatted);
+            mySqlDBConnection.update(connection, formatted);
             connection.close();
-            if (affectedRows > 0) {
-                return true;
-            }
         } catch (SQLException exception) {
             mySqlDBConnection.printSqlExceptionDetails(exception);
         }
-        return false;
     }
 
     public Optional<ShopItem> getShopItemByMaterialAmount(Material material, int amount) {
@@ -165,6 +162,6 @@ public class ItemsDBGateway {
         BigInteger sellingGems = new BigInteger(resultSet.getString("sellingGems"));
         Price shoppingPrice = new Price(shoppingCoins, shoppingObols, shoppingGems);
         Price sellingPrice = new Price(sellingCoins, sellingObols, sellingGems);
-        return new ShopItem(id, ItemStack.deserializeBytes(itemStackBytes), amount, shoppingPrice, sellingPrice);
+        return new ShopItem(aresonSomnium, id, ItemStack.deserializeBytes(itemStackBytes), amount, shoppingPrice, sellingPrice);
     }
 }

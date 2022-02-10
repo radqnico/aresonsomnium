@@ -1,7 +1,6 @@
 package it.areson.aresonsomnium.economy.items;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.database.MySqlConfig;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.guis.ItemListView;
@@ -23,6 +22,7 @@ import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class ShopItemsManager {
 
+    private final AresonSomnium aresonSomnium;
     private final ItemsDBGateway itemsDBGateway;
     private final ItemListView itemListView;
     private final HashMap<String, Integer> playerWithEditorOpened;
@@ -30,8 +30,9 @@ public class ShopItemsManager {
     private final ItemListViewEventsListener itemListViewEventsListener;
 
     public ShopItemsManager(AresonSomnium aresonSomnium, MySqlDBConnection mySqlDBConnection) {
-        itemsDBGateway = new ItemsDBGateway(mySqlDBConnection, MySqlConfig.ITEMS_TABLE_NAME);
-        itemListView = new ItemListView(itemsDBGateway);
+        this.aresonSomnium = aresonSomnium;
+        itemsDBGateway = new ItemsDBGateway(aresonSomnium, mySqlDBConnection);
+        itemListView = new ItemListView(aresonSomnium, itemsDBGateway);
         playerWithEditorOpened = new HashMap<>();
         itemListViewEventsListener = new ItemListViewEventsListener(aresonSomnium);
     }
@@ -65,7 +66,7 @@ public class ShopItemsManager {
     }
 
     public void itemPutIntoEditor(ItemStack itemStack) {
-        ShopItem shopItem = new ShopItem(-1, itemStack, itemStack.getAmount(), Price.zero(), Price.zero());
+        ShopItem shopItem = new ShopItem(aresonSomnium, -1, itemStack, itemStack.getAmount(), Price.zero(), Price.zero());
         itemsDBGateway.upsertShopItem(shopItem);
         reloadItems();
     }

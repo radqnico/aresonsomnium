@@ -3,7 +3,6 @@ package it.areson.aresonsomnium.listeners;
 import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import org.bukkit.entity.Player;
@@ -27,9 +26,9 @@ public class PlayerListener extends GeneralEventListener {
     private final BigDecimal percentOfCoins;
     private final HashMap<String, Integer> playerBlocksBroken;
 
-    public PlayerListener(AresonSomnium aresonSomnium, MessageManager messageManager) {
+    public PlayerListener(AresonSomnium aresonSomnium) {
         super(aresonSomnium);
-        this.messageManager = messageManager;
+        this.messageManager = aresonSomnium.getMessageManager();
         registerEvents();
 
         stealCoinsWorlds = new HashSet<>(aresonSomnium.getConfig().getStringList("steal-coins.allowed-worlds"));
@@ -43,19 +42,18 @@ public class PlayerListener extends GeneralEventListener {
         if (event.getDamager() instanceof Player damager &&
                 event.getEntity() instanceof Player damaged &&
                 stealCoinsWorlds.contains(damaged.getWorld().getName())) {
-            AresonSomniumAPI.instance.getLastHitPvP().setLastHit(damager, damaged);
+            aresonSomnium.getLastHitPvP().setLastHit(damager, damaged);
         }
     }
 
     @EventHandler
     public void onPlayerDeathEvent(PlayerDeathEvent event) {
-        // Listen for death
         if (stealCoinsWorlds.contains(event.getPlayer().getWorld().getName())) {
             Optional<Player> killer = aresonSomnium.getLastHitPvP().getKiller(event.getPlayer());
             if (killer.isPresent()) {
                 Player playerKiller = killer.get();
-                SomniumPlayer somniumPlayerKiller = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(playerKiller);
-                SomniumPlayer somniumPlayer = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(event.getPlayer());
+                SomniumPlayer somniumPlayerKiller = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(playerKiller);
+                SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(event.getPlayer());
                 if (somniumPlayer != null && somniumPlayerKiller != null) {
                     BigDecimal coinsPlayer = Wallet.getCoins(event.getPlayer());
                     BigDecimal amountToSteal = coinsPlayer.multiply(percentOfCoins).setScale(1, RoundingMode.HALF_UP);

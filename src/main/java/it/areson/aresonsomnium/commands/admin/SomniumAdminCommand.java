@@ -3,7 +3,6 @@ package it.areson.aresonsomnium.commands.admin;
 import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.Recaps;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
@@ -95,7 +94,8 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
         if (Objects.nonNull(player)) {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (Objects.nonNull(somniumPlayer)) {
-                Recaps.openRecapToPlayer(player, Integer.parseInt(recap));
+                // TODO RECAPS
+                //Recaps.openRecapToPlayer(player, Integer.parseInt(recap));
             } else {
                 messageManager.sendMessage(player, "somniumplayer-not-found", new Substitution("%player%", playerName));
             }

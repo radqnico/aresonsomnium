@@ -2,36 +2,39 @@ package it.areson.aresonsomnium.commands.shopadmin;
 
 import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonlib.utils.Substitution;
-import it.areson.aresonsomnium.api.AresonSomniumAPI;
-import it.areson.aresonsomnium.commands.AresonCommand;
+import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.commands.CommandParserCommand;
 import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.items.ShopItem;
+import it.areson.aresonsomnium.economy.items.ShopItemsManager;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.SoundManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
 
-@AresonCommand("buyitem")
+@SuppressWarnings("NullableProblems")
 public class BuyItemCommand extends CommandParserCommand {
 
+    private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
+    private final ShopItemsManager shopItemsManager;
 
-    public BuyItemCommand(MessageManager messageManager) {
-        this.messageManager = messageManager;
+    public BuyItemCommand(AresonSomnium aresonSomnium) {
+        this.aresonSomnium = aresonSomnium;
+        this.messageManager = aresonSomnium.getMessageManager();
+        this.shopItemsManager = aresonSomnium.getShopItemsManager();
     }
 
     public void buyItem(int id, Player player, CommandSender commandSender, boolean putTags) {
         if (player != null) {
-            SomniumPlayer somniumPlayer = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(player);
+            SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (somniumPlayer != null) {
-                Optional<ShopItem> itemById = AresonSomniumAPI.instance.shopItemsManager.getItemsGateway().getItemById(id);
+                Optional<ShopItem> itemById = shopItemsManager.getItemsGateway().getItemById(id);
                 if (itemById.isPresent()) {
                     ShopItem shopItem = itemById.get();
                     if (shopItem.getShoppingPrice().isPriceReady()) {
@@ -70,25 +73,25 @@ public class BuyItemCommand extends CommandParserCommand {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        // / /shopadmin buyitem <player> <id> <true/false>
+    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
+        // /shopadmin buyitem <player> <id> <true/false>
+        boolean putTags = true;
+        if (arguments.length >= 4) {
+            putTags = Boolean.parseBoolean(arguments[3]);
+        }
         try {
-            boolean putTags = true;
-            if (strings.length == 4) {
-                putTags = Boolean.parseBoolean(strings[3]);
-            }
-            int id = Integer.parseInt(strings[2]);
-            String playerName = strings[1];
-            Player player = AresonSomniumAPI.instance.getServer().getPlayer(playerName);
+            int id = Integer.parseInt(arguments[2]);
+            Player player = aresonSomnium.getServer().getPlayer(arguments[1]);
             buyItem(id, player, commandSender, putTags);
-        } catch (NumberFormatException numberFormatException) {
-            commandSender.sendMessage("L'ID o la quantità non è un numero");
+        } catch (NumberFormatException exception) {
+            messageManager.sendFreeMessage(commandSender, "L'ID o la quantità non è un numero");
         }
         return true;
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    public @Nullable List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
         return null;
     }
+
 }

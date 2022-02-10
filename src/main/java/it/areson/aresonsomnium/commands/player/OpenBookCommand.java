@@ -1,7 +1,6 @@
 package it.areson.aresonsomnium.commands.player;
 
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.books.BookBuilder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,7 +14,10 @@ import java.util.Optional;
 @SuppressWarnings("NullableProblems")
 public class OpenBookCommand implements CommandExecutor {
 
+    private final AresonSomnium aresonSomnium;
+
     public OpenBookCommand(AresonSomnium aresonSomnium) {
+        this.aresonSomnium = aresonSomnium;
         PluginCommand command = aresonSomnium.getCommand("riassunto");
         if (command != null) {
             command.setExecutor(this);
@@ -34,7 +36,7 @@ public class OpenBookCommand implements CommandExecutor {
                 try {
                     int briefNumber = Integer.parseInt(arguments[0]);
                     BookBuilder builder = new BookBuilder();
-                    YamlConfiguration yamlConfiguration = AresonSomniumAPI.instance.getBriefing().getYamlConfiguration();
+                    YamlConfiguration yamlConfiguration = aresonSomnium.getBriefing().getYamlConfiguration();
                     String path = String.format("riassunti.%d", briefNumber);
                     if (yamlConfiguration.isConfigurationSection(path)) {
                         // TODO Max 32 char title length

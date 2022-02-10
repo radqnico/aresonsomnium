@@ -1,4 +1,4 @@
-package it.areson.aresonsomnium.listeners;
+package it.areson.aresonsomnium.listeners.external;
 
 import it.areson.aresonsomnium.AresonSomnium;
 import net.luckperms.api.LuckPerms;

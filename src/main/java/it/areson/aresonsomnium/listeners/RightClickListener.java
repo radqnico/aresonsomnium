@@ -101,9 +101,9 @@ public class RightClickListener extends GeneralEventListener {
         if (itemStack.hasItemMeta()) {
             try {
                 PersistentDataContainer persistentDataContainer = itemStack.getItemMeta().getPersistentDataContainer();
-                Double multiplier = persistentDataContainer.get(aresonSomnium.multiplierValueNamespacedKey, PersistentDataType.DOUBLE);
+                Double multiplier = persistentDataContainer.get(aresonSomnium.getMultiplierValueNamespacedKey(), PersistentDataType.DOUBLE);
 
-                String duration = persistentDataContainer.getOrDefault(aresonSomnium.multiplierDurationNamespacedKey, PersistentDataType.STRING, "PT10M");
+                String duration = persistentDataContainer.getOrDefault(aresonSomnium.getMultiplierDurationNamespacedKey(), PersistentDataType.STRING, "PT10M");
                 Duration parsedDuration = Duration.parse(duration);
 
                 return Optional.of(Pair.of(multiplier, parsedDuration));
@@ -121,7 +121,7 @@ public class RightClickListener extends GeneralEventListener {
         ItemStack itemStack = event.getItem();
 
         if (itemStack != null) {
-            if (aresonSomnium.luckPerms.isPresent()) {
+            if (aresonSomnium.getLuckPerms().isPresent()) {
                 Optional<Pair<Double, Duration>> optionalProperties = getMultiplierProperties(itemStack);
 
                 if (optionalProperties.isPresent()) {
@@ -130,7 +130,7 @@ public class RightClickListener extends GeneralEventListener {
                     if (properties.left() >= aresonSomnium.getCachedMultiplier(player).value()) {
                         String permission = PERMISSION_MULTIPLIER + "." + (int) (properties.left() * 100);
 
-                        aresonSomnium.luckPerms.get().getUserManager().modifyUser(player.getUniqueId(), user ->
+                        aresonSomnium.getLuckPerms().get().getUserManager().modifyUser(player.getUniqueId(), user ->
                                 user.data().add(Node.builder(permission).expiry(properties.right()).build(), TemporaryNodeMergeStrategy.ADD_NEW_DURATION_TO_EXISTING)
                         );
 

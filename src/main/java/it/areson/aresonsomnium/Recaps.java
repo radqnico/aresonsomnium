@@ -1,7 +1,6 @@
 package it.areson.aresonsomnium;
 
 import it.areson.aresonlib.files.FileManager;
-import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,14 +13,21 @@ import org.bukkit.inventory.meta.BookMeta;
 import java.util.HashMap;
 import java.util.Set;
 
+// TODO RECAPS
 public class Recaps {
-    private static HashMap<Integer, ItemStack> recaps;
 
-    public static void initRecaps(FileManager recapFile) {
+    private final AresonSomnium aresonSomnium;
+    private HashMap<Integer, ItemStack> recaps;
+
+    public Recaps(AresonSomnium aresonSomnium) {
+        this.aresonSomnium = aresonSomnium;
+    }
+
+    public void initRecaps(FileManager recapFile) {
         recaps = new HashMap<>();
         YamlConfiguration recapConfig = recapFile.getYamlConfiguration();
         if (!recapConfig.isConfigurationSection("recaps")) {
-            AresonSomniumAPI.instance.getLogger().severe("Recaps not valid.");
+            aresonSomnium.getLogger().severe("Recaps not valid");
             return;
         }
         ConfigurationSection recapsSection = recapConfig.getConfigurationSection("recaps");
@@ -50,7 +56,8 @@ public class Recaps {
         }
     }
 
-    public static void openRecapToPlayer(Player player, int recap) {
+    public void openRecapToPlayer(Player player, int recap) {
         player.openBook(recaps.get(recap));
     }
+
 }

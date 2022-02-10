@@ -6,9 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.StringUtil;
 
-import java.lang.annotation.Annotation;
 import java.util.*;
-import java.util.logging.Level;
 
 @SuppressWarnings("ALL")
 public class CommandParser extends CommandParserCommand {
@@ -38,8 +36,9 @@ public class CommandParser extends CommandParserCommand {
      * @param executor The command executor
      * @throws Exception The provided command doesn't have the annotation @AresonCommand
      */
+    //TODO URGENTE
     public void addAresonCommand(CommandParserCommand executor) throws Exception {
-        Annotation[] ann = executor.getClass().getAnnotations();
+        /*Annotation[] ann = executor.getClass().getAnnotations();
         boolean added = false;
         for (Annotation a : ann) {
             if (a instanceof AresonCommand) {
@@ -50,7 +49,7 @@ public class CommandParser extends CommandParserCommand {
         }
         if (!added) {
             throw new Exception("Class " + executor.getClass().getName() + " doesn't have Annotation");
-        }
+        }*/
     }
 
     /**

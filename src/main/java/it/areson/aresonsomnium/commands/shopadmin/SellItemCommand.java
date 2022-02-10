@@ -2,12 +2,12 @@ package it.areson.aresonsomnium.commands.shopadmin;
 
 import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonlib.utils.Substitution;
-import it.areson.aresonsomnium.api.AresonSomniumAPI;
-import it.areson.aresonsomnium.commands.AresonCommand;
+import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.commands.CommandParserCommand;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.items.ShopItem;
+import it.areson.aresonsomnium.economy.items.ShopItemsManager;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.SoundManager;
 import org.bukkit.Material;
@@ -27,23 +27,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("NullableProblems")
-@AresonCommand("sellitem")
 public class SellItemCommand extends CommandParserCommand {
 
+    private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
+    private final ShopItemsManager shopItemsManager;
 
-    public SellItemCommand(MessageManager messageManager) {
-        this.messageManager = messageManager;
+    public SellItemCommand(AresonSomnium aresonSomnium) {
+        this.aresonSomnium = aresonSomnium;
+        this.messageManager = aresonSomnium.getMessageManager();
+        this.shopItemsManager = aresonSomnium.getShopItemsManager();
     }
 
-    public void buyItem(int id, Player player, CommandSender commandSender) {
+    public void sellItem(int id, Player player, CommandSender commandSender) {
         if (player != null) {
-            SomniumPlayer somniumPlayer = AresonSomniumAPI.instance.getSomniumPlayerManager().getSomniumPlayer(player);
+            SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
             if (somniumPlayer != null) {
-                Optional<ShopItem> itemById = AresonSomniumAPI.instance.shopItemsManager.getItemsGateway().getItemById(id);
+                Optional<ShopItem> itemById = shopItemsManager.getItemsGateway().getItemById(id);
                 if (itemById.isPresent()) {
                     ShopItem shopItem = itemById.get();
                     if (shopItem.getSellingPrice().isPriceReady()) {
@@ -72,7 +74,7 @@ public class SellItemCommand extends CommandParserCommand {
                     ItemMeta itemMeta = currentItem.getItemMeta();
                     if (itemMeta != null) {
                         PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
-                        Integer currentId = persistentDataContainer.getOrDefault(new NamespacedKey(AresonSomniumAPI.instance, "id"), PersistentDataType.INTEGER, -1);
+                        Integer currentId = persistentDataContainer.getOrDefault(new NamespacedKey(aresonSomnium, "id"), PersistentDataType.INTEGER, -1);
                         if (currentId == id) {
                             int amount = currentItem.getAmount();
                             inventory.clear(i);
@@ -100,12 +102,12 @@ public class SellItemCommand extends CommandParserCommand {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        // / /shopadmin sellitem <player> <id>
+        // /shopadmin sellitem <player> <id>
         try {
             int id = Integer.parseInt(strings[2]);
             String playerName = strings[1];
-            Player player = AresonSomniumAPI.instance.getServer().getPlayer(playerName);
-            buyItem(id, player, commandSender);
+            Player player = aresonSomnium.getServer().getPlayer(playerName);
+            sellItem(id, player, commandSender);
         } catch (NumberFormatException numberFormatException) {
             commandSender.sendMessage("L'ID o non è un numero");
         }
@@ -113,13 +115,14 @@ public class SellItemCommand extends CommandParserCommand {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] arguments) {
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
         List<String> suggestions = new ArrayList<>();
         if (arguments.length == 2) {
             return null;
         }
         if (arguments.length == 3) {
-            suggestions.addAll(Arrays.stream(CoinType.values()).map(coinType -> coinType.name().toLowerCase()).collect(Collectors.toList()));
+            suggestions.addAll(Arrays.stream(CoinType.values())
+                    .map(coinType -> coinType.name().toLowerCase()).toList());
         }
         return suggestions;
     }

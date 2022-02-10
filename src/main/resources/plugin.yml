@@ -3,8 +3,11 @@ version: ${project.version}
 main: ${project.groupId}.${project.artifactId}
 api-version: 1.18
 author: Areson
-depends:
+depend:
   - CommandPanels
+  - Essentials
+  - LuckPerms
+  - PlaceholderAPI
 
 commands:
   somniumsinglefreerepair:
@@ -67,11 +70,6 @@ commands:
     usage: /giveConsumable
   riassunto:
     permission: aresonsomnium.player
-
-depend:
-  - Essentials
-  - LuckPerms
-  - PlaceholderAPI
 
 permissions:
   aresonsomnium.admin:

@@ -4,6 +4,8 @@ import it.areson.aresonsomnium.AresonSomnium;
 
 import java.sql.*;
 
+import static it.areson.aresonsomnium.Constants.*;
+
 public class MySqlDBConnection {
 
     private final AresonSomnium aresonSomnium;
@@ -17,20 +19,16 @@ public class MySqlDBConnection {
         try {
             Connection connection = connect();
             connection.close();
-        } catch (SQLException e) {
-            printSqlExceptionDetails(e);
+        } catch (SQLException exception) {
+            printSqlExceptionDetails(exception);
         }
     }
 
     public Connection connect() {
         try {
-            String host = MySqlConfig.HOST;
-            String database = MySqlConfig.DB;
-            String user = MySqlConfig.USER;
-            String pass = MySqlConfig.PASS;
-            return DriverManager.getConnection("jdbc:mysql://" + host + "/" + database + "?user=" + user + "&password=" + pass + "&serverTimezone=CET");
-        } catch (SQLException e) {
-            printSqlExceptionDetails(e);
+            return DriverManager.getConnection("jdbc:mysql://" + DB_HOST + "/" + DB_NAME + "?user=" + DB_USER + "&password=" + DB_PASSWORD + "&serverTimezone=CET");
+        } catch (SQLException exception) {
+            printSqlExceptionDetails(exception);
         }
         return null;
     }

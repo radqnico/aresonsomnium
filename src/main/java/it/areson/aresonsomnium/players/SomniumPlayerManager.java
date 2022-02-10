@@ -12,11 +12,9 @@ public class SomniumPlayerManager {
 
     private final TreeMap<Player, SomniumPlayer> onlinePlayers;
     private final MySqlDBConnection connection;
-    private final String tableName;
 
-    public SomniumPlayerManager(MySqlDBConnection connection, String tableName) {
+    public SomniumPlayerManager(MySqlDBConnection connection) {
         this.connection = connection;
-        this.tableName = tableName;
         onlinePlayers = new TreeMap<>(new PlayerComparator());
     }
 
@@ -25,7 +23,7 @@ public class SomniumPlayerManager {
     }
 
     public void addSomniumPlayer(Player player) {
-        SomniumPlayer somniumPlayer = new SomniumPlayer(connection, tableName, player);
+        SomniumPlayer somniumPlayer = new SomniumPlayer(connection, player);
         onlinePlayers.put(player, somniumPlayer);
     }
 

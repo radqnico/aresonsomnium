@@ -1,8 +1,8 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
-import it.areson.aresonsomnium.api.AresonSomniumAPI;
-import it.areson.aresonsomnium.commands.AresonCommand;
+import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.commands.CommandParserCommand;
+import it.areson.aresonsomnium.economy.items.ShopItemsManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -10,12 +10,19 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@AresonCommand("reloaditems")
 public class ReloadItemsCommand extends CommandParserCommand {
+
+    private final ShopItemsManager shopItemsManager;
+
+    public ReloadItemsCommand(AresonSomnium aresonSomnium) {
+        this.shopItemsManager = aresonSomnium.getShopItemsManager();
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        AresonSomniumAPI.instance.shopItemsManager.reloadItems();
+        if (commandSender.isOp()) {
+            shopItemsManager.reloadItems();
+        }
         return true;
     }
 

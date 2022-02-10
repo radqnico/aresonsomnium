@@ -1,6 +1,6 @@
 package it.areson.aresonsomnium.economy.guis;
 
-import it.areson.aresonsomnium.api.AresonSomniumAPI;
+import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.items.ItemsDBGateway;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import net.kyori.adventure.text.Component;
@@ -15,10 +15,12 @@ import static net.kyori.adventure.text.format.NamedTextColor.RED;
 
 public class ItemListView {
 
+    private final AresonSomnium aresonSomnium;
     private final ItemsDBGateway itemsDBGateway;
     private final List<Inventory> inventories;
 
-    public ItemListView(ItemsDBGateway itemsDBGateway) {
+    public ItemListView(AresonSomnium aresonSomnium, ItemsDBGateway itemsDBGateway) {
+        this.aresonSomnium = aresonSomnium;
         this.inventories = new ArrayList<>();
         this.itemsDBGateway = itemsDBGateway;
         refreshInventories();
@@ -56,7 +58,7 @@ public class ItemListView {
         try {
             return Optional.of(inventories.get(page));
         } catch (IndexOutOfBoundsException ignored) {
-            AresonSomniumAPI.instance.getLogger().warning("ItemListView pagina " + page + " non esiste");
+            aresonSomnium.getLogger().warning("ItemListView pagina " + page + " non esiste");
         }
         return Optional.empty();
     }
@@ -74,7 +76,7 @@ public class ItemListView {
         return Optional.empty();
     }
 
-    public int getNumberOfPages(){
+    public int getNumberOfPages() {
         return inventories.size();
     }
 

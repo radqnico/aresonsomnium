@@ -95,6 +95,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.sk89q.worldguard</groupId>
+            <artifactId>worldguard-bukkit</artifactId>
+            <version>7.0.6</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>it.areson.aresonlib</groupId>
             <artifactId>AresonLib</artifactId>
             <version>1.26-SNAPSHOT</version>

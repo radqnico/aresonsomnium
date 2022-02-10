@@ -21,7 +21,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static it.areson.aresonsomnium.Constants.*;
+import static it.areson.aresonsomnium.Constants.MULTIPLIER_MODEL_DATA;
+import static it.areson.aresonsomnium.Constants.REPAIR_ALL_MODEL_DATA;
 import static net.md_5.bungee.api.ChatColor.*;
 
 @SuppressWarnings("NullableProblems")
@@ -30,7 +31,6 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
     private final AresonSomnium aresonSomnium;
     public HashMap<String, ItemStack> itemStacks;
     public final String multiplierIndexName = "multiplier";
-    public final String bomb3IndexName = "bomb3";
     public final String repairAllIndexName = "repairAll";
     private final ArrayList<String> quantitySuggestions;
     private final ArrayList<String> multiplierSuggestions;
@@ -54,7 +54,6 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
         itemStacks = new HashMap<>();
 
         itemStacks.put(multiplierIndexName, createConsumableItemStack(Material.CLOCK, "Moltiplicatore", new ArrayList<>(), MULTIPLIER_MODEL_DATA));
-        itemStacks.put(bomb3IndexName, createConsumableItemStack(Material.TNT, "Bomb3", new ArrayList<>(), BOMB3_MODEL_DATA));
         itemStacks.put(repairAllIndexName, createConsumableItemStack(Material.PAPER, AQUA + "" + BOLD + "Pergamena della riparazione", new ArrayList<>(Arrays.asList(
                 GRAY + "Consumando questo oggetto tutti",
                 GRAY + "gli oggetti riparabili nel tuo inventario",
@@ -106,8 +105,8 @@ public class GiveConsumableCommand implements CommandExecutor, TabCompleter {
             }
 
             PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
-            persistentDataContainer.set(aresonSomnium.multiplierValueNamespacedKey, PersistentDataType.DOUBLE, multiplier / 100.0);
-            persistentDataContainer.set(aresonSomnium.multiplierDurationNamespacedKey, PersistentDataType.STRING, duration.toString());
+            persistentDataContainer.set(aresonSomnium.getMultiplierValueNamespacedKey(), PersistentDataType.DOUBLE, multiplier / 100.0);
+            persistentDataContainer.set(aresonSomnium.getMultiplierDurationNamespacedKey(), PersistentDataType.STRING, duration.toString());
 
             itemMeta.lore(lore);
         }

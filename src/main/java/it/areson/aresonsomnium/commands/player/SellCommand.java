@@ -12,16 +12,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 
 @SuppressWarnings("NullableProblems")
 public class SellCommand implements CommandExecutor {
 
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
+    private final HashSet<String> playersWithAutoSellActive;
 
-    public SellCommand(AresonSomnium aresonSomnium, MessageManager messageManager, String command) {
+    public SellCommand(AresonSomnium aresonSomnium, String command) {
         this.aresonSomnium = aresonSomnium;
-        this.messageManager = messageManager;
+        this.messageManager = aresonSomnium.getMessageManager();
+        this.playersWithAutoSellActive = aresonSomnium.getPlayersWithAutoSellActive();
 
         PluginCommand pluginCommand = this.aresonSomnium.getCommand(command);
         if (pluginCommand != null) {
@@ -57,11 +60,11 @@ public class SellCommand implements CommandExecutor {
                 case Constants.AUTO_SELL_COMMAND -> {
                     if (player.hasPermission("aresonSomnium.autosell")) {
                         String playerName = player.getName();
-                        if (!aresonSomnium.playersWithAutoSellActive.contains(playerName)) {
-                            aresonSomnium.playersWithAutoSellActive.add(playerName);
+                        if (!playersWithAutoSellActive.contains(playerName)) {
+                            playersWithAutoSellActive.add(playerName);
                             messageManager.sendMessage(player, "autosell-activated");
                         } else {
-                            aresonSomnium.playersWithAutoSellActive.remove(playerName);
+                            playersWithAutoSellActive.remove(playerName);
                             messageManager.sendMessage(player, "autosell-deactivated");
                         }
                     } else {

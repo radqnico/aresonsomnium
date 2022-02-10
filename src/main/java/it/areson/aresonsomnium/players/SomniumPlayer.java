@@ -1,5 +1,6 @@
 package it.areson.aresonsomnium.players;
 
+import it.areson.aresonsomnium.Constants;
 import it.areson.aresonsomnium.database.MySQLObject;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.Price;
@@ -16,14 +17,15 @@ import java.time.LocalDateTime;
 public class SomniumPlayer extends MySQLObject {
 
     public static long DEFAULT_TIME_PLAYED = 0L;
-    public static String tableQuery = "create table if not exists somniumPlayer\n" +
-            "(\n" +
-            "    playerName  varchar(255)     not null\n" +
-            "        primary key,\n" +
-            "    timePlayed  bigint default 0 null,\n" +
-            "    obols float  default 0 not null,\n" +
-            "    gems float  default 0 not null\n" +
-            ");";
+    public static String tableQuery = """
+            create table if not exists somniumPlayer
+            (
+                playerName  varchar(255)     not null
+                    primary key,
+                timePlayed  bigint default 0 null,
+                obols float  default 0 not null,
+                gems float  default 0 not null
+            );""";
 
     private final Player player;
     private LocalDateTime timeJoined;
@@ -31,8 +33,8 @@ public class SomniumPlayer extends MySQLObject {
 
     private Wallet wallet;
 
-    public SomniumPlayer(MySqlDBConnection mySqlDBConnection, String tableName, Player player) {
-        super(mySqlDBConnection, tableName);
+    public SomniumPlayer(MySqlDBConnection mySqlDBConnection, Player player) {
+        super(mySqlDBConnection, Constants.DB_PLAYER_TABLE);
         this.player = player;
         setAllDefault();
         updateFromDB();

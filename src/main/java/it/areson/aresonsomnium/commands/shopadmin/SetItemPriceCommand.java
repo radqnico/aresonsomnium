@@ -1,7 +1,6 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
-import it.areson.aresonsomnium.api.AresonSomniumAPI;
-import it.areson.aresonsomnium.commands.AresonCommand;
+import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.commands.CommandParserCommand;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.items.ShopItem;
@@ -18,13 +17,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@AresonCommand("setitemprice")
 public class SetItemPriceCommand extends CommandParserCommand {
+
+    private final AresonSomnium aresonSomnium;
+
+    public SetItemPriceCommand(AresonSomnium aresonSomnium) {
+        this.aresonSomnium = aresonSomnium;
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         // / /shopadmin setitemprice buy <id> <valuta> <qta>
-        ShopItemsManager shopItemsManager = AresonSomniumAPI.instance.shopItemsManager;
+        ShopItemsManager shopItemsManager = aresonSomnium.getShopItemsManager();
         try {
             int id = Integer.parseInt(strings[2]);
             try {
@@ -67,10 +71,13 @@ public class SetItemPriceCommand extends CommandParserCommand {
             suggestions.add("sell");
         }
         if (strings.length == 2) {
-            suggestions = AresonSomniumAPI.instance.shopItemsManager.getItemsGateway().getAllItems(false).stream().map(shopItem -> shopItem.getId() + "").collect(Collectors.toList());
+            suggestions = aresonSomnium.getShopItemsManager().getItemsGateway()
+                    .getAllItems(false).stream()
+                    .map(shopItem -> shopItem.getId() + "").collect(Collectors.toList());
         }
         if (strings.length == 4) {
-            boolean b = suggestions.addAll(Arrays.stream(CoinType.values()).map(coinType -> coinType.name().toLowerCase()).collect(Collectors.toList()));
+            suggestions.addAll(Arrays.stream(CoinType.values())
+                    .map(coinType -> coinType.name().toLowerCase()).toList());
         }
         if (strings.length == 5) {
             suggestions.add("<prezzo>");

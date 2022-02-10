@@ -2,7 +2,7 @@ package it.areson.aresonsomnium.commands.repair;
 
 import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonlib.utils.Substitution;
-import it.areson.aresonsomnium.api.AresonSomniumAPI;
+import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.elements.Pair;
 
 import java.time.Duration;
@@ -11,13 +11,16 @@ import java.util.HashMap;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 
+//TODO Viene usata?
 public class RepairCountdown {
 
+    private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
     private final HashMap<String, LocalDateTime> lastRepairTimes;
 
-    public RepairCountdown(MessageManager messageManager) {
-        this.messageManager = messageManager;
+    public RepairCountdown(AresonSomnium aresonSomnium) {
+        this.aresonSomnium = aresonSomnium;
+        this.messageManager = aresonSomnium.getMessageManager();
         this.lastRepairTimes = new HashMap<>();
     }
 
@@ -30,7 +33,8 @@ public class RepairCountdown {
             return Pair.of(true, null);
         }
         LocalDateTime lastRepairTime = lastRepairTimes.get(playerName);
-        long timeToWait = AresonSomniumAPI.instance.getConfig().getLong("repair.delay-seconds");
+        //TODO Ogni volta viene riletto
+        long timeToWait = aresonSomnium.getConfig().getLong("repair.delay-seconds");
         if (Duration.between(lastRepairTime, LocalDateTime.now()).getSeconds() >= timeToWait) {
             return Pair.of(true, null);
         } else {

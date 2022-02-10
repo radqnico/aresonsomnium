@@ -1,6 +1,6 @@
 package it.areson.aresonsomnium.economy.items;
 
-import it.areson.aresonsomnium.api.AresonSomniumAPI;
+import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.Price;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -17,14 +17,17 @@ import java.util.Objects;
 import static org.bukkit.persistence.PersistentDataType.INTEGER;
 
 public class ShopItem {
+    //TODO Naspace builded every time
 
+    private final AresonSomnium aresonSomnium;
     private final int id;
     private final ItemStack itemStack;
     private final int amount;
     private final Price shoppingPrice;
     private final Price sellingPrice;
 
-    public ShopItem(int id, ItemStack itemStack, int amount, Price shoppingPrice, Price sellingPrice) {
+    public ShopItem(AresonSomnium aresonSomnium, int id, ItemStack itemStack, int amount, Price shoppingPrice, Price sellingPrice) {
+        this.aresonSomnium = aresonSomnium;
         this.id = id;
         this.itemStack = itemStack.asOne();
         this.amount = amount;
@@ -32,18 +35,18 @@ public class ShopItem {
         this.sellingPrice = sellingPrice;
     }
 
-    public ShopItem(int id, ItemStack itemStack) {
-        this(id, itemStack, 1, new Price(), new Price());
+    public ShopItem(AresonSomnium aresonSomnium, int id, ItemStack itemStack) {
+        this(aresonSomnium, id, itemStack, 1, new Price(), new Price());
     }
 
-    public static int getIdFromItem(ItemStack itemStack) {
+    public int getIdFromItem(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (Objects.isNull(itemMeta)) {
             return -1;
         }
         PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
         persistentDataContainer.getKeys().stream().map(namespacedKey -> namespacedKey.toString() + "->" + persistentDataContainer.get(namespacedKey, INTEGER)).forEach(System.out::println);
-        return persistentDataContainer.getOrDefault(new NamespacedKey(AresonSomniumAPI.instance, "id"), INTEGER, -1);
+        return persistentDataContainer.getOrDefault(new NamespacedKey(aresonSomnium, "id"), INTEGER, -1);
     }
 
     public int getAmount() {
@@ -66,9 +69,9 @@ public class ShopItem {
             PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
 
             if (putTags) {
-                persistentDataContainer.set(new NamespacedKey(AresonSomniumAPI.instance, "id"), INTEGER, id);
+                persistentDataContainer.set(new NamespacedKey(aresonSomnium, "id"), INTEGER, id);
             } else {
-                persistentDataContainer.remove(new NamespacedKey(AresonSomniumAPI.instance, "id"));
+                persistentDataContainer.remove(new NamespacedKey(aresonSomnium, "id"));
             }
 
             List<Component> lore = itemMeta.lore();
@@ -110,8 +113,7 @@ public class ShopItem {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ShopItem)) return false;
-        ShopItem shopItem = (ShopItem) o;
+        if (!(o instanceof ShopItem shopItem)) return false;
         return id == shopItem.id;
     }
 

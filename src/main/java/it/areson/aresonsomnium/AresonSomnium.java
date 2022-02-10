@@ -1,9 +1,12 @@
 package it.areson.aresonsomnium;
 
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
+import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import it.areson.aresonlib.files.FileManager;
 import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonlib.utils.Substitution;
-import it.areson.aresonsomnium.api.AresonSomniumAPI;
 import it.areson.aresonsomnium.commands.CommandParser;
 import it.areson.aresonsomnium.commands.admin.GiveConsumableCommand;
 import it.areson.aresonsomnium.commands.admin.ObolsCommand;
@@ -23,6 +26,7 @@ import it.areson.aresonsomnium.economy.items.ShopItemsManager;
 import it.areson.aresonsomnium.elements.Multiplier;
 import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import it.areson.aresonsomnium.listeners.*;
+import it.areson.aresonsomnium.listeners.external.LuckPermsListener;
 import it.areson.aresonsomnium.placeholders.CoinsPlaceholders;
 import it.areson.aresonsomnium.placeholders.MultiplierPlaceholders;
 import it.areson.aresonsomnium.players.SomniumPlayer;
@@ -57,19 +61,19 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 import static it.areson.aresonsomnium.Constants.PERMISSION_MULTIPLIER;
-import static it.areson.aresonsomnium.database.MySqlConfig.PLAYER_TABLE_NAME;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class AresonSomnium extends JavaPlugin {
 
+    //Multiplier
     private final Multiplier defaultMultiplier = new Multiplier();
     private final HashMap<String, Multiplier> playerMultipliers = new HashMap<>();
-    public NamespacedKey multiplierValueNamespacedKey;
-    public NamespacedKey multiplierDurationNamespacedKey;
+    private NamespacedKey multiplierValueNamespacedKey;
+    private NamespacedKey multiplierDurationNamespacedKey;
 
+    //Constants
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
     private final String messagePrefix = "[Somnium]";
-    public HashSet<String> playersWithAutoSellActive;
     private final HashMap<Material, String> blocksPermission = new HashMap<>() {{
         put(Material.NETHERRACK, Constants.PERMISSION_SELVA);
         put(Material.GRANITE, Constants.PERMISSION_ANTINFERNO);
@@ -90,13 +94,17 @@ public class AresonSomnium extends JavaPlugin {
         put(Material.WHITE_CONCRETE, Constants.PERMISSION_NONO_CIELO);
     }};
 
+    //Managers
     private SomniumPlayerManager somniumPlayerManager;
     private GatewayListener playerDBEvents;
     private GommaObjectsFileReader gommaObjectsFileReader;
     private MessageManager messageManager;
-    private FileManager recaps;
+    //TODO RECAPS
+    //private FileManager recaps;
     private FileManager briefing;
     private LastHitPvP lastHitPvP;
+    private Optional<LuckPerms> luckPerms;
+
     //Repair
     private HashMap<String, LocalDateTime> fullRepairTimes;
     private long fullRepairDelay;
@@ -106,9 +114,9 @@ public class AresonSomnium extends JavaPlugin {
     private HashMap<String, LocalDateTime> singleRepairTimes;
     private long singleFreeRepairDelay;
 
-
-    public ShopItemsManager shopItemsManager;
-    public Optional<LuckPerms> luckPerms;
+    private HashSet<String> playersWithAutoSellActive;
+    private Optional<StateFlag> wgPermissionFlyState;
+    private ShopItemsManager shopItemsManager;
 
     @Override
     public void onDisable() {
@@ -118,15 +126,12 @@ public class AresonSomnium extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        saveDefaultConfig();
-
-        AresonSomniumAPI.instance = this;
         registerFiles();
         initListeners();
         registerCommands();
 
         MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(this);
-        somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection, PLAYER_TABLE_NAME);
+        somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection);
         shopItemsManager = new ShopItemsManager(this, mySqlDBConnection);
 
         // Multiplier
@@ -138,7 +143,9 @@ public class AresonSomnium extends JavaPlugin {
             new MultiplierPlaceholders(this).register();
             new CoinsPlaceholders(this).register();
         }
-        Recaps.initRecaps(recaps);
+
+        // TODO RECAPS
+        //Recaps.initRecaps(recaps);
 
         // LuckPerms
         RegisteredServiceProvider<LuckPerms> provider = getServer().getServicesManager().getRegistration(LuckPerms.class);
@@ -150,28 +157,18 @@ public class AresonSomnium extends JavaPlugin {
             luckPerms = Optional.empty();
         }
 
-        // Auto Save Task interval
-        // 1m  = 1200
-        // 10m = 12000
-        AutoSaveManager.startAutoSaveTask(this, 12000);
+        //WorldGuard
+        registerWorldGuardFlags();
+
+        //Auto-save
+        AutoSaveManager.startAutoSaveTask(this, 12000); //10 minutes
         lastHitPvP = new LastHitPvP(this);
 
         //Repair
         initializeRepair();
 
-        // Autosell task
-        playersWithAutoSellActive = new HashSet<>();
-        getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> playersWithAutoSellActive.parallelStream().forEach(playerName -> {
-            Player player = getServer().getPlayerExact(playerName);
-            if (player != null) {
-                BigDecimal sold = sellItems(player, player.getInventory().getContents());
-                if (sold.compareTo(BigDecimal.ZERO) > 0) {
-                    messageManager.sendMessage(player, "autosell-sold", new Substitution("%money%", "" + sold));
-                }
-            } else {
-                playersWithAutoSellActive.remove(playerName);
-            }
-        }), 0, 300);
+        //Auto-sell
+        initializeAutoSell();
     }
 
     private void initializeRepair() {
@@ -189,14 +186,31 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     private void registerFiles() {
+        saveDefaultConfig();
+
         messageManager = new MessageManager(this, "messages.yml");
         gommaObjectsFileReader = new GommaObjectsFileReader(this, "gommaItems.yml");
-        recaps = new FileManager(this, "recaps.yml");
+        //recaps = new FileManager(this, "recaps.yml");
         briefing = new FileManager(this, "briefing.yml");
     }
 
     public GommaObjectsFileReader getGommaObjectsFileReader() {
         return gommaObjectsFileReader;
+    }
+
+    private void initializeAutoSell() {
+        playersWithAutoSellActive = new HashSet<>();
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> playersWithAutoSellActive.parallelStream().forEach(playerName -> {
+            Player player = getServer().getPlayerExact(playerName);
+            if (player != null) {
+                BigDecimal sold = sellItems(player, player.getInventory().getContents());
+                if (sold.compareTo(BigDecimal.ZERO) > 0) {
+                    messageManager.sendMessage(player, "autosell-sold", new Substitution("%money%", "" + sold));
+                }
+            } else {
+                playersWithAutoSellActive.remove(playerName);
+            }
+        }), 0, 300);
     }
 
     private void registerCommands() {
@@ -208,18 +222,12 @@ public class AresonSomnium extends JavaPlugin {
         }
 
         try {
-            parserShopAdmin.addAresonCommand(new EditItemsCommand());
-            parserShopAdmin.addAresonCommand(new ReloadItemsCommand());
-            parserShopAdmin.addAresonCommand(new SetItemPriceCommand());
-            parserShopAdmin.addAresonCommand(new BuyItemCommand(messageManager));
-            parserShopAdmin.addAresonCommand(new SellItemCommand(messageManager));
-            parserShopAdmin.registerCommands();
-            parserShopAdmin.addAresonCommand(new EditItemsCommand());
-            parserShopAdmin.addAresonCommand(new ReloadItemsCommand());
-            parserShopAdmin.addAresonCommand(new SetItemPriceCommand());
-            parserShopAdmin.addAresonCommand(new BuyItemCommand(messageManager));
-            parserShopAdmin.addAresonCommand(new SellItemCommand(messageManager));
-            parserShopAdmin.addAresonCommand(new SellLootableCommand());
+            parserShopAdmin.addAresonCommand(new EditItemsCommand(this));
+            parserShopAdmin.addAresonCommand(new ReloadItemsCommand(this));
+            parserShopAdmin.addAresonCommand(new SetItemPriceCommand(this));
+            parserShopAdmin.addAresonCommand(new BuyItemCommand(this));
+            parserShopAdmin.addAresonCommand(new SellItemCommand(this));
+            parserShopAdmin.addAresonCommand(new SellLootableCommand(this));
             parserShopAdmin.registerCommands();
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -231,9 +239,9 @@ public class AresonSomnium extends JavaPlugin {
         new SomniumAdminCommand(this, messageManager);
         new StatsCommand(this, messageManager);
         new SomniumGommaCommand(this, messageManager);
-        new SellCommand(this, messageManager, Constants.SELL_HAND_COMMAND);
-        new SellCommand(this, messageManager, Constants.SELL_ALL_COMMAND);
-        new SellCommand(this, messageManager, Constants.AUTO_SELL_COMMAND);
+        new SellCommand(this, Constants.SELL_HAND_COMMAND);
+        new SellCommand(this, Constants.SELL_ALL_COMMAND);
+        new SellCommand(this, Constants.AUTO_SELL_COMMAND);
 //        new CheckCommand(this);
         new ObolsCommand(this, messageManager);
         new GiveConsumableCommand(this);
@@ -248,7 +256,7 @@ public class AresonSomnium extends JavaPlugin {
         InventoryListener inventoryListener = new InventoryListener(this);
         RightClickListener rightClickListener = new RightClickListener(this, messageManager);
         AnvilListener anvilListener = new AnvilListener(this);
-        new PlayerListener(this, messageManager);
+        new PlayerListener(this);
 
         playerDBEvents.registerEvents();
         inventoryListener.registerEvents();
@@ -532,5 +540,41 @@ public class AresonSomnium extends JavaPlugin {
             return true;
         }
     }
+
+    private void registerWorldGuardFlags() {
+        FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
+        try {
+            StateFlag flag = new StateFlag(Constants.WG_PERMISSION_FLY_FLAG, false);
+            registry.register(flag);
+            wgPermissionFlyState = Optional.of(flag);
+        } catch (FlagConflictException exception) {
+            getLogger().severe("Cannot register WG flag " + Constants.WG_PERMISSION_FLY_FLAG);
+        }
+    }
+
+    public NamespacedKey getMultiplierValueNamespacedKey() {
+        return multiplierValueNamespacedKey;
+    }
+
+    public NamespacedKey getMultiplierDurationNamespacedKey() {
+        return multiplierDurationNamespacedKey;
+    }
+
+    public Optional<LuckPerms> getLuckPerms() {
+        return luckPerms;
+    }
+
+    public ShopItemsManager getShopItemsManager() {
+        return shopItemsManager;
+    }
+
+    public MessageManager getMessageManager() {
+        return messageManager;
+    }
+
+    public HashSet<String> getPlayersWithAutoSellActive() {
+        return playersWithAutoSellActive;
+    }
+
 
 }
