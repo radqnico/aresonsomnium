@@ -18,9 +18,10 @@ public class ItemListViewEventsListener extends GeneralEventListener {
 
     private final ShopItemsManager shopItemsManager;
 
-    public ItemListViewEventsListener(AresonSomnium aresonSomnium) {
+    public ItemListViewEventsListener(AresonSomnium aresonSomnium, ShopItemsManager shopItemsManager) {
         super(aresonSomnium);
-        shopItemsManager = aresonSomnium.getShopItemsManager();
+        //Cannot call aresonSomnium.getShopItemsManager() because this item is created inside ShopItemsManager
+        this.shopItemsManager = shopItemsManager;
     }
 
     @EventHandler

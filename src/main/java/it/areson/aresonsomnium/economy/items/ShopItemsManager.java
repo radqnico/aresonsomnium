@@ -34,7 +34,8 @@ public class ShopItemsManager {
         itemsDBGateway = new ItemsDBGateway(aresonSomnium, mySqlDBConnection);
         itemListView = new ItemListView(aresonSomnium, itemsDBGateway);
         playerWithEditorOpened = new HashMap<>();
-        itemListViewEventsListener = new ItemListViewEventsListener(aresonSomnium);
+        //TODO Andrebbe generalizzato e spostato tra i listener
+        itemListViewEventsListener = new ItemListViewEventsListener(aresonSomnium, this);
     }
 
     public void openEditGuiToPlayer(Player player, int page) {
