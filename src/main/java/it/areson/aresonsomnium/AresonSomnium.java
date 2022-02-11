@@ -13,9 +13,9 @@ import it.areson.aresonsomnium.commands.admin.GiveConsumableCommand;
 import it.areson.aresonsomnium.commands.admin.ObolsCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumAdminCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumGommaCommand;
-import it.areson.aresonsomnium.commands.player.OpenBookCommand;
 import it.areson.aresonsomnium.commands.player.SellCommand;
 import it.areson.aresonsomnium.commands.player.StatsCommand;
+import it.areson.aresonsomnium.commands.player.SummariesCommand;
 import it.areson.aresonsomnium.commands.repair.SomniumRepairCommand;
 import it.areson.aresonsomnium.commands.shopadmin.*;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
@@ -67,8 +67,11 @@ public class AresonSomnium extends AresonPlugin {
     //Multiplier
     private final Multiplier defaultMultiplier = new Multiplier();
     private final HashMap<String, Multiplier> playerMultipliers = new HashMap<>();
+
+    //NamespacedKeys
     private NamespacedKey multiplierValueNamespacedKey;
     private NamespacedKey multiplierDurationNamespacedKey;
+    private NamespacedKey itemIdNamespacedKey;
 
     //Constants
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -98,9 +101,7 @@ public class AresonSomnium extends AresonPlugin {
     private GatewayListener playerDBEvents;
     private GommaObjectsFileReader gommaObjectsFileReader;
     private MessageManager messageManager;
-    //TODO RECAPS
-    //private FileManager recaps;
-    private FileManager briefing;
+    private FileManager briefingFileManager;
     private LastHitPvP lastHitPvP;
     private Optional<LuckPerms> luckPerms;
 
@@ -134,7 +135,7 @@ public class AresonSomnium extends AresonPlugin {
 
     @Override
     public void onEnable() {
-        registerFiles();
+        initializeFiles();
         initListeners();
         registerCommands();
 
@@ -142,20 +143,18 @@ public class AresonSomnium extends AresonPlugin {
         somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection);
         shopItemsManager = new ShopItemsManager(this, mySqlDBConnection);
 
-        // Multiplier
-        multiplierValueNamespacedKey = new NamespacedKey(this, Constants.MULTIPLIER_VALUE_KEY);
-        multiplierDurationNamespacedKey = new NamespacedKey(this, Constants.MULTIPLIER_DURATION_KEY);
+        //NamespacedKeys
+        multiplierValueNamespacedKey = new NamespacedKey(this, Constants.MULTIPLIER_VALUE_NAMESPACED_KEY);
+        multiplierDurationNamespacedKey = new NamespacedKey(this, Constants.MULTIPLIER_DURATION_NAMESPACED_KEY);
+        itemIdNamespacedKey = new NamespacedKey(this, Constants.ITEM_ID_NAMESPACED_KEY);
 
-        // Placeholders
+        //Placeholders
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new MultiplierPlaceholders(this).register();
             new CoinsPlaceholders(this).register();
         }
 
-        // TODO RECAPS
-        //Recaps.initRecaps(recaps);
-
-        // LuckPerms
+        //LuckPerms
         RegisteredServiceProvider<LuckPerms> provider = getServer().getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
             luckPerms = Optional.of(provider.getProvider());
@@ -193,13 +192,12 @@ public class AresonSomnium extends AresonPlugin {
         return lastHitPvP;
     }
 
-    private void registerFiles() {
+    private void initializeFiles() {
         saveDefaultConfig();
 
         messageManager = new MessageManager(this, "messages.yml");
         gommaObjectsFileReader = new GommaObjectsFileReader(this, "gommaItems.yml");
-        //recaps = new FileManager(this, "recaps.yml");
-        briefing = new FileManager(this, "briefing.yml");
+        briefingFileManager = new FileManager(this, "briefing.yml");
     }
 
     public GommaObjectsFileReader getGommaObjectsFileReader() {
@@ -242,7 +240,7 @@ public class AresonSomnium extends AresonPlugin {
         new SomniumRepairCommand(this, Constants.SINGLE_FREE_REPAIR_COMMAND);
         new SomniumRepairCommand(this, Constants.SINGLE_REPAIR_COMMAND);
         new SomniumRepairCommand(this, Constants.FULL_REPAIR_COMMAND);
-        new OpenBookCommand(this);
+        new SummariesCommand(this, "summaries");
     }
 
     private void initListeners() {
@@ -399,8 +397,8 @@ public class AresonSomnium extends AresonPlugin {
         }
     }
 
-    public FileManager getBriefing() {
-        return briefing;
+    public FileManager getBriefingFileManager() {
+        return briefingFileManager;
     }
 
     public boolean hasDamage(ItemStack itemStack) {
@@ -488,13 +486,13 @@ public class AresonSomnium extends AresonPlugin {
 
     public Price getSingleRepairPrice(CoinType coinType) {
         switch (coinType) {
-            case MONETE -> {
+            case COINS -> {
                 return singleRepairCoinsPrice;
             }
-            case GEMME -> {
+            case GEMS -> {
                 return singleRepairGemsPrice;
             }
-            case OBOLI -> {
+            case OBOLS -> {
                 return singleRepairObolsPrice;
             }
             default -> {
@@ -571,6 +569,10 @@ public class AresonSomnium extends AresonPlugin {
 
     public HashSet<String> getPlayersWithAutoSellActive() {
         return playersWithAutoSellActive;
+    }
+
+    public NamespacedKey getItemIdNamespacedKey() {
+        return itemIdNamespacedKey;
     }
 
     //TODO

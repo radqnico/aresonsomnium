@@ -69,7 +69,7 @@ commands:
     description: "Give a consumable object"
     permission: aresonsomnium.admin
     usage: /giveConsumable
-  riassunto:
+  summaries:
     permission: aresonsomnium.player
 
 permissions:

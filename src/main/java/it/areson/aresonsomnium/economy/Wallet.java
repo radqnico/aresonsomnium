@@ -2,26 +2,12 @@ package it.areson.aresonsomnium.economy;
 
 import com.earth2me.essentials.api.NoLoanPermittedException;
 import com.earth2me.essentials.api.UserDoesNotExistException;
-import it.areson.aresonsomnium.players.SomniumPlayer;
 import net.ess3.api.Economy;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static it.areson.aresonsomnium.Constants.CHECK_MODEL_DATA;
 
 public class Wallet {
 
@@ -33,66 +19,8 @@ public class Wallet {
         this.gems = gems;
     }
 
-    public static Wallet getNewDefaultWallet() {
-        return new Wallet(BigInteger.ZERO, BigInteger.ZERO);
-    }
-
-    // TODO Salvare un oggetto "stampo" e modificare il dato che serve all'occasione
-    public static ItemStack generateCheck(BigDecimal amount, CoinType coinType) {
-        ItemStack itemStack = new ItemStack(Material.PAPER);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta != null) {
-            itemMeta.displayName(Component.text(ChatColor.translateAlternateColorCodes('&', "&6Assegno in &e&l" + coinType.getCoinName())));
-            List<Component> lore = new ArrayList<>();
-            lore.add(Component.text(ChatColor.translateAlternateColorCodes('&', "&7Valore:")));
-            lore.add(Component.text(ChatColor.translateAlternateColorCodes('&', "&a" + amount.toString() + " " + coinType.getCoinName())));
-            itemMeta.lore(lore);
-            itemMeta.setCustomModelData(CHECK_MODEL_DATA);
-            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            itemMeta.addEnchant(Enchantment.DAMAGE_UNDEAD, 1, true);
-        }
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
-    }
-
-    //TODO Usare persistent data
-    public static boolean applyCheck(SomniumPlayer somniumPlayer, ItemStack itemStack) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-
-        if (itemMeta.hasCustomModelData() && itemMeta.getCustomModelData() == CHECK_MODEL_DATA) {
-            if (itemMeta.hasLore()) {
-                List<String> lore = itemMeta.getLore();
-                if (lore != null && lore.size() == 2) {
-                    String secondLine = lore.get(1);
-                    String clean = secondLine.replaceAll("&.", "").replaceAll("§.", "");
-                    Pattern patternAmount = Pattern.compile("[0-9.]+(E[+-]?[0-9]+)?");
-                    Pattern patternCoinType = Pattern.compile("(Monete|Gemme|Oboli)");
-                    Matcher matcherCoinType = patternCoinType.matcher(clean);
-                    Matcher matcherAmount = patternAmount.matcher(clean);
-                    if (matcherAmount.find() && matcherCoinType.find()) {
-                        BigDecimal amount = new BigDecimal(matcherAmount.group(0));
-                        CoinType coinType = CoinType.valueOf(matcherCoinType.group(0).toUpperCase());
-                        switch (coinType) {
-                            case OBOLI -> {
-                                somniumPlayer.getWallet().changeObols(amount.toBigInteger());
-                                return true;
-                            }
-                            case GEMME -> {
-                                somniumPlayer.getWallet().changeGems(amount.toBigInteger());
-                                return true;
-                            }
-                            case MONETE -> {
-                                Wallet.addCoins(somniumPlayer.getPlayer(), amount);
-                                return true;
-                            }
-                            default -> {
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return false;
+    public Wallet() {
+        this(BigInteger.ZERO, BigInteger.ZERO);
     }
 
     public static BigDecimal getCoins(Player player) {

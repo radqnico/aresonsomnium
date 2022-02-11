@@ -134,14 +134,15 @@ public class Price {
 
     public void setPrice(CoinType coinType, BigDecimal price) {
         switch (coinType) {
-            case OBOLI -> setObols(price.toBigInteger());
-            case GEMME -> setGems(price.toBigInteger());
-            case MONETE -> setCoins(price);
+            case OBOLS -> setObols(price.toBigInteger());
+            case GEMS -> setGems(price.toBigInteger());
+            case COINS -> setCoins(price);
             default -> {
             }
         }
     }
 
+    //TODO Chiede super.clone
     public Price clone() {
         return new Price(coins, obols, gems);
     }

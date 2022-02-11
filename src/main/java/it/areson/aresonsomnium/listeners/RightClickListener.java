@@ -2,13 +2,10 @@ package it.areson.aresonsomnium.listeners;
 
 import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.elements.Pair;
-import it.areson.aresonsomnium.players.SomniumPlayer;
 import net.luckperms.api.model.data.TemporaryNodeMergeStrategy;
 import net.luckperms.api.node.Node;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -74,10 +71,6 @@ public class RightClickListener extends GeneralEventListener {
                         case GOMMA_MODEL_DATA -> {
                             playerDelays.put(player.getName(), Instant.now());
                             collectGommaReward(event);
-                        }
-                        case CHECK_MODEL_DATA -> {
-                            playerDelays.put(player.getName(), Instant.now());
-                            redeemCheck(event);
                         }
                         case MULTIPLIER_MODEL_DATA -> {
                             playerDelays.put(player.getName(), Instant.now());
@@ -167,24 +160,6 @@ public class RightClickListener extends GeneralEventListener {
                     messageManager.sendMessage(player, "gomma-error-give");
                 }
                 event.setCancelled(true);
-            }
-        }
-    }
-
-    private void redeemCheck(PlayerInteractEvent event) {
-        ItemStack itemStack = event.getItem();
-
-        if (itemStack != null && Objects.equals(itemStack.getType(), Material.PAPER)) {
-            SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(event.getPlayer());
-
-            if (somniumPlayer != null) {
-                if (Wallet.applyCheck(somniumPlayer, itemStack)) {
-                    itemStack.setAmount(itemStack.getAmount() - 1);
-                    messageManager.sendMessage(event.getPlayer(), "check-applied");
-                    event.setCancelled(true);
-                }
-            } else {
-                aresonSomnium.getLogger().warning("Somnium player not found while redeemCheck");
             }
         }
     }

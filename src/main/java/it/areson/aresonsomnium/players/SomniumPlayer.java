@@ -43,7 +43,7 @@ public class SomniumPlayer extends MySQLObject {
     private void setAllDefault() {
         this.timeJoined = LocalDateTime.now();
         this.timePlayed = DEFAULT_TIME_PLAYED;
-        this.wallet = Wallet.getNewDefaultWallet();
+        this.wallet = new Wallet();
     }
 
     public Wallet getWallet() {
@@ -68,7 +68,7 @@ public class SomniumPlayer extends MySQLObject {
         String query = getSaveQuery();
         try {
             Connection connection = mySqlDBConnection.connect();
-            int update = mySqlDBConnection.update(connection, query);
+            mySqlDBConnection.update(connection, query);
             connection.close();
         } catch (SQLException exception) {
             mySqlDBConnection.printSqlExceptionDetails(exception);

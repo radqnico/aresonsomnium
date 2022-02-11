@@ -1,42 +1,33 @@
 package it.areson.aresonsomnium.commands.player;
 
+import it.areson.aresonlib.commands.shapes.RegisteredCommand;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.books.BookBuilder;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.Optional;
-
 @SuppressWarnings("NullableProblems")
-public class OpenBookCommand implements CommandExecutor {
+public class SummariesCommand extends RegisteredCommand {
 
     private final AresonSomnium aresonSomnium;
 
-    public OpenBookCommand(AresonSomnium aresonSomnium) {
+    public SummariesCommand(AresonSomnium aresonSomnium, String command) {
+        super(aresonSomnium, command);
         this.aresonSomnium = aresonSomnium;
-        PluginCommand command = aresonSomnium.getCommand("riassunto");
-        if (command != null) {
-            command.setExecutor(this);
-        } else {
-            aresonSomnium.getLogger().warning("Comando 'assegno' non dichiarato");
-        }
     }
 
     //TODO Usa il file sbagliato
     //TODO From it to en
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] arguments) {
-        if (arguments.length == 1) {
-            Optional<Player> optionalPlayer = this.getPlayer(commandSender);
-            optionalPlayer.ifPresent(player -> {
+        if (commandSender instanceof Player player) {
+            if (arguments.length == 1) {
                 try {
                     int briefNumber = Integer.parseInt(arguments[0]);
                     BookBuilder builder = new BookBuilder();
-                    YamlConfiguration yamlConfiguration = aresonSomnium.getBriefing().getYamlConfiguration();
+                    YamlConfiguration yamlConfiguration = aresonSomnium.getBriefingFileManager().getYamlConfiguration();
                     String path = String.format("riassunti.%d", briefNumber);
                     if (yamlConfiguration.isConfigurationSection(path)) {
                         // TODO Max 32 char title length
@@ -53,16 +44,9 @@ public class OpenBookCommand implements CommandExecutor {
                 } catch (NumberFormatException exception) {
                     player.sendMessage("Errore. Devi inserire il numero di riassunto. '" + arguments[0] + "' non è un numero.");
                 }
-            });
+            }
         }
         return true;
-    }
-
-    private Optional<Player> getPlayer(CommandSender commandSender) {
-        if (commandSender instanceof Player) {
-            return Optional.of((Player) commandSender);
-        }
-        return Optional.empty();
     }
 
 }

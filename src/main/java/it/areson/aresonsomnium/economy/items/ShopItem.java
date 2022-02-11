@@ -17,36 +17,21 @@ import java.util.Objects;
 import static org.bukkit.persistence.PersistentDataType.INTEGER;
 
 public class ShopItem {
-    //TODO Naspace builded every time
 
-    private final AresonSomnium aresonSomnium;
     private final int id;
     private final ItemStack itemStack;
     private final int amount;
     private final Price shoppingPrice;
     private final Price sellingPrice;
+    private final NamespacedKey itemIdNamespacedKey;
 
     public ShopItem(AresonSomnium aresonSomnium, int id, ItemStack itemStack, int amount, Price shoppingPrice, Price sellingPrice) {
-        this.aresonSomnium = aresonSomnium;
         this.id = id;
         this.itemStack = itemStack.asOne();
         this.amount = amount;
         this.shoppingPrice = shoppingPrice;
         this.sellingPrice = sellingPrice;
-    }
-
-    public ShopItem(AresonSomnium aresonSomnium, int id, ItemStack itemStack) {
-        this(aresonSomnium, id, itemStack, 1, new Price(), new Price());
-    }
-
-    public int getIdFromItem(ItemStack itemStack) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        if (Objects.isNull(itemMeta)) {
-            return -1;
-        }
-        PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
-        persistentDataContainer.getKeys().stream().map(namespacedKey -> namespacedKey.toString() + "->" + persistentDataContainer.get(namespacedKey, INTEGER)).forEach(System.out::println);
-        return persistentDataContainer.getOrDefault(new NamespacedKey(aresonSomnium, "id"), INTEGER, -1);
+        this.itemIdNamespacedKey = aresonSomnium.getItemIdNamespacedKey();
     }
 
     public int getAmount() {
@@ -69,9 +54,9 @@ public class ShopItem {
             PersistentDataContainer persistentDataContainer = itemMeta.getPersistentDataContainer();
 
             if (putTags) {
-                persistentDataContainer.set(new NamespacedKey(aresonSomnium, "id"), INTEGER, id);
+                persistentDataContainer.set(itemIdNamespacedKey, INTEGER, id);
             } else {
-                persistentDataContainer.remove(new NamespacedKey(aresonSomnium, "id"));
+                persistentDataContainer.remove(itemIdNamespacedKey);
             }
 
             List<Component> lore = itemMeta.lore();
