@@ -1,4 +1,5 @@
 prefix: "&9[Areson]&7 "
+command-not-found: "Comando non trovato"
 
 sql-connect-error: "Impossibile connettersi all'SQL."
 

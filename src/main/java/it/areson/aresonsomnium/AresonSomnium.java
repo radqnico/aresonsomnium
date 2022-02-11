@@ -4,7 +4,6 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.session.SessionManager;
-import it.areson.aresonlib.AresonPlugin;
 import it.areson.aresonlib.commands.ComplexCommand;
 import it.areson.aresonlib.files.FileManager;
 import it.areson.aresonlib.files.MessageManager;
@@ -49,6 +48,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -62,7 +62,7 @@ import java.util.concurrent.CompletableFuture;
 import static it.areson.aresonsomnium.Constants.PERMISSION_MULTIPLIER;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public class AresonSomnium extends AresonPlugin {
+public class AresonSomnium extends JavaPlugin {
 
     //Multiplier
     private final Multiplier defaultMultiplier = new Multiplier();
@@ -221,7 +221,7 @@ public class AresonSomnium extends AresonPlugin {
     }
 
     private void registerCommands() {
-        ComplexCommand shopAdmin = new ComplexCommand(this, "shopadmin");
+        ComplexCommand shopAdmin = new ComplexCommand(this, "shopadmin", messageManager.getMessage("command-not-found"));
         shopAdmin.addSubCommand("editshopitems", new EditItemsCommand(this));
         shopAdmin.addSubCommand("reloaditems", new ReloadItemsCommand(this));
         shopAdmin.addSubCommand("setitemprice", new SetItemPriceCommand(this));
@@ -574,12 +574,6 @@ public class AresonSomnium extends AresonPlugin {
 
     public NamespacedKey getItemIdNamespacedKey() {
         return itemIdNamespacedKey;
-    }
-
-    //TODO
-    @Override
-    public boolean reload() {
-        return false;
     }
 
 }
