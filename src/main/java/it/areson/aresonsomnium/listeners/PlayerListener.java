@@ -78,10 +78,9 @@ public class PlayerListener extends GeneralEventListener {
     public void onBlockBreakEvent(BlockBreakEvent event) {
         if (!event.isCancelled()) {
             ItemStack itemInMainHand = event.getPlayer().getInventory().getItemInMainHand();
-            System.out.println("itemInMainHand " + itemInMainHand.getType());
             if (itemInMainHand.getItemMeta() instanceof Damageable damageable) {
-                System.out.println("is Damageable " + damageable.getDamage());
-                if ((damageable.getDamage() * 100) / itemInMainHand.getType().getMaxDurability() > 90) {
+                //First control because every items seems to be Damageable. Even blocks
+                if (damageable.getDamage() > 0 && (damageable.getDamage() * 100) / itemInMainHand.getType().getMaxDurability() > 90) {
                     if (isTimeToSendWarn(event.getPlayer().getName())) {
                         messageManager.sendMessage(event.getPlayer(), "item-low-life");
                     }
