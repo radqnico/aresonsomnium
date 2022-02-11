@@ -81,9 +81,10 @@ public class PlayerListener extends GeneralEventListener {
             if (itemInMainHand.getItemMeta() instanceof Damageable damageable) {
                 //First control because every items seems to be Damageable. Even blocks
 //                if (damageable.getDamage() > 0 && (damageable.getDamage() * 100) / itemInMainHand.getType().getMaxDurability() > 90) {
+                System.out.println(itemInMainHand.getType());
+                System.out.println(itemInMainHand.getItemMeta());
                 if ((damageable.getDamage() * 100) / itemInMainHand.getType().getMaxDurability() > 90) {
-                    System.out.println(itemInMainHand.getType());
-                    System.out.println(itemInMainHand.getItemMeta());
+
                     if (isTimeToSendWarn(event.getPlayer().getName())) {
                         messageManager.sendMessage(event.getPlayer(), "item-low-life");
                     }
