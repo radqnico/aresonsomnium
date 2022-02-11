@@ -1,6 +1,7 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
 import it.areson.aresonlib.commands.shapes.CompleteCommand;
+import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import it.areson.aresonsomnium.economy.items.ShopItemsManager;
@@ -22,11 +23,42 @@ import java.util.Optional;
 public class SellLootableCommand implements CompleteCommand {
 
     private final AresonSomnium aresonSomnium;
+    private final MessageManager messageManager;
     private final ShopItemsManager shopItemsManager;
 
     public SellLootableCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
+        this.messageManager = aresonSomnium.getMessageManager();
         this.shopItemsManager = aresonSomnium.getShopItemsManager();
+    }
+
+    @Override
+    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
+        // shopadmin selllootable <playerName> <material> <quantity>
+        if (arguments.length >= 3) {
+            Player player = aresonSomnium.getServer().getPlayer(arguments[0]);
+            if (player == null) {
+                messageManager.sendMessage(commandSender, "player-invalid");
+                return true;
+            }
+            try {
+                int quantity = Integer.parseInt(arguments[2]);
+                Material material = Material.getMaterial(arguments[1]);
+                //TODO
+                System.out.println(material);
+
+                if (material == null) {
+                    commandSender.sendMessage("Nessun materiale trovato con l'id.");
+                    return true;
+                }
+                sellItem(commandSender, player, material, quantity);
+            } catch (Exception exception) {
+                messageManager.sendFreeMessage(commandSender, "Quantità non valida");
+            }
+        } else {
+            messageManager.sendMessage(commandSender, "not-enough-arguments");
+        }
+        return true;
     }
 
     private void sellItem(CommandSender commandSender, Player player, Material material, int quantity) {
@@ -93,31 +125,6 @@ public class SellLootableCommand implements CompleteCommand {
                 break;
             }
         }
-    }
-
-    @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
-        // /shopadmin selllootable player material quantity
-        //TODO
-        try {
-            int quantity = Integer.parseInt(arguments[3]);
-            String materialId = arguments[2];
-            String playerName = arguments[1];
-            Player player = aresonSomnium.getServer().getPlayer(playerName);
-            Material material = Material.getMaterial(materialId);
-            if (material == null) {
-                commandSender.sendMessage("Nessun materiale trovato con l'id.");
-                return true;
-            }
-            if (quantity <= 0 || quantity > material.getMaxStackSize()) {
-                commandSender.sendMessage("La quantità non è valida");
-                return true;
-            }
-            this.sellItem(commandSender, player, material, quantity);
-        } catch (NumberFormatException numberFormatException) {
-            commandSender.sendMessage("La quantità selezionata non è un numero");
-        }
-        return true;
     }
 
     @Override

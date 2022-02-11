@@ -576,4 +576,8 @@ public class AresonSomnium extends JavaPlugin {
         return itemIdNamespacedKey;
     }
 
+    public MessageManager getMessageManager() {
+        return messageManager;
+    }
+
 }

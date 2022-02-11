@@ -1,6 +1,7 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
 import it.areson.aresonlib.commands.shapes.CompleteCommand;
+import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.items.ShopItem;
@@ -19,31 +20,42 @@ import java.util.stream.Collectors;
 public class SetItemPriceCommand implements CompleteCommand {
 
     private final AresonSomnium aresonSomnium;
+    private final MessageManager messageManager;
+    private final ShopItemsManager shopItemsManager;
 
     public SetItemPriceCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
+        this.messageManager = aresonSomnium.getMessageManager();
+        this.shopItemsManager = aresonSomnium.getShopItemsManager();
     }
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
-        // / /shopadmin setitemprice buy <id> <valuta> <qta>
-        //TODO
-        ShopItemsManager shopItemsManager = aresonSomnium.getShopItemsManager();
-        try {
-            int id = Integer.parseInt(arguments[2]);
+        // shopadmin setitemprice buy <itemId> <coinType> <quantity>
+
+
+        if (arguments.length >= 3) {
+
             try {
-                CoinType coinType = CoinType.valueOf(arguments[3].toUpperCase());
-                BigDecimal amount = new BigDecimal(arguments[4]);
-                Optional<ShopItem> itemById = shopItemsManager.getItemsGateway().getItemById(id);
+                int itemId = Integer.parseInt(arguments[0]);
+
+                CoinType coinType = CoinType.valueOf(arguments[1].toUpperCase());
+                //TODO
+                System.out.println(coinType);
+
+                BigDecimal quantity = new BigDecimal(arguments[2]);
+
+
+                Optional<ShopItem> itemById = shopItemsManager.getItemsGateway().getItemById(itemId);
                 if (itemById.isPresent()) {
                     ShopItem shopItem = itemById.get();
                     if (arguments[1].equalsIgnoreCase("buy")) {
-                        shopItem.getShoppingPrice().setPrice(coinType, amount);
+                        shopItem.getShoppingPrice().setPrice(coinType, quantity);
                         shopItemsManager.getItemsGateway().upsertShopItem(shopItem);
                         shopItemsManager.reloadItems();
                         commandSender.sendMessage("Prezzo impostato per l'oggetto ID " + shopItem.getId());
                     } else if (arguments[1].equalsIgnoreCase("sell")) {
-                        shopItem.getSellingPrice().setPrice(coinType, amount);
+                        shopItem.getSellingPrice().setPrice(coinType, quantity);
                         shopItemsManager.getItemsGateway().upsertShopItem(shopItem);
                         shopItemsManager.reloadItems();
                         commandSender.sendMessage("Prezzo impostato per l'oggetto ID " + shopItem.getId());
@@ -53,12 +65,11 @@ public class SetItemPriceCommand implements CompleteCommand {
                 } else {
                     commandSender.sendMessage("L'ID non esiste. Comando: /shopadmin setitemprice buy|sell <id> <valuta> <qta>");
                 }
-            } catch (EnumConstantNotPresentException | IllegalArgumentException enumConstantNotPresentException) {
-                commandSender.sendMessage("Quella valuta (" + arguments[2] + ") non esiste.");
+            } catch (NumberFormatException exception) {
+                messageManager.sendFreeMessage(commandSender, "Quantità non valida");
             }
-
-        } catch (NumberFormatException numberFormatException) {
-            commandSender.sendMessage("L'ID o la quantità non è un numero");
+        } else {
+            messageManager.sendMessage(commandSender, "not-enough-arguments");
         }
         return true;
     }

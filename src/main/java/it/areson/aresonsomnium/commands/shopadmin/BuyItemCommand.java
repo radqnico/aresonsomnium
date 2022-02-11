@@ -31,6 +31,33 @@ public class BuyItemCommand implements CompleteCommand {
         this.shopItemsManager = aresonSomnium.getShopItemsManager();
     }
 
+    @Override
+    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
+        // shopadmin buyitem <playerName> <itemId> <true/false>
+        if (arguments.length >= 2) {
+            Player player = aresonSomnium.getServer().getPlayer(arguments[0]);
+            if (player == null) {
+                messageManager.sendMessage(commandSender, "player-invalid");
+                return true;
+            }
+            try {
+                int itemId = Integer.parseInt(arguments[1]);
+
+                boolean putTags = true;
+                if (arguments.length > 2) {
+                    putTags = Boolean.parseBoolean(arguments[2]);
+                }
+
+                buyItem(itemId, player, commandSender, putTags);
+            } catch (NumberFormatException exception) {
+                messageManager.sendFreeMessage(commandSender, "L'ID o la quantità non è un numero");
+            }
+        } else {
+            messageManager.sendMessage(commandSender, "not-enough-arguments");
+        }
+        return true;
+    }
+
     public void buyItem(int id, Player player, CommandSender commandSender, boolean putTags) {
         if (player != null) {
             SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(player);
@@ -71,33 +98,6 @@ public class BuyItemCommand implements CompleteCommand {
         } else {
             messageManager.sendMessage(commandSender, "Giocatore non trovato");
         }
-    }
-
-    @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
-        // shopadmin buyitem <playerName> <itemId> <true/false>
-        if (arguments.length >= 2) {
-            Player player = aresonSomnium.getServer().getPlayer(arguments[0]);
-            if (player == null) {
-                //TODO Send message player invalid
-                return true;
-            }
-            try {
-                int itemId = Integer.parseInt(arguments[1]);
-
-                boolean putTags = true;
-                if (arguments.length > 2) {
-                    putTags = Boolean.parseBoolean(arguments[2]);
-                }
-
-                buyItem(itemId, player, commandSender, putTags);
-            } catch (NumberFormatException exception) {
-                messageManager.sendFreeMessage(commandSender, "L'ID o la quantità non è un numero");
-            }
-        } else {
-            //TODO Error not enough arguments
-        }
-        return true;
     }
 
     @Override

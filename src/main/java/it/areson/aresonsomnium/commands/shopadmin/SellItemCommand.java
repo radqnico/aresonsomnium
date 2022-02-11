@@ -4,7 +4,6 @@ import it.areson.aresonlib.commands.shapes.CompleteCommand;
 import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import it.areson.aresonsomnium.economy.items.ShopItemsManager;
@@ -22,8 +21,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +35,27 @@ public class SellItemCommand implements CompleteCommand {
         this.aresonSomnium = aresonSomnium;
         this.messageManager = aresonSomnium.getMessageManager();
         this.shopItemsManager = aresonSomnium.getShopItemsManager();
+    }
+
+    @Override
+    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
+        // shopadmin sellitem <playerName> <itemId>
+        if (arguments.length >= 2) {
+            Player player = aresonSomnium.getServer().getPlayer(arguments[0]);
+            if (player == null) {
+                messageManager.sendMessage(commandSender, "player-invalid");
+                return true;
+            }
+            try {
+                int itemId = Integer.parseInt(arguments[1]);
+                sellItem(itemId, player, commandSender);
+            } catch (NumberFormatException exception) {
+                messageManager.sendFreeMessage(commandSender, "Quantità non valida");
+            }
+        } else {
+            messageManager.sendMessage(commandSender, "not-enough-arguments");
+        }
+        return true;
     }
 
     public void sellItem(int id, Player player, CommandSender commandSender) {
@@ -100,32 +118,8 @@ public class SellItemCommand implements CompleteCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
-        // /shopadmin sellitem <player> <id>
-        //TODO
-        try {
-            int id = Integer.parseInt(arguments[2]);
-            String playerName = arguments[1];
-            Player player = aresonSomnium.getServer().getPlayer(playerName);
-            sellItem(id, player, commandSender);
-        } catch (NumberFormatException numberFormatException) {
-            commandSender.sendMessage("L'ID o non è un numero");
-        }
-        return true;
-    }
-
-    @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
-        List<String> suggestions = new ArrayList<>();
-        //TODO
-        if (arguments.length == 2) {
-            return null;
-        }
-        if (arguments.length == 3) {
-            suggestions.addAll(Arrays.stream(CoinType.values())
-                    .map(coinType -> coinType.name().toLowerCase()).toList());
-        }
-        return suggestions;
+        return null;
     }
 
 }

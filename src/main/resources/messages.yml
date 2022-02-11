@@ -1,5 +1,12 @@
 prefix: "&9[Areson]&7 "
-command-not-found: "Comando non trovato"
+
+command-not-found: "&cComando non trovato"
+not-enough-arguments: "&cIl comando è incompleto"
+player-invalid: "&cGiocatore non trovato"
+
+
+
+
 
 sql-connect-error: "Impossibile connettersi all'SQL."
 
