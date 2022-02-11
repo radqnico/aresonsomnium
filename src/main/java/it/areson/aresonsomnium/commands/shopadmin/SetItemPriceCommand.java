@@ -22,51 +22,47 @@ public class SetItemPriceCommand implements CompleteCommand {
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
     private final ShopItemsManager shopItemsManager;
+    private final String commandUsage;
 
     public SetItemPriceCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
         this.messageManager = aresonSomnium.getMessageManager();
         this.shopItemsManager = aresonSomnium.getShopItemsManager();
+        this.commandUsage = "/shopadmin setitemprice <buy|sell> <itemId> <coinType> <price>";
     }
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
-        // shopadmin setitemprice buy <itemId> <coinType> <quantity>
-
-
-        if (arguments.length >= 3) {
-
+        // shopadmin setitemprice <buy|sell> <itemId> <coinType> <price>
+        if (arguments.length >= 4) {
             try {
-                int itemId = Integer.parseInt(arguments[0]);
-
-                CoinType coinType = CoinType.valueOf(arguments[1].toUpperCase());
-                //TODO
-                System.out.println(coinType);
-
-                BigDecimal quantity = new BigDecimal(arguments[2]);
-
+                int itemId = Integer.parseInt(arguments[1]);
+                CoinType coinType = CoinType.valueOf(arguments[2].toUpperCase());
+                BigDecimal price = new BigDecimal(arguments[3]);
 
                 Optional<ShopItem> itemById = shopItemsManager.getItemsGateway().getItemById(itemId);
                 if (itemById.isPresent()) {
                     ShopItem shopItem = itemById.get();
-                    if (arguments[1].equalsIgnoreCase("buy")) {
-                        shopItem.getShoppingPrice().setPrice(coinType, quantity);
+                    if (arguments[0].equalsIgnoreCase("buy")) {
+                        shopItem.getShoppingPrice().setPrice(coinType, price);
                         shopItemsManager.getItemsGateway().upsertShopItem(shopItem);
                         shopItemsManager.reloadItems();
-                        commandSender.sendMessage("Prezzo impostato per l'oggetto ID " + shopItem.getId());
-                    } else if (arguments[1].equalsIgnoreCase("sell")) {
-                        shopItem.getSellingPrice().setPrice(coinType, quantity);
+                        messageManager.sendFreeMessage(commandSender, "Prezzo impostato per l'oggetto ID " + shopItem.getId());
+                    } else if (arguments[0].equalsIgnoreCase("sell")) {
+                        shopItem.getSellingPrice().setPrice(coinType, price);
                         shopItemsManager.getItemsGateway().upsertShopItem(shopItem);
                         shopItemsManager.reloadItems();
-                        commandSender.sendMessage("Prezzo impostato per l'oggetto ID " + shopItem.getId());
+                        messageManager.sendFreeMessage(commandSender, "Prezzo impostato per l'oggetto ID " + shopItem.getId());
                     } else {
-                        commandSender.sendMessage("Comando: /shopadmin setitemprice buy|sell <id> <valuta> <qta>");
+                        messageManager.sendFreeMessage(commandSender, "Comando: " + commandUsage);
                     }
                 } else {
-                    commandSender.sendMessage("L'ID non esiste. Comando: /shopadmin setitemprice buy|sell <id> <valuta> <qta>");
+                    messageManager.sendFreeMessage(commandSender, "Questo item non esiste. Comando: " + commandUsage);
                 }
             } catch (NumberFormatException exception) {
                 messageManager.sendFreeMessage(commandSender, "Quantità non valida");
+            } catch (IllegalArgumentException exception) {
+                messageManager.sendFreeMessage(commandSender, "Tipo di valuta invalida");
             }
         } else {
             messageManager.sendMessage(commandSender, "not-enough-arguments");
@@ -78,21 +74,17 @@ public class SetItemPriceCommand implements CompleteCommand {
     public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
         List<String> suggestions = new ArrayList<>();
         //TODO
-        if (arguments.length == 2) {
-            suggestions.add("buy");
-            suggestions.add("sell");
-        }
-        if (arguments.length == 2) {
-            suggestions = aresonSomnium.getShopItemsManager().getItemsGateway()
+        switch (arguments.length) {
+            case 0 -> {
+                suggestions.add("buy");
+                suggestions.add("sell");
+            }
+            case 1 -> suggestions = aresonSomnium.getShopItemsManager().getItemsGateway()
                     .getAllItems(false).stream()
                     .map(shopItem -> shopItem.getId() + "").collect(Collectors.toList());
-        }
-        if (arguments.length == 4) {
-            suggestions.addAll(Arrays.stream(CoinType.values())
+            case 2 -> suggestions.addAll(Arrays.stream(CoinType.values())
                     .map(coinType -> coinType.name().toLowerCase()).toList());
-        }
-        if (arguments.length == 5) {
-            suggestions.add("<prezzo>");
+            case 3 -> suggestions.add("<prezzo>");
         }
         return suggestions;
     }

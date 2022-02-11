@@ -42,15 +42,13 @@ public class SellLootableCommand implements CompleteCommand {
                 return true;
             }
             try {
-                int quantity = Integer.parseInt(arguments[2]);
                 Material material = Material.getMaterial(arguments[1]);
-                //TODO
-                System.out.println(material);
-
                 if (material == null) {
-                    commandSender.sendMessage("Nessun materiale trovato con l'id.");
+                    messageManager.sendMessage(commandSender, "Material invalido");
                     return true;
                 }
+
+                int quantity = Integer.parseInt(arguments[2]);
                 sellItem(commandSender, player, material, quantity);
             } catch (Exception exception) {
                 messageManager.sendFreeMessage(commandSender, "Quantità non valida");
@@ -130,14 +128,13 @@ public class SellLootableCommand implements CompleteCommand {
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
         List<String> suggestions = new ArrayList<>();
-        //TODO
         switch (arguments.length) {
-            case 2:
-                return null;
-            case 3:
+            case 1:
+                //TODO
                 Arrays.stream(Material.values()).forEach(e -> suggestions.add(e.name()));
                 break;
-            case 4:
+            case 2:
+                //TODO
                 suggestions.add("Quantity");
             default:
                 break;
