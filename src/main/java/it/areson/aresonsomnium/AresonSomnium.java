@@ -548,6 +548,7 @@ public class AresonSomnium extends AresonPlugin {
     }
 
     private void registerWorldGuardHandler() {
+        WorldGuardListener.FACTORY = new WorldGuardListener.Factory(this);
         SessionManager sessionManager = WorldGuard.getInstance().getPlatform().getSessionManager();
         sessionManager.registerHandler(WorldGuardListener.FACTORY, null);
     }

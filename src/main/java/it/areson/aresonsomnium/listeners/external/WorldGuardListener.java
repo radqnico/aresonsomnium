@@ -12,24 +12,31 @@ import it.areson.aresonsomnium.AresonSomnium;
 
 public class WorldGuardListener extends FlagValueChangeHandler<StateFlag.State> {
 
-    public static final Factory FACTORY = new Factory();
+    public static Factory FACTORY = null;
 
     public static class Factory extends Handler.Factory<WorldGuardListener> {
+        private final AresonSomnium aresonSomnium;
+
+        public Factory(AresonSomnium aresonSomnium) {
+            this.aresonSomnium = aresonSomnium;
+        }
+
         @Override
         public WorldGuardListener create(Session session) {
-            return new WorldGuardListener(session);
+            return new WorldGuardListener(aresonSomnium, session);
         }
     }
 
-    private StateFlag.State state;
+    private final AresonSomnium aresonSomnium;
 
-    public WorldGuardListener(Session session) {
+    public WorldGuardListener(AresonSomnium aresonSomnium, Session session) {
         super(session, AresonSomnium.wgPermissionFlyState);
+        this.aresonSomnium = aresonSomnium;
     }
 
     @Override
     protected void onInitialValue(LocalPlayer localPlayer, ApplicableRegionSet applicableRegionSet, StateFlag.State state) {
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA onInitialValue");
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA onInitialValue " + aresonSomnium.getName());
     }
 
     @Override
