@@ -9,6 +9,8 @@ import com.sk89q.worldguard.session.Session;
 import com.sk89q.worldguard.session.handler.FlagValueChangeHandler;
 import com.sk89q.worldguard.session.handler.Handler;
 import it.areson.aresonsomnium.AresonSomnium;
+import it.areson.aresonsomnium.Constants;
+import org.bukkit.entity.Player;
 
 public class WorldGuardListener extends FlagValueChangeHandler<StateFlag.State> {
 
@@ -36,18 +38,25 @@ public class WorldGuardListener extends FlagValueChangeHandler<StateFlag.State> 
 
     @Override
     protected void onInitialValue(LocalPlayer localPlayer, ApplicableRegionSet applicableRegionSet, StateFlag.State state) {
-        System.out.println("INITIAL VALUE " + aresonSomnium.getName());
     }
 
     @Override
     protected boolean onSetValue(LocalPlayer localPlayer, Location location, Location location1, ApplicableRegionSet applicableRegionSet, StateFlag.State state, StateFlag.State t1, MoveType moveType) {
-        System.out.println("onSetValue " + aresonSomnium.getName());
+        if (localPlayer.hasPermission(Constants.PERMISSION_FLY)) {
+            Player player = aresonSomnium.getServer().getPlayer(localPlayer.getName());
+            if (player != null) {
+                player.setAllowFlight(true);
+            }
+        }
         return true;
     }
 
     @Override
     protected boolean onAbsentValue(LocalPlayer localPlayer, Location location, Location location1, ApplicableRegionSet applicableRegionSet, StateFlag.State state, MoveType moveType) {
-        System.out.println("onAbsentValue " + aresonSomnium.getName());
+        Player player = aresonSomnium.getServer().getPlayer(localPlayer.getName());
+        if (player != null) {
+            player.setAllowFlight(false);
+        }
         return true;
     }
 

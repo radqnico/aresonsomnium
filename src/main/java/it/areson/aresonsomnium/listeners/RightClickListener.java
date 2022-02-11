@@ -129,7 +129,6 @@ public class RightClickListener extends GeneralEventListener {
 
                     if (properties.left() >= aresonSomnium.getCachedMultiplier(player).value()) {
                         String permission = PERMISSION_MULTIPLIER + "." + (int) (properties.left() * 100);
-
                         aresonSomnium.getLuckPerms().get().getUserManager().modifyUser(player.getUniqueId(), user ->
                                 user.data().add(Node.builder(permission).expiry(properties.right()).build(), TemporaryNodeMergeStrategy.ADD_NEW_DURATION_TO_EXISTING)
                         );

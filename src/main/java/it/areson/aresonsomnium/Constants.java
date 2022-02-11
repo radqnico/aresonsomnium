@@ -33,14 +33,15 @@ public class Constants {
     public static final String FULL_REPAIR_COMMAND = "somniumfullrepair";
     public static final String FULL_REPAIR_PERMISSION = "aresonsomnium.fullrepair";
 
+    //Fly in regions
     public static final String WG_PERMISSION_FLY_FLAG = "permission-fly";
+    public static final String PERMISSION_FLY = "aresonsomnium.mines.fly";
 
 
     public static final int CHECK_MODEL_DATA = 999;
     public static final int OBOL_MODEL_DATA = 998;
     public static final int GOMMA_MODEL_DATA = 997;
     public static final int MULTIPLIER_MODEL_DATA = 996;
-    public static final int BOMB3_MODEL_DATA = 995;
     public static final int REPAIR_ALL_MODEL_DATA = 994;
 
     public static final int OBOLS_CHANGE_AMOUNT = 20;
