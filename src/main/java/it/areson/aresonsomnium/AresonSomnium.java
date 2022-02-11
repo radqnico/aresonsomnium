@@ -122,6 +122,11 @@ public class AresonSomnium extends AresonPlugin {
     }
 
     @Override
+    public void onLoad() {
+        registerWorldGuardFlags();
+    }
+
+    @Override
     public void onEnable() {
         registerFiles();
         initListeners();
@@ -525,23 +530,14 @@ public class AresonSomnium extends AresonPlugin {
     }
 
     private void registerWorldGuardFlags() {
-        int attempt = 0;
-        do {
-            try {
-                FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
-                StateFlag flag = new StateFlag(Constants.WG_PERMISSION_FLY_FLAG, false);
-                registry.register(flag);
-                wgPermissionFlyState = Optional.of(flag);
-            } catch (Exception exception) {
-                getLogger().severe("Cannot register WG flag " + Constants.WG_PERMISSION_FLY_FLAG);
-                attempt++;
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        } while (attempt < 3);
+        try {
+            FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
+            StateFlag flag = new StateFlag(Constants.WG_PERMISSION_FLY_FLAG, false);
+            registry.register(flag);
+            wgPermissionFlyState = Optional.of(flag);
+        } catch (Exception exception) {
+            getLogger().severe("Cannot register WG flag " + Constants.WG_PERMISSION_FLY_FLAG);
+        }
     }
 
     public NamespacedKey getMultiplierValueNamespacedKey() {
