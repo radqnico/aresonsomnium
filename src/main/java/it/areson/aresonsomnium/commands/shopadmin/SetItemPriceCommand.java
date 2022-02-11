@@ -19,16 +19,19 @@ import java.util.stream.Collectors;
 @SuppressWarnings("NullableProblems")
 public class SetItemPriceCommand implements CompleteCommand {
 
-    private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
     private final ShopItemsManager shopItemsManager;
     private final String commandUsage;
+    private final ArrayList<String> coinTypes;
 
     public SetItemPriceCommand(AresonSomnium aresonSomnium) {
-        this.aresonSomnium = aresonSomnium;
         this.messageManager = aresonSomnium.getMessageManager();
         this.shopItemsManager = aresonSomnium.getShopItemsManager();
+
         this.commandUsage = "/shopadmin setitemprice <buy|sell> <itemId> <coinType> <price>";
+        this.coinTypes = new ArrayList<>();
+        this.coinTypes.addAll(Arrays.stream(CoinType.values())
+                .map(coinType -> coinType.name().toLowerCase()).toList());
     }
 
     @Override
@@ -73,18 +76,17 @@ public class SetItemPriceCommand implements CompleteCommand {
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
         List<String> suggestions = new ArrayList<>();
-        //TODO
         switch (arguments.length) {
             case 0 -> {
                 suggestions.add("buy");
                 suggestions.add("sell");
             }
-            case 1 -> suggestions = aresonSomnium.getShopItemsManager().getItemsGateway()
+            case 1 -> suggestions = shopItemsManager.getItemsGateway()
                     .getAllItems(false).parallelStream()
                     .map(shopItem -> shopItem.getId() + "").collect(Collectors.toList());
-            case 2 -> suggestions.addAll(Arrays.stream(CoinType.values())
-                    .map(coinType -> coinType.name().toLowerCase()).toList());
-            case 3 -> suggestions.add("<prezzo>");
+            case 2 -> {
+                return coinTypes.parallelStream().filter(coinType -> coinType.startsWith(arguments[0])).toList();
+            }
         }
         return suggestions;
     }

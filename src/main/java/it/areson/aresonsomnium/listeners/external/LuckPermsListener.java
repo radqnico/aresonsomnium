@@ -20,7 +20,6 @@ public class LuckPermsListener {
     }
 
     private void onNodeMutateEvent(NodeMutateEvent event) {
-        //TODO Check UserDataRecalculateEvent
         if (event.getTarget() instanceof User user) {
             Player player = aresonSomnium.getServer().getPlayer(user.getUniqueId());
             if (player != null) {

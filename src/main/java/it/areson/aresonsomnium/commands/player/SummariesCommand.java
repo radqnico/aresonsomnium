@@ -16,6 +16,7 @@ public class SummariesCommand extends RegisteredCommand {
     public SummariesCommand(AresonSomnium aresonSomnium, String command) {
         super(aresonSomnium, command);
         this.aresonSomnium = aresonSomnium;
+        initialize();
     }
 
     //TODO
@@ -29,7 +30,6 @@ public class SummariesCommand extends RegisteredCommand {
                     YamlConfiguration yamlConfiguration = aresonSomnium.getSummariesFileManager().getYamlConfiguration();
                     String path = String.format("riassunti.%d", briefNumber);
                     if (yamlConfiguration.isConfigurationSection(path)) {
-                        // TODO Max 32 char title length
                         String chapterTitle = yamlConfiguration.getString(path + ".titolo");
                         String title = chapterTitle.length() > 32 ? "Blank" : chapterTitle;
                         String author = "Areson";
@@ -46,6 +46,10 @@ public class SummariesCommand extends RegisteredCommand {
             }
         }
         return true;
+    }
+
+    public void initialize() {
+
     }
 
 }

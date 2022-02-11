@@ -142,8 +142,9 @@ public class Price {
         }
     }
 
-    //TODO Chiede super.clone
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     public Price clone() {
         return new Price(coins, obols, gems);
     }
+
 }

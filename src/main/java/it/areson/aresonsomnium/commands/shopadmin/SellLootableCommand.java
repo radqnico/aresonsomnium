@@ -25,11 +25,15 @@ public class SellLootableCommand implements CompleteCommand {
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
     private final ShopItemsManager shopItemsManager;
+    private final ArrayList<String> materials;
 
     public SellLootableCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
         this.messageManager = aresonSomnium.getMessageManager();
         this.shopItemsManager = aresonSomnium.getShopItemsManager();
+
+        this.materials = new ArrayList<>();
+        this.materials.addAll(Arrays.stream(Material.values()).parallel().map(Enum::name).toList());
     }
 
     @Override
@@ -127,18 +131,9 @@ public class SellLootableCommand implements CompleteCommand {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
-        List<String> suggestions = new ArrayList<>();
-        switch (arguments.length) {
-            case 1:
-                //TODO
-                Arrays.stream(Material.values()).forEach(e -> suggestions.add(e.name()));
-                break;
-            case 2:
-                //TODO
-                suggestions.add("Quantity");
-            default:
-                break;
+        if (arguments.length == 1) {
+            return materials.parallelStream().filter(material -> material.startsWith(arguments[0])).toList();
         }
-        return suggestions;
+        return null;
     }
 }
