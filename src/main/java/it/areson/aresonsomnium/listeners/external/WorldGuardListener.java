@@ -53,6 +53,7 @@ public class WorldGuardListener extends FlagValueChangeHandler<StateFlag.State> 
                 playerFlyingFromRegion.add(localPlayer.getName());
             }
         }
+
         return true;
     }
 
@@ -62,6 +63,7 @@ public class WorldGuardListener extends FlagValueChangeHandler<StateFlag.State> 
             Player player = aresonSomnium.getServer().getPlayer(localPlayer.getName());
             if (player != null) {
                 player.setAllowFlight(false);
+                playerFlyingFromRegion.remove(localPlayer.getName());
             }
         }
 
