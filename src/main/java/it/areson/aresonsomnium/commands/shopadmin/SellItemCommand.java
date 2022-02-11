@@ -116,6 +116,7 @@ public class SellItemCommand implements CompleteCommand {
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
         List<String> suggestions = new ArrayList<>();
+        //TODO
         if (arguments.length == 2) {
             return null;
         }

@@ -43,9 +43,8 @@ public class EditItemsCommand implements CompleteCommand {
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
         List<String> suggestions = new ArrayList<>();
-        if (arguments.length == 2) {
-            suggestions.add(shopItemsManager.getItemListView().getNumberOfPages() + "");
-        }
+        //TODO
+        suggestions.add(shopItemsManager.getItemListView().getNumberOfPages() + "");
         return suggestions;
     }
 }

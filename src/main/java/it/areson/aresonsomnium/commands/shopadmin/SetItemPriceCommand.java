@@ -65,6 +65,7 @@ public class SetItemPriceCommand implements CompleteCommand {
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
         List<String> suggestions = new ArrayList<>();
+        //TODO
         if (arguments.length == 2) {
             suggestions.add("buy");
             suggestions.add("sell");
