@@ -27,7 +27,7 @@ public class SummariesCommand extends RegisteredCommand {
                 try {
                     int briefNumber = Integer.parseInt(arguments[0]);
                     BookBuilder builder = new BookBuilder();
-                    YamlConfiguration yamlConfiguration = aresonSomnium.getBriefingFileManager().getYamlConfiguration();
+                    YamlConfiguration yamlConfiguration = aresonSomnium.getSummariesFileManager().getYamlConfiguration();
                     String path = String.format("riassunti.%d", briefNumber);
                     if (yamlConfiguration.isConfigurationSection(path)) {
                         // TODO Max 32 char title length

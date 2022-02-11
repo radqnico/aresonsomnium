@@ -101,7 +101,7 @@ public class AresonSomnium extends AresonPlugin {
     private GatewayListener playerDBEvents;
     private GommaObjectsFileReader gommaObjectsFileReader;
     private MessageManager messageManager;
-    private FileManager briefingFileManager;
+    private FileManager summariesFileManager;
     private LastHitPvP lastHitPvP;
     private Optional<LuckPerms> luckPerms;
 
@@ -135,18 +135,19 @@ public class AresonSomnium extends AresonPlugin {
 
     @Override
     public void onEnable() {
+        //NamespacedKeys
+        multiplierValueNamespacedKey = new NamespacedKey(this, Constants.MULTIPLIER_VALUE_NAMESPACED_KEY);
+        multiplierDurationNamespacedKey = new NamespacedKey(this, Constants.MULTIPLIER_DURATION_NAMESPACED_KEY);
+        itemIdNamespacedKey = new NamespacedKey(this, Constants.ITEM_ID_NAMESPACED_KEY);
+
         initializeFiles();
-        initListeners();
-        registerCommands();
 
         MySqlDBConnection mySqlDBConnection = new MySqlDBConnection(this);
         somniumPlayerManager = new SomniumPlayerManager(mySqlDBConnection);
         shopItemsManager = new ShopItemsManager(this, mySqlDBConnection);
 
-        //NamespacedKeys
-        multiplierValueNamespacedKey = new NamespacedKey(this, Constants.MULTIPLIER_VALUE_NAMESPACED_KEY);
-        multiplierDurationNamespacedKey = new NamespacedKey(this, Constants.MULTIPLIER_DURATION_NAMESPACED_KEY);
-        itemIdNamespacedKey = new NamespacedKey(this, Constants.ITEM_ID_NAMESPACED_KEY);
+        initListeners();
+        registerCommands();
 
         //Placeholders
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -197,7 +198,7 @@ public class AresonSomnium extends AresonPlugin {
 
         messageManager = new MessageManager(this, "messages.yml");
         gommaObjectsFileReader = new GommaObjectsFileReader(this, "gommaItems.yml");
-        briefingFileManager = new FileManager(this, "briefing.yml");
+        summariesFileManager = new FileManager(this, "summaries.yml");
     }
 
     public GommaObjectsFileReader getGommaObjectsFileReader() {
@@ -397,8 +398,8 @@ public class AresonSomnium extends AresonPlugin {
         }
     }
 
-    public FileManager getBriefingFileManager() {
-        return briefingFileManager;
+    public FileManager getSummariesFileManager() {
+        return summariesFileManager;
     }
 
     public boolean hasDamage(ItemStack itemStack) {
