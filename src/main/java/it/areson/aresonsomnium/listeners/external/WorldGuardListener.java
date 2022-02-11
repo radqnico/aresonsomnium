@@ -36,18 +36,18 @@ public class WorldGuardListener extends FlagValueChangeHandler<StateFlag.State> 
 
     @Override
     protected void onInitialValue(LocalPlayer localPlayer, ApplicableRegionSet applicableRegionSet, StateFlag.State state) {
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA onInitialValue " + aresonSomnium.getMultiplierDurationNamespacedKey().value());
+        System.out.println("INITIAL VALUE " + aresonSomnium.getName());
     }
 
     @Override
     protected boolean onSetValue(LocalPlayer localPlayer, Location location, Location location1, ApplicableRegionSet applicableRegionSet, StateFlag.State state, StateFlag.State t1, MoveType moveType) {
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA onSetValue");
+        System.out.println("onSetValue " + aresonSomnium.getName());
         return true;
     }
 
     @Override
     protected boolean onAbsentValue(LocalPlayer localPlayer, Location location, Location location1, ApplicableRegionSet applicableRegionSet, StateFlag.State state, MoveType moveType) {
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA onAbsentValue");
+        System.out.println("onAbsentValue " + aresonSomnium.getName());
         return true;
     }
 
