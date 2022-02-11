@@ -3,6 +3,7 @@ package it.areson.aresonsomnium;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
+import com.sk89q.worldguard.session.SessionManager;
 import it.areson.aresonlib.AresonPlugin;
 import it.areson.aresonlib.commands.ComplexCommand;
 import it.areson.aresonlib.files.FileManager;
@@ -27,6 +28,7 @@ import it.areson.aresonsomnium.elements.Multiplier;
 import it.areson.aresonsomnium.exceptions.MaterialNotSellableException;
 import it.areson.aresonsomnium.listeners.*;
 import it.areson.aresonsomnium.listeners.external.LuckPermsListener;
+import it.areson.aresonsomnium.listeners.external.WorldGuardListener;
 import it.areson.aresonsomnium.placeholders.CoinsPlaceholders;
 import it.areson.aresonsomnium.placeholders.MultiplierPlaceholders;
 import it.areson.aresonsomnium.players.SomniumPlayer;
@@ -111,9 +113,13 @@ public class AresonSomnium extends AresonPlugin {
     private HashMap<String, LocalDateTime> singleRepairTimes;
     private long singleFreeRepairDelay;
 
+    //Mixed
     private HashSet<String> playersWithAutoSellActive;
-    private Optional<StateFlag> wgPermissionFlyState;
     private ShopItemsManager shopItemsManager;
+
+    //Static
+    public static StateFlag wgPermissionFlyState = null;
+
 
     @Override
     public void onDisable() {
@@ -160,7 +166,7 @@ public class AresonSomnium extends AresonPlugin {
         }
 
         //WorldGuard
-        registerWorldGuardFlags();
+        registerWorldGuardHandler();
 
         //Auto-save
         AutoSaveManager.startAutoSaveTask(this, 12000); //10 minutes
@@ -534,10 +540,16 @@ public class AresonSomnium extends AresonPlugin {
             FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
             StateFlag flag = new StateFlag(Constants.WG_PERMISSION_FLY_FLAG, false);
             registry.register(flag);
-            wgPermissionFlyState = Optional.of(flag);
+            wgPermissionFlyState = flag;
+            getLogger().info("Registered custom WG flag " + Constants.WG_PERMISSION_FLY_FLAG);
         } catch (Exception exception) {
             getLogger().severe("Cannot register WG flag " + Constants.WG_PERMISSION_FLY_FLAG);
         }
+    }
+
+    private void registerWorldGuardHandler() {
+        SessionManager sessionManager = WorldGuard.getInstance().getPlatform().getSessionManager();
+        sessionManager.registerHandler(WorldGuardListener.FACTORY, null);
     }
 
     public NamespacedKey getMultiplierValueNamespacedKey() {
