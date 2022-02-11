@@ -75,18 +75,27 @@ public class BuyItemCommand implements CompleteCommand {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
-        // /shopadmin buyitem <player> <id> <true/false>
-        boolean putTags = true;
-        //TODO
-        if (arguments.length >= 4) {
-            putTags = Boolean.parseBoolean(arguments[3]);
-        }
-        try {
-            int id = Integer.parseInt(arguments[2]);
-            Player player = aresonSomnium.getServer().getPlayer(arguments[1]);
-            buyItem(id, player, commandSender, putTags);
-        } catch (NumberFormatException exception) {
-            messageManager.sendFreeMessage(commandSender, "L'ID o la quantità non è un numero");
+        // shopadmin buyitem <playerName> <itemId> <true/false>
+        if (arguments.length >= 2) {
+            Player player = aresonSomnium.getServer().getPlayer(arguments[0]);
+            if (player == null) {
+                //TODO Send message player invalid
+                return true;
+            }
+            try {
+                int itemId = Integer.parseInt(arguments[1]);
+
+                boolean putTags = true;
+                if (arguments.length > 2) {
+                    putTags = Boolean.parseBoolean(arguments[2]);
+                }
+
+                buyItem(itemId, player, commandSender, putTags);
+            } catch (NumberFormatException exception) {
+                messageManager.sendFreeMessage(commandSender, "L'ID o la quantità non è un numero");
+            }
+        } else {
+            //TODO Error not enough arguments
         }
         return true;
     }
