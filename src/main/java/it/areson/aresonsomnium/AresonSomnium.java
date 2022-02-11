@@ -2,7 +2,6 @@ package it.areson.aresonsomnium;
 
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.StateFlag;
-import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import it.areson.aresonlib.AresonPlugin;
 import it.areson.aresonlib.commands.ComplexCommand;
@@ -526,12 +525,12 @@ public class AresonSomnium extends AresonPlugin {
     }
 
     private void registerWorldGuardFlags() {
-        FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
         try {
+            FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
             StateFlag flag = new StateFlag(Constants.WG_PERMISSION_FLY_FLAG, false);
             registry.register(flag);
             wgPermissionFlyState = Optional.of(flag);
-        } catch (FlagConflictException exception) {
+        } catch (Exception exception) {
             getLogger().severe("Cannot register WG flag " + Constants.WG_PERMISSION_FLY_FLAG);
         }
     }
