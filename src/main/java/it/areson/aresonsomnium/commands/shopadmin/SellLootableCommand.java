@@ -1,22 +1,25 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
-import it.areson.aresonlib.commands.shapes.SubCommand;
+import it.areson.aresonlib.commands.shapes.CompleteCommand;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import it.areson.aresonsomnium.economy.items.ShopItemsManager;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.SoundManager;
 import org.bukkit.Material;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class SellLootableCommand implements SubCommand {
+@SuppressWarnings("NullableProblems")
+public class SellLootableCommand implements CompleteCommand {
 
     private final AresonSomnium aresonSomnium;
     private final ShopItemsManager shopItemsManager;
@@ -93,7 +96,7 @@ public class SellLootableCommand implements SubCommand {
     }
 
     @Override
-    public void onCommand(CommandSender commandSender, String[] arguments) {
+    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
         // /shopadmin selllootable player material quantity
         try {
             int quantity = Integer.parseInt(arguments[3]);
@@ -103,33 +106,33 @@ public class SellLootableCommand implements SubCommand {
             Material material = Material.getMaterial(materialId);
             if (material == null) {
                 commandSender.sendMessage("Nessun materiale trovato con l'id.");
-                return;
+                return true;
             }
             if (quantity <= 0 || quantity > material.getMaxStackSize()) {
                 commandSender.sendMessage("La quantità non è valida");
-                return;
+                return true;
             }
             this.sellItem(commandSender, player, material, quantity);
         } catch (NumberFormatException numberFormatException) {
             commandSender.sendMessage("La quantità selezionata non è un numero");
         }
+        return true;
     }
 
-    //TODO
-//    @Override
-//    public @Nullable List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-//        List<String> suggestions = new ArrayList<>();
-//        switch (strings.length) {
-//            case 2:
-//                return null;
-//            case 3:
-//                Arrays.stream(Material.values()).forEach(e -> suggestions.add(e.name()));
-//                break;
-//            case 4:
-//                suggestions.add("Quantity");
-//            default:
-//                break;
-//        }
-//        return suggestions;
-//    }
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
+        List<String> suggestions = new ArrayList<>();
+        switch (arguments.length) {
+            case 2:
+                return null;
+            case 3:
+                Arrays.stream(Material.values()).forEach(e -> suggestions.add(e.name()));
+                break;
+            case 4:
+                suggestions.add("Quantity");
+            default:
+                break;
+        }
+        return suggestions;
+    }
 }

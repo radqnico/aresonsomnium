@@ -5,7 +5,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import it.areson.aresonlib.AresonPlugin;
-import it.areson.aresonlib.commands.shapes.ComplexCommand;
+import it.areson.aresonlib.commands.ComplexCommand;
 import it.areson.aresonlib.files.FileManager;
 import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonlib.utils.Substitution;
@@ -550,10 +550,6 @@ public class AresonSomnium extends AresonPlugin {
 
     public ShopItemsManager getShopItemsManager() {
         return shopItemsManager;
-    }
-
-    public MessageManager getMessageManager() {
-        return messageManager;
     }
 
     public HashSet<String> getPlayersWithAutoSellActive() {

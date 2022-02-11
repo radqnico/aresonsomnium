@@ -1,9 +1,10 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
-import it.areson.aresonlib.commands.shapes.SubCommand;
+import it.areson.aresonlib.commands.shapes.CompleteCommand;
 import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.AresonSomnium;
+import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import it.areson.aresonsomnium.economy.items.ShopItemsManager;
@@ -11,6 +12,7 @@ import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.SoundManager;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -20,9 +22,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
-public class SellItemCommand implements SubCommand {
+@SuppressWarnings("NullableProblems")
+public class SellItemCommand implements CompleteCommand {
 
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
@@ -94,7 +100,7 @@ public class SellItemCommand implements SubCommand {
     }
 
     @Override
-    public void onCommand(CommandSender commandSender, String[] arguments) {
+    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
         // /shopadmin sellitem <player> <id>
         try {
             int id = Integer.parseInt(arguments[2]);
@@ -104,20 +110,20 @@ public class SellItemCommand implements SubCommand {
         } catch (NumberFormatException numberFormatException) {
             commandSender.sendMessage("L'ID o non è un numero");
         }
+        return true;
     }
 
-    //TODO
-//    @Override
-//    public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
-//        List<String> suggestions = new ArrayList<>();
-//        if (arguments.length == 2) {
-//            return null;
-//        }
-//        if (arguments.length == 3) {
-//            suggestions.addAll(Arrays.stream(CoinType.values())
-//                    .map(coinType -> coinType.name().toLowerCase()).toList());
-//        }
-//        return suggestions;
-//    }
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
+        List<String> suggestions = new ArrayList<>();
+        if (arguments.length == 2) {
+            return null;
+        }
+        if (arguments.length == 3) {
+            suggestions.addAll(Arrays.stream(CoinType.values())
+                    .map(coinType -> coinType.name().toLowerCase()).toList());
+        }
+        return suggestions;
+    }
 
 }

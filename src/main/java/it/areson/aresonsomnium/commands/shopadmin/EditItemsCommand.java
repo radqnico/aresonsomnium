@@ -1,14 +1,18 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
-import it.areson.aresonlib.commands.shapes.SubCommand;
+import it.areson.aresonlib.commands.shapes.CompleteCommand;
 import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.items.ShopItemsManager;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-public class EditItemsCommand implements SubCommand {
+import java.util.ArrayList;
+import java.util.List;
+
+@SuppressWarnings("NullableProblems")
+public class EditItemsCommand implements CompleteCommand {
 
     private final ShopItemsManager shopItemsManager;
     private final MessageManager messageManager;
@@ -19,7 +23,7 @@ public class EditItemsCommand implements SubCommand {
     }
 
     @Override
-    public void onCommand(@NotNull CommandSender commandSender, String[] arguments) {
+    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
         // /shopadmin editshopitems <page>
         if (commandSender instanceof Player player) {
             if (arguments.length == 1) {
@@ -33,15 +37,15 @@ public class EditItemsCommand implements SubCommand {
                 }
             }
         }
+        return true;
     }
 
-    //TODO
-//    @Override
-//    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,Command command,String s,String[] strings) {
-//        List<String> suggestions = new ArrayList<>();
-//        if (strings.length == 2) {
-//            suggestions.add(shopItemsManager.getItemListView().getNumberOfPages() + "");
-//        }
-//        return suggestions;
-//    }
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
+        List<String> suggestions = new ArrayList<>();
+        if (arguments.length == 2) {
+            suggestions.add(shopItemsManager.getItemListView().getNumberOfPages() + "");
+        }
+        return suggestions;
+    }
 }

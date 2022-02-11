@@ -1,16 +1,22 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
-import it.areson.aresonlib.commands.shapes.SubCommand;
+import it.areson.aresonlib.commands.shapes.CompleteCommand;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import it.areson.aresonsomnium.economy.items.ShopItemsManager;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-public class SetItemPriceCommand implements SubCommand {
+@SuppressWarnings("NullableProblems")
+public class SetItemPriceCommand implements CompleteCommand {
 
     private final AresonSomnium aresonSomnium;
 
@@ -19,7 +25,7 @@ public class SetItemPriceCommand implements SubCommand {
     }
 
     @Override
-    public void onCommand(CommandSender commandSender, String[] arguments) {
+    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
         // / /shopadmin setitemprice buy <id> <valuta> <qta>
         ShopItemsManager shopItemsManager = aresonSomnium.getShopItemsManager();
         try {
@@ -53,27 +59,28 @@ public class SetItemPriceCommand implements SubCommand {
         } catch (NumberFormatException numberFormatException) {
             commandSender.sendMessage("L'ID o la quantità non è un numero");
         }
+        return true;
     }
 
-//    @Override
-//    public @Nullable List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-//        List<String> suggestions = new ArrayList<>();
-//        if (strings.length == 2) {
-//            suggestions.add("buy");
-//            suggestions.add("sell");
-//        }
-//        if (strings.length == 2) {
-//            suggestions = aresonSomnium.getShopItemsManager().getItemsGateway()
-//                    .getAllItems(false).stream()
-//                    .map(shopItem -> shopItem.getId() + "").collect(Collectors.toList());
-//        }
-//        if (strings.length == 4) {
-//            suggestions.addAll(Arrays.stream(CoinType.values())
-//                    .map(coinType -> coinType.name().toLowerCase()).toList());
-//        }
-//        if (strings.length == 5) {
-//            suggestions.add("<prezzo>");
-//        }
-//        return suggestions;
-//    }
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
+        List<String> suggestions = new ArrayList<>();
+        if (arguments.length == 2) {
+            suggestions.add("buy");
+            suggestions.add("sell");
+        }
+        if (arguments.length == 2) {
+            suggestions = aresonSomnium.getShopItemsManager().getItemsGateway()
+                    .getAllItems(false).stream()
+                    .map(shopItem -> shopItem.getId() + "").collect(Collectors.toList());
+        }
+        if (arguments.length == 4) {
+            suggestions.addAll(Arrays.stream(CoinType.values())
+                    .map(coinType -> coinType.name().toLowerCase()).toList());
+        }
+        if (arguments.length == 5) {
+            suggestions.add("<prezzo>");
+        }
+        return suggestions;
+    }
 }
