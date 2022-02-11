@@ -77,6 +77,7 @@ public class BuyItemCommand implements CompleteCommand {
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
         // /shopadmin buyitem <player> <id> <true/false>
         boolean putTags = true;
+        //TODO
         if (arguments.length >= 4) {
             putTags = Boolean.parseBoolean(arguments[3]);
         }

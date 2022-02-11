@@ -27,6 +27,7 @@ public class SetItemPriceCommand implements CompleteCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
         // / /shopadmin setitemprice buy <id> <valuta> <qta>
+        //TODO
         ShopItemsManager shopItemsManager = aresonSomnium.getShopItemsManager();
         try {
             int id = Integer.parseInt(arguments[2]);

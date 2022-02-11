@@ -24,13 +24,13 @@ public class EditItemsCommand implements CompleteCommand {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
-        // /shopadmin editshopitems <page>
+        // shopadmin editshopitems <page>
         if (commandSender instanceof Player player) {
-            if (arguments.length == 1) {
+            if (arguments.length == 0) {
                 shopItemsManager.openEditGuiToPlayer(player, 0);
-            } else if (arguments.length == 2) {
+            } else if (arguments.length == 1) {
                 try {
-                    int page = Integer.parseInt(arguments[1]) - 1;
+                    int page = Integer.parseInt(arguments[0]) - 1;
                     shopItemsManager.openEditGuiToPlayer(player, page);
                 } catch (Exception exception) {
                     messageManager.sendFreeMessage(commandSender, "La pagina non è un numero");

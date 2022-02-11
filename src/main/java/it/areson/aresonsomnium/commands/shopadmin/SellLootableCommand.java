@@ -98,6 +98,7 @@ public class SellLootableCommand implements CompleteCommand {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
         // /shopadmin selllootable player material quantity
+        //TODO
         try {
             int quantity = Integer.parseInt(arguments[3]);
             String materialId = arguments[2];
