@@ -12,6 +12,8 @@ import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.Constants;
 import org.bukkit.entity.Player;
 
+import java.util.HashSet;
+
 public class WorldGuardListener extends FlagValueChangeHandler<StateFlag.State> {
 
     public static Factory FACTORY = null;
@@ -30,10 +32,12 @@ public class WorldGuardListener extends FlagValueChangeHandler<StateFlag.State> 
     }
 
     private final AresonSomnium aresonSomnium;
+    private final HashSet<String> playerFlyingFromRegion;
 
     public WorldGuardListener(AresonSomnium aresonSomnium, Session session) {
         super(session, AresonSomnium.wgPermissionFlyState);
         this.aresonSomnium = aresonSomnium;
+        playerFlyingFromRegion = new HashSet<>();
     }
 
     @Override
@@ -44,8 +48,9 @@ public class WorldGuardListener extends FlagValueChangeHandler<StateFlag.State> 
     protected boolean onSetValue(LocalPlayer localPlayer, Location location, Location location1, ApplicableRegionSet applicableRegionSet, StateFlag.State state, StateFlag.State t1, MoveType moveType) {
         if (localPlayer.hasPermission(Constants.PERMISSION_FLY)) {
             Player player = aresonSomnium.getServer().getPlayer(localPlayer.getName());
-            if (player != null) {
+            if (player != null && !player.getAllowFlight()) {
                 player.setAllowFlight(true);
+                playerFlyingFromRegion.add(localPlayer.getName());
             }
         }
         return true;
@@ -53,10 +58,13 @@ public class WorldGuardListener extends FlagValueChangeHandler<StateFlag.State> 
 
     @Override
     protected boolean onAbsentValue(LocalPlayer localPlayer, Location location, Location location1, ApplicableRegionSet applicableRegionSet, StateFlag.State state, MoveType moveType) {
-        Player player = aresonSomnium.getServer().getPlayer(localPlayer.getName());
-        if (player != null) {
-            player.setAllowFlight(false);
+        if (playerFlyingFromRegion.contains(localPlayer.getName())) {
+            Player player = aresonSomnium.getServer().getPlayer(localPlayer.getName());
+            if (player != null) {
+                player.setAllowFlight(false);
+            }
         }
+
         return true;
     }
 
