@@ -1,26 +1,22 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
+import it.areson.aresonlib.commands.shapes.SubCommand;
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.commands.CommandParserCommand;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import it.areson.aresonsomnium.economy.items.ShopItemsManager;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.SoundManager;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class SellLootableCommand extends CommandParserCommand {
+public class SellLootableCommand implements SubCommand {
 
     private final AresonSomnium aresonSomnium;
     private final ShopItemsManager shopItemsManager;
@@ -97,43 +93,43 @@ public class SellLootableCommand extends CommandParserCommand {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    public void onCommand(CommandSender commandSender, String[] arguments) {
         // /shopadmin selllootable player material quantity
         try {
-            int quantity = Integer.parseInt(strings[3]);
-            String materialId = strings[2];
-            String playerName = strings[1];
+            int quantity = Integer.parseInt(arguments[3]);
+            String materialId = arguments[2];
+            String playerName = arguments[1];
             Player player = aresonSomnium.getServer().getPlayer(playerName);
             Material material = Material.getMaterial(materialId);
             if (material == null) {
                 commandSender.sendMessage("Nessun materiale trovato con l'id.");
-                return true;
+                return;
             }
             if (quantity <= 0 || quantity > material.getMaxStackSize()) {
                 commandSender.sendMessage("La quantità non è valida");
-                return true;
+                return;
             }
             this.sellItem(commandSender, player, material, quantity);
         } catch (NumberFormatException numberFormatException) {
             commandSender.sendMessage("La quantità selezionata non è un numero");
         }
-        return true;
     }
 
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        List<String> suggestions = new ArrayList<>();
-        switch (strings.length) {
-            case 2:
-                return null;
-            case 3:
-                Arrays.stream(Material.values()).forEach(e -> suggestions.add(e.name()));
-                break;
-            case 4:
-                suggestions.add("Quantity");
-            default:
-                break;
-        }
-        return suggestions;
-    }
+    //TODO
+//    @Override
+//    public @Nullable List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+//        List<String> suggestions = new ArrayList<>();
+//        switch (strings.length) {
+//            case 2:
+//                return null;
+//            case 3:
+//                Arrays.stream(Material.values()).forEach(e -> suggestions.add(e.name()));
+//                break;
+//            case 4:
+//                suggestions.add("Quantity");
+//            default:
+//                break;
+//        }
+//        return suggestions;
+//    }
 }

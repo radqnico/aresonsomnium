@@ -1,24 +1,20 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
+import it.areson.aresonlib.commands.shapes.SubCommand;
 import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.commands.CommandParserCommand;
 import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import it.areson.aresonsomnium.economy.items.ShopItemsManager;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.SoundManager;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
-@SuppressWarnings("NullableProblems")
-public class BuyItemCommand extends CommandParserCommand {
+public class BuyItemCommand implements SubCommand {
 
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
@@ -73,7 +69,7 @@ public class BuyItemCommand extends CommandParserCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
+    public void onCommand(CommandSender commandSender, String[] arguments) {
         // /shopadmin buyitem <player> <id> <true/false>
         boolean putTags = true;
         if (arguments.length >= 4) {
@@ -86,12 +82,6 @@ public class BuyItemCommand extends CommandParserCommand {
         } catch (NumberFormatException exception) {
             messageManager.sendFreeMessage(commandSender, "L'ID o la quantità non è un numero");
         }
-        return true;
-    }
-
-    @Override
-    public @Nullable List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
-        return null;
     }
 
 }

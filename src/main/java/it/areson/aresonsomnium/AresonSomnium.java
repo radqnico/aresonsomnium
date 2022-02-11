@@ -4,10 +4,11 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
+import it.areson.aresonlib.AresonPlugin;
+import it.areson.aresonlib.commands.shapes.ComplexCommand;
 import it.areson.aresonlib.files.FileManager;
 import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonlib.utils.Substitution;
-import it.areson.aresonsomnium.commands.CommandParser;
 import it.areson.aresonsomnium.commands.admin.GiveConsumableCommand;
 import it.areson.aresonsomnium.commands.admin.ObolsCommand;
 import it.areson.aresonsomnium.commands.admin.SomniumAdminCommand;
@@ -41,14 +42,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -58,12 +57,11 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.logging.Level;
 
 import static it.areson.aresonsomnium.Constants.PERMISSION_MULTIPLIER;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public class AresonSomnium extends JavaPlugin {
+public class AresonSomnium extends AresonPlugin {
 
     //Multiplier
     private final Multiplier defaultMultiplier = new Multiplier();
@@ -214,27 +212,13 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     private void registerCommands() {
-        CommandParser parserShopAdmin = new CommandParser(this);
-        PluginCommand command = this.getCommand("shopadmin");
-        if (command == null) {
-            this.getLogger().log(Level.SEVERE, "Cannot register shopadmin commands");
-            return;
-        }
-
-        try {
-            parserShopAdmin.addAresonCommand(new EditItemsCommand(this));
-            parserShopAdmin.addAresonCommand(new ReloadItemsCommand(this));
-            parserShopAdmin.addAresonCommand(new SetItemPriceCommand(this));
-            parserShopAdmin.addAresonCommand(new BuyItemCommand(this));
-            parserShopAdmin.addAresonCommand(new SellItemCommand(this));
-            parserShopAdmin.addAresonCommand(new SellLootableCommand(this));
-            parserShopAdmin.registerCommands();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
-
-        command.setExecutor(parserShopAdmin);
-        command.setTabCompleter(parserShopAdmin);
+        ComplexCommand shopAdmin = new ComplexCommand(this, "shopadmin");
+        shopAdmin.addSubCommand("editshopitems", new EditItemsCommand(this));
+        shopAdmin.addSubCommand("reloaditems", new ReloadItemsCommand(this));
+        shopAdmin.addSubCommand("setitemprice", new SetItemPriceCommand(this));
+        shopAdmin.addSubCommand("buyitem", new BuyItemCommand(this));
+        shopAdmin.addSubCommand("sellitem", new SellItemCommand(this));
+        shopAdmin.addSubCommand("selllootable", new SellLootableCommand(this));
 
         new SomniumAdminCommand(this, messageManager);
         new StatsCommand(this, messageManager);
@@ -576,5 +560,10 @@ public class AresonSomnium extends JavaPlugin {
         return playersWithAutoSellActive;
     }
 
+    //TODO
+    @Override
+    public boolean reload() {
+        return false;
+    }
 
 }

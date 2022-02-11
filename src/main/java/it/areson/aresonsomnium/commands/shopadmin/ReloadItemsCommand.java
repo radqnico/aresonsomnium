@@ -1,16 +1,11 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
+import it.areson.aresonlib.commands.shapes.SubCommand;
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.commands.CommandParserCommand;
 import it.areson.aresonsomnium.economy.items.ShopItemsManager;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-public class ReloadItemsCommand extends CommandParserCommand {
+public class ReloadItemsCommand implements SubCommand {
 
     private final ShopItemsManager shopItemsManager;
 
@@ -19,15 +14,10 @@ public class ReloadItemsCommand extends CommandParserCommand {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    public void onCommand(CommandSender commandSender, String[] arguments) {
         if (commandSender.isOp()) {
             shopItemsManager.reloadItems();
         }
-        return true;
     }
 
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        return null;
-    }
 }

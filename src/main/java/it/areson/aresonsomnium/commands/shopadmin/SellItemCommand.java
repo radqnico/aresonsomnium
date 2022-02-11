@@ -1,10 +1,9 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
+import it.areson.aresonlib.commands.shapes.SubCommand;
 import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.AresonSomnium;
-import it.areson.aresonsomnium.commands.CommandParserCommand;
-import it.areson.aresonsomnium.economy.CoinType;
 import it.areson.aresonsomnium.economy.Price;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import it.areson.aresonsomnium.economy.items.ShopItemsManager;
@@ -12,7 +11,6 @@ import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.SoundManager;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -21,15 +19,10 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
-@SuppressWarnings("NullableProblems")
-public class SellItemCommand extends CommandParserCommand {
+public class SellItemCommand implements SubCommand {
 
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
@@ -101,30 +94,30 @@ public class SellItemCommand extends CommandParserCommand {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    public void onCommand(CommandSender commandSender, String[] arguments) {
         // /shopadmin sellitem <player> <id>
         try {
-            int id = Integer.parseInt(strings[2]);
-            String playerName = strings[1];
+            int id = Integer.parseInt(arguments[2]);
+            String playerName = arguments[1];
             Player player = aresonSomnium.getServer().getPlayer(playerName);
             sellItem(id, player, commandSender);
         } catch (NumberFormatException numberFormatException) {
             commandSender.sendMessage("L'ID o non è un numero");
         }
-        return true;
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
-        List<String> suggestions = new ArrayList<>();
-        if (arguments.length == 2) {
-            return null;
-        }
-        if (arguments.length == 3) {
-            suggestions.addAll(Arrays.stream(CoinType.values())
-                    .map(coinType -> coinType.name().toLowerCase()).toList());
-        }
-        return suggestions;
-    }
+    //TODO
+//    @Override
+//    public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
+//        List<String> suggestions = new ArrayList<>();
+//        if (arguments.length == 2) {
+//            return null;
+//        }
+//        if (arguments.length == 3) {
+//            suggestions.addAll(Arrays.stream(CoinType.values())
+//                    .map(coinType -> coinType.name().toLowerCase()).toList());
+//        }
+//        return suggestions;
+//    }
 
 }
