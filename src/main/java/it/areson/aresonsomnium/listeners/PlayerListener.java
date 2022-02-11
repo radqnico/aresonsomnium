@@ -7,11 +7,8 @@ import it.areson.aresonsomnium.economy.Wallet;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -74,20 +71,21 @@ public class PlayerListener extends GeneralEventListener {
         }
     }
 
-    @EventHandler
-    public void onBlockBreakEvent(BlockBreakEvent event) {
-        if (!event.isCancelled()) {
-            ItemStack itemInMainHand = event.getPlayer().getInventory().getItemInMainHand();
-            if (itemInMainHand.getItemMeta() instanceof Damageable damageable) {
-                if ((damageable.getDamage() * 100) / itemInMainHand.getType().getMaxDurability() > 90) {
-                    if (isTimeToSendWarn(event.getPlayer().getName())) {
-                        messageManager.sendMessage(event.getPlayer(), "item-low-life");
-                    }
-                    increaseBrokenBlocks(event.getPlayer().getName());
-                }
-            }
-        }
-    }
+    //TODO Damageable not working
+//    @EventHandler
+//    public void onBlockBreakEvent(BlockBreakEvent event) {
+//        if (!event.isCancelled()) {
+//            ItemStack itemInMainHand = event.getPlayer().getInventory().getItemInMainHand();
+//            if (itemInMainHand.getItemMeta() instanceof Damageable damageable) {
+//                if ((damageable.getDamage() * 100) / itemInMainHand.getType().getMaxDurability() > 90) {
+//                    if (isTimeToSendWarn(event.getPlayer().getName())) {
+//                        messageManager.sendMessage(event.getPlayer(), "item-low-life");
+//                    }
+//                    increaseBrokenBlocks(event.getPlayer().getName());
+//                }
+//            }
+//        }
+//    }
 
     private boolean isTimeToSendWarn(String playerName) {
         return !playerBlocksBroken.containsKey(playerName) || playerBlocksBroken.get(playerName) > 10;

@@ -18,8 +18,7 @@ public class SummariesCommand extends RegisteredCommand {
         this.aresonSomnium = aresonSomnium;
     }
 
-    //TODO Usa il file sbagliato
-    //TODO From it to en
+    //TODO
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] arguments) {
         if (commandSender instanceof Player player) {

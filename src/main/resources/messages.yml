@@ -5,9 +5,6 @@ not-enough-arguments: "&cIl comando è incompleto"
 player-invalid: "&cGiocatore non trovato"
 
 
-
-
-
 sql-connect-error: "Impossibile connettersi all'SQL."
 
 # Commands response ADMIN

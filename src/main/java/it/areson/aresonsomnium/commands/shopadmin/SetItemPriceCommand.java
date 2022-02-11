@@ -80,7 +80,7 @@ public class SetItemPriceCommand implements CompleteCommand {
                 suggestions.add("sell");
             }
             case 1 -> suggestions = aresonSomnium.getShopItemsManager().getItemsGateway()
-                    .getAllItems(false).stream()
+                    .getAllItems(false).parallelStream()
                     .map(shopItem -> shopItem.getId() + "").collect(Collectors.toList());
             case 2 -> suggestions.addAll(Arrays.stream(CoinType.values())
                     .map(coinType -> coinType.name().toLowerCase()).toList());
