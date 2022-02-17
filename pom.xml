@@ -15,10 +15,8 @@
     </properties>
 
     <build>
-        <!-- Play button -->
         <defaultGoal>clean package</defaultGoal>
 
-        <!-- Resource directory -->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
