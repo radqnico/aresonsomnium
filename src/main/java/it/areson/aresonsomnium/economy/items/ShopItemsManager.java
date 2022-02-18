@@ -1,5 +1,6 @@
 package it.areson.aresonsomnium.economy.items;
 
+import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.Price;
@@ -23,6 +24,7 @@ import static net.kyori.adventure.text.format.NamedTextColor.*;
 public class ShopItemsManager {
 
     private final AresonSomnium aresonSomnium;
+    private final MessageManager messageManager;
     private final ItemsDBGateway itemsDBGateway;
     private final ItemListView itemListView;
     private final HashMap<String, Integer> playerWithEditorOpened;
@@ -31,10 +33,10 @@ public class ShopItemsManager {
 
     public ShopItemsManager(AresonSomnium aresonSomnium, MySqlDBConnection mySqlDBConnection) {
         this.aresonSomnium = aresonSomnium;
+        this.messageManager = aresonSomnium.getMessageManager();
         itemsDBGateway = new ItemsDBGateway(aresonSomnium, mySqlDBConnection);
         itemListView = new ItemListView(aresonSomnium, itemsDBGateway);
         playerWithEditorOpened = new HashMap<>();
-        //TODO Andrebbe generalizzato e spostato tra i listener
         itemListViewEventsListener = new ItemListViewEventsListener(aresonSomnium, this);
     }
 
@@ -47,7 +49,7 @@ public class ShopItemsManager {
             }
             playerWithEditorOpened.put(player.getName(), page);
         } else {
-            player.sendMessage("La Pagina " + (page + 1) + " non esiste.");
+            messageManager.sendErrorMessage(player, "La Pagina " + (page + 1) + " non esiste.");
         }
     }
 
@@ -59,10 +61,6 @@ public class ShopItemsManager {
     }
 
     public boolean checkIfIsItemsEditor(Player player, Inventory inventory) {
-        return playerWithEditorOpened.containsKey(player.getName()) && itemListView.isInventoryOfView(inventory);
-    }
-
-    public boolean checkIfPlayerOpenedEditGui(Player player, Inventory inventory) {
         return playerWithEditorOpened.containsKey(player.getName()) && itemListView.isInventoryOfView(inventory);
     }
 
@@ -109,7 +107,7 @@ public class ShopItemsManager {
                             .clickEvent(ClickEvent.suggestCommand(initialCommand + shopItem.getId() + " gemme "))
                             .hoverEvent(HoverEvent.showText(Component.text("Imposta le gemme"))))
                     .append(Component.newline());
-            player.sendMessage(message);
+            messageManager.sendFreeMessage(player, message);
             player.closeInventory();
         });
     }

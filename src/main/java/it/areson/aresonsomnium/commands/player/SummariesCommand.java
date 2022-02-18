@@ -108,4 +108,5 @@ public class SummariesCommand extends RegisteredCommand implements TabExecutor {
     public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
         return books.keySet().parallelStream().filter(key -> key.startsWith(arguments[0])).toList();
     }
+
 }
