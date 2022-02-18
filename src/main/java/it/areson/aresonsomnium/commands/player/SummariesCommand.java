@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -15,10 +16,11 @@ import org.bukkit.inventory.meta.BookMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 @SuppressWarnings("NullableProblems")
-public class SummariesCommand extends RegisteredCommand {
+public class SummariesCommand extends RegisteredCommand implements TabExecutor {
 
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
@@ -100,4 +102,8 @@ public class SummariesCommand extends RegisteredCommand {
         return pages;
     }
 
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
+        return books.keySet().parallelStream().filter(key -> key.startsWith(arguments[0])).toList();
+    }
 }
