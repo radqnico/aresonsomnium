@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.bukkit.ChatColor.*;
+
 
 @SuppressWarnings("NullableProblems")
 public class SummariesCommand extends RegisteredCommand implements TabExecutor {
@@ -74,7 +76,7 @@ public class SummariesCommand extends RegisteredCommand implements TabExecutor {
         bookMeta.setTitle(title);
         bookMeta.setAuthor("Areson");
 
-        ArrayList<String> pages = buildBookPages(description);
+        ArrayList<String> pages = buildBookPages(RED + "" + BOLD + title + "\n\n" + BLACK + description);
         for (String page : pages) {
             bookMeta.addPages(Component.text(ChatColor.translateAlternateColorCodes('&', page)));
         }
