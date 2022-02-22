@@ -72,7 +72,7 @@ commands:
   summaries:
     permission: aresonsomnium.player
     aliases:
-      - riassunti
+      - riassunto
 
 permissions:
   aresonsomnium.admin:
