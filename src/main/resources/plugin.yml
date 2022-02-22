@@ -71,6 +71,8 @@ commands:
     usage: /giveConsumable
   summaries:
     permission: aresonsomnium.player
+    aliases:
+      - riassunti
 
 permissions:
   aresonsomnium.admin:
