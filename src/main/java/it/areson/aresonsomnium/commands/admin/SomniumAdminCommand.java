@@ -176,15 +176,15 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     amount = removing ? amount.negate() : amount;
                     CoinType type = CoinType.valueOf(coinType.toUpperCase());
                     switch (type) {
-                        case OBOLS -> somniumPlayer.getWallet().changeObols(amount.toBigInteger());
-                        case GEMS -> somniumPlayer.getWallet().changeGems(amount.toBigInteger());
-                        case COINS -> Wallet.addCoins(player, amount);
+                        case OBOLI -> somniumPlayer.getWallet().changeObols(amount.toBigInteger());
+                        case GEMME -> somniumPlayer.getWallet().changeGems(amount.toBigInteger());
+                        case MONETE -> Wallet.addCoins(player, amount);
                         default -> messageManager.sendMessage(player, "coins-type-error");
                     }
                     switch (type) {
-                        case COINS:
-                        case GEMS:
-                        case OBOLS:
+                        case MONETE:
+                        case GEMME:
+                        case OBOLI:
                             if (removing) {
                                 messageManager.sendMessage(player, "coins-remove", new Substitution("%type%", type.getCoinName()), new Substitution("%amount%", amount.negate().toString()));
                             } else {
@@ -214,15 +214,15 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
                     BigDecimal amount = BigDecimal.valueOf(Double.parseDouble(amountString));
                     CoinType type = CoinType.valueOf(coinType.toUpperCase());
                     switch (type) {
-                        case OBOLS -> {
+                        case OBOLI -> {
                             somniumPlayer.getWallet().setObols(amount.toBigInteger());
                             messageManager.sendMessage(player, "coins-set");
                         }
-                        case GEMS -> {
+                        case GEMME -> {
                             somniumPlayer.getWallet().setGems(amount.toBigInteger());
                             messageManager.sendMessage(player, "coins-set");
                         }
-                        case COINS -> {
+                        case MONETE -> {
                             Wallet.setCoins(player, amount);
                             messageManager.sendMessage(player, "coins-set");
                         }

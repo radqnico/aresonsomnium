@@ -487,13 +487,13 @@ public class AresonSomnium extends JavaPlugin {
 
     public Price getSingleRepairPrice(CoinType coinType) {
         switch (coinType) {
-            case COINS -> {
+            case MONETE -> {
                 return singleRepairCoinsPrice;
             }
-            case GEMS -> {
+            case GEMME -> {
                 return singleRepairGemsPrice;
             }
-            case OBOLS -> {
+            case OBOLI -> {
                 return singleRepairObolsPrice;
             }
             default -> {

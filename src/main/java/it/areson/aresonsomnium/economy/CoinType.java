@@ -1,11 +1,11 @@
 package it.areson.aresonsomnium.economy;
 
 public enum CoinType {
-    COINS("Monete"),
-    GEMS("Gemme"),
-    OBOLS("Oboli");
+    MONETE("Monete"),
+    GEMME("Gemme"),
+    OBOLI("Oboli");
 
-    private String coinName;
+    private final String coinName;
 
     CoinType(String coinName) {
         this.coinName = coinName;

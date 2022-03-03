@@ -134,9 +134,9 @@ public class Price {
 
     public void setPrice(CoinType coinType, BigDecimal price) {
         switch (coinType) {
-            case OBOLS -> setObols(price.toBigInteger());
-            case GEMS -> setGems(price.toBigInteger());
-            case COINS -> setCoins(price);
+            case OBOLI -> setObols(price.toBigInteger());
+            case GEMME -> setGems(price.toBigInteger());
+            case MONETE -> setCoins(price);
             default -> {
             }
         }
