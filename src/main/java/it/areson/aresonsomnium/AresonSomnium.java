@@ -147,6 +147,10 @@ public class AresonSomnium extends JavaPlugin {
         shopItemsManager = new ShopItemsManager(this, mySqlDBConnection);
 
         initListeners();
+
+        //Auto-sell
+        initializeAutoSell();
+        
         registerCommands();
 
         //Placeholders
@@ -174,9 +178,6 @@ public class AresonSomnium extends JavaPlugin {
 
         //Repair
         initializeRepair();
-
-        //Auto-sell
-        initializeAutoSell();
     }
 
     private void initializeRepair() {

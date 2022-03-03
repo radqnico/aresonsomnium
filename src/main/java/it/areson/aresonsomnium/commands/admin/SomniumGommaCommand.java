@@ -43,13 +43,13 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
-        switch (args.length) {
+    public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] arguments) {
+        switch (arguments.length) {
             case 0:
                 MessageUtils.notEnoughArguments(commandSender, command);
                 break;
             case 1:
-                switch (args[0].toLowerCase()) {
+                switch (arguments[0].toLowerCase()) {
                     case "setblock" -> handleSetBlock(commandSender);
                     case "additem" -> handleAddItem(commandSender);
                     case "testgive" -> handleTestGive(commandSender);
@@ -57,10 +57,10 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
                 }
                 break;
             case 3:
-                if ("givegomma".equalsIgnoreCase(args[0])) {
+                if ("givegomma".equalsIgnoreCase(arguments[0])) {
                     try {
-                        int amount = Integer.parseInt(args[2]);
-                        String nick = args[1];
+                        int amount = Integer.parseInt(arguments[2]);
+                        String nick = arguments[1];
                         handleGiveGomma(nick, amount);
                     } catch (NumberFormatException e) {
                         messageManager.sendMessage(commandSender, "not-a-number");
@@ -150,10 +150,10 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] strings) {
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] arguments) {
         List<String> suggestions = new ArrayList<>();
-        if (strings.length == 1) {
-            StringUtil.copyPartialMatches(strings[0], Arrays.asList(subCommands), suggestions);
+        if (arguments.length == 1) {
+            StringUtil.copyPartialMatches(arguments[0], Arrays.asList(subCommands), suggestions);
         }
         return suggestions;
     }

@@ -47,20 +47,20 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String alias, String[] args) {
-        switch (args.length) {
+    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] arguments) {
+        switch (arguments.length) {
             case 0:
             case 1:
                 MessageUtils.notEnoughArguments(commandSender, command);
                 break;
             case 2:
-                if ("convertshards".equalsIgnoreCase(args[0])) {
-                    handleConvertShards(args[1]);
+                if ("convertshards".equalsIgnoreCase(arguments[0])) {
+                    handleConvertShards(arguments[1]);
                 }
                 break;
             case 3:
-                if ("generateobolshard".equalsIgnoreCase(args[0])) {
-                    handleGenerateObolShard(args[1], Integer.parseInt(args[2]));
+                if ("generateobolshard".equalsIgnoreCase(arguments[0])) {
+                    handleGenerateObolShard(arguments[1], Integer.parseInt(arguments[2]));
                 }
                 break;
             default:
