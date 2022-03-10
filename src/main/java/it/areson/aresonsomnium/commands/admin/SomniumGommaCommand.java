@@ -5,6 +5,7 @@ import it.areson.aresonlib.files.MessageManager;
 import it.areson.aresonlib.utils.Substitution;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.utils.MessageUtils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -82,12 +83,12 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
 
             ItemMeta itemMeta = gommaItem.getItemMeta();
             if (Objects.nonNull(itemMeta)) {
-                itemMeta.setDisplayName(messageManager.getMessageWithoutPrefix("gomma-item-name"));
+                itemMeta.displayName(Component.text(messageManager.getMessageWithoutPrefix("gomma-item-name")));
 
                 String loreString = messageManager.getMessageWithoutPrefix("gomma-item-lore");
                 String[] split = loreString.split("\\n");
-                ArrayList<String> lore = new ArrayList<>(Arrays.asList(split));
-                itemMeta.setLore(lore);
+                List<Component> lore = Arrays.stream(split).map(line -> Component.text(line).asComponent()).toList();
+                itemMeta.lore(lore);
 
                 itemMeta.setCustomModelData(GOMMA_MODEL_DATA);
                 itemMeta.addEnchant(Enchantment.DURABILITY, 2, true);
