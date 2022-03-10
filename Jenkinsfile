@@ -34,13 +34,11 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-//            def mvn = tool 'Default Maven';
             steps {
                 checkout scm
 
-
                 withSonarQubeEnv() {
-                    sh "${mvn}/bin/mvn clean verify sonar:sonar -Dsonar.projectKey=areson_aresonsomnium"
+                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=areson_aresonsomnium"
                 }
             }
         }
