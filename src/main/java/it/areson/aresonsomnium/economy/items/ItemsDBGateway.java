@@ -12,7 +12,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.zip.ZipException;
 
 import static it.areson.aresonsomnium.Constants.DB_ITEMS_TABLE;
 
@@ -39,12 +38,9 @@ public class ItemsDBGateway {
                 cache.clear();
             }
             while (resultSet.next()) {
-                try {
-                    ShopItem shopItem = readShopItemFromRecord(resultSet);
-                    shopItems.add(shopItem);
-                    cache.putIfAbsent(shopItem.getId(), shopItem);
-                } catch (ZipException ignored) {
-                }
+                ShopItem shopItem = readShopItemFromRecord(resultSet);
+                shopItems.add(shopItem);
+                cache.putIfAbsent(shopItem.getId(), shopItem);
             }
             connection.close();
         } catch (SQLException exception) {
@@ -69,12 +65,9 @@ public class ItemsDBGateway {
             Connection connection = mySqlDBConnection.connect();
             ResultSet resultSet = mySqlDBConnection.select(connection, query);
             while (resultSet.next()) {
-                try {
-                    ShopItem shopItem = readShopItemFromRecord(resultSet);
-                    optionalShopItem = Optional.of(shopItem);
-                    cache.putIfAbsent(shopItem.getId(), shopItem);
-                } catch (ZipException ignored) {
-                }
+                ShopItem shopItem = readShopItemFromRecord(resultSet);
+                optionalShopItem = Optional.of(shopItem);
+                cache.putIfAbsent(shopItem.getId(), shopItem);
             }
             connection.close();
         } catch (SQLException exception) {
@@ -149,7 +142,7 @@ public class ItemsDBGateway {
         }).findFirst();
     }
 
-    private ShopItem readShopItemFromRecord(ResultSet resultSet) throws SQLException, ZipException {
+    private ShopItem readShopItemFromRecord(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("id");
         int amount = resultSet.getInt("amount");
         String itemStack64 = resultSet.getString("itemStack");

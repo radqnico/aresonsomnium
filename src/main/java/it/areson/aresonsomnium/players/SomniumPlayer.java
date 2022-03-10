@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 
 public class SomniumPlayer extends MySQLObject {
 
-    public static long DEFAULT_TIME_PLAYED = 0L;
-    public static String tableQuery = """
+    private static final long DEFAULT_TIME_PLAYED = 0L;
+    private static final String tableQuery = """
             create table if not exists somniumPlayer
             (
                 playerName  varchar(255)     not null

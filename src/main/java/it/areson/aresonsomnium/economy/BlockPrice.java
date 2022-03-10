@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public class BlockPrice {
 
-    private static final HashMap<Material, BigDecimal> prices = new HashMap<Material, BigDecimal>() {{
+    private static final HashMap<Material, BigDecimal> prices = new HashMap<>() {{
         put(Material.NETHERRACK, BigDecimal.valueOf(1));
         put(Material.GRANITE, BigDecimal.valueOf(2.5));
         put(Material.BLACKSTONE, BigDecimal.valueOf(5));

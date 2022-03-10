@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public abstract class GeneralEventListener implements Listener {
 
-    protected AresonSomnium aresonSomnium;
+    protected final AresonSomnium aresonSomnium;
 
     public GeneralEventListener(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;

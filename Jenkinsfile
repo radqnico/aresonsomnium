@@ -33,16 +33,6 @@ pipeline {
             }
         }
 
-        stage("SonarQube Analysis") {
-            steps {
-                withMaven(maven: "maven-3") {
-                    withSonarQubeEnv() {
-                        sh "mvn clean verify sonar:sonar -Dsonar.projectKey=areson_aresonsomnium"
-                    }
-                }
-            }
-        }
-
         stage("Publish") {
             steps {
                 timeout(1) {
