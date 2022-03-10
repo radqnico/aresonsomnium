@@ -35,10 +35,10 @@ pipeline {
 
         stage("SonarQube Analysis") {
             steps {
-                checkout scm
-
-                withSonarQubeEnv() {
-                    sh "mvn clean verify sonar:sonar -Dsonar.projectKey=areson_aresonsomnium"
+                withMaven(maven: "maven-3") {
+                    withSonarQubeEnv() {
+                        sh "mvn clean verify sonar:sonar -Dsonar.projectKey=areson_aresonsomnium"
+                    }
                 }
             }
         }
