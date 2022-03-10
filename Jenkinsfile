@@ -34,7 +34,7 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-            def mvn = tool 'Default Maven';
+//            def mvn = tool 'Default Maven';
             steps {
                 checkout scm
 
