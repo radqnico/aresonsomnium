@@ -38,6 +38,7 @@ import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.node.Node;
+import net.luckperms.api.query.QueryOptions;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -150,7 +151,7 @@ public class AresonSomnium extends JavaPlugin {
 
         //Auto-sell
         initializeAutoSell();
-        
+
         registerCommands();
 
         //Placeholders
