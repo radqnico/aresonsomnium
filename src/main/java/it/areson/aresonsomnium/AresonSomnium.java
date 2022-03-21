@@ -279,8 +279,10 @@ public class AresonSomnium extends JavaPlugin {
     }
 
     public CompletableFuture<Multiplier> extractPlayerMaxMultiplierTupleFromPermissions(Collection<Node> permissions) {
+
         return CompletableFuture.supplyAsync(() -> permissions.parallelStream().reduce(defaultMultiplier, (previousValue, node) -> {
             String permission = node.getKey();
+            getLogger().warn("Perission: " + permission);
 
             if (permission.startsWith(PERMISSION_MULTIPLIER)) {
                 int lastDotPosition = permission.lastIndexOf(".");
