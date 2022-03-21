@@ -319,7 +319,7 @@ public class AresonSomnium extends JavaPlugin {
     public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player) {
         if (luckPerms.isPresent()) {
             return luckPerms.get().getUserManager().loadUser(player.getUniqueId()).thenCompose(
-                    (user) -> forceMultiplierRefresh(player, user.resolveInheritedNodes())
+                    (user) -> forceMultiplierRefresh(player, user.resolveInheritedNodes(QueryOptions.nonContextual()))
             );
         } else {
             return CompletableFuture.completedFuture(defaultMultiplier);
