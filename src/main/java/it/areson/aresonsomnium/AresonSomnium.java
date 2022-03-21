@@ -282,7 +282,7 @@ public class AresonSomnium extends JavaPlugin {
 
         return CompletableFuture.supplyAsync(() -> permissions.parallelStream().reduce(defaultMultiplier, (previousValue, node) -> {
             String permission = node.getKey();
-            getLogger().warn("Perission: " + permission);
+            getLogger().severe("Permission: " + permission);
 
             if (permission.startsWith(PERMISSION_MULTIPLIER)) {
                 int lastDotPosition = permission.lastIndexOf(".");
