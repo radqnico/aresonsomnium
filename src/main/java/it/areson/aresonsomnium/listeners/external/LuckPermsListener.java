@@ -5,7 +5,6 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.event.EventBus;
 import net.luckperms.api.event.node.NodeMutateEvent;
 import net.luckperms.api.model.user.User;
-import net.luckperms.api.query.QueryOptions;
 import org.bukkit.entity.Player;
 
 public class LuckPermsListener {
@@ -24,9 +23,8 @@ public class LuckPermsListener {
         if (event.getTarget() instanceof User user) {
             Player player = aresonSomnium.getServer().getPlayer(user.getUniqueId());
             if (player != null) {
-                System.out.println("onNodeMutateEvent");
-                System.out.println(event.getDataAfter());
-                System.out.println(event.getTarget().resolveInheritedNodes(QueryOptions.nonContextual()));
+                System.out.println("onNodeMutateEvent" + event.getDataAfter());
+//                System.out.println(event.getTarget().resolveInheritedNodes(QueryOptions.nonContextual()));
                 aresonSomnium.forceMultiplierRefresh(player, event.getDataAfter());
             }
         }
