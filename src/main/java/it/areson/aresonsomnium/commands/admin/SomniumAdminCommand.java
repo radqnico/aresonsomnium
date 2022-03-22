@@ -28,9 +28,9 @@ public class SomniumAdminCommand implements CommandExecutor, TabCompleter {
     private final MessageManager messageManager;
     private final String[] subCommands = new String[]{"stats", "setCoins", "listPlayers", "deleteLastLoreLine", "addCoins", "removeCoins"};
 
-    public SomniumAdminCommand(AresonSomnium aresonSomnium, MessageManager messageManager) {
+    public SomniumAdminCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
-        this.messageManager = messageManager;
+        this.messageManager = aresonSomnium.getMessageManager();
         PluginCommand command = this.aresonSomnium.getCommand("SomniumAdmin");
         if (command != null) {
             command.setExecutor(this);

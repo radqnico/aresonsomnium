@@ -31,9 +31,9 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
 
-    public SomniumGommaCommand(AresonSomnium aresonSomnium, MessageManager messageManager) {
+    public SomniumGommaCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
-        this.messageManager = messageManager;
+        this.messageManager = aresonSomnium.getMessageManager();
         PluginCommand command = this.aresonSomnium.getCommand("gomma");
         if (command != null) {
             command.setExecutor(this);

@@ -34,9 +34,9 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
     private final String[] subCommands = new String[]{"generateObolShard", "convertShards"};
 
 
-    public ObolsCommand(AresonSomnium aresonSomnium, MessageManager messageManager) {
+    public ObolsCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
-        this.messageManager = messageManager;
+        this.messageManager = aresonSomnium.getMessageManager();
         PluginCommand command = this.aresonSomnium.getCommand("obols");
         if (command != null) {
             command.setExecutor(this);

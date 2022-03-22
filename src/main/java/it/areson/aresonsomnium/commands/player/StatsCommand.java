@@ -20,9 +20,9 @@ public class StatsCommand implements CommandExecutor, TabCompleter {
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
 
-    public StatsCommand(AresonSomnium aresonSomnium, MessageManager messageManager) {
+    public StatsCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
-        this.messageManager = messageManager;
+        this.messageManager = aresonSomnium.getMessageManager();
         PluginCommand command = this.aresonSomnium.getCommand("stats");
         if (command != null) {
             command.setExecutor(this);

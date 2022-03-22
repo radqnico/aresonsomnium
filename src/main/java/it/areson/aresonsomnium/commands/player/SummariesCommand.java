@@ -28,8 +28,8 @@ public class SummariesCommand extends RegisteredCommand implements TabExecutor {
     private final MessageManager messageManager;
     private HashMap<String, ItemStack> books;
 
-    public SummariesCommand(AresonSomnium aresonSomnium, String command) {
-        super(aresonSomnium, command);
+    public SummariesCommand(AresonSomnium aresonSomnium) {
+        super(aresonSomnium, "summaries");
         this.aresonSomnium = aresonSomnium;
         this.messageManager = aresonSomnium.getMessageManager();
         initializeBooks();

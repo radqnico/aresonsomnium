@@ -232,25 +232,25 @@ public class AresonSomnium extends JavaPlugin {
         shopAdmin.addSubCommand("sellitem", new SellItemCommand(this));
         shopAdmin.addSubCommand("selllootable", new SellLootableCommand(this));
 
-        new SomniumAdminCommand(this, messageManager);
-        new StatsCommand(this, messageManager);
-        new SomniumGommaCommand(this, messageManager);
+        new SomniumAdminCommand(this);
+        new StatsCommand(this);
+        new SomniumGommaCommand(this);
         new SellCommand(this, Constants.SELL_HAND_COMMAND);
         new SellCommand(this, Constants.SELL_ALL_COMMAND);
         new SellCommand(this, Constants.AUTO_SELL_COMMAND);
 //        new CheckCommand(this);
-        new ObolsCommand(this, messageManager);
+        new ObolsCommand(this);
         new GiveConsumableCommand(this);
         new SomniumRepairCommand(this, Constants.SINGLE_FREE_REPAIR_COMMAND);
         new SomniumRepairCommand(this, Constants.SINGLE_REPAIR_COMMAND);
         new SomniumRepairCommand(this, Constants.FULL_REPAIR_COMMAND);
-        new SummariesCommand(this, "summaries");
+        new SummariesCommand(this);
     }
 
     private void initListeners() {
         playerDBEvents = new GatewayListener(this);
         InventoryListener inventoryListener = new InventoryListener(this);
-        RightClickListener rightClickListener = new RightClickListener(this, messageManager);
+        RightClickListener rightClickListener = new RightClickListener(this);
         AnvilListener anvilListener = new AnvilListener(this);
         new PlayerListener(this);
 

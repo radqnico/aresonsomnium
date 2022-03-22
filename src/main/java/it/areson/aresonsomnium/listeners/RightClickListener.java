@@ -34,9 +34,9 @@ public class RightClickListener extends GeneralEventListener {
     private final HashMap<String, Instant> playerDelays;
     private final int delaySeconds = 2;
 
-    public RightClickListener(AresonSomnium aresonSomnium, MessageManager messageManager) {
+    public RightClickListener(AresonSomnium aresonSomnium) {
         super(aresonSomnium);
-        this.messageManager = messageManager;
+        this.messageManager = aresonSomnium.getMessageManager();
 
         playerDelays = new HashMap<>();
     }
