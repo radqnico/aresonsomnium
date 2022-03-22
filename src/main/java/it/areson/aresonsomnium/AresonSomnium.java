@@ -37,6 +37,7 @@ import it.areson.aresonsomnium.utils.AutoSaveManager;
 import it.areson.aresonsomnium.utils.file.GommaObjectsFileReader;
 import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
+import net.luckperms.api.model.PermissionHolder;
 import net.luckperms.api.node.Node;
 import net.luckperms.api.query.QueryOptions;
 import org.bukkit.ChatColor;
@@ -306,19 +307,20 @@ public class AresonSomnium extends JavaPlugin {
         }, this::getMaxMultiplier));
     }
 
-    public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player, Collection<Node> permissions) {
+    public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player, PermissionHolder permissionHolder) {
         getLogger().info("Forcing the update of multiplier for player " + player.getName());
 
-        return extractPlayerMaxMultiplierTupleFromPermissions(permissions).thenApplyAsync((latestMultiplier) -> {
-            playerMultipliers.put(player.getName(), latestMultiplier);
-            return latestMultiplier;
-        });
+        return extractPlayerMaxMultiplierTupleFromPermissions(permissionHolder.resolveInheritedNodes(QueryOptions.nonContextual()))
+                .thenApplyAsync((latestMultiplier) -> {
+                    playerMultipliers.put(player.getName(), latestMultiplier);
+                    return latestMultiplier;
+                });
     }
 
     public CompletableFuture<Multiplier> forceMultiplierRefresh(Player player) {
         if (luckPerms.isPresent()) {
             return luckPerms.get().getUserManager().loadUser(player.getUniqueId()).thenCompose(
-                    (user) -> forceMultiplierRefresh(player, user.resolveInheritedNodes(QueryOptions.nonContextual()))
+                    (user) -> forceMultiplierRefresh(player, user)
             );
         } else {
             return CompletableFuture.completedFuture(defaultMultiplier);

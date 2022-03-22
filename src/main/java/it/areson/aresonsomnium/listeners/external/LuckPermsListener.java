@@ -23,9 +23,7 @@ public class LuckPermsListener {
         if (event.getTarget() instanceof User user) {
             Player player = aresonSomnium.getServer().getPlayer(user.getUniqueId());
             if (player != null) {
-                System.out.println("onNodeMutateEvent" + event.getDataAfter());
-//                System.out.println(event.getTarget().resolveInheritedNodes(QueryOptions.nonContextual()));
-                aresonSomnium.forceMultiplierRefresh(player, event.getDataAfter());
+                aresonSomnium.forceMultiplierRefresh(player, event.getTarget());
             }
         }
     }
