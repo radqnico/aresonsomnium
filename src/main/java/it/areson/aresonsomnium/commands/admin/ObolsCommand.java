@@ -130,6 +130,10 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
             itemMeta.displayName(messageManager.getMessageWithoutPrefix("obolshard-item-name"));
+
+            System.out.println("We: " + messageManager.getSimpleString("obolshard-item-lore"));
+            System.out.println("We2: " + messageManager.getMessageListWithoutPrefix("obolshard-item-lore"));
+
             itemMeta.lore(messageManager.getMessageListWithoutPrefix("obolshard-item-lore"));
 
             itemMeta.setCustomModelData(OBOL_MODEL_DATA);
