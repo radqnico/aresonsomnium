@@ -131,7 +131,7 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
         ItemStack itemStack = new ItemStack(Material.GOLD_NUGGET);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
-            itemMeta.displayName(Component.text(messageManager.getMessageWithoutPrefix("obolshard-item-name")));
+            itemMeta.displayName(Component.text("&cobolshard-item-name"));//TO REMOVE
 
             String loreString = messageManager.getMessageWithoutPrefix("obolshard-item-lore");
             String[] split = loreString.split("\\n");
