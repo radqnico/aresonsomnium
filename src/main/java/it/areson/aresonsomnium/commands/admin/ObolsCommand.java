@@ -32,11 +32,14 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
     private final AresonSomnium aresonSomnium;
     private final MessageManager messageManager;
     private final String[] subCommands = new String[]{"generateObolShard", "convertShards"};
+    private final ItemStack shardShape;
 
 
     public ObolsCommand(AresonSomnium aresonSomnium) {
         this.aresonSomnium = aresonSomnium;
         this.messageManager = aresonSomnium.getMessageManager();
+        this.shardShape = createShardShape();
+
         PluginCommand command = this.aresonSomnium.getCommand("obols");
         if (command != null) {
             command.setExecutor(this);
@@ -73,7 +76,7 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
     private void handleGenerateObolShard(String playerName, int amount) {
         Player player = aresonSomnium.getServer().getPlayer(playerName);
         if (player != null) {
-            HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(generateObolShard(amount));
+            HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(shardShape.clone().asQuantity(amount));
             if (!remaining.isEmpty()) {
                 for (Integer integer : remaining.keySet()) {
                     player.getWorld().dropItem(player.getLocation(), remaining.get(integer));
@@ -124,8 +127,8 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
     }
 
 
-    public ItemStack generateObolShard(int amount) {
-        ItemStack itemStack = new ItemStack(Material.GOLD_NUGGET, amount);
+    private ItemStack createShardShape() {
+        ItemStack itemStack = new ItemStack(Material.GOLD_NUGGET);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
             itemMeta.displayName(Component.text(messageManager.getMessageWithoutPrefix("obolshard-item-name")));
@@ -136,7 +139,7 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
             itemMeta.lore(lore);
 
             itemMeta.setCustomModelData(OBOL_MODEL_DATA);
-            itemMeta.addEnchant(Enchantment.DURABILITY, 2, true);
+            itemMeta.addEnchant(Enchantment.DURABILITY, 1, true);
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
         itemStack.setItemMeta(itemMeta);
