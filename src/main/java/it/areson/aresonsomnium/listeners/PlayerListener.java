@@ -15,12 +15,14 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Random;
 
 public class PlayerListener extends GeneralEventListener {
 
     private final MessageManager messageManager;
     private final HashSet<String> stealCoinsWorlds;
-    private final BigDecimal percentOfCoins;
+    private final int minPercentOfCoins;
+    private final int maxPercentOfCoins;
     private final HashMap<String, Integer> playerBlocksBroken;
 
     public PlayerListener(AresonSomnium aresonSomnium) {
@@ -29,7 +31,8 @@ public class PlayerListener extends GeneralEventListener {
         registerEvents();
 
         stealCoinsWorlds = new HashSet<>(aresonSomnium.getConfig().getStringList("steal-coins.allowed-worlds"));
-        percentOfCoins = BigDecimal.valueOf(aresonSomnium.getConfig().getDouble("steal-coins.percent-of-coins") / 100);
+        minPercentOfCoins = (int) Math.round(aresonSomnium.getConfig().getDouble("steal-coins.min-percent-of-coins") / 100);
+        maxPercentOfCoins = (int) Math.round(aresonSomnium.getConfig().getDouble("steal-coins.max-percent-of-coins") / 100);
         playerBlocksBroken = new HashMap<>();
     }
 
@@ -52,8 +55,9 @@ public class PlayerListener extends GeneralEventListener {
                 SomniumPlayer somniumPlayerKiller = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(playerKiller);
                 SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(event.getPlayer());
                 if (somniumPlayer != null && somniumPlayerKiller != null) {
-                    BigDecimal coinsPlayer = Wallet.getCoins(event.getPlayer());
-                    BigDecimal amountToSteal = coinsPlayer.multiply(percentOfCoins).setScale(1, RoundingMode.HALF_UP);
+                    BigDecimal coinsPlayer = Wallet.getCoins(playerKiller);
+                    int percentToSteal = new Random().nextInt(minPercentOfCoins, maxPercentOfCoins + 1);
+                    BigDecimal amountToSteal = coinsPlayer.multiply(BigDecimal.valueOf(percentToSteal)).setScale(1, RoundingMode.HALF_UP);
 
                     Wallet.addCoins(event.getPlayer(), amountToSteal.negate());
                     Wallet.addCoins(playerKiller, amountToSteal);
