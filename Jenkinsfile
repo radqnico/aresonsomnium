@@ -38,6 +38,7 @@ pipeline {
                 timeout(1) {
                     sshagent(credentials: ['Areson']) {
                         sh "scp -r -v -o StrictHostKeyChecking=no **/*dependencies.jar minecraft@${SERVER_IP}:/home/minecraft/somnium/plugins"
+                        sh "scp -r -v -o StrictHostKeyChecking=no **/*dependencies.jar minecraft@${SERVER_IP}:/home/minecraft/development/plugins"
                         sh "ssh -v -o StrictHostKeyChecking=no root@${SERVER_IP} reloadServer somnium"
                     }
                 }
