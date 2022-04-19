@@ -9,6 +9,6 @@ repair:
 steal-coins:
   allowed-worlds:
     - worldname
-  min-percent-of-coins: 5
-  max-percent-of-coins: 10
+  other-percent-of-coins: 5
+  personal-percent-of-coins: 10
   seconds-last-hit: 30

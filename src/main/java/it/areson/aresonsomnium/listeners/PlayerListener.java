@@ -15,14 +15,13 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Optional;
-import java.util.Random;
 
 public class PlayerListener extends GeneralEventListener {
 
     private final MessageManager messageManager;
     private final HashSet<String> stealCoinsWorlds;
-    private final double minPercentOfCoins;
-    private final double maxPercentOfCoins;
+    private final double personalPercentOfCoins;
+    private final double otherPercentOfCoins;
     private final HashMap<String, Integer> playerBlocksBroken;
 
     public PlayerListener(AresonSomnium aresonSomnium) {
@@ -31,8 +30,8 @@ public class PlayerListener extends GeneralEventListener {
         registerEvents();
 
         stealCoinsWorlds = new HashSet<>(aresonSomnium.getConfig().getStringList("steal-coins.allowed-worlds"));
-        minPercentOfCoins = aresonSomnium.getConfig().getDouble("steal-coins.min-percent-of-coins") / 100;
-        maxPercentOfCoins = aresonSomnium.getConfig().getDouble("steal-coins.max-percent-of-coins") / 100;
+        otherPercentOfCoins = aresonSomnium.getConfig().getDouble("steal-coins.other-percent-of-coins") / 100;
+        personalPercentOfCoins = aresonSomnium.getConfig().getDouble("steal-coins.personal-percent-of-coins") / 100;
         playerBlocksBroken = new HashMap<>();
     }
 
@@ -48,27 +47,28 @@ public class PlayerListener extends GeneralEventListener {
 
     @EventHandler
     public void onPlayerDeathEvent(PlayerDeathEvent event) {
-        if (stealCoinsWorlds.contains(event.getPlayer().getWorld().getName())) {
-            Optional<Player> killer = aresonSomnium.getLastHitPvP().getKiller(event.getPlayer());
-            if (killer.isPresent()) {
-                Player playerKiller = killer.get();
-                SomniumPlayer somniumPlayerKiller = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(playerKiller);
+        Player killed = event.getPlayer();
+        if (stealCoinsWorlds.contains(killed.getWorld().getName())) {
+            Optional<Player> maybeKiller = aresonSomnium.getLastHitPvP().getKiller(killed);
+            if (maybeKiller.isPresent()) {
+                Player killer = maybeKiller.get();
+                SomniumPlayer somniumPlayerKiller = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(killer);
                 SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(event.getPlayer());
                 if (somniumPlayer != null && somniumPlayerKiller != null) {
-                    BigDecimal coinsPlayer = Wallet.getCoins(playerKiller);
-                    double percentToSteal = new Random().nextDouble(minPercentOfCoins, maxPercentOfCoins + 1);
-                    BigDecimal amountToSteal = coinsPlayer.multiply(BigDecimal.valueOf(percentToSteal)).setScale(1, RoundingMode.HALF_UP);
+                    BigDecimal otherSteal = Wallet.getCoins(killed).multiply(BigDecimal.valueOf(otherPercentOfCoins)).setScale(1, RoundingMode.HALF_UP);
+                    BigDecimal personalSteal = Wallet.getCoins(killer).multiply(BigDecimal.valueOf(personalPercentOfCoins)).setScale(1, RoundingMode.HALF_UP);
+                    BigDecimal amountToSteal = otherSteal.compareTo(personalSteal) < 0 ? otherSteal : personalSteal;
 
-                    Wallet.addCoins(event.getPlayer(), amountToSteal.negate());
-                    Wallet.addCoins(playerKiller, amountToSteal);
+                    Wallet.addCoins(killed, amountToSteal.negate());
+                    Wallet.addCoins(killer, amountToSteal);
 
-                    messageManager.sendMessage(playerKiller, "steal-coins-earned",
+                    messageManager.sendMessage(killer, "steal-coins-earned",
                             new Substitution("%coins%", amountToSteal + ""),
-                            new Substitution("%playerName%", event.getPlayer().getName())
+                            new Substitution("%playerName%", killed.getName())
                     );
-                    messageManager.sendMessage(event.getPlayer(), "steal-coins-lost",
+                    messageManager.sendMessage(killed, "steal-coins-lost",
                             new Substitution("%coins%", amountToSteal + ""),
-                            new Substitution("%playerName%", playerKiller.getName())
+                            new Substitution("%playerName%", killer.getName())
                     );
                 }
             }
