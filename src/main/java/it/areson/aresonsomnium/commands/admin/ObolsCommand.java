@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static it.areson.aresonsomnium.Constants.OBOL_MODEL_DATA;
 
@@ -133,10 +132,10 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
         if (itemMeta != null) {
             itemMeta.displayName(Component.text(messageManager.getMessageWithoutPrefix("obolshard-item-name")));
 
-            String loreString = messageManager.getMessageWithoutPrefix("obolshard-item-lore");
-            String[] split = loreString.split("\\n");
-            List<Component> lore = Arrays.asList(split).parallelStream().map(Component::text).collect(Collectors.toList());
-            itemMeta.lore(lore);
+//            String loreString = messageManager.getMessageWithoutPrefix("obolshard-item-lore");
+//            String[] split = loreString.split("\\n");
+//            List<Component> lore = Arrays.asList(split).parallelStream().map(Component::text).collect(Collectors.toList());
+//            itemMeta.lore(lore);
 
             itemMeta.setCustomModelData(OBOL_MODEL_DATA);
             itemMeta.addEnchant(Enchantment.DURABILITY, 1, true);
