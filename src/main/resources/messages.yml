@@ -40,7 +40,9 @@ gomma-item-give: "&aHai ottenuto un oggetto dal Gomma Gomma"
 gomma-error-give: "&cFai spazio nell'inventario"
 
 gomma-item-name: "&lGomma"
-gomma-item-lore: "Ciaone burlone \n paperone"
+gomma-item-lore:
+  - "Ciaone burlone"
+  - "paperone"
 gomma-material: "IRON_NUGGET"
 
 check-created: "&aBuono creato."
@@ -69,7 +71,10 @@ obols-not-enough: "&cPortami almeno 10 pepite!"
 obols-not-nugget: "&cDevi portarmi le mie pepite!"
 
 obolshard-item-name: "&6Frammento di &lObolo"
-obolshard-item-lore: "&6Colleziona e consegna questi\n&6frammenti a &lCaronte &6per\n&6ottenere gli Oboli"
+obolshard-item-lore:
+  - "&6Colleziona e consegna questi"
+  - "&6frammenti a &lCaronte &6per"
+  - "&6ottenere gli Oboli"
 
 cannot-repair-time-left: "&cNon puoi ancora riparare: tempo rimanente %seconds% secondi"
 cannot-repair-yet: "&cNon puoi ancora riparare"
