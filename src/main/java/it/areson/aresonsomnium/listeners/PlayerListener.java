@@ -21,8 +21,8 @@ public class PlayerListener extends GeneralEventListener {
 
     private final MessageManager messageManager;
     private final HashSet<String> stealCoinsWorlds;
-    private final int minPercentOfCoins;
-    private final int maxPercentOfCoins;
+    private final double minPercentOfCoins;
+    private final double maxPercentOfCoins;
     private final HashMap<String, Integer> playerBlocksBroken;
 
     public PlayerListener(AresonSomnium aresonSomnium) {
@@ -31,8 +31,8 @@ public class PlayerListener extends GeneralEventListener {
         registerEvents();
 
         stealCoinsWorlds = new HashSet<>(aresonSomnium.getConfig().getStringList("steal-coins.allowed-worlds"));
-        minPercentOfCoins = (int) Math.round(aresonSomnium.getConfig().getDouble("steal-coins.min-percent-of-coins") / 100);
-        maxPercentOfCoins = (int) Math.round(aresonSomnium.getConfig().getDouble("steal-coins.max-percent-of-coins") / 100);
+        minPercentOfCoins = aresonSomnium.getConfig().getDouble("steal-coins.min-percent-of-coins") / 100;
+        maxPercentOfCoins = aresonSomnium.getConfig().getDouble("steal-coins.max-percent-of-coins") / 100;
         playerBlocksBroken = new HashMap<>();
     }
 
@@ -56,7 +56,7 @@ public class PlayerListener extends GeneralEventListener {
                 SomniumPlayer somniumPlayer = aresonSomnium.getSomniumPlayerManager().getSomniumPlayer(event.getPlayer());
                 if (somniumPlayer != null && somniumPlayerKiller != null) {
                     BigDecimal coinsPlayer = Wallet.getCoins(playerKiller);
-                    int percentToSteal = new Random().nextInt(minPercentOfCoins, maxPercentOfCoins + 1);
+                    double percentToSteal = new Random().nextDouble(minPercentOfCoins, maxPercentOfCoins + 1);
                     BigDecimal amountToSteal = coinsPlayer.multiply(BigDecimal.valueOf(percentToSteal)).setScale(1, RoundingMode.HALF_UP);
 
                     Wallet.addCoins(event.getPlayer(), amountToSteal.negate());
