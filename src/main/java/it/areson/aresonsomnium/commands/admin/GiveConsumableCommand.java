@@ -1,6 +1,6 @@
 package it.areson.aresonsomnium.commands.admin;
 
-import it.areson.aresonlib.utils.DurationUtils;
+import it.areson.aresonlib.minecraft.utils.DurationUtils;
 import it.areson.aresonsomnium.AresonSomnium;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;

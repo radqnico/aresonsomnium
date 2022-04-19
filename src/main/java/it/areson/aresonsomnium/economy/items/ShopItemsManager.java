@@ -1,6 +1,6 @@
 package it.areson.aresonsomnium.economy.items;
 
-import it.areson.aresonlib.files.MessageManager;
+import it.areson.aresonlib.minecraft.files.MessageManager;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.database.MySqlDBConnection;
 import it.areson.aresonsomnium.economy.Price;

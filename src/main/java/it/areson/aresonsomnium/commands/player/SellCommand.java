@@ -1,7 +1,7 @@
 package it.areson.aresonsomnium.commands.player;
 
-import it.areson.aresonlib.files.MessageManager;
-import it.areson.aresonlib.utils.Substitution;
+import it.areson.aresonlib.minecraft.files.MessageManager;
+import it.areson.aresonlib.minecraft.utils.Substitution;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.Constants;
 import org.bukkit.command.Command;

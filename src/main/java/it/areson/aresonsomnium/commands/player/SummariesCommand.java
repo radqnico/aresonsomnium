@@ -1,7 +1,7 @@
 package it.areson.aresonsomnium.commands.player;
 
-import it.areson.aresonlib.commands.shapes.RegisteredCommand;
-import it.areson.aresonlib.files.MessageManager;
+import it.areson.aresonlib.minecraft.commands.shapes.RegisteredCommand;
+import it.areson.aresonlib.minecraft.files.MessageManager;
 import it.areson.aresonsomnium.AresonSomnium;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;

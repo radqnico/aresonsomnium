@@ -1,12 +1,11 @@
 package it.areson.aresonsomnium.commands.admin;
 
-import it.areson.aresonlib.files.MessageManager;
-import it.areson.aresonlib.utils.Substitution;
+import it.areson.aresonlib.minecraft.files.MessageManager;
+import it.areson.aresonlib.minecraft.utils.Substitution;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.Constants;
 import it.areson.aresonsomnium.players.SomniumPlayer;
 import it.areson.aresonsomnium.utils.MessageUtils;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.command.*;
 import org.bukkit.enchantments.Enchantment;
@@ -130,12 +129,8 @@ public class ObolsCommand implements CommandExecutor, TabCompleter {
         ItemStack itemStack = new ItemStack(Material.GOLD_NUGGET);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta != null) {
-            itemMeta.displayName(Component.text(messageManager.getMessageWithoutPrefix("obolshard-item-name")).asComponent());
-
-//            String loreString = messageManager.getMessageWithoutPrefix("obolshard-item-lore");
-//            String[] split = loreString.split("\\n");
-//            List<Component> lore = Arrays.asList(split).parallelStream().map(Component::text).collect(Collectors.toList());
-//            itemMeta.lore(lore);
+            itemMeta.displayName(messageManager.getMessageWithoutPrefix("obolshard-item-name"));
+            itemMeta.lore(messageManager.getMessageListWithoutPrefix("obolshard-item-lore"));
 
             itemMeta.setCustomModelData(OBOL_MODEL_DATA);
             itemMeta.addEnchant(Enchantment.DURABILITY, 1, true);

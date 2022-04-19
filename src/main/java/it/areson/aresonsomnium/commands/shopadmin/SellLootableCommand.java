@@ -1,7 +1,7 @@
 package it.areson.aresonsomnium.commands.shopadmin;
 
-import it.areson.aresonlib.commands.shapes.CompleteCommand;
-import it.areson.aresonlib.files.MessageManager;
+import it.areson.aresonlib.minecraft.commands.shapes.CompleteCommand;
+import it.areson.aresonlib.minecraft.files.MessageManager;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.economy.items.ShopItem;
 import it.areson.aresonsomnium.economy.items.ShopItemsManager;

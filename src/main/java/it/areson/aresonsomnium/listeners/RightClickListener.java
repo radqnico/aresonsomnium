@@ -1,6 +1,6 @@
 package it.areson.aresonsomnium.listeners;
 
-import it.areson.aresonlib.files.MessageManager;
+import it.areson.aresonlib.minecraft.files.MessageManager;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.elements.Pair;
 import net.luckperms.api.model.data.TemporaryNodeMergeStrategy;

@@ -1,11 +1,10 @@
 package it.areson.aresonsomnium.commands.admin;
 
 import com.destroystokyo.paper.block.TargetBlockInfo;
-import it.areson.aresonlib.files.MessageManager;
-import it.areson.aresonlib.utils.Substitution;
+import it.areson.aresonlib.minecraft.files.MessageManager;
+import it.areson.aresonlib.minecraft.utils.Substitution;
 import it.areson.aresonsomnium.AresonSomnium;
 import it.areson.aresonsomnium.utils.MessageUtils;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -79,16 +78,12 @@ public class SomniumGommaCommand implements CommandExecutor, TabCompleter {
     private void handleGiveGomma(String nick, int amount) {
         Player player = aresonSomnium.getServer().getPlayer(nick);
         if (player != null) {
-            ItemStack gommaItem = new ItemStack(Material.valueOf(messageManager.getMessageWithoutPrefix("gomma-material")));
+            ItemStack gommaItem = new ItemStack(Material.valueOf(messageManager.getSimpleString("gomma-material")));
 
             ItemMeta itemMeta = gommaItem.getItemMeta();
             if (Objects.nonNull(itemMeta)) {
-                itemMeta.displayName(Component.text(messageManager.getMessageWithoutPrefix("gomma-item-name")));
-
-                String loreString = messageManager.getMessageWithoutPrefix("gomma-item-lore");
-                String[] split = loreString.split("\\n");
-                List<Component> lore = Arrays.stream(split).map(line -> Component.text(line).asComponent()).toList();
-                itemMeta.lore(lore);
+                itemMeta.displayName(messageManager.getMessageWithoutPrefix("gomma-item-name"));
+                itemMeta.lore(messageManager.getMessageListWithoutPrefix("gomma-item-lore"));
 
                 itemMeta.setCustomModelData(GOMMA_MODEL_DATA);
                 itemMeta.addEnchant(Enchantment.DURABILITY, 2, true);
